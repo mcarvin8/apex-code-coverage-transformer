@@ -14,7 +14,7 @@ This plugin will convert the JSON file created by the Salesforce CLI during Apex
 
 Directory containing Salesforce metadata (default: `force-app/main/default`).
 
-# flags.json.summary
+# flags.coverage-json.summary
 
 Path to the JSON file created by the Salesforce CLI deployment command.
 

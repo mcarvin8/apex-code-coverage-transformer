@@ -19,7 +19,7 @@ describe('transform the code coverage json', () => {
 
 
   it('transform the test JSON file into the generic test coverage format', async () => {
-    await TransformerTransform.run(['--json', testJsonPath]);
+    await TransformerTransform.run(['--coverage-json', testJsonPath]);
       const output = sfCommandStubs.log
         .getCalls()
         .flatMap((c) => c.args)

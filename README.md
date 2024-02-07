@@ -33,7 +33,7 @@ USAGE
   $ sf apex-code-coverage transformer transform -j <value> -x <value> -d <value> [--json]
 
 FLAGS
-  -j, --json=<value> The path to the JSON file created by the Salesforce CLI for code coverage.
+  -j, --coverage-json=<value> The path to the JSON file created by the Salesforce CLI for code coverage.
   -x, --xml=<value> [default: coverage.xml] Output path for the XML file created by this plugin
   -d, --dx-directory=<value> [default: force-app/main/default] The root directory containing your Salesforce metadata.
 

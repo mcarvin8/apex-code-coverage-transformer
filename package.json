@@ -47,7 +47,7 @@
     "xml",
     "json"
   ],
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "oclif": {
     "commands": "./lib/commands",
     "bin": "sf",

@@ -1,5 +1,6 @@
 'use strict';
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
@@ -25,13 +26,13 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       exists: true,
       default: 'force-app/main/default',
     }),
-    'json': Flags.string({
-      summary: messages.getMessage('flags.json.summary'),
+    'coverage-json': Flags.file({
+      summary: messages.getMessage('flags.coverage-json.summary'),
       char: 'j',
       required: true,
       exists: true,
     }),
-    'xml': Flags.string({
+    'xml': Flags.file({
       summary: messages.getMessage('flags.xml.summary'),
       char: 'x',
       required: true,
@@ -42,17 +43,21 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
-    const jsonFilePath = flags['json'];
+    let jsonFilePath = flags['coverage-json'];
     const xmlFilePath = flags['xml'];
     const dxDirectory = flags['dx-directory'];
-
+    jsonFilePath = path.resolve(jsonFilePath);
+    // Check if the JSON file exists
+    if (!fs.existsSync(jsonFilePath)) {
+      this.error(`JSON file does not exist: ${jsonFilePath}`);
+    }
     const jsonData = fs.readFileSync(jsonFilePath, 'utf-8');
     const coverageData = JSON.parse(jsonData) as CoverageData;
     const xmlData = convertToGenericTestReport(coverageData, dxDirectory);
 
     // Write the XML data to the XML file
     try {
-      fs.writeFileSync(xmlFilePath as string, xmlData);
+      fs.writeFileSync(xmlFilePath, xmlData);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       this.log(`The XML data has been written to ${xmlFilePath}`);
     } catch (error) {
