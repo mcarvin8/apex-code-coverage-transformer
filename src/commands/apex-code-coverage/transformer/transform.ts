@@ -44,9 +44,10 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
     let jsonFilePath = flags['coverage-json'];
-    const xmlFilePath = flags['xml'];
+    let xmlFilePath = flags['xml'];
     const dxDirectory = flags['dx-directory'];
     jsonFilePath = path.resolve(jsonFilePath);
+    xmlFilePath = path.resolve(xmlFilePath);
     // Check if the JSON file exists
     if (!fs.existsSync(jsonFilePath)) {
       this.error(`JSON file does not exist: ${jsonFilePath}`);

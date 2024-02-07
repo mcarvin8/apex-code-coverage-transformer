@@ -1,3 +1,5 @@
+import * as path from 'node:path';
+
 import { TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
@@ -6,8 +8,10 @@ import TransformerTransform from '../../../src/commands/apex-code-coverage/trans
 describe('transform the code coverage json', () => {
   const $$ = new TestContext();
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
-  const testJsonPath = 'test.json';
-  const testXmlPath = 'coverage.xml';
+  let testJsonPath = 'test.json';
+  let testXmlPath = 'coverage.xml';
+  testJsonPath = path.resolve(testJsonPath);
+  testXmlPath = path.resolve(testXmlPath);
 
   beforeEach(() => {
     sfCommandStubs = stubSfCommandUx($$.SANDBOX);
