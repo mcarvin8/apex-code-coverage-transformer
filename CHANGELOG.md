@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.1.1...v1.2.0) (2024-02-07)
+
+### Features
+
+- check if file name is an apex class or apex trigger using the dx directory flag ([215e41e](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/215e41eab0c41e2861d86370b0bddae2b2e487f0))
+
 ## [1.1.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.1.0...v1.1.1) (2024-02-07)
 
 ### Bug Fixes
