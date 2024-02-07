@@ -19,11 +19,10 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    'dx-directory': Flags.directory({
+    'dx-directory': Flags.string({
       summary: messages.getMessage('flags.dx-directory.summary'),
       char: 'd',
       required: true,
-      exists: true,
       default: 'force-app/main/default',
     }),
     'coverage-json': Flags.file({
@@ -70,6 +69,21 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   }
 }
 
+function findFilePath(className: string, dxDirectory: string): string | null {
+  const relativeClassPath = `${dxDirectory}/classes/${className}.cls`;
+  const relativeTriggerPath = `${dxDirectory}/triggers/${className}.trigger`;
+
+  const absoluteClassPath = path.resolve(relativeClassPath);
+  const absoluteTriggerPath = path.resolve(relativeTriggerPath);
+  if (fs.existsSync(absoluteClassPath)) {
+      return relativeClassPath;
+  } else if (fs.existsSync(absoluteTriggerPath)) {
+      return relativeTriggerPath;
+  } else {
+      throw Error(`The file name ${className} was not found in the classes or triggers directory.`);
+  }
+}
+
 function convertToGenericTestReport(data: CoverageData, dxDirectory: string): string {
   let xml = '<?xml version="1.0"?>\n<coverage version="1">\n';
 
@@ -77,8 +91,8 @@ function convertToGenericTestReport(data: CoverageData, dxDirectory: string): st
       if (Object.prototype.hasOwnProperty.call(data, className)) {
           const classInfo = data[className];
           const formattedClassName = className.replace('no-map/', '');
-          const classPath = `${dxDirectory}/classes/${formattedClassName}.cls`;
-          xml += `\t<file path="${classPath}">\n`;
+          const filePath = findFilePath(formattedClassName, dxDirectory);
+          xml += `\t<file path="${filePath}">\n`;
 
           for (const lineNumber in classInfo.s) {
               if (Object.prototype.hasOwnProperty.call(classInfo.s, lineNumber)) {
