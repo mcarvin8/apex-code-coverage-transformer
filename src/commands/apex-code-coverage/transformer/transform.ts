@@ -35,7 +35,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       summary: messages.getMessage('flags.xml.summary'),
       char: 'x',
       required: true,
-      exists: true,
+      exists: false,
       default: 'coverage.xml',
     }),
   };
