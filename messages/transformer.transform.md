@@ -12,7 +12,7 @@ This plugin will convert the JSON file created by the Salesforce CLI during Apex
 
 # flags.dx-directory.summary
 
-Directory containing Salesforce metadata (default: `force-app/main/default`).
+Directory containing Salesforce metadata relative to your repository (default: `force-app/main/default`).
 
 # flags.coverage-json.summary
 
