@@ -45,7 +45,8 @@
     "sfdx",
     "sfdx-plugin",
     "xml",
-    "json"
+    "json",
+    "sonarqube"
   ],
   "license": "MIT",
   "oclif": {

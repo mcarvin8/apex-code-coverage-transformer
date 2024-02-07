@@ -17,13 +17,16 @@ describe('transform the code coverage json', () => {
   // Mock file contents
   const mockClassContent = '// Test Apex Class';
   const mockTriggerContent = '// Test Apex Trigger';
+  const mockFlowContent = '<!-- Test Flow -->';
 
   // Create mock files
   before(() => {
     fs.mkdirSync('force-app/main/default/classes', { recursive: true });
     fs.mkdirSync('force-app/main/default/triggers', { recursive: true });
+    fs.mkdirSync('force-app/main/default/flows', { recursive: true });
     fs.writeFileSync('force-app/main/default/classes/AccountProfile.cls', mockClassContent);
     fs.writeFileSync('force-app/main/default/triggers/AccountTrigger.trigger', mockTriggerContent);
+    fs.writeFileSync('force-app/main/default/flows/Get_Info.flow-meta.xml', mockFlowContent);
   });
 
   beforeEach(() => {
@@ -38,8 +41,10 @@ describe('transform the code coverage json', () => {
   after(() => {
     fs.unlinkSync('force-app/main/default/classes/AccountProfile.cls');
     fs.unlinkSync('force-app/main/default/triggers/AccountTrigger.trigger');
+    fs.unlinkSync('force-app/main/default/flows/Get_Info.flow-meta.xml');
     fs.rmdirSync('force-app/main/default/classes');
     fs.rmdirSync('force-app/main/default/triggers');
+    fs.rmdirSync('force-app/main/default/flows');
   });
 
   it('transform the test JSON file into the generic test coverage format', async () => {
