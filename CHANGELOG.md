@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.1.0...v1.1.1) (2024-02-07)
+
+### Bug Fixes
+
+- resolve path to xml ([cc75e96](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/cc75e96ef26120f86cff8588256e4f55e79d5473))
+
 # [1.1.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.0.0...v1.1.0) (2024-02-07)
 
 ### Features
