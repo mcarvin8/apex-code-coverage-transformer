@@ -8,7 +8,7 @@ This plugin will convert the JSON file created by the Salesforce CLI during Apex
 
 # examples
 
-- `sf apex-code-coverage transformer transform --json "path-to-cli-coverage.json"`
+- `sf apex-code-coverage transformer transform --coverage-json "path-to-cli-coverage.json"`
 
 # flags.dx-directory.summary
 

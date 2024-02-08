@@ -19,10 +19,11 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    'dx-directory': Flags.string({
+    'dx-directory': Flags.directory({
       summary: messages.getMessage('flags.dx-directory.summary'),
       char: 'd',
       required: true,
+      exists: true,
       default: 'force-app/main/default',
     }),
     'coverage-json': Flags.file({
@@ -82,9 +83,9 @@ function findFilePath(className: string, dxDirectory: string): string | null {
   } else if (fs.existsSync(absoluteTriggerPath)) {
       return relativeTriggerPath;
   } else if (fs.existsSync(absoluteFlowPath)) {
-    return relativeFlowPath;
+      return relativeFlowPath;
   } else {
-      throw Error(`The file name ${className} was not found in the classes or triggers directory.`);
+      throw Error(`The file name ${className} was not found in the classes, triggers, or flows directory.`);
   }
 }
 

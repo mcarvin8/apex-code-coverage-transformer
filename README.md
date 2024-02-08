@@ -6,7 +6,7 @@ The `apex-code-coverage-transformer` is a simple Salesforce CLI plugin to transf
 
 This plugin supports code coverage metrics created for Apex Classes, Apex Triggers, and Flows (if flows are deployed as active in your org).
 
-Here is how you can create the Code Coverage JSON file with the Salesforce CLI:
+To create the code coverage JSON during a Salesforce CLI deployment/validation, append `--coverage-formatters json --results-dir coverage` to the `sf project deploy` command:
 
 ```
 sf project deploy validate -x manifest/package.xml -l RunSpecifiedTests -t {testclasses} --verbose --coverage-formatters json --results-dir coverage
@@ -16,7 +16,7 @@ This will create a coverage JSON in this relative path - `coverage/coverage/cove
 
 This JSON isn't accepted by SonarQube automatically and needs to be converted using this plugin.
 
-Note: Until this [issue](https://github.com/forcedotcom/cli/issues/1813) is resolved in the Salesforce CLI, this will not work properly if there is an Apex class and trigger with the same name. Once this issue is resolved on the CLI, this plugin will be updated to account for the file extension additions.
+**Note**: This has been tested and confirmed on code which meets 100% coverage.
 
 ## Install
 
