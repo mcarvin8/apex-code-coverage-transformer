@@ -183,5 +183,12 @@
   },
   "exports": "./lib/index.js",
   "type": "module",
-  "author": "Matt Carvin"
+  "author": "Matt Carvin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcarvin8/apex-code-coverage-transformer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mcarvin8/apex-code-coverage-transformer/issues"
+  }
 }
