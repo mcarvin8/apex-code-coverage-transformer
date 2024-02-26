@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.3.0...v1.3.1) (2024-02-26)
+
+### Bug Fixes
+
+- dx-directory should be an existing directory and fix flag in messages ([38fb20b](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/38fb20b8a107c203ba78266cb05d133805135ce4))
+
 # [1.3.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.2.0...v1.3.0) (2024-02-07)
 
 ### Features
