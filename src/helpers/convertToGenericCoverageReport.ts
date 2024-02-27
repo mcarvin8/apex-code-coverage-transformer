@@ -1,3 +1,4 @@
+'use strict';
 import { CoverageData } from './types.js';
 import { findFilePath } from './findFilePath.js';
 
