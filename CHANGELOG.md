@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.3.1...v1.4.0) (2024-02-27)
+
+### Features
+
+- if coverage JSON includes file extensions, use that to determine paths ([efc1fa6](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/efc1fa61ce21cff394bbc696afce88c4d57894ea))
+
 ## [1.3.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.3.0...v1.3.1) (2024-02-26)
 
 ### Bug Fixes
