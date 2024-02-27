@@ -5,6 +5,7 @@ import * as path from 'node:path';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import { CoverageData } from '../../../helpers/types.js';
+import { convertToGenericCoverageReport } from '../../../helpers/convertToGenericCoverageReport.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('apex-code-coverage-transformer', 'transformer.transform');
@@ -32,7 +33,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       required: true,
       exists: true,
     }),
-    'xml': Flags.file({
+    xml: Flags.file({
       summary: messages.getMessage('flags.xml.summary'),
       char: 'x',
       required: true,
@@ -54,7 +55,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     }
     const jsonData = fs.readFileSync(jsonFilePath, 'utf-8');
     const coverageData = JSON.parse(jsonData) as CoverageData;
-    const xmlData = convertToGenericTestReport(coverageData, dxDirectory);
+    const xmlData = convertToGenericCoverageReport(coverageData, dxDirectory);
 
     // Write the XML data to the XML file
     try {
@@ -68,50 +69,4 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
     return { path: xmlFilePath };
   }
-}
-
-function findFilePath(className: string, dxDirectory: string): string | null {
-  const relativeClassPath = `${dxDirectory}/classes/${className}.cls`;
-  const relativeTriggerPath = `${dxDirectory}/triggers/${className}.trigger`;
-  const relativeFlowPath = `${dxDirectory}/flows/${className}.flow-meta.xml`;
-
-  const absoluteClassPath = path.resolve(relativeClassPath);
-  const absoluteTriggerPath = path.resolve(relativeTriggerPath);
-  const absoluteFlowPath = path.resolve(relativeFlowPath);
-  if (fs.existsSync(absoluteClassPath)) {
-      return relativeClassPath;
-  } else if (fs.existsSync(absoluteTriggerPath)) {
-      return relativeTriggerPath;
-  } else if (fs.existsSync(absoluteFlowPath)) {
-      return relativeFlowPath;
-  } else {
-      throw Error(`The file name ${className} was not found in the classes, triggers, or flows directory.`);
-  }
-}
-
-function convertToGenericTestReport(data: CoverageData, dxDirectory: string): string {
-  let xml = '<?xml version="1.0"?>\n<coverage version="1">\n';
-
-  for (const className in data) {
-      if (Object.prototype.hasOwnProperty.call(data, className)) {
-          const classInfo = data[className];
-          const formattedClassName = className.replace('no-map/', '');
-          const filePath = findFilePath(formattedClassName, dxDirectory);
-          xml += `\t<file path="${filePath}">\n`;
-
-          for (const lineNumber in classInfo.s) {
-              if (Object.prototype.hasOwnProperty.call(classInfo.s, lineNumber)) {
-                  const count = classInfo.s[lineNumber];
-                  const covered = count > 0 ? 'true' : 'false';
-                  // only add uncovered lines
-                  if (covered === 'false') {
-                      xml += `\t\t<lineToCover lineNumber="${lineNumber}" covered="${covered}"/>\n`;
-                  }
-              }
-          }
-          xml += '\t</file>\n';
-      }
-  }
-  xml += '</coverage>';
-  return xml;
 }
