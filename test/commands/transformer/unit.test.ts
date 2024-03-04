@@ -50,6 +50,8 @@ describe('transform the code coverage json', () => {
     fs.rmdirSync('force-app/main/default/classes');
     fs.rmdirSync('force-app/main/default/triggers');
     fs.rmdirSync('force-app/main/default/flows');
+    fs.rmSync(testXmlPath1);
+    fs.rmSync(testXmlPath2);
   });
 
   it('transform the test JSON file without file extensions into the generic test coverage format', async () => {
