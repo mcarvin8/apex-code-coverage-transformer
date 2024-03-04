@@ -1,3 +1,9 @@
+## [1.4.1-beta.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.0...v1.4.1-beta.1) (2024-03-04)
+
+### Bug Fixes
+
+- add covered and uncovered lines to XML ([9e8f102](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/9e8f102e9e5c848f5bd604fb2755ae7ea2172cc9))
+
 # [1.4.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.3.1...v1.4.0) (2024-02-27)
 
 ### Features
