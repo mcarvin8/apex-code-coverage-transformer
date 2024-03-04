@@ -1,6 +1,6 @@
 {
   "name": "apex-code-coverage-transformer",
-  "description": "Transforms the Apex Code Coverage JSON into the Generic Test Data Report.",
+  "description": "Transforms the Apex Code Coverage JSON into the Generic Test Coverage Format.",
   "version": "1.4.1-beta.1",
   "dependencies": {
     "@oclif/core": "^3.18.1",

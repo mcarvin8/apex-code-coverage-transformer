@@ -16,6 +16,8 @@ This will create a coverage JSON in this relative path - `coverage/coverage/cove
 
 This JSON isn't accepted by SonarQube automatically and needs to be converted using this plugin.
 
+After this plugin creates the XML, you can pass the XML file-path to SonarQube using the `sonar.coverageReportPaths` flag.
+
 **Note**: This has been tested and confirmed on code which meets 100% coverage.
 
 ## Install
