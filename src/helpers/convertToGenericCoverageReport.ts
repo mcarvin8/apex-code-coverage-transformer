@@ -16,10 +16,7 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
         if (Object.hasOwn(classInfo.s, lineNumber)) {
           const count = classInfo.s[lineNumber];
           const covered = count > 0 ? 'true' : 'false';
-          // only add uncovered lines
-          if (covered === 'false') {
-            xml += `\t\t<lineToCover lineNumber="${lineNumber}" covered="${covered}"/>\n`;
-          }
+          xml += `\t\t<lineToCover lineNumber="${lineNumber}" covered="${covered}"/>\n`;
         }
       }
       xml += '\t</file>\n';
