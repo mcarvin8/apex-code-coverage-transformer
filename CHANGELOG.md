@@ -1,3 +1,9 @@
+## [1.4.1-beta.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.2...v1.4.1-beta.3) (2024-03-05)
+
+### Bug Fixes
+
+- print uncovered lines first, then covered lines, ensuring out-of-range lines are replaced with a random unused line ([594e7cb](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/594e7cb47b6acf0823a02fb67a3cc681980e8e0f))
+
 ## [1.4.1-beta.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.1...v1.4.1-beta.2) (2024-03-05)
 
 ### Bug Fixes
