@@ -1,3 +1,9 @@
+## [1.4.1-beta.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.1...v1.4.1-beta.2) (2024-03-05)
+
+### Bug Fixes
+
+- get total number of lines in each file and assume line is covered if it's not listed as "uncovered" in JSON ([794a9e7](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/794a9e7813db182e47f46c2275a8064b8d92e261))
+
 ## [1.4.1-beta.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.0...v1.4.1-beta.1) (2024-03-04)
 
 ### Bug Fixes
