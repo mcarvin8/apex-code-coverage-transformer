@@ -15,4 +15,26 @@ trigger helloWorldAccountTrigger on Account (before insert) {
    MyHelloWorld.addHelloWorld(accs);
    MyHelloWorld.addHelloWorld(accs);
    MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
+   MyHelloWorld.addHelloWorld(accs);
 }

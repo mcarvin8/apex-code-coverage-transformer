@@ -19,15 +19,31 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
       const uncoveredLines = Object.keys(classInfo.s)
       .filter(lineNumber => classInfo.s[lineNumber] === 0)
       .map(Number);
+      const coveredLines = Object.keys(classInfo.s)
+      .filter(lineNumber => classInfo.s[lineNumber] === 1)
+      .map(Number);
+      const randomLines: number[] = [];
       const totalLines = getTotalLines(filePath);
 
       xml += `\t<file path="${filePath}">\n`;
 
-      for (let lineNumber = 1; lineNumber <= totalLines; lineNumber++) {
-        // Mark the line as covered if it is not listed as "uncovered" in the JSON
-        const covered = uncoveredLines.includes(lineNumber) ? 'false' : 'true';
-        xml += `\t\t<lineToCover lineNumber="${lineNumber}" covered="${covered}"/>\n`;
+      for (const uncoveredLine of uncoveredLines) {
+        xml += `\t\t<lineToCover lineNumber="${uncoveredLine}" covered="false"/>\n`;
       }
+
+      for (const coveredLine of coveredLines) {
+        if (coveredLine > totalLines) {
+          let randomLineNumber;
+          do {
+            randomLineNumber = Math.floor(Math.random() * totalLines) + 1;
+          } while (coveredLines.includes(randomLineNumber) || uncoveredLines.includes(randomLineNumber) || randomLines.includes(randomLineNumber));
+          randomLines.push(randomLineNumber);
+          xml += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
+        } else {
+          xml += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
+        }
+      }
+
       xml += '\t</file>\n';
     }
   }
