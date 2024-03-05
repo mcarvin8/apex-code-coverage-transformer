@@ -19,21 +19,6 @@ describe('transform the code coverage json', () => {
   testXmlPath1 = path.resolve(testXmlPath1);
   testXmlPath2 = path.resolve(testXmlPath2);
 
-  // Mock file contents
-  const mockClassContent = '// Test Apex Class';
-  const mockTriggerContent = '// Test Apex Trigger';
-  const mockFlowContent = '<!-- Test Flow -->';
-
-  // Create mock files
-  before(() => {
-    fs.mkdirSync('force-app/main/default/classes', { recursive: true });
-    fs.mkdirSync('force-app/main/default/triggers', { recursive: true });
-    fs.mkdirSync('force-app/main/default/flows', { recursive: true });
-    fs.writeFileSync('force-app/main/default/classes/AccountProfile.cls', mockClassContent);
-    fs.writeFileSync('force-app/main/default/triggers/AccountTrigger.trigger', mockTriggerContent);
-    fs.writeFileSync('force-app/main/default/flows/Get_Info.flow-meta.xml', mockFlowContent);
-  });
-
   beforeEach(() => {
     sfCommandStubs = stubSfCommandUx($$.SANDBOX);
   });
@@ -44,12 +29,6 @@ describe('transform the code coverage json', () => {
 
   // Cleanup mock files
   after(() => {
-    fs.unlinkSync('force-app/main/default/classes/AccountProfile.cls');
-    fs.unlinkSync('force-app/main/default/triggers/AccountTrigger.trigger');
-    fs.unlinkSync('force-app/main/default/flows/Get_Info.flow-meta.xml');
-    fs.rmdirSync('force-app/main/default/classes');
-    fs.rmdirSync('force-app/main/default/triggers');
-    fs.rmdirSync('force-app/main/default/flows');
     fs.rmSync(testXmlPath1);
     fs.rmSync(testXmlPath2);
   });

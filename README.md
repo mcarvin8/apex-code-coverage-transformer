@@ -59,223 +59,356 @@ A JSON created by the Salesforce CLI :
 
 ```json
 {
-  "no-map/AccountTrigger": {
+  "no-map/PrepareMySandbox": {
     "fnMap": {},
     "branchMap": {},
-    "path": "no-map/AccountTrigger",
+    "path": "no-map/PrepareMySandbox",
     "f": {},
     "b": {},
     "s": {
-      "52": 0,
-      "53": 0,
-      "54": 1,
-      "55": 1,
-      "56": 1,
-      "57": 1,
-      "58": 1,
-      "59": 0,
-      "60": 0,
-      "61": 1,
-      "62": 1,
-      "63": 1,
-      "64": 1,
-      "65": 1,
-      "66": 1,
-      "67": 1,
-      "68": 1,
-      "69": 1,
-      "70": 1,
-      "71": 1,
-      "72": 1,
-      "73": 1,
-      "74": 1,
-      "75": 1,
-      "76": 1,
-      "77": 1,
-      "78": 1,
-      "79": 1,
-      "80": 1,
-      "81": 1,
-      "82": 1
+      "7": 0,
+      "8": 1,
+      "9": 1,
+      "10": 1,
+      "11": 1,
+      "12": 0,
+      "13": 1,
+      "14": 1,
+      "15": 1,
+      "16": 1,
+      "17": 1,
+      "18": 1,
+      "19": 1,
+      "20": 1,
+      "21": 1,
+      "22": 1,
+      "23": 1,
+      "24": 1,
+      "25": 1,
+      "26": 1,
+      "27": 1,
+      "28": 1,
+      "29": 1,
+      "30": 1,
+      "31": 1,
+      "32": 1,
+      "33": 1,
+      "34": 1,
+      "35": 1,
+      "36": 1,
+      "37": 1
     },
     "statementMap": {
-      "52": { "start": { "line": 52, "column": 0 }, "end": { "line": 52, "column": 0 } },
-      "53": { "start": { "line": 53, "column": 0 }, "end": { "line": 53, "column": 0 } },
-      "54": { "start": { "line": 54, "column": 0 }, "end": { "line": 54, "column": 0 } },
-      "55": { "start": { "line": 55, "column": 0 }, "end": { "line": 55, "column": 0 } },
-      "56": { "start": { "line": 56, "column": 0 }, "end": { "line": 56, "column": 0 } },
-      "57": { "start": { "line": 57, "column": 0 }, "end": { "line": 57, "column": 0 } },
-      "58": { "start": { "line": 58, "column": 0 }, "end": { "line": 58, "column": 0 } },
-      "59": { "start": { "line": 59, "column": 0 }, "end": { "line": 59, "column": 0 } },
-      "60": { "start": { "line": 60, "column": 0 }, "end": { "line": 60, "column": 0 } },
-      "61": { "start": { "line": 61, "column": 0 }, "end": { "line": 61, "column": 0 } },
-      "62": { "start": { "line": 62, "column": 0 }, "end": { "line": 62, "column": 0 } },
-      "63": { "start": { "line": 63, "column": 0 }, "end": { "line": 63, "column": 0 } },
-      "64": { "start": { "line": 64, "column": 0 }, "end": { "line": 64, "column": 0 } },
-      "65": { "start": { "line": 65, "column": 0 }, "end": { "line": 65, "column": 0 } },
-      "66": { "start": { "line": 66, "column": 0 }, "end": { "line": 66, "column": 0 } },
-      "67": { "start": { "line": 67, "column": 0 }, "end": { "line": 67, "column": 0 } },
-      "68": { "start": { "line": 68, "column": 0 }, "end": { "line": 68, "column": 0 } },
-      "69": { "start": { "line": 69, "column": 0 }, "end": { "line": 69, "column": 0 } },
-      "70": { "start": { "line": 70, "column": 0 }, "end": { "line": 70, "column": 0 } },
-      "71": { "start": { "line": 71, "column": 0 }, "end": { "line": 71, "column": 0 } },
-      "72": { "start": { "line": 72, "column": 0 }, "end": { "line": 72, "column": 0 } },
-      "73": { "start": { "line": 73, "column": 0 }, "end": { "line": 73, "column": 0 } },
-      "74": { "start": { "line": 74, "column": 0 }, "end": { "line": 74, "column": 0 } },
-      "75": { "start": { "line": 75, "column": 0 }, "end": { "line": 75, "column": 0 } },
-      "76": { "start": { "line": 76, "column": 0 }, "end": { "line": 76, "column": 0 } },
-      "77": { "start": { "line": 77, "column": 0 }, "end": { "line": 77, "column": 0 } },
-      "78": { "start": { "line": 78, "column": 0 }, "end": { "line": 78, "column": 0 } },
-      "79": { "start": { "line": 79, "column": 0 }, "end": { "line": 79, "column": 0 } },
-      "80": { "start": { "line": 80, "column": 0 }, "end": { "line": 80, "column": 0 } },
-      "81": { "start": { "line": 81, "column": 0 }, "end": { "line": 81, "column": 0 } },
-      "82": { "start": { "line": 82, "column": 0 }, "end": { "line": 82, "column": 0 } }
-    }
-  },
-  "no-map/AccountProfile": {
-    "fnMap": {},
-    "branchMap": {},
-    "path": "no-map/AccountProfile",
-    "f": {},
-    "b": {},
-    "s": {
-      "52": 0,
-      "53": 0,
-      "54": 1,
-      "55": 1,
-      "56": 1,
-      "57": 1,
-      "58": 1,
-      "59": 0,
-      "60": 0,
-      "61": 1,
-      "62": 1,
-      "63": 1,
-      "64": 1,
-      "65": 1,
-      "66": 1,
-      "67": 1,
-      "68": 1,
-      "69": 1,
-      "70": 1,
-      "71": 1,
-      "72": 1,
-      "73": 1,
-      "74": 1,
-      "75": 1,
-      "76": 1,
-      "77": 1,
-      "78": 1,
-      "79": 1,
-      "80": 1,
-      "81": 1,
-      "82": 1
-    },
-    "statementMap": {
-      "52": { "start": { "line": 52, "column": 0 }, "end": { "line": 52, "column": 0 } },
-      "53": { "start": { "line": 53, "column": 0 }, "end": { "line": 53, "column": 0 } },
-      "54": { "start": { "line": 54, "column": 0 }, "end": { "line": 54, "column": 0 } },
-      "55": { "start": { "line": 55, "column": 0 }, "end": { "line": 55, "column": 0 } },
-      "56": { "start": { "line": 56, "column": 0 }, "end": { "line": 56, "column": 0 } },
-      "57": { "start": { "line": 57, "column": 0 }, "end": { "line": 57, "column": 0 } },
-      "58": { "start": { "line": 58, "column": 0 }, "end": { "line": 58, "column": 0 } },
-      "59": { "start": { "line": 59, "column": 0 }, "end": { "line": 59, "column": 0 } },
-      "60": { "start": { "line": 60, "column": 0 }, "end": { "line": 60, "column": 0 } },
-      "61": { "start": { "line": 61, "column": 0 }, "end": { "line": 61, "column": 0 } },
-      "62": { "start": { "line": 62, "column": 0 }, "end": { "line": 62, "column": 0 } },
-      "63": { "start": { "line": 63, "column": 0 }, "end": { "line": 63, "column": 0 } },
-      "64": { "start": { "line": 64, "column": 0 }, "end": { "line": 64, "column": 0 } },
-      "65": { "start": { "line": 65, "column": 0 }, "end": { "line": 65, "column": 0 } },
-      "66": { "start": { "line": 66, "column": 0 }, "end": { "line": 66, "column": 0 } },
-      "67": { "start": { "line": 67, "column": 0 }, "end": { "line": 67, "column": 0 } },
-      "68": { "start": { "line": 68, "column": 0 }, "end": { "line": 68, "column": 0 } },
-      "69": { "start": { "line": 69, "column": 0 }, "end": { "line": 69, "column": 0 } },
-      "70": { "start": { "line": 70, "column": 0 }, "end": { "line": 70, "column": 0 } },
-      "71": { "start": { "line": 71, "column": 0 }, "end": { "line": 71, "column": 0 } },
-      "72": { "start": { "line": 72, "column": 0 }, "end": { "line": 72, "column": 0 } },
-      "73": { "start": { "line": 73, "column": 0 }, "end": { "line": 73, "column": 0 } },
-      "74": { "start": { "line": 74, "column": 0 }, "end": { "line": 74, "column": 0 } },
-      "75": { "start": { "line": 75, "column": 0 }, "end": { "line": 75, "column": 0 } },
-      "76": { "start": { "line": 76, "column": 0 }, "end": { "line": 76, "column": 0 } },
-      "77": { "start": { "line": 77, "column": 0 }, "end": { "line": 77, "column": 0 } },
-      "78": { "start": { "line": 78, "column": 0 }, "end": { "line": 78, "column": 0 } },
-      "79": { "start": { "line": 79, "column": 0 }, "end": { "line": 79, "column": 0 } },
-      "80": { "start": { "line": 80, "column": 0 }, "end": { "line": 80, "column": 0 } },
-      "81": { "start": { "line": 81, "column": 0 }, "end": { "line": 81, "column": 0 } },
-      "82": { "start": { "line": 82, "column": 0 }, "end": { "line": 82, "column": 0 } }
-    }
-  },
-  "no-map/Get_Info": {
-    "fnMap": {},
-    "branchMap": {},
-    "path": "no-map/Get_Info",
-    "f": {},
-    "b": {},
-    "s": {
-      "52": 0,
-      "53": 0,
-      "54": 1,
-      "55": 1,
-      "56": 1,
-      "57": 1,
-      "58": 1,
-      "59": 0,
-      "60": 0,
-      "61": 1,
-      "62": 1,
-      "63": 1,
-      "64": 1,
-      "65": 1,
-      "66": 1,
-      "67": 1,
-      "68": 1,
-      "69": 1,
-      "70": 1,
-      "71": 1,
-      "72": 1,
-      "73": 1,
-      "74": 1,
-      "75": 1,
-      "76": 1,
-      "77": 1,
-      "78": 1,
-      "79": 1,
-      "80": 1,
-      "81": 1,
-      "82": 1
-    },
-    "statementMap": {
-      "52": { "start": { "line": 52, "column": 0 }, "end": { "line": 52, "column": 0 } },
-      "53": { "start": { "line": 53, "column": 0 }, "end": { "line": 53, "column": 0 } },
-      "54": { "start": { "line": 54, "column": 0 }, "end": { "line": 54, "column": 0 } },
-      "55": { "start": { "line": 55, "column": 0 }, "end": { "line": 55, "column": 0 } },
-      "56": { "start": { "line": 56, "column": 0 }, "end": { "line": 56, "column": 0 } },
-      "57": { "start": { "line": 57, "column": 0 }, "end": { "line": 57, "column": 0 } },
-      "58": { "start": { "line": 58, "column": 0 }, "end": { "line": 58, "column": 0 } },
-      "59": { "start": { "line": 59, "column": 0 }, "end": { "line": 59, "column": 0 } },
-      "60": { "start": { "line": 60, "column": 0 }, "end": { "line": 60, "column": 0 } },
-      "61": { "start": { "line": 61, "column": 0 }, "end": { "line": 61, "column": 0 } },
-      "62": { "start": { "line": 62, "column": 0 }, "end": { "line": 62, "column": 0 } },
-      "63": { "start": { "line": 63, "column": 0 }, "end": { "line": 63, "column": 0 } },
-      "64": { "start": { "line": 64, "column": 0 }, "end": { "line": 64, "column": 0 } },
-      "65": { "start": { "line": 65, "column": 0 }, "end": { "line": 65, "column": 0 } },
-      "66": { "start": { "line": 66, "column": 0 }, "end": { "line": 66, "column": 0 } },
-      "67": { "start": { "line": 67, "column": 0 }, "end": { "line": 67, "column": 0 } },
-      "68": { "start": { "line": 68, "column": 0 }, "end": { "line": 68, "column": 0 } },
-      "69": { "start": { "line": 69, "column": 0 }, "end": { "line": 69, "column": 0 } },
-      "70": { "start": { "line": 70, "column": 0 }, "end": { "line": 70, "column": 0 } },
-      "71": { "start": { "line": 71, "column": 0 }, "end": { "line": 71, "column": 0 } },
-      "72": { "start": { "line": 72, "column": 0 }, "end": { "line": 72, "column": 0 } },
-      "73": { "start": { "line": 73, "column": 0 }, "end": { "line": 73, "column": 0 } },
-      "74": { "start": { "line": 74, "column": 0 }, "end": { "line": 74, "column": 0 } },
-      "75": { "start": { "line": 75, "column": 0 }, "end": { "line": 75, "column": 0 } },
-      "76": { "start": { "line": 76, "column": 0 }, "end": { "line": 76, "column": 0 } },
-      "77": { "start": { "line": 77, "column": 0 }, "end": { "line": 77, "column": 0 } },
-      "78": { "start": { "line": 78, "column": 0 }, "end": { "line": 78, "column": 0 } },
-      "79": { "start": { "line": 79, "column": 0 }, "end": { "line": 79, "column": 0 } },
-      "80": { "start": { "line": 80, "column": 0 }, "end": { "line": 80, "column": 0 } },
-      "81": { "start": { "line": 81, "column": 0 }, "end": { "line": 81, "column": 0 } },
-      "82": { "start": { "line": 82, "column": 0 }, "end": { "line": 82, "column": 0 } }
+      "7": {
+        "start": {
+          "line": 7,
+          "column": 0
+        },
+        "end": {
+          "line": 7,
+          "column": 0
+        }
+      },
+      "8": {
+        "start": {
+          "line": 8,
+          "column": 0
+        },
+        "end": {
+          "line": 8,
+          "column": 0
+        }
+      },
+      "9": {
+        "start": {
+          "line": 9,
+          "column": 0
+        },
+        "end": {
+          "line": 9,
+          "column": 0
+        }
+      },
+      "10": {
+        "start": {
+          "line": 10,
+          "column": 0
+        },
+        "end": {
+          "line": 10,
+          "column": 0
+        }
+      },
+      "11": {
+        "start": {
+          "line": 11,
+          "column": 0
+        },
+        "end": {
+          "line": 11,
+          "column": 0
+        }
+      },
+      "12": {
+        "start": {
+          "line": 12,
+          "column": 0
+        },
+        "end": {
+          "line": 12,
+          "column": 0
+        }
+      },
+      "13": {
+        "start": {
+          "line": 13,
+          "column": 0
+        },
+        "end": {
+          "line": 13,
+          "column": 0
+        }
+      },
+      "14": {
+        "start": {
+          "line": 14,
+          "column": 0
+        },
+        "end": {
+          "line": 14,
+          "column": 0
+        }
+      },
+      "15": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 15,
+          "column": 0
+        }
+      },
+      "16": {
+        "start": {
+          "line": 16,
+          "column": 0
+        },
+        "end": {
+          "line": 16,
+          "column": 0
+        }
+      },
+      "17": {
+        "start": {
+          "line": 17,
+          "column": 0
+        },
+        "end": {
+          "line": 17,
+          "column": 0
+        }
+      },
+      "18": {
+        "start": {
+          "line": 18,
+          "column": 0
+        },
+        "end": {
+          "line": 18,
+          "column": 0
+        }
+      },
+      "19": {
+        "start": {
+          "line": 19,
+          "column": 0
+        },
+        "end": {
+          "line": 19,
+          "column": 0
+        }
+      },
+      "20": {
+        "start": {
+          "line": 20,
+          "column": 0
+        },
+        "end": {
+          "line": 20,
+          "column": 0
+        }
+      },
+      "21": {
+        "start": {
+          "line": 21,
+          "column": 0
+        },
+        "end": {
+          "line": 21,
+          "column": 0
+        }
+      },
+      "22": {
+        "start": {
+          "line": 22,
+          "column": 0
+        },
+        "end": {
+          "line": 22,
+          "column": 0
+        }
+      },
+      "23": {
+        "start": {
+          "line": 23,
+          "column": 0
+        },
+        "end": {
+          "line": 23,
+          "column": 0
+        }
+      },
+      "24": {
+        "start": {
+          "line": 24,
+          "column": 0
+        },
+        "end": {
+          "line": 24,
+          "column": 0
+        }
+      },
+      "25": {
+        "start": {
+          "line": 25,
+          "column": 0
+        },
+        "end": {
+          "line": 25,
+          "column": 0
+        }
+      },
+      "26": {
+        "start": {
+          "line": 26,
+          "column": 0
+        },
+        "end": {
+          "line": 26,
+          "column": 0
+        }
+      },
+      "27": {
+        "start": {
+          "line": 27,
+          "column": 0
+        },
+        "end": {
+          "line": 27,
+          "column": 0
+        }
+      },
+      "28": {
+        "start": {
+          "line": 28,
+          "column": 0
+        },
+        "end": {
+          "line": 28,
+          "column": 0
+        }
+      },
+      "29": {
+        "start": {
+          "line": 29,
+          "column": 0
+        },
+        "end": {
+          "line": 29,
+          "column": 0
+        }
+      },
+      "30": {
+        "start": {
+          "line": 30,
+          "column": 0
+        },
+        "end": {
+          "line": 30,
+          "column": 0
+        }
+      },
+      "31": {
+        "start": {
+          "line": 31,
+          "column": 0
+        },
+        "end": {
+          "line": 31,
+          "column": 0
+        }
+      },
+      "32": {
+        "start": {
+          "line": 32,
+          "column": 0
+        },
+        "end": {
+          "line": 32,
+          "column": 0
+        }
+      },
+      "33": {
+        "start": {
+          "line": 33,
+          "column": 0
+        },
+        "end": {
+          "line": 33,
+          "column": 0
+        }
+      },
+      "34": {
+        "start": {
+          "line": 34,
+          "column": 0
+        },
+        "end": {
+          "line": 34,
+          "column": 0
+        }
+      },
+      "35": {
+        "start": {
+          "line": 35,
+          "column": 0
+        },
+        "end": {
+          "line": 35,
+          "column": 0
+        }
+      },
+      "36": {
+        "start": {
+          "line": 36,
+          "column": 0
+        },
+        "end": {
+          "line": 36,
+          "column": 0
+        }
+      },
+      "37": {
+        "start": {
+          "line": 37,
+          "column": 0
+        },
+        "end": {
+          "line": 37,
+          "column": 0
+        }
+      }
     }
   }
 }
@@ -286,23 +419,79 @@ will be converted to:
 ```xml
 <?xml version="1.0"?>
 <coverage version="1">
-	<file path="force-app/main/default/triggers/AccountTrigger.trigger">
-		<lineToCover lineNumber="52" covered="false"/>
-		<lineToCover lineNumber="53" covered="false"/>
-		<lineToCover lineNumber="59" covered="false"/>
-		<lineToCover lineNumber="60" covered="false"/>
-	</file>
-	<file path="force-app/main/default/classes/AccountProfile.cls">
-		<lineToCover lineNumber="52" covered="false"/>
-		<lineToCover lineNumber="53" covered="false"/>
-		<lineToCover lineNumber="59" covered="false"/>
-		<lineToCover lineNumber="60" covered="false"/>
-	</file>
-	<file path="force-app/main/default/flows/Get_Info.flow-meta.xml">
-		<lineToCover lineNumber="52" covered="false"/>
-		<lineToCover lineNumber="53" covered="false"/>
-		<lineToCover lineNumber="59" covered="false"/>
-		<lineToCover lineNumber="60" covered="false"/>
+	<file path="force-app/main/default/classes/PrepareMySandbox.cls">
+		<lineToCover lineNumber="1" covered="true"/>
+		<lineToCover lineNumber="2" covered="true"/>
+		<lineToCover lineNumber="3" covered="true"/>
+		<lineToCover lineNumber="4" covered="true"/>
+		<lineToCover lineNumber="5" covered="true"/>
+		<lineToCover lineNumber="6" covered="true"/>
+		<lineToCover lineNumber="7" covered="false"/>
+		<lineToCover lineNumber="8" covered="true"/>
+		<lineToCover lineNumber="9" covered="true"/>
+		<lineToCover lineNumber="10" covered="true"/>
+		<lineToCover lineNumber="11" covered="true"/>
+		<lineToCover lineNumber="12" covered="false"/>
+		<lineToCover lineNumber="13" covered="true"/>
+		<lineToCover lineNumber="14" covered="true"/>
+		<lineToCover lineNumber="15" covered="true"/>
+		<lineToCover lineNumber="16" covered="true"/>
+		<lineToCover lineNumber="17" covered="true"/>
+		<lineToCover lineNumber="18" covered="true"/>
+		<lineToCover lineNumber="19" covered="true"/>
+		<lineToCover lineNumber="20" covered="true"/>
+		<lineToCover lineNumber="21" covered="true"/>
+		<lineToCover lineNumber="22" covered="true"/>
+		<lineToCover lineNumber="23" covered="true"/>
+		<lineToCover lineNumber="24" covered="true"/>
+		<lineToCover lineNumber="25" covered="true"/>
+		<lineToCover lineNumber="26" covered="true"/>
+		<lineToCover lineNumber="27" covered="true"/>
+		<lineToCover lineNumber="28" covered="true"/>
+		<lineToCover lineNumber="29" covered="true"/>
+		<lineToCover lineNumber="30" covered="true"/>
+		<lineToCover lineNumber="31" covered="true"/>
+		<lineToCover lineNumber="32" covered="true"/>
+		<lineToCover lineNumber="33" covered="true"/>
+		<lineToCover lineNumber="34" covered="true"/>
+		<lineToCover lineNumber="35" covered="true"/>
+		<lineToCover lineNumber="36" covered="true"/>
+		<lineToCover lineNumber="37" covered="true"/>
+		<lineToCover lineNumber="38" covered="true"/>
+		<lineToCover lineNumber="39" covered="true"/>
+		<lineToCover lineNumber="40" covered="true"/>
+		<lineToCover lineNumber="41" covered="true"/>
+		<lineToCover lineNumber="42" covered="true"/>
+		<lineToCover lineNumber="43" covered="true"/>
+		<lineToCover lineNumber="44" covered="true"/>
+		<lineToCover lineNumber="45" covered="true"/>
+		<lineToCover lineNumber="46" covered="true"/>
+		<lineToCover lineNumber="47" covered="true"/>
+		<lineToCover lineNumber="48" covered="true"/>
+		<lineToCover lineNumber="49" covered="true"/>
+		<lineToCover lineNumber="50" covered="true"/>
+		<lineToCover lineNumber="51" covered="true"/>
+		<lineToCover lineNumber="52" covered="true"/>
+		<lineToCover lineNumber="53" covered="true"/>
+		<lineToCover lineNumber="54" covered="true"/>
+		<lineToCover lineNumber="55" covered="true"/>
+		<lineToCover lineNumber="56" covered="true"/>
+		<lineToCover lineNumber="57" covered="true"/>
+		<lineToCover lineNumber="58" covered="true"/>
+		<lineToCover lineNumber="59" covered="true"/>
+		<lineToCover lineNumber="60" covered="true"/>
+		<lineToCover lineNumber="61" covered="true"/>
+		<lineToCover lineNumber="62" covered="true"/>
+		<lineToCover lineNumber="63" covered="true"/>
+		<lineToCover lineNumber="64" covered="true"/>
+		<lineToCover lineNumber="65" covered="true"/>
+		<lineToCover lineNumber="66" covered="true"/>
+		<lineToCover lineNumber="67" covered="true"/>
+		<lineToCover lineNumber="68" covered="true"/>
+		<lineToCover lineNumber="69" covered="true"/>
+		<lineToCover lineNumber="70" covered="true"/>
+		<lineToCover lineNumber="71" covered="true"/>
+		<lineToCover lineNumber="72" covered="true"/>
 	</file>
 </coverage>
 ```

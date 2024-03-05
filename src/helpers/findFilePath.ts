@@ -2,7 +2,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-export function findFilePath(fileName: string, dxDirectory: string): string | null {
+export function findFilePath(fileName: string, dxDirectory: string): string | undefined {
   const fileExtension = fileName.split('.').slice(1).join('.');
   let relativeClassPath = '';
   let relativeTriggerPath = '';
@@ -46,5 +46,5 @@ export function findFilePath(fileName: string, dxDirectory: string): string | nu
   } else if (fs.existsSync(absoluteFlowPath)) {
     return relativeFlowPath;
   }
-  throw Error(`The file name ${fileName} was not found in the classes, triggers, or flows directory.`);
+  return undefined;
 }
