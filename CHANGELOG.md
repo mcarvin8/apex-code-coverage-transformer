@@ -1,3 +1,9 @@
+## [1.4.1-beta.8](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.7...v1.4.1-beta.8) (2024-03-06)
+
+### Bug Fixes
+
+- don't need to track total covered lines in XML after adding break ([bc14f0c](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/bc14f0c98de1d1c22fb5e6df4f3d91b41ee4336b))
+
 ## [1.4.1-beta.7](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.6...v1.4.1-beta.7) (2024-03-06)
 
 ### Bug Fixes
