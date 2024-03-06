@@ -1,3 +1,9 @@
+## [1.4.1-beta.5](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.4...v1.4.1-beta.5) (2024-03-06)
+
+### Bug Fixes
+
+- ensure covered lines in XML match JSON total ([2c6e6bb](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/2c6e6bb022924a5b04775a3076d24f24bb6ecc4b))
+
 ## [1.4.1-beta.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.3...v1.4.1-beta.4) (2024-03-06)
 
 ### Bug Fixes
