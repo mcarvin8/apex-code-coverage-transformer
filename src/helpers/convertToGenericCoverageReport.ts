@@ -44,8 +44,6 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
               xml += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
               randomLines.push(randomLineNumber);
               totalCoveredLinesInXML++;
-            }
-            else if (totalCoveredLinesInXML === coveredLines.length) {
               break;
             }
           }
