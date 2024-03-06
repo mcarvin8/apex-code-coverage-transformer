@@ -45,6 +45,9 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
               randomLines.push(randomLineNumber);
               totalCoveredLinesInXML++;
             }
+            else if (totalCoveredLinesInXML === coveredLines.length) {
+              break;
+            }
           }
         } else {
           xml += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
@@ -58,7 +61,6 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
   xml += '</coverage>';
   return xml;
 }
-
 
 function getTotalLines(filePath: string): number {
   const fileContent = fs.readFileSync(filePath, 'utf8');
