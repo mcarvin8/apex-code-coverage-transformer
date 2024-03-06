@@ -30,7 +30,6 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
       for (const uncoveredLine of uncoveredLines) {
         xml += `\t\t<lineToCover lineNumber="${uncoveredLine}" covered="false"/>\n`;
       }
-      let totalCoveredLinesInXML = 0;
 
       for (const coveredLine of coveredLines) {
         if (coveredLine > totalLines) {
@@ -38,18 +37,15 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
             if (
               !uncoveredLines.includes(randomLineNumber) &&
               !coveredLines.includes(randomLineNumber) &&
-              !randomLines.includes(randomLineNumber) && 
-              totalCoveredLinesInXML < coveredLines.length
+              !randomLines.includes(randomLineNumber)
             ) {
               xml += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
               randomLines.push(randomLineNumber);
-              totalCoveredLinesInXML++;
               break;
             }
           }
         } else {
           xml += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
-          totalCoveredLinesInXML++;
         }
       }
 
