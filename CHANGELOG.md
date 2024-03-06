@@ -1,3 +1,9 @@
+## [1.4.1-beta.7](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.6...v1.4.1-beta.7) (2024-03-06)
+
+### Bug Fixes
+
+- move break ([da2f8da](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/da2f8daff06782650ae79ab0cbf5c3194ccee471))
+
 ## [1.4.1-beta.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.5...v1.4.1-beta.6) (2024-03-06)
 
 ### Bug Fixes
