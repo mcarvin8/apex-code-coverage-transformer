@@ -17,11 +17,11 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
       }
       // Extract the "uncovered lines" from the JSON data
       const uncoveredLines = Object.keys(classInfo.s)
-      .filter(lineNumber => classInfo.s[lineNumber] === 0)
-      .map(Number);
+        .filter(lineNumber => classInfo.s[lineNumber] === 0)
+        .map(Number);
       const coveredLines = Object.keys(classInfo.s)
-      .filter(lineNumber => classInfo.s[lineNumber] === 1)
-      .map(Number);
+        .filter(lineNumber => classInfo.s[lineNumber] === 1)
+        .map(Number);
       const randomLines: number[] = [];
       const totalLines = getTotalLines(filePath);
 
@@ -30,6 +30,7 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
       for (const uncoveredLine of uncoveredLines) {
         xml += `\t\t<lineToCover lineNumber="${uncoveredLine}" covered="false"/>\n`;
       }
+      let totalCoveredLinesInXML = 0;
 
       for (const coveredLine of coveredLines) {
         if (coveredLine > totalLines) {
@@ -37,14 +38,17 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
             if (
               !uncoveredLines.includes(randomLineNumber) &&
               !coveredLines.includes(randomLineNumber) &&
-              !randomLines.includes(randomLineNumber)
+              !randomLines.includes(randomLineNumber) && 
+              totalCoveredLinesInXML < coveredLines.length
             ) {
               xml += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
               randomLines.push(randomLineNumber);
+              totalCoveredLinesInXML++;
             }
           }
         } else {
           xml += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
+          totalCoveredLinesInXML++;
         }
       }
 
@@ -54,6 +58,7 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
   xml += '</coverage>';
   return xml;
 }
+
 
 function getTotalLines(filePath: string): number {
   const fileContent = fs.readFileSync(filePath, 'utf8');
