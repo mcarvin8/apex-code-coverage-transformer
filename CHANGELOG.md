@@ -1,3 +1,9 @@
+## [1.4.1-beta.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.5...v1.4.1-beta.6) (2024-03-06)
+
+### Bug Fixes
+
+- add break condition ([6e1d527](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/6e1d5270ef5eeae0fe843e7ec5de0f2f5f0a535e))
+
 ## [1.4.1-beta.5](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.4...v1.4.1-beta.5) (2024-03-06)
 
 ### Bug Fixes
