@@ -33,12 +33,16 @@ export function convertToGenericCoverageReport(data: CoverageData, dxDirectory: 
 
       for (const coveredLine of coveredLines) {
         if (coveredLine > totalLines) {
-          let randomLineNumber;
-          do {
-            randomLineNumber = Math.floor(Math.random() * totalLines) + 1;
-          } while (coveredLines.includes(randomLineNumber) || uncoveredLines.includes(randomLineNumber) || randomLines.includes(randomLineNumber));
-          randomLines.push(randomLineNumber);
-          xml += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
+          for (let randomLineNumber = 1; randomLineNumber <= totalLines; randomLineNumber++) {
+            if (
+              !uncoveredLines.includes(randomLineNumber) &&
+              !coveredLines.includes(randomLineNumber) &&
+              !randomLines.includes(randomLineNumber)
+            ) {
+              xml += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
+              randomLines.push(randomLineNumber);
+            }
+          }
         } else {
           xml += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
         }
