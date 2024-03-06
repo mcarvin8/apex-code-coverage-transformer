@@ -1,3 +1,9 @@
+## [1.4.1-beta.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.3...v1.4.1-beta.4) (2024-03-06)
+
+### Bug Fixes
+
+- switch do statement to a for statement and start random number count at 1 ([1c29323](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/1c293238e059d47eace1fd395d230e51bb399315))
+
 ## [1.4.1-beta.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.1-beta.2...v1.4.1-beta.3) (2024-03-05)
 
 ### Bug Fixes
