@@ -1,3 +1,9 @@
+# [1.5.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.0...v1.5.0) (2024-03-20)
+
+### Features
+
+- support multiple package directories via the sfdx-project.json ([52c1a12](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/52c1a12ff5fbfb10c215a41e010ee7fc6c0370de))
+
 # [1.4.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.3.1...v1.4.0) (2024-02-27)
 
 ### Features
