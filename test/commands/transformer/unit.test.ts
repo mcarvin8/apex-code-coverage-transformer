@@ -14,24 +14,34 @@ describe('transform the code coverage json', () => {
   let coverageJsonPathWithExts = 'coverage_with_file_exts.json';
   let testXmlPath1 = 'coverage1.xml';
   let testXmlPath2 = 'coverage2.xml';
+  let sfdxConfigFile = 'sfdx-project.json';
   coverageJsonPathNoExts = path.resolve(coverageJsonPathNoExts);
   coverageJsonPathWithExts = path.resolve(coverageJsonPathWithExts);
   testXmlPath1 = path.resolve(testXmlPath1);
   testXmlPath2 = path.resolve(testXmlPath2);
+  sfdxConfigFile = path.resolve(sfdxConfigFile);
 
   // Mock file contents
   const mockClassContent = '// Test Apex Class';
   const mockTriggerContent = '// Test Apex Trigger';
   const mockFlowContent = '<!-- Test Flow -->';
+  const configFile = {
+    packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
+    namespace: '',
+    sfdcLoginUrl: 'https://login.salesforce.com',
+    sourceApiVersion: '58.0',
+  };
+  const configJsonString = JSON.stringify(configFile, null, 2);
 
   // Create mock files
   before(() => {
     fs.mkdirSync('force-app/main/default/classes', { recursive: true });
     fs.mkdirSync('force-app/main/default/triggers', { recursive: true });
-    fs.mkdirSync('force-app/main/default/flows', { recursive: true });
+    fs.mkdirSync('packaged/flows', { recursive: true });
     fs.writeFileSync('force-app/main/default/classes/AccountProfile.cls', mockClassContent);
     fs.writeFileSync('force-app/main/default/triggers/AccountTrigger.trigger', mockTriggerContent);
-    fs.writeFileSync('force-app/main/default/flows/Get_Info.flow-meta.xml', mockFlowContent);
+    fs.writeFileSync('packaged/flows/Get_Info.flow-meta.xml', mockFlowContent);
+    fs.writeFileSync(sfdxConfigFile, configJsonString);
   });
 
   beforeEach(() => {
@@ -46,10 +56,12 @@ describe('transform the code coverage json', () => {
   after(() => {
     fs.unlinkSync('force-app/main/default/classes/AccountProfile.cls');
     fs.unlinkSync('force-app/main/default/triggers/AccountTrigger.trigger');
-    fs.unlinkSync('force-app/main/default/flows/Get_Info.flow-meta.xml');
-    fs.rmdirSync('force-app/main/default/classes');
-    fs.rmdirSync('force-app/main/default/triggers');
-    fs.rmdirSync('force-app/main/default/flows');
+    fs.unlinkSync('packaged/flows/Get_Info.flow-meta.xml');
+    fs.rmdirSync('force-app', { recursive: true });
+    fs.rmdirSync('packaged', { recursive: true });
+    fs.rmSync(testXmlPath1);
+    fs.rmSync(testXmlPath2);
+    fs.rmSync(sfdxConfigFile);
   });
 
   it('transform the test JSON file without file extensions into the generic test coverage format', async () => {

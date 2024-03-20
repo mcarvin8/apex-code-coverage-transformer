@@ -3,6 +3,8 @@ tmp/
 # use yarn by default, so ignore npm
 package-lock.json
 
+.sfdx/
+
 # never checkin npm config
 .npmrc
 
