@@ -10,9 +10,9 @@ This plugin will convert the JSON file created by the Salesforce CLI during Apex
 
 - `sf apex-code-coverage transformer transform --coverage-json "path-to-cli-coverage.json"`
 
-# flags.dx-directory.summary
+# flags.sfdx-configuration.summary
 
-Directory containing Salesforce metadata relative to your repository (default: `force-app/main/default`).
+Path to your project's Salesforce DX configuration file (`sfdx-project.json`). By default, it will look for `sfdx-project.json` in the same directory you're running this plugin in.
 
 # flags.coverage-json.summary
 

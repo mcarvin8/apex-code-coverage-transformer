@@ -1,4 +1,5 @@
 'use strict';
+
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
@@ -20,12 +21,12 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    'dx-directory': Flags.directory({
-      summary: messages.getMessage('flags.dx-directory.summary'),
-      char: 'd',
+    'sfdx-configuration': Flags.file({
+      summary: messages.getMessage('flags.sfdx-configuration.summary'),
+      char: 'c',
       required: true,
       exists: true,
-      default: 'force-app/main/default',
+      default: 'sfdx-project.json',
     }),
     'coverage-json': Flags.file({
       summary: messages.getMessage('flags.coverage-json.summary'),
@@ -46,25 +47,23 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     const { flags } = await this.parse(TransformerTransform);
     let jsonFilePath = flags['coverage-json'];
     let xmlFilePath = flags['xml'];
-    const dxDirectory = flags['dx-directory'];
+    let sfdxConfigFile = flags['sfdx-configuration'];
     jsonFilePath = path.resolve(jsonFilePath);
     xmlFilePath = path.resolve(xmlFilePath);
-    // Check if the JSON file exists
-    if (!fs.existsSync(jsonFilePath)) {
-      this.error(`JSON file does not exist: ${jsonFilePath}`);
-    }
+    sfdxConfigFile = path.resolve(sfdxConfigFile);
+
     const jsonData = fs.readFileSync(jsonFilePath, 'utf-8');
     const coverageData = JSON.parse(jsonData) as CoverageData;
-    const xmlData = convertToGenericCoverageReport(coverageData, dxDirectory);
+    const xmlData = await convertToGenericCoverageReport(coverageData, sfdxConfigFile);
 
     // Write the XML data to the XML file
     try {
       fs.writeFileSync(xmlFilePath, xmlData);
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       this.log(`The XML data has been written to ${xmlFilePath}`);
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      this.error(`Error writing XML data to file: ${error}`);
+      if (error instanceof Error) {
+        this.error(`Error writing XML data to file: ${error.message}`);
+      }
     }
 
     return { path: xmlFilePath };
