@@ -10,11 +10,17 @@ import TransformerTransform from '../../../src/commands/apex-code-coverage/trans
 describe('transform the code coverage json', () => {
   const $$ = new TestContext();
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
+  let baselineFlowPath = 'test/baselines/flows/Get_Info.flow-meta.xml';
+  let baselineClassPath = 'test/baselines/classes/AccountProfile.cls';
+  let baselineTriggerPath = 'test/baselines/triggers/AccountTrigger.trigger';
   let coverageJsonPathNoExts = 'coverage_no_file_exts.json';
   let coverageJsonPathWithExts = 'coverage_with_file_exts.json';
   let testXmlPath1 = 'coverage1.xml';
   let testXmlPath2 = 'coverage2.xml';
   let sfdxConfigFile = 'sfdx-project.json';
+  baselineFlowPath = path.resolve(baselineFlowPath);
+  baselineClassPath = path.resolve(baselineClassPath);
+  baselineTriggerPath = path.resolve(baselineTriggerPath);
   coverageJsonPathNoExts = path.resolve(coverageJsonPathNoExts);
   coverageJsonPathWithExts = path.resolve(coverageJsonPathWithExts);
   testXmlPath1 = path.resolve(testXmlPath1);
@@ -32,6 +38,12 @@ describe('transform the code coverage json', () => {
 
   // Create mock files
   before(() => {
+    fs.mkdirSync('force-app/main/default/classes', { recursive: true });
+    fs.mkdirSync('force-app/main/default/triggers', { recursive: true });
+    fs.mkdirSync('packaged/flows', { recursive: true });
+    fs.copyFileSync(baselineFlowPath, 'packaged/flows/Get_Info.flow-meta.xml');
+    fs.copyFileSync(baselineClassPath, 'force-app/main/default/classes/AccountProfile.cls');
+    fs.copyFileSync(baselineTriggerPath, 'force-app/main/default/triggers/AccountTrigger.trigger');
     fs.writeFileSync(sfdxConfigFile, configJsonString);
   });
 
@@ -45,6 +57,11 @@ describe('transform the code coverage json', () => {
 
   // Cleanup mock files
   after(() => {
+    fs.unlinkSync('force-app/main/default/classes/AccountProfile.cls');
+    fs.unlinkSync('force-app/main/default/triggers/AccountTrigger.trigger');
+    fs.unlinkSync('packaged/flows/Get_Info.flow-meta.xml');
+    fs.rmdirSync('force-app', { recursive: true });
+    fs.rmdirSync('packaged', { recursive: true });
     fs.rmSync(testXmlPath1);
     fs.rmSync(testXmlPath2);
     fs.rmSync(sfdxConfigFile);
