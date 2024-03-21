@@ -16,7 +16,7 @@ This will create a coverage JSON in this relative path - `coverage/coverage/cove
 
 This JSON isn't accepted by SonarQube automatically and needs to be converted using this plugin.
 
-**Note**: This has been tested and confirmed on code which meets 100% coverage.
+**Disclaimer**: Due to existing bugs with how the Salesforce CLI reports `covered` lines (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for `covered` lines in this plugin, I had to add a function to re-number out-of-range `covered` lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as `covered` by the Salesforce CLI deploy command). Once Salesforce updates the API to correctly return `covered` lines in the deploy command, this function will be removed.
 
 ## Install
 
@@ -65,18 +65,99 @@ This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-c
 		<lineToCover lineNumber="53" covered="false"/>
 		<lineToCover lineNumber="59" covered="false"/>
 		<lineToCover lineNumber="60" covered="false"/>
+		<lineToCover lineNumber="1" covered="true"/>
+		<lineToCover lineNumber="2" covered="true"/>
+		<lineToCover lineNumber="3" covered="true"/>
+		<lineToCover lineNumber="4" covered="true"/>
+		<lineToCover lineNumber="5" covered="true"/>
+		<lineToCover lineNumber="6" covered="true"/>
+		<lineToCover lineNumber="7" covered="true"/>
+		<lineToCover lineNumber="8" covered="true"/>
+		<lineToCover lineNumber="9" covered="true"/>
+		<lineToCover lineNumber="10" covered="true"/>
+		<lineToCover lineNumber="11" covered="true"/>
+		<lineToCover lineNumber="12" covered="true"/>
+		<lineToCover lineNumber="13" covered="true"/>
+		<lineToCover lineNumber="14" covered="true"/>
+		<lineToCover lineNumber="15" covered="true"/>
+		<lineToCover lineNumber="16" covered="true"/>
+		<lineToCover lineNumber="17" covered="true"/>
+		<lineToCover lineNumber="18" covered="true"/>
+		<lineToCover lineNumber="19" covered="true"/>
+		<lineToCover lineNumber="20" covered="true"/>
+		<lineToCover lineNumber="21" covered="true"/>
+		<lineToCover lineNumber="22" covered="true"/>
+		<lineToCover lineNumber="23" covered="true"/>
+		<lineToCover lineNumber="24" covered="true"/>
+		<lineToCover lineNumber="25" covered="true"/>
+		<lineToCover lineNumber="26" covered="true"/>
+		<lineToCover lineNumber="27" covered="true"/>
 	</file>
 	<file path="force-app\main\default\classes\AccountProfile.cls">
 		<lineToCover lineNumber="52" covered="false"/>
 		<lineToCover lineNumber="53" covered="false"/>
 		<lineToCover lineNumber="59" covered="false"/>
 		<lineToCover lineNumber="60" covered="false"/>
+		<lineToCover lineNumber="54" covered="true"/>
+		<lineToCover lineNumber="55" covered="true"/>
+		<lineToCover lineNumber="56" covered="true"/>
+		<lineToCover lineNumber="57" covered="true"/>
+		<lineToCover lineNumber="58" covered="true"/>
+		<lineToCover lineNumber="61" covered="true"/>
+		<lineToCover lineNumber="62" covered="true"/>
+		<lineToCover lineNumber="63" covered="true"/>
+		<lineToCover lineNumber="64" covered="true"/>
+		<lineToCover lineNumber="65" covered="true"/>
+		<lineToCover lineNumber="66" covered="true"/>
+		<lineToCover lineNumber="67" covered="true"/>
+		<lineToCover lineNumber="68" covered="true"/>
+		<lineToCover lineNumber="69" covered="true"/>
+		<lineToCover lineNumber="70" covered="true"/>
+		<lineToCover lineNumber="71" covered="true"/>
+		<lineToCover lineNumber="72" covered="true"/>
+		<lineToCover lineNumber="1" covered="true"/>
+		<lineToCover lineNumber="2" covered="true"/>
+		<lineToCover lineNumber="3" covered="true"/>
+		<lineToCover lineNumber="4" covered="true"/>
+		<lineToCover lineNumber="5" covered="true"/>
+		<lineToCover lineNumber="6" covered="true"/>
+		<lineToCover lineNumber="7" covered="true"/>
+		<lineToCover lineNumber="8" covered="true"/>
+		<lineToCover lineNumber="9" covered="true"/>
+		<lineToCover lineNumber="10" covered="true"/>
 	</file>
-	<file path="force-app\main\default\flows\Get_Info.flow-meta.xml">
+	<file path="packaged\flows\Get_Info.flow-meta.xml">
 		<lineToCover lineNumber="52" covered="false"/>
 		<lineToCover lineNumber="53" covered="false"/>
 		<lineToCover lineNumber="59" covered="false"/>
 		<lineToCover lineNumber="60" covered="false"/>
+		<lineToCover lineNumber="54" covered="true"/>
+		<lineToCover lineNumber="55" covered="true"/>
+		<lineToCover lineNumber="56" covered="true"/>
+		<lineToCover lineNumber="57" covered="true"/>
+		<lineToCover lineNumber="58" covered="true"/>
+		<lineToCover lineNumber="61" covered="true"/>
+		<lineToCover lineNumber="62" covered="true"/>
+		<lineToCover lineNumber="63" covered="true"/>
+		<lineToCover lineNumber="64" covered="true"/>
+		<lineToCover lineNumber="65" covered="true"/>
+		<lineToCover lineNumber="66" covered="true"/>
+		<lineToCover lineNumber="67" covered="true"/>
+		<lineToCover lineNumber="68" covered="true"/>
+		<lineToCover lineNumber="69" covered="true"/>
+		<lineToCover lineNumber="70" covered="true"/>
+		<lineToCover lineNumber="71" covered="true"/>
+		<lineToCover lineNumber="72" covered="true"/>
+		<lineToCover lineNumber="73" covered="true"/>
+		<lineToCover lineNumber="74" covered="true"/>
+		<lineToCover lineNumber="75" covered="true"/>
+		<lineToCover lineNumber="76" covered="true"/>
+		<lineToCover lineNumber="77" covered="true"/>
+		<lineToCover lineNumber="78" covered="true"/>
+		<lineToCover lineNumber="79" covered="true"/>
+		<lineToCover lineNumber="80" covered="true"/>
+		<lineToCover lineNumber="81" covered="true"/>
+		<lineToCover lineNumber="82" covered="true"/>
 	</file>
 </coverage>
 ```

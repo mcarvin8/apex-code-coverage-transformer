@@ -1,3 +1,9 @@
+# [1.6.0-beta.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.5.0...v1.6.0-beta.1) (2024-03-20)
+
+### Features
+
+- add `covered` lines, renumbering out-of-range lines numbers ([1733b09](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/1733b09063eac28f0e627e66080dcd24d7c74bf9))
+
 # [1.5.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.4.0...v1.5.0) (2024-03-20)
 
 ### Features
