@@ -1,3 +1,9 @@
+## [1.6.1-beta.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.0...v1.6.1-beta.1) (2024-03-22)
+
+### Bug Fixes
+
+- search the directories recursively without hard-coding the sub-folder names ([8880ab3](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/8880ab3e3c9097b8e7927230395eae32560ae55a))
+
 # [1.6.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.5.0...v1.6.0) (2024-03-21)
 
 ### Features
