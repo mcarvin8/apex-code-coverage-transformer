@@ -4,7 +4,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { findSubFolder } from './findSubFolder.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 
 export async function findFilePath(fileName: string, dxConfigFile: string): Promise<string | undefined> {
@@ -20,46 +19,39 @@ export async function findFilePath(fileName: string, dxConfigFile: string): Prom
   return filePath;
 }
 
-async function findFilePathinDirectory(fileName: string, dxDirectory: string): Promise<string | undefined> {
-  const fileExtension = fileName.split('.').slice(1).join('.');
-  let relativeClassPath = await findSubFolder(dxDirectory, 'classes');
-  let relativeTriggerPath = await findSubFolder(dxDirectory, 'triggers');
-  let relativeFlowPath = await findSubFolder(dxDirectory, 'flows');
-  let absoluteClassPath = '';
-  let absoluteTriggerPath = '';
-  let absoluteFlowPath = '';
-
-  // if file extension is found, use that to determine paths
-  if (fileExtension === 'cls' && relativeClassPath !== undefined) {
-    absoluteClassPath = path.resolve(relativeClassPath, fileName);
-    if (fs.existsSync(absoluteClassPath)) {
-      return path.join(relativeClassPath, fileName);
+async function searchRecursively(fileName: string, dxDirectory: string): Promise<string | undefined> {
+  const files = await fs.promises.readdir(dxDirectory);
+  for (const file of files) {
+    const filePath = path.join(dxDirectory, file);
+    const stats = await fs.promises.stat(filePath);
+    if (stats.isDirectory()) {
+      const result = await searchRecursively(fileName, filePath);
+      if (result) {
+        return result;
+      }
+    } else if (file === fileName) {
+      return filePath;
     }
-  } else if (fileExtension === 'trigger' && relativeTriggerPath !== undefined) {
-    absoluteTriggerPath = path.resolve(relativeTriggerPath, fileName);
-    if (fs.existsSync(absoluteTriggerPath)) {
-      return path.join(relativeTriggerPath, fileName);
-    }
-  } else if (fileExtension === 'flow-meta.xml' && relativeFlowPath !== undefined) {
-    absoluteFlowPath = path.resolve(relativeFlowPath, fileName);
-    if (fs.existsSync(absoluteFlowPath)) {
-      return path.join(relativeFlowPath, fileName);
-    }
-  }
-
-  // if file extension is not found, add file extensions manually and test paths
-  relativeClassPath = path.join(relativeClassPath, `${fileName}.cls`);
-  relativeTriggerPath = path.join(relativeTriggerPath, `${fileName}.trigger`);
-  relativeFlowPath = path.join(relativeFlowPath, `${fileName}.flow-meta.xml`);
-  absoluteClassPath = path.resolve(relativeClassPath);
-  absoluteTriggerPath = path.resolve(relativeTriggerPath);
-  absoluteFlowPath = path.resolve(relativeFlowPath);
-  if (fs.existsSync(absoluteClassPath)) {
-    return relativeClassPath;
-  } else if (fs.existsSync(absoluteTriggerPath)) {
-    return relativeTriggerPath;
-  } else if (fs.existsSync(absoluteFlowPath)) {
-    return relativeFlowPath;
   }
   return undefined;
+}
+
+async function findFilePathinDirectory(fileName: string, dxDirectory: string): Promise<string | undefined> {
+  const fileExtension = fileName.split('.').slice(1).join('.');
+  let relativeFilePath: string | undefined;
+
+  if (fileExtension) {
+    // If file extension is defined, search recursively with that extension
+    relativeFilePath = await searchRecursively(fileName, dxDirectory);
+  } else {
+    // If file extension is not defined, test each extension option
+    const fileExts: string[] = ['cls', 'trigger', 'flow-meta.xml'];
+    for (const ext of fileExts) {
+      relativeFilePath = await searchRecursively(`${fileName}.${ext}`, dxDirectory);
+      if (relativeFilePath !== undefined) {
+        break;
+      }
+    }
+  }
+  return relativeFilePath;
 }
