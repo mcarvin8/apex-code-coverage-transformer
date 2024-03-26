@@ -1,3 +1,9 @@
+## [1.6.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.1...v1.6.2) (2024-03-26)
+
+### Bug Fixes
+
+- warn if a file isn't found and fail if no files are found ([6b9e8ea](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/6b9e8ea80f9101429f82eed7fb3539c71dc613f4))
+
 ## [1.6.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.0...v1.6.1) (2024-03-22)
 
 ### Bug Fixes
