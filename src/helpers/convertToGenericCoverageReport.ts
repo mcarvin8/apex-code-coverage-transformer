@@ -5,8 +5,13 @@ import { CoverageData } from './types.js';
 import { getTotalLines } from './getTotalLines.js';
 import { findFilePath } from './findFilePath.js';
 
-export async function convertToGenericCoverageReport(data: CoverageData, dxConfigFile: string): Promise<string> {
+export async function convertToGenericCoverageReport(
+  data: CoverageData,
+  dxConfigFile: string
+): Promise<{ xml: string; warnings: string[]; filesProcessed: number }> {
   let xml = '<?xml version="1.0"?>\n<coverage version="1">\n';
+  const warnings: string[] = [];
+  let filesProcessed: number = 0;
 
   for (const fileName in data) {
     if (!Object.hasOwn(data, fileName)) continue;
@@ -14,14 +19,15 @@ export async function convertToGenericCoverageReport(data: CoverageData, dxConfi
     const formattedFileName = fileName.replace('no-map/', '');
     const filePath = await findFilePath(formattedFileName, dxConfigFile);
     if (filePath === undefined) {
-      throw Error(`The file name ${formattedFileName} was not found in any package directory.`);
+      warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
+      continue;
     }
     // Extract the "uncovered lines" from the JSON data
     const uncoveredLines = Object.keys(fileInfo.s)
-      .filter(lineNumber => fileInfo.s[lineNumber] === 0)
+      .filter((lineNumber) => fileInfo.s[lineNumber] === 0)
       .map(Number);
     const coveredLines = Object.keys(fileInfo.s)
-      .filter(lineNumber => fileInfo.s[lineNumber] === 1)
+      .filter((lineNumber) => fileInfo.s[lineNumber] === 1)
       .map(Number);
     const randomLines: number[] = [];
     const totalLines = getTotalLines(filePath);
@@ -49,9 +55,9 @@ export async function convertToGenericCoverageReport(data: CoverageData, dxConfi
         xml += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
       }
     }
-
+    filesProcessed++;
     xml += '\t</file>\n';
   }
   xml += '</coverage>';
-  return xml;
+  return { xml, warnings, filesProcessed };
 }

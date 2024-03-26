@@ -53,6 +53,37 @@ EXAMPLES
     $ apex-code-coverage transformer transform -j "test.json" -x "coverage.xml" -c "sfdx-project.json"
 ```
 
+## Errors and Warnings
+
+Any file in the coverage JSON that isn't found in any package directory will result in this warning:
+
+```
+Warning: The file name AccountTrigger was not found in any package directory.
+```
+
+Files not found in any package directory will not be added to the coverage XML.
+
+If none of the files listed in the coverage JSON were found in a package directory, the plugin will fail with this error in addition to the above warnings:
+
+```
+Warning: The file name AccountTrigger was not found in any package directory.
+Warning: The file name AccountProfile was not found in any package directory.
+Warning: The file name Get_Info was not found in any package directory.
+Error (1): None of the files listed in the coverage JSON were processed.
+```
+
+If the `sfdx-project.json` file was not found, the plugin will fail with:
+
+```
+Error (1): Salesforce DX Config File does not exist in this path: {filePath}
+```
+
+Any ENOENT failures indicate that the plugin had issues finding one of the package directories in the `sfdx-project.json` file:
+
+```
+Error (1): ENOENT: no such file or directory: {packageDirPath}
+```
+
 ## Example
 
 This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/coverage_no_file_exts.json) created by the Salesforce CLI will be transformed into:
