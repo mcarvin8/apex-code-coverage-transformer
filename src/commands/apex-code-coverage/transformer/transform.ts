@@ -54,7 +54,22 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
     const jsonData = fs.readFileSync(jsonFilePath, 'utf-8');
     const coverageData = JSON.parse(jsonData) as CoverageData;
-    const xmlData = await convertToGenericCoverageReport(coverageData, sfdxConfigFile);
+    const {
+      xml: xmlData,
+      warnings,
+      filesProcessed,
+    } = await convertToGenericCoverageReport(coverageData, sfdxConfigFile);
+
+    // Print warnings if any
+    if (warnings.length > 0) {
+      warnings.forEach((warning) => {
+        this.warn(warning);
+      });
+    }
+
+    if (filesProcessed === 0) {
+      this.error('None of the files listed in the coverage JSON were processed.');
+    }
 
     // Write the XML data to the XML file
     try {
