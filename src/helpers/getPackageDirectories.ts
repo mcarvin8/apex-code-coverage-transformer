@@ -3,10 +3,7 @@
 
 import * as fs from 'node:fs';
 import * as promises from 'node:fs/promises';
-
-interface SfdxProject {
-  packageDirectories: Array<{ path: string }>;
-}
+import { SfdxProject } from './types.js';
 
 export async function getPackageDirectories(dxConfigFile: string): Promise<string[]> {
   if (!fs.existsSync(dxConfigFile)) {
