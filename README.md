@@ -4,7 +4,7 @@
 
 The `apex-code-coverage-transformer` is a simple Salesforce CLI plugin to transform the Apex Code Coverage JSON file into Generic Test Coverage Format (XML). This format is accepted by static code analysis tools like SonarQube.
 
-This plugin supports code coverage metrics created for Apex Classes, Apex Triggers, and Flows (if flows are deployed as active in your org). This also supports multiple package directories as listed in your project's `sfdx-project.json` configuration, assuming unique file-names are used in your package directories.
+This plugin supports code coverage metrics created for Apex Classes and Apex Triggers. This also supports multiple package directories as listed in your project's `sfdx-project.json` configuration, assuming unique file-names are used in your package directories.
 
 To create the code coverage JSON during a Salesforce CLI deployment/validation, append `--coverage-formatters json --results-dir coverage` to the `sf project deploy` command:
 
@@ -86,12 +86,12 @@ Error (1): ENOENT: no such file or directory: {packageDirPath}
 
 ## Example
 
-This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/coverage_no_file_exts.json) created by the Salesforce CLI will be transformed into:
+This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/coverage_no_file_exts.json) created by the Salesforce CLI will be transformed into:
 
 ```xml
 <?xml version="1.0"?>
 <coverage version="1">
-	<file path="force-app\main\default\triggers\AccountTrigger.trigger">
+	<file path="packaged\triggers\AccountTrigger.trigger">
 		<lineToCover lineNumber="52" covered="false"/>
 		<lineToCover lineNumber="53" covered="false"/>
 		<lineToCover lineNumber="59" covered="false"/>
@@ -156,39 +156,6 @@ This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-c
 		<lineToCover lineNumber="8" covered="true"/>
 		<lineToCover lineNumber="9" covered="true"/>
 		<lineToCover lineNumber="10" covered="true"/>
-	</file>
-	<file path="packaged\flows\Get_Info.flow-meta.xml">
-		<lineToCover lineNumber="52" covered="false"/>
-		<lineToCover lineNumber="53" covered="false"/>
-		<lineToCover lineNumber="59" covered="false"/>
-		<lineToCover lineNumber="60" covered="false"/>
-		<lineToCover lineNumber="54" covered="true"/>
-		<lineToCover lineNumber="55" covered="true"/>
-		<lineToCover lineNumber="56" covered="true"/>
-		<lineToCover lineNumber="57" covered="true"/>
-		<lineToCover lineNumber="58" covered="true"/>
-		<lineToCover lineNumber="61" covered="true"/>
-		<lineToCover lineNumber="62" covered="true"/>
-		<lineToCover lineNumber="63" covered="true"/>
-		<lineToCover lineNumber="64" covered="true"/>
-		<lineToCover lineNumber="65" covered="true"/>
-		<lineToCover lineNumber="66" covered="true"/>
-		<lineToCover lineNumber="67" covered="true"/>
-		<lineToCover lineNumber="68" covered="true"/>
-		<lineToCover lineNumber="69" covered="true"/>
-		<lineToCover lineNumber="70" covered="true"/>
-		<lineToCover lineNumber="71" covered="true"/>
-		<lineToCover lineNumber="72" covered="true"/>
-		<lineToCover lineNumber="73" covered="true"/>
-		<lineToCover lineNumber="74" covered="true"/>
-		<lineToCover lineNumber="75" covered="true"/>
-		<lineToCover lineNumber="76" covered="true"/>
-		<lineToCover lineNumber="77" covered="true"/>
-		<lineToCover lineNumber="78" covered="true"/>
-		<lineToCover lineNumber="79" covered="true"/>
-		<lineToCover lineNumber="80" covered="true"/>
-		<lineToCover lineNumber="81" covered="true"/>
-		<lineToCover lineNumber="82" covered="true"/>
 	</file>
 </coverage>
 ```

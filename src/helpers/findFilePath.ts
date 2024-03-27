@@ -45,7 +45,7 @@ async function findFilePathinDirectory(fileName: string, dxDirectory: string): P
     relativeFilePath = await searchRecursively(fileName, dxDirectory);
   } else {
     // If file extension is not defined, test each extension option
-    const fileExts: string[] = ['cls', 'trigger', 'flow-meta.xml'];
+    const fileExts: string[] = ['cls', 'trigger'];
     for (const ext of fileExts) {
       relativeFilePath = await searchRecursively(`${fileName}.${ext}`, dxDirectory);
       if (relativeFilePath !== undefined) {
