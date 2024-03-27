@@ -1,3 +1,9 @@
+## [1.6.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.2...v1.6.3) (2024-03-27)
+
+### Bug Fixes
+
+- remove flow logic ([dd3db2a](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/dd3db2ab60614dd21bdc844b78c8e882814c43a8))
+
 ## [1.6.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.1...v1.6.2) (2024-03-26)
 
 ### Bug Fixes
