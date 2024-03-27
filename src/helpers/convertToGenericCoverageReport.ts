@@ -29,8 +29,6 @@ export async function convertToGenericCoverageReport(
     const coveredLines = Object.keys(fileInfo.s)
       .filter((lineNumber) => fileInfo.s[lineNumber] === 1)
       .map(Number);
-    const randomLines: number[] = [];
-    const totalLines = getTotalLines(filePath);
 
     xml += `\t<file path="${filePath}">\n`;
 
@@ -38,26 +36,35 @@ export async function convertToGenericCoverageReport(
       xml += `\t\t<lineToCover lineNumber="${uncoveredLine}" covered="false"/>\n`;
     }
 
-    for (const coveredLine of coveredLines) {
-      if (coveredLine > totalLines) {
-        for (let randomLineNumber = 1; randomLineNumber <= totalLines; randomLineNumber++) {
-          if (
-            !uncoveredLines.includes(randomLineNumber) &&
-            !coveredLines.includes(randomLineNumber) &&
-            !randomLines.includes(randomLineNumber)
-          ) {
-            xml += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
-            randomLines.push(randomLineNumber);
-            break;
-          }
-        }
-      } else {
-        xml += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
-      }
-    }
+    // this function is only needed until Salesforce fixes the API to correctly return covered lines
+    xml += setCoveredLines(coveredLines, uncoveredLines, filePath);
     filesProcessed++;
     xml += '\t</file>\n';
   }
   xml += '</coverage>';
   return { xml, warnings, filesProcessed };
+}
+
+function setCoveredLines(coveredLines: number[], uncoveredLines: number[], filePath: string): string {
+  let formattedCoveredLines: string = '';
+  const randomLines: number[] = [];
+  const totalLines = getTotalLines(filePath);
+  for (const coveredLine of coveredLines) {
+    if (coveredLine > totalLines) {
+      for (let randomLineNumber = 1; randomLineNumber <= totalLines; randomLineNumber++) {
+        if (
+          !uncoveredLines.includes(randomLineNumber) &&
+          !coveredLines.includes(randomLineNumber) &&
+          !randomLines.includes(randomLineNumber)
+        ) {
+          formattedCoveredLines += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
+          randomLines.push(randomLineNumber);
+          break;
+        }
+      }
+    } else {
+      formattedCoveredLines += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
+    }
+  }
+  return formattedCoveredLines;
 }
