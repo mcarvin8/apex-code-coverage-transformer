@@ -68,7 +68,6 @@ If none of the files listed in the coverage JSON were found in a package directo
 ```
 Warning: The file name AccountTrigger was not found in any package directory.
 Warning: The file name AccountProfile was not found in any package directory.
-Warning: The file name Get_Info was not found in any package directory.
 Error (1): None of the files listed in the coverage JSON were processed.
 ```
 
