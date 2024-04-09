@@ -1,6 +1,8 @@
-import * as fs from 'node:fs';
-import * as assert from 'node:assert';
-import * as path from 'node:path';
+'use strict';
+
+import { copyFile, readFile, writeFile, rm, mkdir } from 'node:fs/promises';
+import { strictEqual } from 'node:assert';
+import { resolve } from 'node:path';
 
 import { TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
@@ -17,15 +19,14 @@ describe('transform the code coverage json', () => {
   let testXmlPath1 = 'coverage1.xml';
   let testXmlPath2 = 'coverage2.xml';
   let sfdxConfigFile = 'sfdx-project.json';
-  baselineClassPath = path.resolve(baselineClassPath);
-  baselineTriggerPath = path.resolve(baselineTriggerPath);
-  coverageJsonPathNoExts = path.resolve(coverageJsonPathNoExts);
-  coverageJsonPathWithExts = path.resolve(coverageJsonPathWithExts);
-  testXmlPath1 = path.resolve(testXmlPath1);
-  testXmlPath2 = path.resolve(testXmlPath2);
-  sfdxConfigFile = path.resolve(sfdxConfigFile);
+  baselineClassPath = resolve(baselineClassPath);
+  baselineTriggerPath = resolve(baselineTriggerPath);
+  coverageJsonPathNoExts = resolve(coverageJsonPathNoExts);
+  coverageJsonPathWithExts = resolve(coverageJsonPathWithExts);
+  testXmlPath1 = resolve(testXmlPath1);
+  testXmlPath2 = resolve(testXmlPath2);
+  sfdxConfigFile = resolve(sfdxConfigFile);
 
-  // Mock file contents
   const configFile = {
     packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
     namespace: '',
@@ -34,13 +35,12 @@ describe('transform the code coverage json', () => {
   };
   const configJsonString = JSON.stringify(configFile, null, 2);
 
-  // Create mock files
-  before(() => {
-    fs.mkdirSync('force-app/main/default/classes', { recursive: true });
-    fs.mkdirSync('packaged/triggers', { recursive: true });
-    fs.copyFileSync(baselineClassPath, 'force-app/main/default/classes/AccountProfile.cls');
-    fs.copyFileSync(baselineTriggerPath, 'packaged/triggers/AccountTrigger.trigger');
-    fs.writeFileSync(sfdxConfigFile, configJsonString);
+  before(async () => {
+    await mkdir('force-app/main/default/classes', { recursive: true });
+    await mkdir('packaged/triggers', { recursive: true });
+    await copyFile(baselineClassPath, 'force-app/main/default/classes/AccountProfile.cls');
+    await copyFile(baselineTriggerPath, 'packaged/triggers/AccountTrigger.trigger');
+    await writeFile(sfdxConfigFile, configJsonString);
   });
 
   beforeEach(() => {
@@ -51,40 +51,45 @@ describe('transform the code coverage json', () => {
     $$.restore();
   });
 
-  // Cleanup mock files
-  after(() => {
-    fs.unlinkSync('force-app/main/default/classes/AccountProfile.cls');
-    fs.unlinkSync('packaged/triggers/AccountTrigger.trigger');
-    fs.rmdirSync('force-app', { recursive: true });
-    fs.rmdirSync('packaged', { recursive: true });
-    fs.rmSync(testXmlPath1);
-    fs.rmSync(testXmlPath2);
-    fs.rmSync(sfdxConfigFile);
+  after(async () => {
+    await rm('force-app/main/default/classes/AccountProfile.cls');
+    await rm('packaged/triggers/AccountTrigger.trigger');
+    await rm('force-app', { recursive: true });
+    await rm('packaged', { recursive: true });
+    await rm(testXmlPath1);
+    await rm(testXmlPath2);
+    await rm(sfdxConfigFile);
   });
 
-  it('transform the test JSON file without file extensions into the generic test coverage format', async () => {
+  it('transform the test JSON file without file extensions into the generic test coverage format without any warnings', async () => {
     await TransformerTransform.run(['--coverage-json', coverageJsonPathNoExts, '--xml', testXmlPath1]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
     expect(output).to.include(`The XML data has been written to ${testXmlPath1}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
   });
-  it('transform the test JSON file with file extensions into the generic test coverage format', async () => {
+  it('transform the test JSON file with file extensions into the generic test coverage format without any warnings', async () => {
     await TransformerTransform.run(['--coverage-json', coverageJsonPathWithExts, '--xml', testXmlPath2]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
     expect(output).to.include(`The XML data has been written to ${testXmlPath2}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
   });
   it('confirm the 2 XML files created in the previous tests match', async () => {
-    const xmlContent1 = fs.readFileSync(testXmlPath1, 'utf-8');
-    const xmlContent2 = fs.readFileSync(testXmlPath2, 'utf-8');
-    assert.strictEqual(
-      xmlContent1,
-      xmlContent2,
-      `File content is different between ${testXmlPath1} and ${testXmlPath2}`
-    );
+    const xmlContent1 = await readFile(testXmlPath1, 'utf-8');
+    const xmlContent2 = await readFile(testXmlPath2, 'utf-8');
+    strictEqual(xmlContent1, xmlContent2, `File content is different between ${testXmlPath1} and ${testXmlPath2}`);
   });
 });
