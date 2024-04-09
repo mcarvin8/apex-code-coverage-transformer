@@ -1,3 +1,9 @@
+## [1.6.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.3...v1.6.4) (2024-04-09)
+
+### Bug Fixes
+
+- switch to promises/async and refactor imports ([2577692](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/2577692672aeb9271151f67e8347ef8a09a07b37))
+
 ## [1.6.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.2...v1.6.3) (2024-03-27)
 
 ### Bug Fixes
