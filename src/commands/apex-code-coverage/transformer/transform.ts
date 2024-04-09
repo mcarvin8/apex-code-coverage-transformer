@@ -1,7 +1,7 @@
 'use strict';
 
-import * as fs from 'node:fs';
-import * as path from 'node:path';
+import { resolve } from 'node:path';
+import { writeFile, readFile } from 'node:fs/promises';
 
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
@@ -48,11 +48,11 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     let jsonFilePath = flags['coverage-json'];
     let xmlFilePath = flags['xml'];
     let sfdxConfigFile = flags['sfdx-configuration'];
-    jsonFilePath = path.resolve(jsonFilePath);
-    xmlFilePath = path.resolve(xmlFilePath);
-    sfdxConfigFile = path.resolve(sfdxConfigFile);
+    jsonFilePath = resolve(jsonFilePath);
+    xmlFilePath = resolve(xmlFilePath);
+    sfdxConfigFile = resolve(sfdxConfigFile);
 
-    const jsonData = fs.readFileSync(jsonFilePath, 'utf-8');
+    const jsonData = await readFile(jsonFilePath, 'utf-8');
     const coverageData = JSON.parse(jsonData) as CoverageData;
     const {
       xml: xmlData,
@@ -71,16 +71,8 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       this.error('None of the files listed in the coverage JSON were processed.');
     }
 
-    // Write the XML data to the XML file
-    try {
-      fs.writeFileSync(xmlFilePath, xmlData);
-      this.log(`The XML data has been written to ${xmlFilePath}`);
-    } catch (error) {
-      if (error instanceof Error) {
-        this.error(`Error writing XML data to file: ${error.message}`);
-      }
-    }
-
+    await writeFile(xmlFilePath, xmlData);
+    this.log(`The XML data has been written to ${xmlFilePath}`);
     return { path: xmlFilePath };
   }
 }
