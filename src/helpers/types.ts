@@ -21,3 +21,20 @@ export interface CoverageData {
 export interface SfdxProject {
   packageDirectories: Array<{ path: string }>;
 }
+
+interface LineToCover {
+  '@lineNumber': number;
+  '@covered': string;
+}
+
+export interface FileObject {
+  '@path': string;
+  lineToCover: LineToCover[];
+}
+
+export interface CoverageObject {
+  coverage: {
+    file: FileObject[];
+    '@version': string;
+  };
+}

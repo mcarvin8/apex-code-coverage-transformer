@@ -1,13 +1,14 @@
 'use strict';
 
 import { getTotalLines } from './getTotalLines.js';
+import { FileObject } from './types.js';
 
 export async function setCoveredLines(
   coveredLines: number[],
   uncoveredLines: number[],
-  filePath: string
-): Promise<string> {
-  let formattedCoveredLines: string = '';
+  filePath: string,
+  fileObj: FileObject
+): Promise<void> {
   const randomLines: number[] = [];
   const totalLines = await getTotalLines(filePath);
   for (const coveredLine of coveredLines) {
@@ -18,14 +19,19 @@ export async function setCoveredLines(
           !coveredLines.includes(randomLineNumber) &&
           !randomLines.includes(randomLineNumber)
         ) {
-          formattedCoveredLines += `\t\t<lineToCover lineNumber="${randomLineNumber}" covered="true"/>\n`;
+          fileObj.lineToCover.push({
+            '@lineNumber': randomLineNumber,
+            '@covered': 'true',
+          });
           randomLines.push(randomLineNumber);
           break;
         }
       }
     } else {
-      formattedCoveredLines += `\t\t<lineToCover lineNumber="${coveredLine}" covered="true"/>\n`;
+      fileObj.lineToCover.push({
+        '@lineNumber': coveredLine,
+        '@covered': 'true',
+      });
     }
   }
-  return formattedCoveredLines;
 }
