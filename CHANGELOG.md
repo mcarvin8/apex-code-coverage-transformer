@@ -1,3 +1,9 @@
+## [1.6.5](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.4...v1.6.5) (2024-04-18)
+
+### Bug Fixes
+
+- build XML using xmlbuilder2 and normalize path building using posix ([c6d6d94](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/c6d6d944e2675eb6be0dd90e972d67e6311f6738))
+
 ## [1.6.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.3...v1.6.4) (2024-04-09)
 
 ### Bug Fixes
