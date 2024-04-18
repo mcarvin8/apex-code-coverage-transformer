@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 
 import { readdir, stat } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join } from 'node:path/posix';
 
 import { getPackageDirectories } from './getPackageDirectories.js';
 

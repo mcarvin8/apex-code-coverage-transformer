@@ -9,23 +9,17 @@ import { expect } from 'chai';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
 import TransformerTransform from '../../../src/commands/apex-code-coverage/transformer/transform.js';
 
-describe('transform the code coverage json', () => {
+describe('main', () => {
   const $$ = new TestContext();
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
-  let baselineClassPath = 'test/baselines/classes/AccountProfile.cls';
-  let baselineTriggerPath = 'test/baselines/triggers/AccountTrigger.trigger';
-  let coverageJsonPathNoExts = 'test/coverage_no_file_exts.json';
-  let coverageJsonPathWithExts = 'test/coverage_with_file_exts.json';
-  let testXmlPath1 = 'coverage1.xml';
-  let testXmlPath2 = 'coverage2.xml';
-  let sfdxConfigFile = 'sfdx-project.json';
-  baselineClassPath = resolve(baselineClassPath);
-  baselineTriggerPath = resolve(baselineTriggerPath);
-  coverageJsonPathNoExts = resolve(coverageJsonPathNoExts);
-  coverageJsonPathWithExts = resolve(coverageJsonPathWithExts);
-  testXmlPath1 = resolve(testXmlPath1);
-  testXmlPath2 = resolve(testXmlPath2);
-  sfdxConfigFile = resolve(sfdxConfigFile);
+  const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
+  const baselineTriggerPath = resolve('test/baselines/triggers/AccountTrigger.trigger');
+  const coverageJsonPathNoExts = resolve('test/coverage_no_file_exts.json');
+  const coverageJsonPathWithExts = resolve('test/coverage_with_file_exts.json');
+  const baselineXmlPath = resolve('test/coverage_baseline.xml');
+  const testXmlPath1 = resolve('coverage1.xml');
+  const testXmlPath2 = resolve('coverage2.xml');
+  const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
     packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
@@ -61,7 +55,7 @@ describe('transform the code coverage json', () => {
     await rm(sfdxConfigFile);
   });
 
-  it('transform the test JSON file without file extensions into the generic test coverage format without any warnings', async () => {
+  it('transform the test JSON file without file extensions into the generic test coverage format without any warnings.', async () => {
     await TransformerTransform.run(['--coverage-json', coverageJsonPathNoExts, '--xml', testXmlPath1]);
     const output = sfCommandStubs.log
       .getCalls()
@@ -74,7 +68,7 @@ describe('transform the code coverage json', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the test JSON file with file extensions into the generic test coverage format without any warnings', async () => {
+  it('transform the test JSON file with file extensions into the generic test coverage format without any warnings.', async () => {
     await TransformerTransform.run(['--coverage-json', coverageJsonPathWithExts, '--xml', testXmlPath2]);
     const output = sfCommandStubs.log
       .getCalls()
@@ -87,9 +81,19 @@ describe('transform the code coverage json', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('confirm the 2 XML files created in the previous tests match', async () => {
+  it('confirm the 2 XML files created in the previous tests are the same as the baseline.', async () => {
     const xmlContent1 = await readFile(testXmlPath1, 'utf-8');
     const xmlContent2 = await readFile(testXmlPath2, 'utf-8');
-    strictEqual(xmlContent1, xmlContent2, `File content is different between ${testXmlPath1} and ${testXmlPath2}`);
+    const baselineXmlContent = await readFile(baselineXmlPath, 'utf-8');
+    strictEqual(
+      xmlContent1,
+      baselineXmlContent,
+      `File content is different between ${testXmlPath1} and ${baselineXmlPath}`
+    );
+    strictEqual(
+      xmlContent2,
+      baselineXmlContent,
+      `File content is different between ${testXmlPath2} and ${baselineXmlPath}`
+    );
   });
 });
