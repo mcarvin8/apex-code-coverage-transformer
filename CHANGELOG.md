@@ -1,3 +1,9 @@
+## [1.6.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.5...v1.6.6) (2024-04-22)
+
+### Bug Fixes
+
+- fix path resolution when running in non-root directories ([c16fe7d](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/c16fe7d09898b857c68c2cc73a1ac2bcc8665f1e))
+
 ## [1.6.5](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.4...v1.6.5) (2024-04-18)
 
 ### Bug Fixes
