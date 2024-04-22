@@ -2,21 +2,24 @@
 /* eslint-disable no-await-in-loop */
 
 import { readdir, stat } from 'node:fs/promises';
-import { join } from 'node:path/posix';
+import { join, relative } from 'node:path';
 
 import { getPackageDirectories } from './getPackageDirectories.js';
 
-export async function findFilePath(fileName: string, dxConfigFile: string): Promise<string | undefined> {
-  const packageDirectories = await getPackageDirectories(dxConfigFile);
+export async function findFilePath(
+  fileName: string,
+  dxConfigFile: string
+): Promise<{ repoRoot: string; relativeFilePath: string | undefined }> {
+  const { repoRoot, packageDirectories } = await getPackageDirectories(dxConfigFile);
 
-  let filePath: string | undefined;
+  let relativeFilePath: string | undefined;
   for (const directory of packageDirectories) {
-    filePath = await findFilePathinDirectory(fileName, directory);
-    if (filePath !== undefined) {
+    relativeFilePath = await findFilePathinDirectory(fileName, directory, repoRoot);
+    if (relativeFilePath !== undefined) {
       break;
     }
   }
-  return filePath;
+  return { repoRoot, relativeFilePath };
 }
 
 async function searchRecursively(fileName: string, dxDirectory: string): Promise<string | undefined> {
@@ -36,19 +39,25 @@ async function searchRecursively(fileName: string, dxDirectory: string): Promise
   return undefined;
 }
 
-async function findFilePathinDirectory(fileName: string, dxDirectory: string): Promise<string | undefined> {
+async function findFilePathinDirectory(
+  fileName: string,
+  dxDirectory: string,
+  repoRoot: string
+): Promise<string | undefined> {
   const fileExtension = fileName.split('.').slice(1).join('.');
   let relativeFilePath: string | undefined;
 
   if (fileExtension) {
     // If file extension is defined, search recursively with that extension
-    relativeFilePath = await searchRecursively(fileName, dxDirectory);
+    const absoluteFilePath = await searchRecursively(fileName, dxDirectory);
+    if (absoluteFilePath !== undefined) relativeFilePath = relative(repoRoot, absoluteFilePath);
   } else {
     // If file extension is not defined, test each extension option
     const fileExts: string[] = ['cls', 'trigger'];
     for (const ext of fileExts) {
-      relativeFilePath = await searchRecursively(`${fileName}.${ext}`, dxDirectory);
-      if (relativeFilePath !== undefined) {
+      const absoluteFilePath = await searchRecursively(`${fileName}.${ext}`, dxDirectory);
+      if (absoluteFilePath !== undefined) {
+        relativeFilePath = relative(repoRoot, absoluteFilePath);
         break;
       }
     }

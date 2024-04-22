@@ -6,6 +6,7 @@ import { create } from 'xmlbuilder2';
 import { CoverageData, CoverageObject, FileObject } from './types.js';
 import { findFilePath } from './findFilePath.js';
 import { setCoveredLines } from './setCoveredLines.js';
+import { normalizePathToUnix } from './normalizePathToUnix.js';
 
 export async function convertToGenericCoverageReport(
   data: CoverageData,
@@ -19,8 +20,8 @@ export async function convertToGenericCoverageReport(
     if (!Object.hasOwn(data, fileName)) continue;
     const fileInfo = data[fileName];
     const formattedFileName = fileName.replace('no-map/', '');
-    const filePath = await findFilePath(formattedFileName, dxConfigFile);
-    if (filePath === undefined) {
+    const { repoRoot, relativeFilePath } = await findFilePath(formattedFileName, dxConfigFile);
+    if (relativeFilePath === undefined) {
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
       continue;
     }
@@ -32,7 +33,7 @@ export async function convertToGenericCoverageReport(
       .map(Number);
 
     const fileObj: FileObject = {
-      '@path': filePath,
+      '@path': normalizePathToUnix(relativeFilePath),
       lineToCover: uncoveredLines.map((lineNumber: number) => ({
         '@lineNumber': lineNumber,
         '@covered': 'false',
@@ -40,7 +41,7 @@ export async function convertToGenericCoverageReport(
     };
 
     // this function is only needed until Salesforce fixes the API to correctly return covered lines
-    await setCoveredLines(coveredLines, uncoveredLines, filePath, fileObj);
+    await setCoveredLines(coveredLines, uncoveredLines, repoRoot, relativeFilePath, fileObj);
     filesProcessed++;
     coverageObj.coverage.file.push(fileObj);
   }

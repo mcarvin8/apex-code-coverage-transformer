@@ -45,12 +45,9 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
-    let jsonFilePath = flags['coverage-json'];
-    let xmlFilePath = flags['xml'];
-    let sfdxConfigFile = flags['sfdx-configuration'];
-    jsonFilePath = resolve(jsonFilePath);
-    xmlFilePath = resolve(xmlFilePath);
-    sfdxConfigFile = resolve(sfdxConfigFile);
+    const jsonFilePath = resolve(flags['coverage-json']);
+    const xmlFilePath = resolve(flags['xml']);
+    const sfdxConfigFile = resolve(flags['sfdx-configuration']);
 
     const jsonData = await readFile(jsonFilePath, 'utf-8');
     const coverageData = JSON.parse(jsonData) as CoverageData;
