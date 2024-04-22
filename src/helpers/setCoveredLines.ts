@@ -1,16 +1,19 @@
 'use strict';
 
+import { join } from 'node:path';
+
 import { getTotalLines } from './getTotalLines.js';
 import { FileObject } from './types.js';
 
 export async function setCoveredLines(
   coveredLines: number[],
   uncoveredLines: number[],
+  repoRoot: string,
   filePath: string,
   fileObj: FileObject
 ): Promise<void> {
   const randomLines: number[] = [];
-  const totalLines = await getTotalLines(filePath);
+  const totalLines = await getTotalLines(join(repoRoot, filePath));
   for (const coveredLine of coveredLines) {
     if (coveredLine > totalLines) {
       for (let randomLineNumber = 1; randomLineNumber <= totalLines; randomLineNumber++) {
