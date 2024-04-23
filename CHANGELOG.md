@@ -1,3 +1,9 @@
+## [1.6.7](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.6...v1.6.7) (2024-04-23)
+
+### Bug Fixes
+
+- remove `--sfdx-configuration` flag and get `sfdx-project.json` path using `simple-git` ([87d92f3](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/87d92f39fdd4f404887dc2c931940ea3221d7606))
+
 ## [1.6.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.5...v1.6.6) (2024-04-22)
 
 ### Bug Fixes
