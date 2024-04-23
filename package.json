@@ -1,7 +1,7 @@
 {
   "name": "apex-code-coverage-transformer",
   "description": "Transforms the Apex code coverage JSON created during Salesforce deployments into the Generic Test Coverage Format (XML).",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "dependencies": {
     "@oclif/core": "^3.18.1",
     "@salesforce/core": "^6.4.7",
