@@ -4,6 +4,7 @@
 import { create } from 'xmlbuilder2';
 
 import { CoverageData, CoverageObject, FileObject } from './types.js';
+import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { setCoveredLines } from './setCoveredLines.js';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
@@ -14,12 +15,13 @@ export async function convertToGenericCoverageReport(
   const coverageObj: CoverageObject = { coverage: { '@version': '1', file: [] } };
   const warnings: string[] = [];
   let filesProcessed: number = 0;
+  const { repoRoot, packageDirectories } = await getPackageDirectories();
 
   for (const fileName in data) {
     if (!Object.hasOwn(data, fileName)) continue;
     const fileInfo = data[fileName];
     const formattedFileName = fileName.replace('no-map/', '');
-    const { repoRoot, relativeFilePath } = await findFilePath(formattedFileName);
+    const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
     if (relativeFilePath === undefined) {
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
       continue;

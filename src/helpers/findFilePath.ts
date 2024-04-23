@@ -4,13 +4,11 @@
 import { readdir, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
-import { getPackageDirectories } from './getPackageDirectories.js';
-
 export async function findFilePath(
-  fileName: string
-): Promise<{ repoRoot: string; relativeFilePath: string | undefined }> {
-  const { repoRoot, packageDirectories } = await getPackageDirectories();
-
+  fileName: string,
+  packageDirectories: string[],
+  repoRoot: string
+): Promise<string | undefined> {
   let relativeFilePath: string | undefined;
   for (const directory of packageDirectories) {
     relativeFilePath = await findFilePathinDirectory(fileName, directory, repoRoot);
@@ -18,7 +16,7 @@ export async function findFilePath(
       break;
     }
   }
-  return { repoRoot, relativeFilePath };
+  return relativeFilePath;
 }
 
 async function searchRecursively(fileName: string, dxDirectory: string): Promise<string | undefined> {
