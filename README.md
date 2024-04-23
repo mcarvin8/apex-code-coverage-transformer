@@ -4,6 +4,8 @@
 
 The `apex-code-coverage-transformer` is a Salesforce CLI plugin to transform the Apex Code Coverage JSON files created during deployments into the Generic Test Coverage Format (XML). This format is accepted by static code analysis tools like SonarQube.
 
+This plugin requires [git](https://git-scm.com/downloads) to be installed and that it can be called using the command `git`.
+
 This plugin supports code coverage metrics created for Apex Classes and Apex Triggers. This also supports multiple package directories as listed in your project's `sfdx-project.json` configuration, assuming unique file-names are used in your package directories.
 
 This plugin is intended for users who deploy their Apex codebase from a git-based repository and use SonarQube for code quality. This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. SonarQube relies on file-paths to map code coverage to the files in their file explorer interface. Since files from managed and unlocked packages aren't retrieved into git-based Salesforce repositories, these files cannot be included in your SonarQube scans. If your Apex code coverage JSON output includes managed/unlocked package files, they will not be added to the coverage XML created by this plugin. A warning will be printed for each file not found in a package directory in your git repository. See [Errors and Warnings](https://github.com/mcarvin8/apex-code-coverage-transformer?tab=readme-ov-file#errors-and-warnings) for more information.
@@ -32,18 +34,17 @@ The `apex-code-coverage-transformer` has 1 command:
 
 - `sf apex-code-coverage transformer transform`
 
-I recommend running this command in the repository's root folder where your `sfdx-project.json` file is located, but the command will work if you supply a different path for the `--sfdx-configuration`/`-c` flag. This command will use the parent directory of the `sfdx-project.json` file found via the `-c` flag to locate the package directories listed.
+This command needs to be ran somewhere inside your Salesforce DX git repository, whether in the root folder (recommended) or in a subfolder. This plugin will determine the root folder of this repository and read the `sfdx-project.json` file in the root folder. All package directories listed in the `sfdx-project.json` file will be processed when running this plugin.
 
 ## `sf apex-code-coverage transformer transform`
 
 ```
 USAGE
-  $ sf apex-code-coverage transformer transform -j <value> -x <value> -c <value> [--json]
+  $ sf apex-code-coverage transformer transform -j <value> -x <value> [--json]
 
 FLAGS
   -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment command.
   -x, --xml=<value> [default: coverage.xml] Path to code coverage XML file that will be created by this plugin.
-  -c, --sfdx-configuration=<value> [default: 'sfdx-project.json'] Path to your project's Salesforce DX configuration file.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -52,7 +53,7 @@ DESCRIPTION
   This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments into an XML accepted by tools like SonarQube.
 
 EXAMPLES
-    $ sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml" -c "sfdx-project.json"
+    $ sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml"
 ```
 
 ## Errors and Warnings
@@ -73,7 +74,7 @@ Warning: The file name AccountProfile was not found in any package directory.
 Error (1): None of the files listed in the coverage JSON were processed.
 ```
 
-If the `sfdx-project.json` file was not found, the plugin will fail with:
+If the `sfdx-project.json` file was not found in your repository's root folder, the plugin will fail with:
 
 ```
 Error (1): Salesforce DX Config File does not exist in this path: {filePath}

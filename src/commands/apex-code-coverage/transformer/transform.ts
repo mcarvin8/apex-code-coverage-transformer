@@ -21,13 +21,6 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    'sfdx-configuration': Flags.file({
-      summary: messages.getMessage('flags.sfdx-configuration.summary'),
-      char: 'c',
-      required: true,
-      exists: true,
-      default: 'sfdx-project.json',
-    }),
     'coverage-json': Flags.file({
       summary: messages.getMessage('flags.coverage-json.summary'),
       char: 'j',
@@ -47,15 +40,10 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     const { flags } = await this.parse(TransformerTransform);
     const jsonFilePath = resolve(flags['coverage-json']);
     const xmlFilePath = resolve(flags['xml']);
-    const sfdxConfigFile = resolve(flags['sfdx-configuration']);
 
     const jsonData = await readFile(jsonFilePath, 'utf-8');
     const coverageData = JSON.parse(jsonData) as CoverageData;
-    const {
-      xml: xmlData,
-      warnings,
-      filesProcessed,
-    } = await convertToGenericCoverageReport(coverageData, sfdxConfigFile);
+    const { xml: xmlData, warnings, filesProcessed } = await convertToGenericCoverageReport(coverageData);
 
     // Print warnings if any
     if (warnings.length > 0) {

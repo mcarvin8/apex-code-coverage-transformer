@@ -7,10 +7,9 @@ import { join, relative } from 'node:path';
 import { getPackageDirectories } from './getPackageDirectories.js';
 
 export async function findFilePath(
-  fileName: string,
-  dxConfigFile: string
+  fileName: string
 ): Promise<{ repoRoot: string; relativeFilePath: string | undefined }> {
-  const { repoRoot, packageDirectories } = await getPackageDirectories(dxConfigFile);
+  const { repoRoot, packageDirectories } = await getPackageDirectories();
 
   let relativeFilePath: string | undefined;
   for (const directory of packageDirectories) {

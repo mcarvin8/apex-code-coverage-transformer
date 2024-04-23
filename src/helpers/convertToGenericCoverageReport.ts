@@ -9,8 +9,7 @@ import { setCoveredLines } from './setCoveredLines.js';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
 
 export async function convertToGenericCoverageReport(
-  data: CoverageData,
-  dxConfigFile: string
+  data: CoverageData
 ): Promise<{ xml: string; warnings: string[]; filesProcessed: number }> {
   const coverageObj: CoverageObject = { coverage: { '@version': '1', file: [] } };
   const warnings: string[] = [];
@@ -20,7 +19,7 @@ export async function convertToGenericCoverageReport(
     if (!Object.hasOwn(data, fileName)) continue;
     const fileInfo = data[fileName];
     const formattedFileName = fileName.replace('no-map/', '');
-    const { repoRoot, relativeFilePath } = await findFilePath(formattedFileName, dxConfigFile);
+    const { repoRoot, relativeFilePath } = await findFilePath(formattedFileName);
     if (relativeFilePath === undefined) {
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
       continue;
