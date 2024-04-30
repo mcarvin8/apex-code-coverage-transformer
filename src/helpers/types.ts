@@ -38,3 +38,8 @@ export interface CoverageObject {
     '@version': string;
   };
 }
+
+export interface ConfigFile {
+  coverageJsonPath: string;
+  coverageXmlPath: string;
+}

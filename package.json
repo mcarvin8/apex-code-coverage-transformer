@@ -58,6 +58,9 @@
     "commands": "./lib/commands",
     "bin": "sf",
     "topicSeparator": " ",
+    "hooks": {
+      "postrun": "./lib/hooks/postrun"
+    },
     "devPlugins": [
       "@oclif/plugin-help"
     ],

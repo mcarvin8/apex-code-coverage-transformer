@@ -56,6 +56,28 @@ EXAMPLES
     $ sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml"
 ```
 
+## Hook
+
+A post-run hook has been configured if you elect to use it.
+
+The post-run hook will automatically transform the code coverage JSON file into a generic test coverage report XML after every Salesforce CLI deployment (`sf project deploy start`, `sf project deploy validate`, `sf project deploy report`, `sf project deploy resume` commands) if the JSON is found.
+
+The hook requires you to create this file in the root of your repo: `.apexcodecovtransformer.config.json`
+
+The `.apexcodecovtransformer.config.json` should look like this:
+
+```json
+{
+  "coverageJsonPath": "coverage/coverage/coverage.json",
+  "coverageXmlPath": "coverage.xml"
+}
+```
+
+- `coverageJsonPath` is required and should be the path to the code coverage JSON created by the Salesforce CLI. Recommend using a relative path.
+- `coverageXmlPath` is optional and should be the path to the code coverage XML created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.xml` in the working directory.
+
+If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
+
 ## Errors and Warnings
 
 Any file in the coverage JSON that isn't found in any package directory will result in this warning:
