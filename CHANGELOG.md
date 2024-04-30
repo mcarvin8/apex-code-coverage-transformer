@@ -1,3 +1,9 @@
+# [1.7.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.8...v1.7.0) (2024-04-30)
+
+### Features
+
+- add a post run hook for post deployments ([894a4cd](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/894a4cdb14f6367b3e9248e757b1463e3134ae83))
+
 ## [1.6.8](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.7...v1.6.8) (2024-04-23)
 
 ### Bug Fixes
