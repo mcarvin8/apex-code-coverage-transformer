@@ -20,7 +20,7 @@ export async function convertToGenericCoverageReport(
   for (const fileName in data) {
     if (!Object.hasOwn(data, fileName)) continue;
     const fileInfo = data[fileName];
-    const formattedFileName = fileName.replace('no-map/', '');
+    const formattedFileName = fileName.replace(/no-map[\\/]+/, '');
     const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
     if (relativeFilePath === undefined) {
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
