@@ -1,3 +1,9 @@
+## [1.7.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.0...v1.7.1) (2024-04-30)
+
+### Bug Fixes
+
+- fix no-map replacement for windows-style paths ([e6d4fef](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/e6d4fef16266a8075c01601b3f5a838a058c5fa2))
+
 # [1.7.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.6.8...v1.7.0) (2024-04-30)
 
 ### Features
