@@ -2,7 +2,7 @@
 
 [![NPM](https://img.shields.io/npm/v/apex-code-coverage-transformer.svg?label=apex-code-coverage-transformer)](https://www.npmjs.com/package/apex-code-coverage-transformer) [![Downloads/week](https://img.shields.io/npm/dw/apex-code-coverage-transformer.svg)](https://npmjs.org/package/apex-code-coverage-transformer) [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md)
 
-The `apex-code-coverage-transformer` is a Salesforce CLI plugin to transform the Apex Code Coverage JSON files created during deployments into the Generic Test Coverage Format (XML). This format is accepted by static code analysis tools like SonarQube.
+The `apex-code-coverage-transformer` is a Salesforce CLI plugin to transform the Apex Code Coverage JSON files created during deployments and test runs into the Generic Test Coverage Format (XML). This format is accepted by static code analysis tools like SonarQube.
 
 This plugin requires [git](https://git-scm.com/downloads) to be installed and that it can be called using the command `git`.
 
@@ -10,17 +10,21 @@ This plugin supports code coverage metrics created for Apex Classes and Apex Tri
 
 This plugin is intended for users who deploy their Apex codebase from a git-based repository and use SonarQube for code quality. This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. SonarQube relies on file-paths to map code coverage to the files in their file explorer interface. Since files from managed and unlocked packages aren't retrieved into git-based Salesforce repositories, these files cannot be included in your SonarQube scans. If your Apex code coverage JSON output includes managed/unlocked package files, they will not be added to the coverage XML created by this plugin. A warning will be printed for each file not found in a package directory in your git repository. See [Errors and Warnings](https://github.com/mcarvin8/apex-code-coverage-transformer?tab=readme-ov-file#errors-and-warnings) for more information.
 
-To create the code coverage JSON during a Salesforce CLI deployment/validation, append `--coverage-formatters json --results-dir coverage` to the `sf project deploy` command:
+To create the code coverage JSON during a Salesforce CLI deployment/validation, append `--coverage-formatters json --results-dir coverage` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
 ```
 sf project deploy [start/validate] -x manifest/package.xml -l RunSpecifiedTests -t {testclasses} --verbose --coverage-formatters json --results-dir coverage
 ```
 
-This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`
+To create the code coverage JSON when running tests directly in the org, append `-c -r json` to the `sf apex run test` command.
 
-This JSON isn't accepted by SonarQube automatically for git-based Salesforce repositories and needs to be converted using this plugin.
+```
+sf apex run test -c -r json
+```
 
-**Disclaimer**: Due to existing bugs with how the Salesforce CLI reports covered lines (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for covered lines in this plugin, I had to add a function to re-number out-of-range covered lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as covered by the Salesforce CLI deploy command). Salesforce's coverage result may also include extra lines as covered (ex: 120 lines are included in the coverage report for a 100 line file), so the coverage percentage may vary based on how many lines the API returns in the coverage report. Once Salesforce fixes the API to correctly return covered lines in the deploy command, this function will be removed.
+The code coverage JSONs created by the Salesforce CLI aren't accepted by SonarQube automatically for git-based Salesforce repositories and needs to be converted using this plugin.
+
+**Disclaimer**: Due to existing bugs with how the Salesforce CLI reports covered lines during deployments (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for covered lines in this plugin for deployment coverage files, I had to add a function to re-number out-of-range covered lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as covered by the Salesforce CLI deploy command). Salesforce's coverage result may also include extra lines as covered (ex: 120 lines are included in the coverage report for a 100 line file), so the coverage percentage may vary based on how many lines the API returns in the coverage report. Once Salesforce fixes the API to correctly return covered lines in the deploy command, this function will be removed.
 
 ## Install
 
@@ -40,11 +44,12 @@ This command needs to be ran somewhere inside your Salesforce DX git repository,
 
 ```
 USAGE
-  $ sf apex-code-coverage transformer transform -j <value> -x <value> [--json]
+  $ sf apex-code-coverage transformer transform -j <value> -x <value> -c <value> [--json]
 
 FLAGS
   -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment command.
-  -x, --xml=<value> [default: coverage.xml] Path to code coverage XML file that will be created by this plugin.
+  -x, --xml=<value> [default: "coverage.xml"] Path to code coverage XML file that will be created by this plugin.
+  -c, --command=<value> [default: "deploy"] The type of Salesforce CLI command you are running. Valid options: "deploy" or "test".
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -53,7 +58,7 @@ DESCRIPTION
   This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments into an XML accepted by tools like SonarQube.
 
 EXAMPLES
-    $ sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml"
+    $ sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml" -c "deploy"
 ```
 
 ## Hook
