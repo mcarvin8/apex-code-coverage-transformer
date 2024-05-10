@@ -18,10 +18,6 @@ Path to the code coverage JSON file created by the Salesforce CLI deployment com
 
 Path to code coverage XML file that will be created by this plugin.
 
-# flags.xml.summary
-
-Path to code coverage XML file that will be created by this plugin.
-
 # flags.command.summary
 
 The type of Salesforce CLI command you are running.
