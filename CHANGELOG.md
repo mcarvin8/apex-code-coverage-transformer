@@ -1,3 +1,9 @@
+## [1.7.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.1...v1.7.2) (2024-05-10)
+
+### Bug Fixes
+
+- add support for coverage JSONs created by `sf apex run test` ([5f48b77](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/5f48b777f1ccd003d650c50ef87a0b24e2b4a73f))
+
 ## [1.7.2-beta.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.1...v1.7.2-beta.1) (2024-05-09)
 
 ### Bug Fixes
