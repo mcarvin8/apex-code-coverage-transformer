@@ -65,7 +65,7 @@ EXAMPLES
 
 A post-run hook has been configured if you elect to use it.
 
-The post-run hook will automatically transform the code coverage JSON file into a generic test coverage report XML after every Salesforce CLI deployment (`sf project deploy start`, `sf project deploy validate`, `sf project deploy report`, `sf project deploy resume` commands) if the JSON is found.
+The post-run hook will automatically transform the code coverage JSON file into a generic test coverage report XML after every Salesforce CLI deployment (`sf project deploy start`, `sf project deploy validate`, `sf project deploy report`, `sf project deploy resume` commands) and test run (`sf apex run test` command) if the JSON is found.
 
 The hook requires you to create this file in the root of your repo: `.apexcodecovtransformer.config.json`
 
