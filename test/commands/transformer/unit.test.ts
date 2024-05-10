@@ -14,11 +14,13 @@ describe('main', () => {
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
   const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
   const baselineTriggerPath = resolve('test/baselines/triggers/AccountTrigger.trigger');
-  const coverageJsonPathNoExts = resolve('test/coverage_no_file_exts.json');
-  const coverageJsonPathWithExts = resolve('test/coverage_with_file_exts.json');
+  const deployCoverageNoExts = resolve('test/deploy_coverage_no_file_exts.json');
+  const deployCoverageWithExts = resolve('test/deploy_coverage_with_file_exts.json');
+  const testCoverage = resolve('test/test_coverage.json');
   const baselineXmlPath = resolve('test/coverage_baseline.xml');
   const testXmlPath1 = resolve('coverage1.xml');
   const testXmlPath2 = resolve('coverage2.xml');
+  const testXmlPath3 = resolve('coverage3.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -52,11 +54,12 @@ describe('main', () => {
     await rm('packaged', { recursive: true });
     await rm(testXmlPath1);
     await rm(testXmlPath2);
+    await rm(testXmlPath3);
     await rm(sfdxConfigFile);
   });
 
   it('transform the test JSON file without file extensions into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', coverageJsonPathNoExts, '--xml', testXmlPath1]);
+    await TransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--xml', testXmlPath1]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
@@ -69,12 +72,25 @@ describe('main', () => {
     expect(warnings).to.include('');
   });
   it('transform the test JSON file with file extensions into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', coverageJsonPathWithExts, '--xml', testXmlPath2]);
+    await TransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--xml', testXmlPath2]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
     expect(output).to.include(`The XML data has been written to ${testXmlPath2}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the JSON file from a test command into the generic test coverage format without any warnings.', async () => {
+    await TransformerTransform.run(['--coverage-json', testCoverage, '--xml', testXmlPath3, '-c', 'test']);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The XML data has been written to ${testXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)

@@ -1,6 +1,6 @@
 'use strict';
 
-export interface CoverageData {
+export interface DeployCoverageData {
   [className: string]: {
     fnMap: Record<string, unknown>;
     branchMap: Record<string, unknown>;
@@ -16,6 +16,15 @@ export interface CoverageData {
       }
     >;
   };
+}
+
+export interface TestCoverageData {
+  id: string;
+  name: string;
+  totalLines: number;
+  lines: Record<string, number>;
+  totalCovered: number;
+  coveredPercent: number;
 }
 
 export interface SfdxProject {
