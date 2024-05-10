@@ -47,7 +47,7 @@ USAGE
   $ sf apex-code-coverage transformer transform -j <value> -x <value> -c <value> [--json]
 
 FLAGS
-  -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment command.
+  -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment or test command.
   -x, --xml=<value> [default: "coverage.xml"] Path to code coverage XML file that will be created by this plugin.
   -c, --command=<value> [default: "deploy"] The type of Salesforce CLI command you are running. Valid options: "deploy" or "test".
 
@@ -55,7 +55,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments into an XML accepted by tools like SonarQube.
+  This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments and test runs into an XML accepted by tools like SonarQube.
 
 EXAMPLES
     $ sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml" -c "deploy"

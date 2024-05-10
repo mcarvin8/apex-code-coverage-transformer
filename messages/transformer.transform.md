@@ -4,7 +4,7 @@ Transforms the Code Coverage JSON into the Generic Test Coverage Format (XML).
 
 # description
 
-This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments into an XML accepted by tools like SonarQube.
+This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments and test runs into an XML accepted by tools like SonarQube.
 
 # examples
 
@@ -12,7 +12,7 @@ This plugin will convert the code coverage JSON file created by the Salesforce C
 
 # flags.coverage-json.summary
 
-Path to the code coverage JSON file created by the Salesforce CLI deployment command.
+Path to the code coverage JSON file created by the Salesforce CLI deployment or test command.
 
 # flags.xml.summary
 
