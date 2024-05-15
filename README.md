@@ -115,7 +115,7 @@ Error (1): ENOENT: no such file or directory: {packageDirPath}
 
 ## Example
 
-This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/coverage_no_file_exts.json) created during a Salesforce CLI deployment will be transformed into:
+This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_no_file_exts.json) created during a Salesforce CLI deployment will be transformed into:
 
 ```xml
 <?xml version="1.0"?>

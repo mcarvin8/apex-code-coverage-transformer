@@ -21,7 +21,12 @@ export async function transformTestCoverageReport(
   }
 
   for (const data of testCoverageData) {
-    const { name, lines } = data;
+    const name = data?.name;
+    const lines = data?.lines;
+
+    if (!name || !lines) {
+      continue;
+    }
     const formattedFileName = name.replace(/no-map[\\/]+/, '');
     const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
     if (relativeFilePath === undefined) {
