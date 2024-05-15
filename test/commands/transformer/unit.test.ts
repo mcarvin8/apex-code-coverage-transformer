@@ -64,7 +64,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The XML data has been written to ${testXmlPath1}`);
+    expect(output).to.include(`The coverage XML has been written to ${testXmlPath1}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -77,7 +77,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The XML data has been written to ${testXmlPath2}`);
+    expect(output).to.include(`The coverage XML has been written to ${testXmlPath2}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -90,7 +90,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The XML data has been written to ${testXmlPath3}`);
+    expect(output).to.include(`The coverage XML has been written to ${testXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)

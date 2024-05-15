@@ -80,7 +80,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     }
 
     await writeFile(xmlFilePath, xmlData);
-    this.log(`The XML data has been written to ${xmlFilePath}`);
+    this.log(`The coverage XML has been written to ${xmlFilePath}`);
     return { path: xmlFilePath };
   }
 }
