@@ -76,7 +76,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     }
 
     if (filesProcessed === 0) {
-      this.error('None of the files listed in the coverage JSON were processed.');
+      this.warn('None of the files listed in the coverage JSON were processed. The coverage XML will be empty.');
     }
 
     await writeFile(xmlFilePath, xmlData);

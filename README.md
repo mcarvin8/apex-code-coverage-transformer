@@ -93,12 +93,12 @@ Warning: The file name AccountTrigger was not found in any package directory.
 
 Files not found in any package directory will not be added to the coverage XML. This includes Apex classes that originate from installed managed and unlocked packages when running all tests in your org.
 
-If none of the files listed in the coverage JSON were found in a package directory, the plugin will fail with this error in addition to the above warnings:
+If none of the files listed in the coverage JSON were found in a package directory, the plugin will print an additional warning stating no files were processed. In this case, the coverage XML generated will be an empty file.
 
 ```
 Warning: The file name AccountTrigger was not found in any package directory.
 Warning: The file name AccountProfile was not found in any package directory.
-Error (1): None of the files listed in the coverage JSON were processed.
+Warning: None of the files listed in the coverage JSON were processed. The coverage XML will be empty.
 ```
 
 If the `sfdx-project.json` file was not found in your repository's root folder, the plugin will fail with:
