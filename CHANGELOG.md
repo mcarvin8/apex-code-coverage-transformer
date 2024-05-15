@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.2...v1.7.3) (2024-05-15)
+
+### Bug Fixes
+
+- fix handling of an empty JSON from the test run command ([48ef6df](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/48ef6df77eda762006a78e1d2eb66936d57ee418))
+- warn instead of fail when no files in the JSON are processed ([7809843](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/780984332c279ed7142695cbf262e67f69e916c0))
+
 ## [1.7.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.1...v1.7.2) (2024-05-10)
 
 ### Bug Fixes
