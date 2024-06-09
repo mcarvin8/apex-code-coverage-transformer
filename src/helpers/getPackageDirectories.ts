@@ -4,19 +4,12 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { simpleGit, SimpleGit, SimpleGitOptions } from 'simple-git';
 
 import { SfdxProject } from './types.js';
+import { getRepoRoot } from './getRepoRoot.js';
 
 export async function getPackageDirectories(): Promise<{ repoRoot: string; packageDirectories: string[] }> {
-  const options: Partial<SimpleGitOptions> = {
-    baseDir: process.cwd(),
-    binary: 'git',
-    maxConcurrentProcesses: 6,
-    trimmed: true,
-  };
-  const git: SimpleGit = simpleGit(options);
-  const repoRoot = (await git.revparse('--show-toplevel')).trim();
+  const repoRoot = await getRepoRoot();
   const dxConfigPath = resolve(repoRoot, 'sfdx-project.json');
   if (!existsSync(dxConfigPath)) {
     throw Error(`Salesforce DX Config File does not exist in this path: ${dxConfigPath}`);
