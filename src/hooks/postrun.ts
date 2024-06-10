@@ -11,6 +11,7 @@ import { getRepoRoot } from '../helpers/getRepoRoot.js';
 
 export const postrun: Hook<'postrun'> = async function (options) {
   let commandType: string;
+  let coverageJson: string;
   if (
     ['project:deploy:validate', 'project:deploy:start', 'project:deploy:report', 'project:deploy:resume'].includes(
       options.Command.id
@@ -33,8 +34,13 @@ export const postrun: Hook<'postrun'> = async function (options) {
     return;
   }
 
-  const coverageJson: string = configFile.coverageJsonPath || '.';
   const coverageXml: string = configFile.coverageXmlPath || 'coverage.xml';
+
+  if (commandType === 'deploy') {
+    coverageJson = configFile.deployCoverageJsonPath || '.';
+  } else {
+    coverageJson = configFile.testCoverageJsonPath || '.';
+  }
 
   if (coverageJson.trim() === '.') {
     return;

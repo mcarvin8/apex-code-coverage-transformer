@@ -49,6 +49,7 @@ export interface CoverageObject {
 }
 
 export interface ConfigFile {
-  coverageJsonPath: string;
+  deployCoverageJsonPath: string;
+  testCoverageJsonPath: string;
   coverageXmlPath: string;
 }
