@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.3...v1.7.4) (2024-06-10)
+
+### Bug Fixes
+
+- include `apex get test` command in the hook ([34718f0](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/34718f0c146dbf51efe04c81d994c0c724e84a0c))
+- update the hook to allow 2 different JSON paths based on command ([f6159be](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/f6159be3fe12801a00c06f44a5304cab2d02697e))
+
 ## [1.7.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.2...v1.7.3) (2024-05-15)
 
 ### Bug Fixes
