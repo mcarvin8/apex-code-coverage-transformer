@@ -1,3 +1,10 @@
+<!-- markdownlint-disable MD024 MD025 -->
+<!-- markdown-link-check-disable -->
+
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
 ## [1.7.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.3...v1.7.4) (2024-06-10)
 
 ### Bug Fixes
