@@ -6,7 +6,6 @@ import { create } from 'xmlbuilder2';
 import { DeployCoverageData, CoverageObject, FileObject } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
-import { setCoveredLines } from './setCoveredLines.js';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
 
 export async function transformDeployCoverageReport(
@@ -26,23 +25,21 @@ export async function transformDeployCoverageReport(
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
       continue;
     }
-    const uncoveredLines = Object.keys(fileInfo.s)
-      .filter((lineNumber) => fileInfo.s[lineNumber] === 0)
-      .map(Number);
-    const coveredLines = Object.keys(fileInfo.s)
-      .filter((lineNumber) => fileInfo.s[lineNumber] === 1)
-      .map(Number);
-
     const fileObj: FileObject = {
       '@path': normalizePathToUnix(relativeFilePath),
-      lineToCover: uncoveredLines.map((lineNumber: number) => ({
-        '@lineNumber': lineNumber,
-        '@covered': 'false',
-      })),
+      lineToCover: [],
     };
 
-    // this function is only needed until Salesforce fixes the API to correctly return covered lines
-    await setCoveredLines(coveredLines, uncoveredLines, repoRoot, relativeFilePath, fileObj);
+    for (const lineNumberString in fileInfo.s) {
+      if (!Object.hasOwn(fileInfo.s, lineNumberString)) continue;
+
+      const covered = fileInfo.s[lineNumberString] === 1 ? 'true' : 'false';
+      fileObj.lineToCover.push({
+        '@lineNumber': Number(lineNumberString),
+        '@covered': covered,
+      });
+    }
+
     filesProcessed++;
     coverageObj.coverage.file.push(fileObj);
   }
