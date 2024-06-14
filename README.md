@@ -25,8 +25,6 @@ sf apex get test --test-run-id <test run id> --code-coverage --result-format jso
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted by SonarQube automatically for git-based Salesforce repositories and needs to be converted using this plugin.
 
-**Disclaimer**: Due to existing bugs with how the Salesforce CLI reports covered lines during deployments (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for covered lines in this plugin for deployment coverage files, I had to add a function to re-number out-of-range covered lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as covered by the Salesforce CLI deploy command). Salesforce's coverage result may also include extra lines as covered (ex: 120 lines are included in the coverage report for a 100 line file), so the coverage percentage may vary based on how many lines the API returns in the coverage report. Once Salesforce fixes the API to correctly return covered lines in the deploy command, this function will be removed.
-
 ## Install
 
 ```bash
