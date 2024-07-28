@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.5](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.4...v1.7.5) (2024-07-28)
+
+
+### Bug Fixes
+
+* switch to isomorphic-git ([2da1fcc](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/2da1fcc2f55cf76296d1b7cd033daedba1bf496d))
+
 ## [1.7.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.3...v1.7.4) (2024-06-10)
 
 ### Bug Fixes
