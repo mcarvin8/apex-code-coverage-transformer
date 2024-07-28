@@ -1,7 +1,7 @@
 {
   "name": "apex-code-coverage-transformer",
   "description": "Transforms the Apex code coverage JSON created during Salesforce deployments and test runs into the Generic Test Coverage Format (XML) for SonarQube.",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "dependencies": {
     "@oclif/core": "^3.18.1",
     "@salesforce/core": "^6.4.7",
