@@ -1,6 +1,10 @@
 'use strict';
 
-export interface DeployCoverageData {
+export type TransformerTransformResult = {
+  path: string;
+};
+
+export type DeployCoverageData = {
   [className: string]: {
     fnMap: Record<string, unknown>;
     branchMap: Record<string, unknown>;
@@ -16,40 +20,40 @@ export interface DeployCoverageData {
       }
     >;
   };
-}
+};
 
-export interface TestCoverageData {
+export type TestCoverageData = {
   id: string;
   name: string;
   totalLines: number;
   lines: Record<string, number>;
   totalCovered: number;
   coveredPercent: number;
-}
+};
 
-export interface SfdxProject {
+export type SfdxProject = {
   packageDirectories: Array<{ path: string }>;
-}
+};
 
-interface LineToCover {
+type LineToCover = {
   '@lineNumber': number;
   '@covered': string;
-}
+};
 
-export interface FileObject {
+export type FileObject = {
   '@path': string;
   lineToCover: LineToCover[];
-}
+};
 
-export interface CoverageObject {
+export type CoverageObject = {
   coverage: {
     file: FileObject[];
     '@version': string;
   };
-}
+};
 
-export interface ConfigFile {
+export type ConfigFile = {
   deployCoverageJsonPath: string;
   testCoverageJsonPath: string;
   coverageXmlPath: string;
-}
+};

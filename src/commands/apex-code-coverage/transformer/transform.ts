@@ -8,13 +8,10 @@ import { Messages } from '@salesforce/core';
 import { DeployCoverageData, TestCoverageData } from '../../../helpers/types.js';
 import { transformDeployCoverageReport } from '../../../helpers/transformDeployCoverageReport.js';
 import { transformTestCoverageReport } from '../../../helpers/transformTestCoverageReport.js';
+import { TransformerTransformResult } from '../../../helpers/types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('apex-code-coverage-transformer', 'transformer.transform');
-
-export type TransformerTransformResult = {
-  path: string;
-};
 
 export default class TransformerTransform extends SfCommand<TransformerTransformResult> {
   public static readonly summary = messages.getMessage('summary');
