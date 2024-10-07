@@ -16,11 +16,9 @@ export async function transformTestCoverageReport(
   let filesProcessed: number = 0;
   const { repoRoot, packageDirectories } = await getPackageDirectories();
 
-  if (!Array.isArray(testCoverageData)) {
-    testCoverageData = [testCoverageData];
-  }
+  const coverageDataArray = Array.isArray(testCoverageData) ? testCoverageData : [testCoverageData];
 
-  for (const data of testCoverageData) {
+  for (const data of coverageDataArray) {
     const name = data?.name;
     const lines = data?.lines;
 

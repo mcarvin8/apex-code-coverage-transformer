@@ -3,24 +3,28 @@
   "description": "Transforms the Apex code coverage JSON created during Salesforce deployments and test runs into the Generic Test Coverage Format (XML) for SonarQube.",
   "version": "1.7.6",
   "dependencies": {
-    "@oclif/core": "^3.18.1",
-    "@salesforce/core": "^6.4.7",
-    "@salesforce/sf-plugins-core": "^7.1.3",
+    "@oclif/core": "4.0.27",
+    "@salesforce/core": "^8.6.1",
+    "@salesforce/sf-plugins-core": "^11.3.10",
     "isomorphic-git": "^1.27.1",
     "xmlbuilder2": "^3.1.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.6.1",
-    "@commitlint/config-conventional": "^18.6.0",
-    "@oclif/plugin-command-snapshot": "^5.0.2",
-    "@salesforce/cli-plugins-testkit": "^5.1.7",
-    "@salesforce/dev-scripts": "^8.3.0",
-    "eslint-plugin-sf-plugin": "^1.17.2",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@oclif/plugin-command-snapshot": "^5.2.18",
+    "@salesforce/cli-plugins-testkit": "^5.3.33",
+    "@salesforce/dev-scripts": "^10.2.10",
+    "@types/mocha": "^10",
+    "@types/node": "^22.7.4",
+    "eslint-plugin-sf-plugin": "^1.20.7",
     "husky": "^9.1.4",
-    "oclif": "^4.3.4",
-    "shx": "0.3.4",
+    "mocha": "^10.7.3",
+    "nyc": "^17.1.0",
+    "oclif": "^4.14.32",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "wireit": "^0.14.9"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -29,7 +33,8 @@
     "/lib",
     "/messages",
     "/oclif.manifest.json",
-    "/oclif.lock"
+    "/oclif.lock",
+    "/CHANGELOG.md"
   ],
   "keywords": [
     "force",
@@ -57,19 +62,23 @@
     "devPlugins": [
       "@oclif/plugin-help"
     ],
+    "topics": {
+      "acc-transformer": {
+        "description": "description for transformer command."
+      }
+    },
     "flexibleTaxonomy": true
   },
   "scripts": {
-    "command-docs": "oclif readme",
-    "build": "tsc -b",
+    "build": "wireit",
     "clean": "sf-clean",
     "clean-all": "sf-clean all",
-    "clean:lib": "shx rm -rf lib && shx rm -rf coverage && shx rm -rf .nyc_output && shx rm -f oclif.manifest.json oclif.lock",
-    "compile": "sf-compile",
+    "compile": "wireit",
     "docs": "sf-docs",
-    "format": "sf-format",
+    "format": "wireit",
+    "link-check": "wireit",
     "lint": "wireit",
-    "postpack": "shx rm -f oclif.manifest.json oclif.lock",
+    "postpack": "sf-clean --ignore-signing-artifacts",
     "prepack": "sf-prepack",
     "prepare": "husky install",
     "test": "wireit",
@@ -153,7 +162,7 @@
       "output": []
     },
     "test:command-reference": {
-      "command": "\"./bin/dev\" commandreference:generate --erroronwarnings",
+      "command": "node --loader ts-node/esm --no-warnings=ExperimentalWarning \"./bin/dev.js\" commandreference:generate --erroronwarnings",
       "files": [
         "src/**/*.ts",
         "messages/**",
@@ -164,7 +173,7 @@
       ]
     },
     "test:deprecation-policy": {
-      "command": "\"./bin/dev\" snapshot:compare",
+      "command": "node --loader ts-node/esm --no-warnings=ExperimentalWarning \"./bin/dev.js\" snapshot:compare",
       "files": [
         "src/**/*.ts"
       ],
@@ -174,10 +183,19 @@
       ]
     },
     "test:json-schema": {
-      "command": "\"./bin/dev\" schema:compare",
+      "command": "node --loader ts-node/esm --no-warnings=ExperimentalWarning \"./bin/dev.js\" schema:compare",
       "files": [
         "src/**/*.ts",
         "schemas"
+      ],
+      "output": []
+    },
+    "link-check": {
+      "command": "node -e \"process.exit(process.env.CI ? 0 : 1)\" || linkinator \"**/*.md\" --skip \"CHANGELOG.md|node_modules|test/|confluence.internal.salesforce.com|my.salesforce.com|%s\" --markdown --retry --directory-listing --verbosity error",
+      "files": [
+        "./*.md",
+        "./!(CHANGELOG).md",
+        "messages/**/*.md"
       ],
       "output": []
     }
@@ -191,5 +209,6 @@
   },
   "bugs": {
     "url": "https://github.com/mcarvin8/apex-code-coverage-transformer/issues"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }

@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Hook } from '@oclif/core';
 
-import TransformerTransform from '../commands/apex-code-coverage/transformer/transform.js';
+import TransformerTransform from '../commands/acc-transformer/transform.js';
 import { ConfigFile } from '../helpers/types.js';
 import { getRepoRoot } from '../helpers/getRepoRoot.js';
 

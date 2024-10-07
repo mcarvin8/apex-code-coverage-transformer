@@ -8,7 +8,7 @@ This plugin will convert the code coverage JSON file created by the Salesforce C
 
 # examples
 
-- `sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml" -c "deploy"`
+- `sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -c "deploy"`
 
 # flags.coverage-json.summary
 
