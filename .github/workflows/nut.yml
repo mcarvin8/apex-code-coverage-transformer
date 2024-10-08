@@ -30,11 +30,10 @@ jobs:
       - name: Install salesforce CLI
         run: npm install -g @salesforce/cli
 
-      - name: Install plugin
-        run: echo y | sf plugins install apex-code-coverage-transformer@latest
-
       - name: Yarn install
-        run: bash -c "yarn"
+        run: yarn
 
-      - name: Run NUT
-        run: bash -c "${{ inputs.command }}"
+      - name: Install plugin and Run NUT
+        run: |
+         echo y | sf plugins install apex-code-coverage-transformer@latest
+         bash -c "${{ inputs.command }}"
