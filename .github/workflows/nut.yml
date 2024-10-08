@@ -36,4 +36,4 @@ jobs:
       - name: Install plugin and Run NUT
         run: |
          echo y | sf plugins install apex-code-coverage-transformer@latest
-         bash -c "${{ inputs.command }}"
+         ${{ inputs.command }}
