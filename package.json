@@ -3,28 +3,23 @@
   "description": "Transforms the Apex code coverage JSON created during Salesforce deployments and test runs into the Generic Test Coverage Format (XML) for SonarQube.",
   "version": "1.7.6",
   "dependencies": {
-    "@oclif/core": "4.0.27",
-    "@salesforce/core": "^8.6.1",
-    "@salesforce/sf-plugins-core": "^11.3.10",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@oclif/core": "^4",
+    "@salesforce/core": "^7.2.0",
+    "@salesforce/sf-plugins-core": "^10.0.0",
+    "husky": "^9.1.6",
     "isomorphic-git": "^1.27.1",
     "xmlbuilder2": "^3.1.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@oclif/plugin-command-snapshot": "^5.2.18",
-    "@salesforce/cli-plugins-testkit": "^5.3.33",
-    "@salesforce/dev-scripts": "^10.2.10",
-    "@types/mocha": "^10",
-    "@types/node": "^22.7.4",
-    "eslint-plugin-sf-plugin": "^1.20.7",
-    "husky": "^9.1.4",
-    "mocha": "^10.7.3",
-    "nyc": "^17.1.0",
-    "oclif": "^4.14.32",
+    "@oclif/plugin-command-snapshot": "^5.1.9",
+    "@salesforce/cli-plugins-testkit": "^5.3.10",
+    "@salesforce/dev-scripts": "^10",
+    "eslint-plugin-sf-plugin": "^1.18.6",
+    "oclif": "^4.14.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "wireit": "^0.14.9"
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -33,8 +28,7 @@
     "/lib",
     "/messages",
     "/oclif.manifest.json",
-    "/oclif.lock",
-    "/CHANGELOG.md"
+    "/oclif.lock"
   ],
   "keywords": [
     "force",
@@ -56,15 +50,15 @@
     "commands": "./lib/commands",
     "bin": "sf",
     "topicSeparator": " ",
-    "hooks": {
-      "postrun": "./lib/hooks/postrun"
-    },
     "devPlugins": [
       "@oclif/plugin-help"
     ],
+    "hooks": {
+      "postrun": "./lib/hooks/postrun"
+    },
     "topics": {
       "acc-transformer": {
-        "description": "description for transformer command."
+        "description": "description for acc-transformer"
       }
     },
     "flexibleTaxonomy": true
@@ -78,9 +72,9 @@
     "format": "wireit",
     "link-check": "wireit",
     "lint": "wireit",
+    "postinstall": "yarn husky install",
     "postpack": "sf-clean --ignore-signing-artifacts",
     "prepack": "sf-prepack",
-    "prepare": "husky install",
     "test": "wireit",
     "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
     "test:only": "wireit",
@@ -209,6 +203,5 @@
   },
   "bugs": {
     "url": "https://github.com/mcarvin8/apex-code-coverage-transformer/issues"
-  },
-  "packageManager": "yarn@1.22.22"
+  }
 }

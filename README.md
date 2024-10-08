@@ -16,10 +16,10 @@ sf project deploy [start/validate] --coverage-formatters json --results-dir "cov
 
 To create the code coverage JSON when running tests directly in the org, append `--code-coverage --result-format json --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in the a folder named "coverage".
 
-```
+````
 sf apex run test --code-coverage --result-format json --output-dir "coverage"
 sf apex get test --test-run-id <test run id> --code-coverage --result-format json --output-dir "coverage"
-```
+```a
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted by SonarQube automatically for git-based Salesforce repositories and needs to be converted using this plugin.
 
@@ -29,7 +29,7 @@ The code coverage JSONs created by the Salesforce CLI aren't accepted by SonarQu
 
 ```bash
 sf plugins install apex-code-coverage-transformer@x.y.z
-```
+````
 
 ## Command
 

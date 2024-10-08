@@ -7,9 +7,9 @@ import { resolve } from 'node:path';
 import { TestContext } from '@salesforce/core/testSetup';
 import { expect } from 'chai';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
-import TransformerTransform from '../../../src/commands/acc-transformer/transform.js';
+import AccTransformerTransform from '../../../src/commands/acc-transformer/transform.js';
 
-describe('main', () => {
+describe('acc-transformer transform', () => {
   const $$ = new TestContext();
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
   const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
@@ -59,7 +59,7 @@ describe('main', () => {
   });
 
   it('transform the test JSON file without file extensions into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--xml', testXmlPath1]);
+    await AccTransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--xml', testXmlPath1]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
@@ -72,7 +72,7 @@ describe('main', () => {
     expect(warnings).to.include('');
   });
   it('transform the test JSON file with file extensions into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--xml', testXmlPath2]);
+    await AccTransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--xml', testXmlPath2]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
@@ -85,7 +85,7 @@ describe('main', () => {
     expect(warnings).to.include('');
   });
   it('transform the JSON file from a test command into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', testCoverage, '--xml', testXmlPath3, '-c', 'test']);
+    await AccTransformerTransform.run(['--coverage-json', testCoverage, '--xml', testXmlPath3, '-c', 'test']);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)

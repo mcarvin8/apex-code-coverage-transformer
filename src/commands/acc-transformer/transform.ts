@@ -5,31 +5,34 @@ import { writeFile, readFile } from 'node:fs/promises';
 
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import { DeployCoverageData, TestCoverageData, TransformerTransformResult } from '../../helpers/types.js';
+import { DeployCoverageData, TestCoverageData } from '../../helpers/types.js';
 import { transformDeployCoverageReport } from '../../helpers/transformDeployCoverageReport.js';
 import { transformTestCoverageReport } from '../../helpers/transformTestCoverageReport.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
-const messages = Messages.loadMessages('apex-code-coverage-transformer', 'transformer.transform');
+const messages = Messages.loadMessages('apex-code-coverage-transformer', 'acc-transformer.transform');
 
-export default class TransformerTransform extends SfCommand<TransformerTransformResult> {
+export type AccTransformerTransformResult = {
+  path: string;
+};
+
+export default class AccTransformerTransform extends SfCommand<AccTransformerTransformResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
+    xml: Flags.file({
+      summary: messages.getMessage('flags.xml.summary'),
+      char: 'x',
+      required: true,
+      default: 'coverage.xml',
+    }),
     'coverage-json': Flags.file({
       summary: messages.getMessage('flags.coverage-json.summary'),
       char: 'j',
       required: true,
       exists: true,
-    }),
-    xml: Flags.file({
-      summary: messages.getMessage('flags.xml.summary'),
-      char: 'x',
-      required: true,
-      exists: false,
-      default: 'coverage.xml',
     }),
     command: Flags.string({
       summary: messages.getMessage('flags.command.summary'),
@@ -40,8 +43,8 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     }),
   };
 
-  public async run(): Promise<TransformerTransformResult> {
-    const { flags } = await this.parse(TransformerTransform);
+  public async run(): Promise<AccTransformerTransformResult> {
+    const { flags } = await this.parse(AccTransformerTransform);
     const jsonFilePath = resolve(flags['coverage-json']);
     const xmlFilePath = resolve(flags['xml']);
     const commandType = flags['command'];

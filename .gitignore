@@ -47,7 +47,3 @@ node_modules
 # os specific files
 .DS_Store
 .idea
-.sfdx
-stderr*.txt
-stdout*.txt
-.yarn/install-state.gz
