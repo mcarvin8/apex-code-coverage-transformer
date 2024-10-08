@@ -28,7 +28,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install salesforce CLI
-        run: npm install -g @salesforce/cli
+        run: npm install -g @salesforce/cli --unsafe-perm
 
       - name: Yarn install
         run: yarn
