@@ -50,21 +50,21 @@ describe('acc transformer NUTs', () => {
   });
 
   it('runs transform on the deploy coverage file without file extensions.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${testXmlPath1}"`;
+    const command = `apex-code-coverage transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${testXmlPath1}"`;
     const output = execCmd(command, { ensureExitCode: 0, cli: 'sf' }).shellOutput.stdout;
 
     expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath1}`);
   });
 
   it('runs transform on the deploy coverage file with file extensions.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${testXmlPath2}"`;
+    const command = `apex-code-coverage transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${testXmlPath2}"`;
     const output = execCmd(command, { ensureExitCode: 0, cli: 'sf' }).shellOutput.stdout;
 
     expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath2}`);
   });
 
   it('runs transform on the test coverage file.', async () => {
-    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${testXmlPath3}"`;
+    const command = `apex-code-coverage transformer transform --coverage-json "${testCoverage}" --xml "${testXmlPath3}"`;
     const output = execCmd(command, { ensureExitCode: 0, cli: 'sf' }).shellOutput.stdout;
 
     expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath3}`);

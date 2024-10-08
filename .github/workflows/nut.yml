@@ -26,8 +26,6 @@ jobs:
           node-version: 18
           cache: yarn
           registry-url: 'https://registry.npmjs.org'
-          check-latest: true
-          node-options: "--experimental-specifier-resolution=node"
 
       - name: Install Dependencies
         run: yarn install
@@ -38,13 +36,9 @@ jobs:
       - name: Install salesforce CLI
         run: npm install -g @salesforce/cli
 
-      - name: Clear Yarn Cache (Ubuntu)
-        if: runner.os == 'Linux'
-        run: yarn cache clean
-
       - name: Install plugin
         run: |
-          sf plugins:link .
+          echo y | sf plugins install apex-code-coverage-transformer@latest
           sf plugins
 
       - name: Run NUT
