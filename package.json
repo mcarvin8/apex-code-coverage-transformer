@@ -3,21 +3,21 @@
   "description": "Transforms the Apex code coverage JSON created during Salesforce deployments and test runs into the Generic Test Coverage Format (XML) for SonarQube.",
   "version": "1.7.6",
   "dependencies": {
-    "@oclif/core": "^4",
-    "@salesforce/core": "^7.2.0",
-    "@salesforce/sf-plugins-core": "^10.0.0",
+    "@oclif/core": "4.0.27",
+    "@salesforce/core": "^8.6.1",
+    "@salesforce/sf-plugins-core": "^11.3.10",
     "husky": "^9.1.6",
     "isomorphic-git": "^1.27.1",
     "xmlbuilder2": "^3.1.1"
   },
   "devDependencies": {
-    "@oclif/plugin-command-snapshot": "^5.2.15",
-    "@salesforce/cli-plugins-testkit": "^5.3.10",
+    "@oclif/plugin-command-snapshot": "^5.2.18",
+    "@salesforce/cli-plugins-testkit": "^5.3.33",
     "@salesforce/dev-scripts": "^10.2.10",
-    "eslint-plugin-sf-plugin": "^1.18.6",
-    "oclif": "^4.14.0",
+    "eslint-plugin-sf-plugin": "^1.20.7",
+    "oclif": "^4.14.32",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"
