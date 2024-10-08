@@ -27,13 +27,11 @@ jobs:
           cache: yarn
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install salesforce CLI
-        run: npm install -g @salesforce/cli --unsafe-perm
-
       - name: Yarn install
         run: yarn
 
-      - name: Install plugin and Run NUT
+      - name: Install Salesforce CLI, plugin and Run NUT
         run: |
+         npm install -g @salesforce/cli --unsafe-perm
          echo y | sf plugins install apex-code-coverage-transformer@latest
          ${{ inputs.command }}
