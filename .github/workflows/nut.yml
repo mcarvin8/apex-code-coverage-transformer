@@ -30,9 +30,6 @@ jobs:
       - name: Install salesforce CLI
         run: npm install -g @salesforce/cli
 
-      - name: Ensure Salesforce CLI in PATH
-        run: echo "::add-path::$(npm bin -g)"
-
       - name: Install plugin
         run: echo y | sf plugins install apex-code-coverage-transformer@latest
 
