@@ -27,19 +27,13 @@ jobs:
           cache: yarn
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install Dependencies
-        run: yarn install
-
-      - name: Build
-        run: yarn build
-
       - name: Install salesforce CLI
         run: npm install -g @salesforce/cli
 
       - name: Install plugin
-        run: |
-          echo y | sf plugins install apex-code-coverage-transformer@latest
-          sf plugins
+        run: echo y | sf plugins install apex-code-coverage-transformer@latest
 
       - name: Run NUT
-        run: ${{ inputs.command }}
+        run: |
+          yarn
+          ${{ inputs.command }}
