@@ -33,8 +33,15 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Install Salesforce CLI, link plugin and Run NUT
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Link Plugin
+        run: sf plugins:link .
+
+      - name: Run NUT
         run: |
-         npm install -g @salesforce/cli --unsafe-perm
-         sf plugins:link .
-         ${{ inputs.command }}
+          env
+          export HOME=/root
+          env
+          ${{ inputs.command }}
