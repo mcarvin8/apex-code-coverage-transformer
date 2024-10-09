@@ -41,7 +41,5 @@ jobs:
 
       - name: Run NUT
         run: |
-          env
           export HOME=/root
-          env
           ${{ inputs.command }}
