@@ -27,7 +27,10 @@ jobs:
           cache: yarn
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Yarn build
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
         run: yarn build
 
       - name: Install Salesforce CLI, link plugin and Run NUT
