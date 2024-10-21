@@ -35,15 +35,15 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 
 The `apex-code-coverage-transformer` has 1 command:
 
-- `sf apex-code-coverage transformer transform`
+- `sf acc-transformer transform`
 
 This command needs to be ran somewhere inside your Salesforce DX git repository, whether in the root folder (recommended) or in a subfolder. This plugin will determine the root folder of this repository and read the `sfdx-project.json` file in the root folder. All package directories listed in the `sfdx-project.json` file will be processed when running this plugin.
 
-## `sf apex-code-coverage transformer transform`
+## `sf acc-transformer transform`
 
 ```
 USAGE
-  $ sf apex-code-coverage transformer transform -j <value> -x <value> -c <value> [--json]
+  $ sf acc-transformer transform -j <value> -x <value> -c <value> [--json]
 
 FLAGS
   -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment or test command.
@@ -57,7 +57,7 @@ DESCRIPTION
   This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments and test runs into an XML accepted by tools like SonarQube.
 
 EXAMPLES
-    $ sf apex-code-coverage transformer transform -j "coverage.json" -x "coverage.xml" -c "deploy"
+    $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -c "deploy"
 ```
 
 ## Hook

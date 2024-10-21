@@ -51,6 +51,11 @@
     "commands": "./lib/commands",
     "bin": "sf",
     "topicSeparator": " ",
+    "topics": {
+      "acc-transformer": {
+        "description": "description for acc-transformer"
+      }
+    },
     "hooks": {
       "postrun": "./lib/hooks/postrun"
     },
