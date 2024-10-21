@@ -20,7 +20,7 @@ describe('acc-transformer transform NUTs', () => {
   const testXmlPath3 = resolve('coverage3.xml');
 
   const configFile = {
-    packageDirectories: [{ path: 'test/baselines', default: true }],
+    packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
     namespace: '',
     sfdcLoginUrl: 'https://login.salesforce.com',
     sourceApiVersion: '58.0',
@@ -50,21 +50,21 @@ describe('acc-transformer transform NUTs', () => {
 
   it('runs transform on the deploy coverage file without file extensions.', async () => {
     const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${testXmlPath1}"`;
-    const output = execCmd(command, { ensureExitCode: 0, cli: 'sf' }).shellOutput.stdout;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
     expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath1}`);
   });
 
   it('runs transform on the deploy coverage file with file extensions.', async () => {
     const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${testXmlPath2}"`;
-    const output = execCmd(command, { ensureExitCode: 0, cli: 'sf' }).shellOutput.stdout;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
     expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath2}`);
   });
 
   it('runs transform on the test coverage file.', async () => {
     const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${testXmlPath3}"`;
-    const output = execCmd(command, { ensureExitCode: 0, cli: 'sf' }).shellOutput.stdout;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
     expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath3}`);
   });
