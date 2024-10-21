@@ -1,6 +1,6 @@
 'use strict';
 
-import { copyFile, writeFile, readFile, rm, mkdir } from 'node:fs/promises';
+import { writeFile, readFile, rm, mkdir } from 'node:fs/promises';
 import { strictEqual } from 'node:assert';
 import { resolve } from 'node:path';
 
@@ -9,8 +9,10 @@ import { expect } from 'chai';
 
 describe('acc-transformer transform NUTs', () => {
   let session: TestSession;
-  const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
-  const baselineTriggerPath = resolve('test/baselines/triggers/AccountTrigger.trigger');
+  const mockClassContent = '// Test Apex Class';
+  const mockTriggerContent = '// Test Apex Trigger';
+  const baselineClassPath = resolve('force-app/main/default/classes/AccountProfile.cls');
+  const baselineTriggerPath = resolve('packaged/triggers/AccountTrigger.trigger');
   const deployCoverageNoExts = resolve('test/deploy_coverage_no_file_exts.json');
   const deployCoverageWithExts = resolve('test/deploy_coverage_with_file_exts.json');
   const testCoverage = resolve('test/test_coverage.json');
@@ -18,6 +20,7 @@ describe('acc-transformer transform NUTs', () => {
   const testXmlPath1 = resolve('coverage1.xml');
   const testXmlPath2 = resolve('coverage2.xml');
   const testXmlPath3 = resolve('coverage3.xml');
+  const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
     packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
@@ -29,18 +32,18 @@ describe('acc-transformer transform NUTs', () => {
 
   before(async () => {
     session = await TestSession.create({ devhubAuthStrategy: 'NONE' });
-    await writeFile('sfdx-project.json', configJsonString);
+    await writeFile(sfdxConfigFile, configJsonString);
     await mkdir('force-app/main/default/classes', { recursive: true });
     await mkdir('packaged/triggers', { recursive: true });
-    await copyFile(baselineClassPath, 'force-app/main/default/classes/AccountProfile.cls');
-    await copyFile(baselineTriggerPath, 'packaged/triggers/AccountTrigger.trigger');
+    await writeFile(baselineClassPath, mockClassContent);
+    await writeFile(baselineTriggerPath, mockTriggerContent);
   });
 
   after(async () => {
     await session?.clean();
-    await rm('sfdx-project.json');
-    await rm('force-app/main/default/classes/AccountProfile.cls');
-    await rm('packaged/triggers/AccountTrigger.trigger');
+    await rm(sfdxConfigFile);
+    await rm(baselineClassPath);
+    await rm(baselineTriggerPath);
     await rm('force-app', { recursive: true });
     await rm('packaged', { recursive: true });
     await rm(testXmlPath1);
