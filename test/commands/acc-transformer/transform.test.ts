@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 import { TestContext } from '@salesforce/core/lib/testSetup.js';
 import { expect } from 'chai';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
-import TransformerTransform from '../../../src/commands/apex-code-coverage/transformer/transform.js';
+import TransformerTransform from '../../../src/commands/acc-transformer/transform.js';
 
 describe('main', () => {
   const $$ = new TestContext();
