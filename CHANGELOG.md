@@ -5,6 +5,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.6...v2.0.0) (2024-10-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* shorten command to acc-transformer
+
+### Features
+
+* shorten command to acc-transformer ([686cdc6](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/686cdc6960f8f73e7796e6b97928a8294a6b450b))
+
 ## [1.7.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.5...v1.7.6) (2024-07-28)
 
 
