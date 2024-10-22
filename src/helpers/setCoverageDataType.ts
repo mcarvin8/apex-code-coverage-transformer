@@ -3,7 +3,7 @@
 import { DeployCoverageData, TestCoverageData } from './types.js';
 
 // Type guard for DeployCoverageData
-export function isDeployCoverageData(data: unknown): data is DeployCoverageData {
+function isDeployCoverageData(data: unknown): data is DeployCoverageData {
   if (typeof data !== 'object' || data === null) return false;
 
   return Object.entries(data).every(([, item]) => {
@@ -51,7 +51,7 @@ export function isDeployCoverageData(data: unknown): data is DeployCoverageData 
 }
 
 // Type guard for a single TestCoverageData
-export function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
+function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
   return (
     typeof data === 'object' &&
     data !== null &&
@@ -66,7 +66,7 @@ export function isSingleTestCoverageData(data: unknown): data is TestCoverageDat
 }
 
 // Type guard for TestCoverageData array
-export function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
+function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
   return Array.isArray(data) && data.every(isSingleTestCoverageData);
 }
 
