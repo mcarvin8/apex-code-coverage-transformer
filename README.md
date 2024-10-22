@@ -101,7 +101,7 @@ Warning: The file name AccountProfile was not found in any package directory.
 Warning: None of the files listed in the coverage JSON were processed. The coverage XML will be empty.
 ```
 
-The code coverage JSON files created by the Salesforce CLI deployment commands follow a different format than the format created by the test commands. If the code coverage JSON file does not match one of the 2 expected coverage data types, the plugin will fail with:
+The code coverage JSON files created by the Salesforce CLI deployment commands follow a different format than the code coverage files created by the test commands. If the code coverage JSON file provided does not match one of the 2 expected coverage data types, the plugin will fail with:
 
 ```
 Error (1): The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.
