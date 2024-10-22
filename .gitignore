@@ -48,3 +48,6 @@ node_modules
 oclif.manifest.json
 
 oclif.lock
+*.log
+stderr*.txt
+stdout*.txt

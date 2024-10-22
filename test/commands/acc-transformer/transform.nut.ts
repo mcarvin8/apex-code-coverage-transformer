@@ -14,10 +14,13 @@ describe('acc-transformer transform NUTs', () => {
   const deployCoverageNoExts = resolve('test/deploy_coverage_no_file_exts.json');
   const deployCoverageWithExts = resolve('test/deploy_coverage_with_file_exts.json');
   const testCoverage = resolve('test/test_coverage.json');
-  const baselineXmlPath = resolve('test/coverage_baseline.xml');
-  const testXmlPath1 = resolve('coverage1.xml');
-  const testXmlPath2 = resolve('coverage2.xml');
-  const testXmlPath3 = resolve('coverage3.xml');
+  const invalidJson = resolve('test/invalid.json');
+  const deployBaselineXmlPath = resolve('test/deploy_coverage_baseline.xml');
+  const testBaselineXmlPath = resolve('test/test_coverage_baseline.xml');
+  const coverageXmlPath1 = resolve('coverage1.xml');
+  const coverageXmlPath2 = resolve('coverage2.xml');
+  const coverageXmlPath3 = resolve('coverage3.xml');
+  const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
     packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
@@ -29,7 +32,7 @@ describe('acc-transformer transform NUTs', () => {
 
   before(async () => {
     session = await TestSession.create({ devhubAuthStrategy: 'NONE' });
-    await writeFile('sfdx-project.json', configJsonString);
+    await writeFile(sfdxConfigFile, configJsonString);
     await mkdir('force-app/main/default/classes', { recursive: true });
     await mkdir('packaged/triggers', { recursive: true });
     await copyFile(baselineClassPath, 'force-app/main/default/classes/AccountProfile.cls');
@@ -38,49 +41,65 @@ describe('acc-transformer transform NUTs', () => {
 
   after(async () => {
     await session?.clean();
-    await rm('sfdx-project.json');
+    await rm(sfdxConfigFile);
     await rm('force-app/main/default/classes/AccountProfile.cls');
     await rm('packaged/triggers/AccountTrigger.trigger');
     await rm('force-app', { recursive: true });
     await rm('packaged', { recursive: true });
-    await rm(testXmlPath1);
-    await rm(testXmlPath2);
-    await rm(testXmlPath3);
+    await rm(coverageXmlPath1);
+    await rm(coverageXmlPath2);
+    await rm(coverageXmlPath3);
   });
 
   it('runs transform on the deploy coverage file without file extensions.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${testXmlPath1}"`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${coverageXmlPath1}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath1}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coverageXmlPath1}`);
   });
 
   it('runs transform on the deploy coverage file with file extensions.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${testXmlPath2}"`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${coverageXmlPath2}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath2}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coverageXmlPath2}`);
   });
 
   it('runs transform on the test coverage file.', async () => {
-    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${testXmlPath3}"`;
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${coverageXmlPath3}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${testXmlPath3}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coverageXmlPath3}`);
   });
-  it('confirm the 2 XML files created in the previous tests are the same as the baseline.', async () => {
-    const xmlContent1 = await readFile(testXmlPath1, 'utf-8');
-    const xmlContent2 = await readFile(testXmlPath2, 'utf-8');
-    const baselineXmlContent = await readFile(baselineXmlPath, 'utf-8');
+  it('confirms a failure on an invalid JSON file.', async () => {
+    const command = `acc-transformer transform --coverage-json "${invalidJson}"`;
+    const error = execCmd(command, { ensureExitCode: 2 }).shellOutput.stderr;
+
+    expect(error.replace('\n', '')).to.contain(
+      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+    );
+  });
+
+  it('confirm the XML files created are the same as the baselines.', async () => {
+    const deployXml1 = await readFile(coverageXmlPath1, 'utf-8');
+    const deployXml2 = await readFile(coverageXmlPath2, 'utf-8');
+    const testXml = await readFile(coverageXmlPath3, 'utf-8');
+    const deployBaselineXmlContent = await readFile(deployBaselineXmlPath, 'utf-8');
+    const testBaselineXmlContent = await readFile(testBaselineXmlPath, 'utf-8');
     strictEqual(
-      xmlContent1,
-      baselineXmlContent,
-      `File content is different between ${testXmlPath1} and ${baselineXmlPath}`
+      deployXml1,
+      deployBaselineXmlContent,
+      `File content is different between ${coverageXmlPath1} and ${deployBaselineXmlPath}`
     );
     strictEqual(
-      xmlContent2,
-      baselineXmlContent,
-      `File content is different between ${testXmlPath2} and ${baselineXmlPath}`
+      deployXml2,
+      deployBaselineXmlContent,
+      `File content is different between ${coverageXmlPath2} and ${deployBaselineXmlPath}`
+    );
+    strictEqual(
+      testXml,
+      testBaselineXmlContent,
+      `File content is different between ${coverageXmlPath2} and ${testBaselineXmlPath}`
     );
   });
 });

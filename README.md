@@ -43,12 +43,11 @@ This command needs to be ran somewhere inside your Salesforce DX git repository,
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> -x <value> -c <value> [--json]
+  $ sf acc-transformer transform -j <value> -x <value> [--json]
 
 FLAGS
   -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment or test command.
   -x, --xml=<value> [default: "coverage.xml"] Path to code coverage XML file that will be created by this plugin.
-  -c, --command=<value> [default: "deploy"] The type of Salesforce CLI command you are running. Valid options: "deploy" or "test".
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -57,7 +56,7 @@ DESCRIPTION
   This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments and test runs into an XML accepted by tools like SonarQube.
 
 EXAMPLES
-    $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -c "deploy"
+    $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml"
 ```
 
 ## Hook
@@ -100,6 +99,12 @@ If none of the files listed in the coverage JSON were found in a package directo
 Warning: The file name AccountTrigger was not found in any package directory.
 Warning: The file name AccountProfile was not found in any package directory.
 Warning: None of the files listed in the coverage JSON were processed. The coverage XML will be empty.
+```
+
+The code coverage JSON files created by the Salesforce CLI deployment commands follow a different format than the format created by the test commands. If the code coverage JSON file does not match one of the 2 expected coverage data types, the plugin will fail with:
+
+```
+Error (1): The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.
 ```
 
 If the `sfdx-project.json` file was not found in your repository's root folder, the plugin will fail with:
