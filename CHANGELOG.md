@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.0.0...v2.1.0) (2024-10-22)
+
+
+### Features
+
+* remove command flag by adding type guard functions ([be380bf](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/be380bf2400cb217a3769d6272668d6ba277a6a4))
+
 ## [2.0.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v1.7.6...v2.0.0) (2024-10-21)
 
 
