@@ -8,6 +8,7 @@ import { Messages } from '@salesforce/core';
 import { DeployCoverageData, TestCoverageData, TransformerTransformResult } from '../../helpers/types.js';
 import { transformDeployCoverageReport } from '../../helpers/transformDeployCoverageReport.js';
 import { transformTestCoverageReport } from '../../helpers/transformTestCoverageReport.js';
+import { checkCoverageDataType } from '../../helpers/setCoverageDataType.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('apex-code-coverage-transformer', 'transformer.transform');
@@ -31,37 +32,35 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       exists: false,
       default: 'coverage.xml',
     }),
-    command: Flags.string({
-      summary: messages.getMessage('flags.command.summary'),
-      char: 'c',
-      required: true,
-      default: 'deploy',
-      options: ['deploy', 'test'],
-    }),
   };
 
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
     const jsonFilePath = resolve(flags['coverage-json']);
     const xmlFilePath = resolve(flags['xml']);
-    const commandType = flags['command'];
     const jsonData = await readFile(jsonFilePath, 'utf-8');
 
     let xmlData: string;
     let warnings: string[] = [];
     let filesProcessed: number = 0;
-    if (commandType === 'test') {
-      const coverageData = JSON.parse(jsonData) as TestCoverageData[];
-      const result = await transformTestCoverageReport(coverageData);
+    const parsedData = JSON.parse(jsonData) as DeployCoverageData | TestCoverageData[];
+    const commandType = checkCoverageDataType(parsedData);
+
+    // Determine the type of coverage data using type guards
+    if (commandType === 'TestCoverageData') {
+      const result = await transformTestCoverageReport(parsedData as TestCoverageData[]);
+      xmlData = result.xml;
+      warnings = result.warnings;
+      filesProcessed = result.filesProcessed;
+    } else if (commandType === 'DeployCoverageData') {
+      const result = await transformDeployCoverageReport(parsedData as DeployCoverageData);
       xmlData = result.xml;
       warnings = result.warnings;
       filesProcessed = result.filesProcessed;
     } else {
-      const coverageData = JSON.parse(jsonData) as DeployCoverageData;
-      const result = await transformDeployCoverageReport(coverageData);
-      xmlData = result.xml;
-      warnings = result.warnings;
-      filesProcessed = result.filesProcessed;
+      this.error(
+        'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+      );
     }
 
     // Print warnings if any

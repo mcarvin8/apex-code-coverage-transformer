@@ -58,7 +58,5 @@ export const postrun: Hook<'postrun'> = async function (options) {
   commandArgs.push(coverageJsonPath);
   commandArgs.push('--xml');
   commandArgs.push(coverageXmlPath);
-  commandArgs.push('--command');
-  commandArgs.push(commandType);
   await TransformerTransform.run(commandArgs);
 };
