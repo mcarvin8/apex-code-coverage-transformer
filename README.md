@@ -14,7 +14,7 @@ To create the code coverage JSON during a Salesforce CLI deployment/validation, 
 sf project deploy [start/validate] --coverage-formatters json --results-dir "coverage"
 ```
 
-To create the code coverage JSON when running tests directly in the org, append `--code-coverage --result-format json --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in the a folder named "coverage".
+To create the code coverage JSON when running tests directly in the org, append `--code-coverage --result-format json --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in a folder named "coverage".
 
 ```
 sf apex run test --code-coverage --result-format json --output-dir "coverage"
