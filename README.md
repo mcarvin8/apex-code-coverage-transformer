@@ -53,8 +53,6 @@ sf apex get test --test-run-id <test run id> --code-coverage --result-format jso
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX repositories and needs to be converted using this plugin.
 
-**Disclaimer**: Due to existing bugs with how the Salesforce CLI reports covered lines during deployments (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for covered lines in this plugin for deployment coverage files, I had to add a function to re-number out-of-range covered lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as covered by the Salesforce CLI deploy command). Salesforce's coverage result may also include extra lines as covered (ex: 120 lines are included in the coverage report for a 100 line file), so the coverage percentage may vary based on how many lines the API returns in the coverage report. Once Salesforce fixes the API to correctly return covered lines in the deploy command, this function will be removed.
-
 ## Command
 
 The `apex-code-coverage-transformer` has 1 command:
@@ -161,46 +159,13 @@ This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-c
   <file path="packaged/triggers/AccountTrigger.trigger">
     <lineToCover lineNumber="52" covered="false"/>
     <lineToCover lineNumber="53" covered="false"/>
-    <lineToCover lineNumber="59" covered="false"/>
-    <lineToCover lineNumber="60" covered="false"/>
-    <lineToCover lineNumber="1" covered="true"/>
-    <lineToCover lineNumber="2" covered="true"/>
-    <lineToCover lineNumber="3" covered="true"/>
-    <lineToCover lineNumber="4" covered="true"/>
-    <lineToCover lineNumber="5" covered="true"/>
-    <lineToCover lineNumber="6" covered="true"/>
-    <lineToCover lineNumber="7" covered="true"/>
-    <lineToCover lineNumber="8" covered="true"/>
-    <lineToCover lineNumber="9" covered="true"/>
-    <lineToCover lineNumber="10" covered="true"/>
-    <lineToCover lineNumber="11" covered="true"/>
-    <lineToCover lineNumber="12" covered="true"/>
-    <lineToCover lineNumber="13" covered="true"/>
-    <lineToCover lineNumber="14" covered="true"/>
-    <lineToCover lineNumber="15" covered="true"/>
-    <lineToCover lineNumber="16" covered="true"/>
-    <lineToCover lineNumber="17" covered="true"/>
-    <lineToCover lineNumber="18" covered="true"/>
-    <lineToCover lineNumber="19" covered="true"/>
-    <lineToCover lineNumber="20" covered="true"/>
-    <lineToCover lineNumber="21" covered="true"/>
-    <lineToCover lineNumber="22" covered="true"/>
-    <lineToCover lineNumber="23" covered="true"/>
-    <lineToCover lineNumber="24" covered="true"/>
-    <lineToCover lineNumber="25" covered="true"/>
-    <lineToCover lineNumber="26" covered="true"/>
-    <lineToCover lineNumber="27" covered="true"/>
-  </file>
-  <file path="force-app/main/default/classes/AccountProfile.cls">
-    <lineToCover lineNumber="52" covered="false"/>
-    <lineToCover lineNumber="53" covered="false"/>
-    <lineToCover lineNumber="59" covered="false"/>
-    <lineToCover lineNumber="60" covered="false"/>
     <lineToCover lineNumber="54" covered="true"/>
     <lineToCover lineNumber="55" covered="true"/>
     <lineToCover lineNumber="56" covered="true"/>
     <lineToCover lineNumber="57" covered="true"/>
     <lineToCover lineNumber="58" covered="true"/>
+    <lineToCover lineNumber="59" covered="false"/>
+    <lineToCover lineNumber="60" covered="false"/>
     <lineToCover lineNumber="61" covered="true"/>
     <lineToCover lineNumber="62" covered="true"/>
     <lineToCover lineNumber="63" covered="true"/>
@@ -213,16 +178,49 @@ This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-c
     <lineToCover lineNumber="70" covered="true"/>
     <lineToCover lineNumber="71" covered="true"/>
     <lineToCover lineNumber="72" covered="true"/>
-    <lineToCover lineNumber="1" covered="true"/>
-    <lineToCover lineNumber="2" covered="true"/>
-    <lineToCover lineNumber="3" covered="true"/>
-    <lineToCover lineNumber="4" covered="true"/>
-    <lineToCover lineNumber="5" covered="true"/>
-    <lineToCover lineNumber="6" covered="true"/>
-    <lineToCover lineNumber="7" covered="true"/>
-    <lineToCover lineNumber="8" covered="true"/>
-    <lineToCover lineNumber="9" covered="true"/>
-    <lineToCover lineNumber="10" covered="true"/>
+    <lineToCover lineNumber="73" covered="true"/>
+    <lineToCover lineNumber="74" covered="true"/>
+    <lineToCover lineNumber="75" covered="true"/>
+    <lineToCover lineNumber="76" covered="true"/>
+    <lineToCover lineNumber="77" covered="true"/>
+    <lineToCover lineNumber="78" covered="true"/>
+    <lineToCover lineNumber="79" covered="true"/>
+    <lineToCover lineNumber="80" covered="true"/>
+    <lineToCover lineNumber="81" covered="true"/>
+    <lineToCover lineNumber="82" covered="true"/>
+  </file>
+  <file path="force-app/main/default/classes/AccountProfile.cls">
+    <lineToCover lineNumber="52" covered="false"/>
+    <lineToCover lineNumber="53" covered="false"/>
+    <lineToCover lineNumber="54" covered="true"/>
+    <lineToCover lineNumber="55" covered="true"/>
+    <lineToCover lineNumber="56" covered="true"/>
+    <lineToCover lineNumber="57" covered="true"/>
+    <lineToCover lineNumber="58" covered="true"/>
+    <lineToCover lineNumber="59" covered="false"/>
+    <lineToCover lineNumber="60" covered="false"/>
+    <lineToCover lineNumber="61" covered="true"/>
+    <lineToCover lineNumber="62" covered="true"/>
+    <lineToCover lineNumber="63" covered="true"/>
+    <lineToCover lineNumber="64" covered="true"/>
+    <lineToCover lineNumber="65" covered="true"/>
+    <lineToCover lineNumber="66" covered="true"/>
+    <lineToCover lineNumber="67" covered="true"/>
+    <lineToCover lineNumber="68" covered="true"/>
+    <lineToCover lineNumber="69" covered="true"/>
+    <lineToCover lineNumber="70" covered="true"/>
+    <lineToCover lineNumber="71" covered="true"/>
+    <lineToCover lineNumber="72" covered="true"/>
+    <lineToCover lineNumber="73" covered="true"/>
+    <lineToCover lineNumber="74" covered="true"/>
+    <lineToCover lineNumber="75" covered="true"/>
+    <lineToCover lineNumber="76" covered="true"/>
+    <lineToCover lineNumber="77" covered="true"/>
+    <lineToCover lineNumber="78" covered="true"/>
+    <lineToCover lineNumber="79" covered="true"/>
+    <lineToCover lineNumber="80" covered="true"/>
+    <lineToCover lineNumber="81" covered="true"/>
+    <lineToCover lineNumber="82" covered="true"/>
   </file>
 </coverage>
 ```
@@ -232,7 +230,7 @@ and this format for Cobertura:
 ```xml
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1734621101529" complexity="0" version="0.1">
+<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1734899535002" complexity="0" version="0.1">
   <sources>
     <source>.</source>
   </sources>
@@ -244,49 +242,13 @@ and this format for Cobertura:
           <lines>
             <line number="52" hits="0" branch="false"/>
             <line number="53" hits="0" branch="false"/>
-            <line number="59" hits="0" branch="false"/>
-            <line number="60" hits="0" branch="false"/>
-            <line number="1" hits="1" branch="false"/>
-            <line number="2" hits="1" branch="false"/>
-            <line number="3" hits="1" branch="false"/>
-            <line number="4" hits="1" branch="false"/>
-            <line number="5" hits="1" branch="false"/>
-            <line number="6" hits="1" branch="false"/>
-            <line number="7" hits="1" branch="false"/>
-            <line number="8" hits="1" branch="false"/>
-            <line number="9" hits="1" branch="false"/>
-            <line number="10" hits="1" branch="false"/>
-            <line number="11" hits="1" branch="false"/>
-            <line number="12" hits="1" branch="false"/>
-            <line number="13" hits="1" branch="false"/>
-            <line number="14" hits="1" branch="false"/>
-            <line number="15" hits="1" branch="false"/>
-            <line number="16" hits="1" branch="false"/>
-            <line number="17" hits="1" branch="false"/>
-            <line number="18" hits="1" branch="false"/>
-            <line number="19" hits="1" branch="false"/>
-            <line number="20" hits="1" branch="false"/>
-            <line number="21" hits="1" branch="false"/>
-            <line number="22" hits="1" branch="false"/>
-            <line number="23" hits="1" branch="false"/>
-            <line number="24" hits="1" branch="false"/>
-            <line number="25" hits="1" branch="false"/>
-            <line number="26" hits="1" branch="false"/>
-            <line number="27" hits="1" branch="false"/>
-          </lines>
-        </class>
-        <class name="AccountProfile" filename="force-app/main/default/classes/AccountProfile.cls" line-rate="0.8710" branch-rate="1">
-          <methods/>
-          <lines>
-            <line number="52" hits="0" branch="false"/>
-            <line number="53" hits="0" branch="false"/>
-            <line number="59" hits="0" branch="false"/>
-            <line number="60" hits="0" branch="false"/>
             <line number="54" hits="1" branch="false"/>
             <line number="55" hits="1" branch="false"/>
             <line number="56" hits="1" branch="false"/>
             <line number="57" hits="1" branch="false"/>
             <line number="58" hits="1" branch="false"/>
+            <line number="59" hits="0" branch="false"/>
+            <line number="60" hits="0" branch="false"/>
             <line number="61" hits="1" branch="false"/>
             <line number="62" hits="1" branch="false"/>
             <line number="63" hits="1" branch="false"/>
@@ -299,16 +261,52 @@ and this format for Cobertura:
             <line number="70" hits="1" branch="false"/>
             <line number="71" hits="1" branch="false"/>
             <line number="72" hits="1" branch="false"/>
-            <line number="1" hits="1" branch="false"/>
-            <line number="2" hits="1" branch="false"/>
-            <line number="3" hits="1" branch="false"/>
-            <line number="4" hits="1" branch="false"/>
-            <line number="5" hits="1" branch="false"/>
-            <line number="6" hits="1" branch="false"/>
-            <line number="7" hits="1" branch="false"/>
-            <line number="8" hits="1" branch="false"/>
-            <line number="9" hits="1" branch="false"/>
-            <line number="10" hits="1" branch="false"/>
+            <line number="73" hits="1" branch="false"/>
+            <line number="74" hits="1" branch="false"/>
+            <line number="75" hits="1" branch="false"/>
+            <line number="76" hits="1" branch="false"/>
+            <line number="77" hits="1" branch="false"/>
+            <line number="78" hits="1" branch="false"/>
+            <line number="79" hits="1" branch="false"/>
+            <line number="80" hits="1" branch="false"/>
+            <line number="81" hits="1" branch="false"/>
+            <line number="82" hits="1" branch="false"/>
+          </lines>
+        </class>
+        <class name="AccountProfile" filename="force-app/main/default/classes/AccountProfile.cls" line-rate="0.8710" branch-rate="1">
+          <methods/>
+          <lines>
+            <line number="52" hits="0" branch="false"/>
+            <line number="53" hits="0" branch="false"/>
+            <line number="54" hits="1" branch="false"/>
+            <line number="55" hits="1" branch="false"/>
+            <line number="56" hits="1" branch="false"/>
+            <line number="57" hits="1" branch="false"/>
+            <line number="58" hits="1" branch="false"/>
+            <line number="59" hits="0" branch="false"/>
+            <line number="60" hits="0" branch="false"/>
+            <line number="61" hits="1" branch="false"/>
+            <line number="62" hits="1" branch="false"/>
+            <line number="63" hits="1" branch="false"/>
+            <line number="64" hits="1" branch="false"/>
+            <line number="65" hits="1" branch="false"/>
+            <line number="66" hits="1" branch="false"/>
+            <line number="67" hits="1" branch="false"/>
+            <line number="68" hits="1" branch="false"/>
+            <line number="69" hits="1" branch="false"/>
+            <line number="70" hits="1" branch="false"/>
+            <line number="71" hits="1" branch="false"/>
+            <line number="72" hits="1" branch="false"/>
+            <line number="73" hits="1" branch="false"/>
+            <line number="74" hits="1" branch="false"/>
+            <line number="75" hits="1" branch="false"/>
+            <line number="76" hits="1" branch="false"/>
+            <line number="77" hits="1" branch="false"/>
+            <line number="78" hits="1" branch="false"/>
+            <line number="79" hits="1" branch="false"/>
+            <line number="80" hits="1" branch="false"/>
+            <line number="81" hits="1" branch="false"/>
+            <line number="82" hits="1" branch="false"/>
           </lines>
         </class>
       </classes>
@@ -321,54 +319,20 @@ and this format for Clover:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1734898566028" clover="3.2.0">
-  <project timestamp="1734898566028" name="All files">
+<coverage generated="1734899535162" clover="3.2.0">
+  <project timestamp="1734899535162" name="All files">
     <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="62" coveredelements="54" complexity="0" loc="62" ncloc="62" packages="1" files="2" classes="2"/>
     <file name="AccountTrigger" path="packaged/triggers/AccountTrigger.trigger">
       <metrics statements="31" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <line num="52" count="0" type="stmt"/>
       <line num="53" count="0" type="stmt"/>
-      <line num="59" count="0" type="stmt"/>
-      <line num="60" count="0" type="stmt"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="2" count="1" type="stmt"/>
-      <line num="3" count="1" type="stmt"/>
-      <line num="4" count="1" type="stmt"/>
-      <line num="5" count="1" type="stmt"/>
-      <line num="6" count="1" type="stmt"/>
-      <line num="7" count="1" type="stmt"/>
-      <line num="8" count="1" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="1" type="stmt"/>
-      <line num="11" count="1" type="stmt"/>
-      <line num="12" count="1" type="stmt"/>
-      <line num="13" count="1" type="stmt"/>
-      <line num="14" count="1" type="stmt"/>
-      <line num="15" count="1" type="stmt"/>
-      <line num="16" count="1" type="stmt"/>
-      <line num="17" count="1" type="stmt"/>
-      <line num="18" count="1" type="stmt"/>
-      <line num="19" count="1" type="stmt"/>
-      <line num="20" count="1" type="stmt"/>
-      <line num="21" count="1" type="stmt"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="23" count="1" type="stmt"/>
-      <line num="24" count="1" type="stmt"/>
-      <line num="25" count="1" type="stmt"/>
-      <line num="26" count="1" type="stmt"/>
-      <line num="27" count="1" type="stmt"/>
-    </file>
-    <file name="AccountProfile" path="force-app/main/default/classes/AccountProfile.cls">
-      <metrics statements="31" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <line num="52" count="0" type="stmt"/>
-      <line num="53" count="0" type="stmt"/>
-      <line num="59" count="0" type="stmt"/>
-      <line num="60" count="0" type="stmt"/>
       <line num="54" count="1" type="stmt"/>
       <line num="55" count="1" type="stmt"/>
       <line num="56" count="1" type="stmt"/>
       <line num="57" count="1" type="stmt"/>
       <line num="58" count="1" type="stmt"/>
+      <line num="59" count="0" type="stmt"/>
+      <line num="60" count="0" type="stmt"/>
       <line num="61" count="1" type="stmt"/>
       <line num="62" count="1" type="stmt"/>
       <line num="63" count="1" type="stmt"/>
@@ -381,16 +345,50 @@ and this format for Clover:
       <line num="70" count="1" type="stmt"/>
       <line num="71" count="1" type="stmt"/>
       <line num="72" count="1" type="stmt"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="2" count="1" type="stmt"/>
-      <line num="3" count="1" type="stmt"/>
-      <line num="4" count="1" type="stmt"/>
-      <line num="5" count="1" type="stmt"/>
-      <line num="6" count="1" type="stmt"/>
-      <line num="7" count="1" type="stmt"/>
-      <line num="8" count="1" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="1" type="stmt"/>
+      <line num="73" count="1" type="stmt"/>
+      <line num="74" count="1" type="stmt"/>
+      <line num="75" count="1" type="stmt"/>
+      <line num="76" count="1" type="stmt"/>
+      <line num="77" count="1" type="stmt"/>
+      <line num="78" count="1" type="stmt"/>
+      <line num="79" count="1" type="stmt"/>
+      <line num="80" count="1" type="stmt"/>
+      <line num="81" count="1" type="stmt"/>
+      <line num="82" count="1" type="stmt"/>
+    </file>
+    <file name="AccountProfile" path="force-app/main/default/classes/AccountProfile.cls">
+      <metrics statements="31" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <line num="52" count="0" type="stmt"/>
+      <line num="53" count="0" type="stmt"/>
+      <line num="54" count="1" type="stmt"/>
+      <line num="55" count="1" type="stmt"/>
+      <line num="56" count="1" type="stmt"/>
+      <line num="57" count="1" type="stmt"/>
+      <line num="58" count="1" type="stmt"/>
+      <line num="59" count="0" type="stmt"/>
+      <line num="60" count="0" type="stmt"/>
+      <line num="61" count="1" type="stmt"/>
+      <line num="62" count="1" type="stmt"/>
+      <line num="63" count="1" type="stmt"/>
+      <line num="64" count="1" type="stmt"/>
+      <line num="65" count="1" type="stmt"/>
+      <line num="66" count="1" type="stmt"/>
+      <line num="67" count="1" type="stmt"/>
+      <line num="68" count="1" type="stmt"/>
+      <line num="69" count="1" type="stmt"/>
+      <line num="70" count="1" type="stmt"/>
+      <line num="71" count="1" type="stmt"/>
+      <line num="72" count="1" type="stmt"/>
+      <line num="73" count="1" type="stmt"/>
+      <line num="74" count="1" type="stmt"/>
+      <line num="75" count="1" type="stmt"/>
+      <line num="76" count="1" type="stmt"/>
+      <line num="77" count="1" type="stmt"/>
+      <line num="78" count="1" type="stmt"/>
+      <line num="79" count="1" type="stmt"/>
+      <line num="80" count="1" type="stmt"/>
+      <line num="81" count="1" type="stmt"/>
+      <line num="82" count="1" type="stmt"/>
     </file>
   </project>
 </coverage>
