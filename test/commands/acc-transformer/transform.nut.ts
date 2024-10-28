@@ -99,7 +99,7 @@ describe('acc-transformer transform NUTs', () => {
     strictEqual(
       testXml,
       testBaselineXmlContent,
-      `File content is different between ${coverageXmlPath2} and ${testBaselineXmlPath}`
+      `File content is different between ${coverageXmlPath3} and ${testBaselineXmlPath}`
     );
   });
 });
