@@ -24,7 +24,10 @@ export const postrun: Hook<'postrun'> = async function (options) {
     return;
   }
   let configFile: ConfigFile;
-  const repoRoot = await getRepoRoot();
+  const { repoRoot } = await getRepoRoot();
+  if (!repoRoot) {
+    return;
+  }
   const configPath = resolve(repoRoot, '.apexcodecovtransformer.config.json');
 
   try {
