@@ -6,7 +6,6 @@ import { DeployCoverageData } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { generateReport } from './generateReport.js';
-import { setCoveredLines } from './setCoveredLines.js';
 
 export async function transformDeployCoverageReport(
   data: DeployCoverageData,
@@ -28,9 +27,6 @@ export async function transformDeployCoverageReport(
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
       continue;
     }
-
-    const updatedLines = await setCoveredLines(relativeFilePath, repoRoot, fileInfo.s);
-    fileInfo.s = updatedLines;
 
     handler.processFile(
       relativeFilePath,
