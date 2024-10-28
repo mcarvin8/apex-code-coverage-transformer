@@ -16,6 +16,8 @@
 - [License](#license)
 </details>
 
+> **NOTICE:** The Salesforce CLI bug with inaccurate deployment coverage reports (see [3030](https://github.com/forcedotcom/cli/issues/3030)) has been resolved with `sf` CLI version 2.62.6 (October 16, 2024). This plugin's v3 series builds will only work with newer versions of the `sf` CLI with this fix for deployment coverage reports. The test coverage reports are not impacted by this fix.
+
 The `apex-code-coverage-transformer` is a Salesforce CLI plugin to transform the Apex Code Coverage JSON files created during deployments and test runs into the Generic Test Coverage Format (XML). This format is accepted by static code analysis tools like SonarQube.
 
 This plugin supports code coverage metrics created for Apex Classes and Apex Triggers. This also supports multiple package directories as listed in your project's `sfdx-project.json` configuration, assuming unique file-names are used in your package directories.
@@ -38,8 +40,6 @@ sf apex get test --test-run-id <test run id> --code-coverage --result-format jso
 ```
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted by SonarQube automatically for Salesforce DX repositories and needs to be converted using this plugin.
-
-**Disclaimer**: Due to existing bugs with how the Salesforce CLI reports covered lines during deployments (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for covered lines in this plugin for deployment coverage files, I had to add a function to re-number out-of-range covered lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as covered by the Salesforce CLI deploy command). Salesforce's coverage result may also include extra lines as covered (ex: 120 lines are included in the coverage report for a 100 line file), so the coverage percentage may vary based on how many lines the API returns in the coverage report. Once Salesforce fixes the API to correctly return covered lines in the deploy command, this function will be removed.
 
 ## Install
 
