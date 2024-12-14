@@ -28,9 +28,9 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 
 ## Who is the Plugin For?
 
-This plugin is intended for users who deploy their Apex codebase (Apex classes and triggers) from any Salesforce DX repository (`sfdx-project.json` file), not just git-based ones. You should be running this plugin somewhere inside your Salesforce DX repository (root folder preferred). This plugin searches for your repository's `sfdx-project.json` file to know which package directories to search into. Since SonarQube relies on file-paths to map code coverage to the files in their explorer interface, the Apex files must be found in one of your package directories. 
+This plugin is intended for users who deploy their Apex codebase (Apex classes and triggers) from any Salesforce DX repository (`sfdx-project.json` file), not just git-based ones. You should be running this plugin somewhere inside your Salesforce DX repository (root folder preferred). This plugin searches for your repository's `sfdx-project.json` file to know which package directories to search into. Since SonarQube relies on file-paths to map code coverage to the files in their explorer interface, the Apex files must be found in one of your package directories.
 
-This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. Since files from managed and unlocked packages aren't retrieved into Salesforce DX repositories, these files cannot be included in your SonarQube scans. 
+This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. Since files from managed and unlocked packages aren't retrieved into Salesforce DX repositories, these files cannot be included in your SonarQube scans.
 
 When the plugin is unable to find the Apex file from the coverage report in your repository, it will print a warning and not add that file's coverage data to the coverage XML created by this plugin. A warning will be printed for each file not found in a package directory in your repository. See [Errors and Warnings](https://github.com/mcarvin8/apex-code-coverage-transformer?tab=readme-ov-file#errors-and-warnings) for more information.
 
@@ -50,8 +50,6 @@ sf apex get test --test-run-id <test run id> --code-coverage --result-format jso
 ```
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted by SonarQube automatically for Salesforce DX repositories and needs to be converted using this plugin.
-
-**Disclaimer**: Due to existing bugs with how the Salesforce CLI reports covered lines during deployments (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for covered lines in this plugin for deployment coverage files, I had to add a function to re-number out-of-range covered lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as covered by the Salesforce CLI deploy command). Salesforce's coverage result may also include extra lines as covered (ex: 120 lines are included in the coverage report for a 100 line file), so the coverage percentage may vary based on how many lines the API returns in the coverage report. Once Salesforce fixes the API to correctly return covered lines in the deploy command, this function will be removed.
 
 ## Command
 
