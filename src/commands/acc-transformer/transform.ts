@@ -32,12 +32,21 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       exists: false,
       default: 'coverage.xml',
     }),
+    format: Flags.string({
+      summary: messages.getMessage('flags.format.summary'),
+      char: 'f',
+      required: true,
+      multiple: false,
+      default: 'sonar',
+      options: ['sonar', 'cobertura'],
+    }),
   };
 
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
     const jsonFilePath = resolve(flags['coverage-json']);
     const xmlFilePath = resolve(flags['xml']);
+    const format = flags['format'];
     const jsonData = await readFile(jsonFilePath, 'utf-8');
 
     let xmlData: string;
@@ -48,12 +57,12 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
     // Determine the type of coverage data using type guards
     if (commandType === 'TestCoverageData') {
-      const result = await transformTestCoverageReport(parsedData as TestCoverageData[]);
+      const result = await transformTestCoverageReport(parsedData as TestCoverageData[], format);
       xmlData = result.xml;
       warnings = result.warnings;
       filesProcessed = result.filesProcessed;
     } else if (commandType === 'DeployCoverageData') {
-      const result = await transformDeployCoverageReport(parsedData as DeployCoverageData);
+      const result = await transformDeployCoverageReport(parsedData as DeployCoverageData, format);
       xmlData = result.xml;
       warnings = result.warnings;
       filesProcessed = result.filesProcessed;

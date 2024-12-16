@@ -20,9 +20,12 @@ describe('main', () => {
   const invalidJson = resolve('test/invalid.json');
   const deployBaselineXmlPath = resolve('test/deploy_coverage_baseline.xml');
   const testBaselineXmlPath = resolve('test/test_coverage_baseline.xml');
-  const coverageXmlPath1 = resolve('coverage1.xml');
-  const coverageXmlPath2 = resolve('coverage2.xml');
-  const coverageXmlPath3 = resolve('coverage3.xml');
+  const sonarXmlPath1 = resolve('sonar1.xml');
+  const sonarXmlPath2 = resolve('sonar2.xml');
+  const sonarXmlPath3 = resolve('sonar3.xml');
+  const coberturaXmlPath1 = resolve('cobertura1.xml');
+  const coberturaXmlPath2 = resolve('cobertura2.xml');
+  const coberturaXmlPath3 = resolve('cobertura3.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -55,44 +58,47 @@ describe('main', () => {
     await rm('packaged/triggers/AccountTrigger.trigger');
     await rm('force-app', { recursive: true });
     await rm('packaged', { recursive: true });
-    await rm(coverageXmlPath1);
-    await rm(coverageXmlPath2);
-    await rm(coverageXmlPath3);
+    await rm(sonarXmlPath1);
+    await rm(sonarXmlPath2);
+    await rm(sonarXmlPath3);
+    await rm(coberturaXmlPath1);
+    await rm(coberturaXmlPath2);
+    await rm(coberturaXmlPath3);
   });
 
-  it('transform the test JSON file without file extensions into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--xml', coverageXmlPath1]);
+  it('transform the test JSON file without file extensions into Sonar format without any warnings.', async () => {
+    await TransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--xml', sonarXmlPath1]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${coverageXmlPath1}`);
+    expect(output).to.include(`The coverage XML has been written to ${sonarXmlPath1}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the test JSON file with file extensions into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--xml', coverageXmlPath2]);
+  it('transform the test JSON file with file extensions into Sonar format without any warnings.', async () => {
+    await TransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--xml', sonarXmlPath2]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${coverageXmlPath2}`);
+    expect(output).to.include(`The coverage XML has been written to ${sonarXmlPath2}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the JSON file from a test command into the generic test coverage format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', testCoverage, '--xml', coverageXmlPath3]);
+  it('transform the JSON file from a test command into Sonar format without any warnings.', async () => {
+    await TransformerTransform.run(['--coverage-json', testCoverage, '--xml', sonarXmlPath3]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${coverageXmlPath3}`);
+    expect(output).to.include(`The coverage XML has been written to ${sonarXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -114,25 +120,85 @@ describe('main', () => {
     }
   });
   it('confirm the XML files created are the same as the baselines.', async () => {
-    const deployXml1 = await readFile(coverageXmlPath1, 'utf-8');
-    const deployXml2 = await readFile(coverageXmlPath2, 'utf-8');
-    const testXml = await readFile(coverageXmlPath3, 'utf-8');
+    const deployXml1 = await readFile(sonarXmlPath1, 'utf-8');
+    const deployXml2 = await readFile(sonarXmlPath2, 'utf-8');
+    const testXml = await readFile(sonarXmlPath3, 'utf-8');
     const deployBaselineXmlContent = await readFile(deployBaselineXmlPath, 'utf-8');
     const testBaselineXmlContent = await readFile(testBaselineXmlPath, 'utf-8');
     strictEqual(
       deployXml1,
       deployBaselineXmlContent,
-      `File content is different between ${coverageXmlPath1} and ${deployBaselineXmlPath}`
+      `File content is different between ${sonarXmlPath1} and ${deployBaselineXmlPath}`
     );
     strictEqual(
       deployXml2,
       deployBaselineXmlContent,
-      `File content is different between ${coverageXmlPath2} and ${deployBaselineXmlPath}`
+      `File content is different between ${sonarXmlPath2} and ${deployBaselineXmlPath}`
     );
     strictEqual(
       testXml,
       testBaselineXmlContent,
-      `File content is different between ${coverageXmlPath3} and ${testBaselineXmlPath}`
+      `File content is different between ${sonarXmlPath3} and ${testBaselineXmlPath}`
     );
+  });
+  it('transform the test JSON file without file extensions into Cobertura format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      deployCoverageNoExts,
+      '--xml',
+      coberturaXmlPath1,
+      '--format',
+      'cobertura',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage XML has been written to ${coberturaXmlPath1}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the test JSON file with file extensions into Cobertura format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      deployCoverageWithExts,
+      '--xml',
+      coberturaXmlPath2,
+      '--format',
+      'cobertura',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage XML has been written to ${coberturaXmlPath2}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the JSON file from a test command into Cobertura format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      testCoverage,
+      '--xml',
+      coberturaXmlPath3,
+      '--format',
+      'cobertura',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage XML has been written to ${coberturaXmlPath3}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
   });
 });

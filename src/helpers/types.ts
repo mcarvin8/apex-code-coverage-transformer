@@ -56,4 +56,51 @@ export type ConfigFile = {
   deployCoverageJsonPath: string;
   testCoverageJsonPath: string;
   coverageXmlPath: string;
+  format: string;
+};
+
+export type CoberturaLine = {
+  '@number': number;
+  '@hits': number;
+  '@branch': string;
+};
+
+export type CoberturaClass = {
+  '@name': string;
+  '@filename': string;
+  '@line-rate': string;
+  '@branch-rate': string;
+  methods: Record<string, never>;
+  lines: {
+    line: CoberturaLine[];
+  };
+};
+
+type CoberturaPackage = {
+  '@name': string;
+  '@line-rate': number;
+  '@branch-rate': number;
+  classes: {
+    class: CoberturaClass[];
+  };
+};
+
+export type CoberturaCoverageObject = {
+  coverage: {
+    '@lines-valid': number;
+    '@lines-covered': number;
+    '@line-rate': number;
+    '@branches-valid': number;
+    '@branches-covered': number;
+    '@branch-rate': number | string;
+    '@timestamp': number;
+    '@complexity': number;
+    '@version': string;
+    sources: {
+      source: string[];
+    };
+    packages: {
+      package: CoberturaPackage[];
+    };
+  };
 };
