@@ -68,19 +68,23 @@ USAGE
   $ sf acc-transformer transform -j <value> -x <value> -f <value> [--json]
 
 FLAGS
-  -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment or test command.
-  -x, --xml=<value>           [default: "coverage.xml"] Path to code coverage XML file that will be created by this plugin.
-  -f, --format=<value>        [default: "sonar"] Output format for the code coverage format.
-                                                 Valid options are "sonar" or "cobertura".
+  -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
+  -x, --xml=<value>           Path to the code coverage XML file that will be created by this plugin.
+                              [default: "coverage.xml"]
+  -f, --format=<value>        Output format for the code coverage format.
+                              Valid options are "sonar" or "cobertura".
+                              [default: "sonar"]
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments and test runs into SonarQube or Cobertura format.
+  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube or Cobertura format.
 
 EXAMPLES
     $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "sonar"
+
+    $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "cobertura"
 ```
 
 ## Hook
