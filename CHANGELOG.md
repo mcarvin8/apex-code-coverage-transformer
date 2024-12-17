@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.2.1...v2.3.0) (2024-12-17)
+
+
+### Features
+
+* add support for cobertura format ([41a3b25](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/41a3b2583ce1014ccd04f935c5c8b87831bee2e7))
+
 ## [2.2.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.2.0...v2.2.1) (2024-12-14)
 
 
