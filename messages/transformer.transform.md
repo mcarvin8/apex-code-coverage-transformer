@@ -17,3 +17,7 @@ Path to the code coverage JSON file created by the Salesforce CLI deployment or 
 # flags.xml.summary
 
 Path to code coverage XML file that will be created by this plugin.
+
+# flags.format.summary
+
+Output format for the coverage report.

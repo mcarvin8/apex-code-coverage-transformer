@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { getTotalLines } from './getTotalLines.js';
 import { FileObject } from './types.js';
 
-export async function setCoveredLines(
+export async function setCoveredLinesSonar(
   coveredLines: number[],
   uncoveredLines: number[],
   repoRoot: string,

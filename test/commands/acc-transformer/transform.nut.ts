@@ -17,9 +17,12 @@ describe('acc-transformer transform NUTs', () => {
   const invalidJson = resolve('test/invalid.json');
   const deployBaselineXmlPath = resolve('test/deploy_coverage_baseline.xml');
   const testBaselineXmlPath = resolve('test/test_coverage_baseline.xml');
-  const coverageXmlPath1 = resolve('coverage1.xml');
-  const coverageXmlPath2 = resolve('coverage2.xml');
-  const coverageXmlPath3 = resolve('coverage3.xml');
+  const sonarXmlPath1 = resolve('sonar1.xml');
+  const sonarXmlPath2 = resolve('sonar2.xml');
+  const sonarXmlPath3 = resolve('sonar3.xml');
+  const coberturaXmlPath1 = resolve('cobertura1.xml');
+  const coberturaXmlPath2 = resolve('cobertura2.xml');
+  const coberturaXmlPath3 = resolve('cobertura3.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -46,30 +49,33 @@ describe('acc-transformer transform NUTs', () => {
     await rm('packaged/triggers/AccountTrigger.trigger');
     await rm('force-app', { recursive: true });
     await rm('packaged', { recursive: true });
-    await rm(coverageXmlPath1);
-    await rm(coverageXmlPath2);
-    await rm(coverageXmlPath3);
+    await rm(sonarXmlPath1);
+    await rm(sonarXmlPath2);
+    await rm(sonarXmlPath3);
+    await rm(coberturaXmlPath1);
+    await rm(coberturaXmlPath2);
+    await rm(coberturaXmlPath3);
   });
 
-  it('runs transform on the deploy coverage file without file extensions.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${coverageXmlPath1}"`;
+  it('runs transform on the deploy coverage file without file extensions in Sonar format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${sonarXmlPath1}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coverageXmlPath1}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${sonarXmlPath1}`);
   });
 
-  it('runs transform on the deploy coverage file with file extensions.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${coverageXmlPath2}"`;
+  it('runs transform on the deploy coverage file with file extensions in Sonar format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${sonarXmlPath2}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coverageXmlPath2}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${sonarXmlPath2}`);
   });
 
-  it('runs transform on the test coverage file.', async () => {
-    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${coverageXmlPath3}"`;
+  it('runs transform on the test coverage file in Sonar format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${sonarXmlPath3}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coverageXmlPath3}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${sonarXmlPath3}`);
   });
   it('confirms a failure on an invalid JSON file.', async () => {
     const command = `acc-transformer transform --coverage-json "${invalidJson}"`;
@@ -81,25 +87,45 @@ describe('acc-transformer transform NUTs', () => {
   });
 
   it('confirm the XML files created are the same as the baselines.', async () => {
-    const deployXml1 = await readFile(coverageXmlPath1, 'utf-8');
-    const deployXml2 = await readFile(coverageXmlPath2, 'utf-8');
-    const testXml = await readFile(coverageXmlPath3, 'utf-8');
+    const deployXml1 = await readFile(sonarXmlPath1, 'utf-8');
+    const deployXml2 = await readFile(sonarXmlPath2, 'utf-8');
+    const testXml = await readFile(sonarXmlPath3, 'utf-8');
     const deployBaselineXmlContent = await readFile(deployBaselineXmlPath, 'utf-8');
     const testBaselineXmlContent = await readFile(testBaselineXmlPath, 'utf-8');
     strictEqual(
       deployXml1,
       deployBaselineXmlContent,
-      `File content is different between ${coverageXmlPath1} and ${deployBaselineXmlPath}`
+      `File content is different between ${sonarXmlPath1} and ${deployBaselineXmlPath}`
     );
     strictEqual(
       deployXml2,
       deployBaselineXmlContent,
-      `File content is different between ${coverageXmlPath2} and ${deployBaselineXmlPath}`
+      `File content is different between ${sonarXmlPath2} and ${deployBaselineXmlPath}`
     );
     strictEqual(
       testXml,
       testBaselineXmlContent,
-      `File content is different between ${coverageXmlPath3} and ${testBaselineXmlPath}`
+      `File content is different between ${sonarXmlPath3} and ${testBaselineXmlPath}`
     );
+  });
+  it('runs transform on the deploy coverage file without file extensions in Cobertura format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${coberturaXmlPath1}" --format cobertura`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coberturaXmlPath1}`);
+  });
+
+  it('runs transform on the deploy coverage file with file extensions in Cobertura format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${coberturaXmlPath2}" --format cobertura`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coberturaXmlPath2}`);
+  });
+
+  it('runs transform on the test coverage file in Cobertura format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${coberturaXmlPath3}" --format cobertura`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coberturaXmlPath3}`);
   });
 });

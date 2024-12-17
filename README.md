@@ -18,7 +18,7 @@
 - [License](#license)
 </details>
 
-A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into the generic test coverage format (XML) accepted by SonarQube.
+A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into SonarQube format or Cobertura format.
 
 ## Install
 
@@ -28,13 +28,15 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 
 ## Who is the Plugin For?
 
-This plugin is intended for users who deploy their Apex codebase (Apex classes and triggers) from any Salesforce DX repository (`sfdx-project.json` file), not just git-based ones. You should be running this plugin somewhere inside your Salesforce DX repository (root folder preferred). This plugin searches for your repository's `sfdx-project.json` file to know which package directories to search into. Since SonarQube relies on file-paths to map code coverage to the files in their explorer interface, the Apex files must be found in one of your package directories. 
+This plugin is intended for users who deploy their Apex codebase (Apex classes and triggers) from any Salesforce DX repository (`sfdx-project.json` file), not just git-based ones. You should be running this plugin somewhere inside your Salesforce DX repository (root folder preferred). This plugin searches for your repository's `sfdx-project.json` file to know which package directories to search into. The Apex files must be found in one of your package directories.
 
-This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. Since files from managed and unlocked packages aren't retrieved into Salesforce DX repositories, these files cannot be included in your SonarQube scans. 
+This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. Since files from managed and unlocked packages aren't retrieved into Salesforce DX repositories, these files cannot be included in your code coverage reports.
 
-When the plugin is unable to find the Apex file from the coverage report in your repository, it will print a warning and not add that file's coverage data to the coverage XML created by this plugin. A warning will be printed for each file not found in a package directory in your repository. See [Errors and Warnings](https://github.com/mcarvin8/apex-code-coverage-transformer?tab=readme-ov-file#errors-and-warnings) for more information.
+When the plugin is unable to find the Apex file from the Salesforce CLI coverage report in your repository, it will print a warning and not add that file's coverage data to the coverage XML created by this plugin. A warning will be printed for each file not found in a package directory in your repository. See [Errors and Warnings](https://github.com/mcarvin8/apex-code-coverage-transformer?tab=readme-ov-file#errors-and-warnings) for more information.
 
 ## Creating Code Coverage Files with the Salesforce CLI
+
+**This tool will only support the JSON coverage format from the Salesforce CLI. Do not use "json-summary" or Salesforce's cobertura output.**
 
 To create the code coverage JSON during a Salesforce CLI deployment/validation, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
@@ -49,7 +51,7 @@ sf apex run test --code-coverage --result-format json --output-dir "coverage"
 sf apex get test --test-run-id <test run id> --code-coverage --result-format json --output-dir "coverage"
 ```
 
-The code coverage JSONs created by the Salesforce CLI aren't accepted by SonarQube automatically for Salesforce DX repositories and needs to be converted using this plugin.
+The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX repositories and needs to be converted using this plugin.
 
 **Disclaimer**: Due to existing bugs with how the Salesforce CLI reports covered lines during deployments (see [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568)), to add support for covered lines in this plugin for deployment coverage files, I had to add a function to re-number out-of-range covered lines the CLI may report (ex: line 100 in a 98-line Apex Class is reported back as covered by the Salesforce CLI deploy command). Salesforce's coverage result may also include extra lines as covered (ex: 120 lines are included in the coverage report for a 100 line file), so the coverage percentage may vary based on how many lines the API returns in the coverage report. Once Salesforce fixes the API to correctly return covered lines in the deploy command, this function will be removed.
 
@@ -63,20 +65,22 @@ The `apex-code-coverage-transformer` has 1 command:
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> -x <value> [--json]
+  $ sf acc-transformer transform -j <value> -x <value> -f <value> [--json]
 
 FLAGS
   -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deployment or test command.
-  -x, --xml=<value> [default: "coverage.xml"] Path to code coverage XML file that will be created by this plugin.
+  -x, --xml=<value>           [default: "coverage.xml"] Path to code coverage XML file that will be created by this plugin.
+  -f, --format=<value>        [default: "sonar"] Output format for the code coverage format.
+                                                 Valid options are "sonar" or "cobertura".
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments and test runs into an XML accepted by tools like SonarQube.
+  This plugin will convert the code coverage JSON file created by the Salesforce CLI during Apex deployments and test runs into SonarQube or Cobertura format.
 
 EXAMPLES
-    $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml"
+    $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "sonar"
 ```
 
 ## Hook
@@ -93,13 +97,15 @@ The `.apexcodecovtransformer.config.json` should look like this:
 {
   "deployCoverageJsonPath": "coverage/coverage/coverage.json",
   "testCoverageJsonPath": "coverage/test-coverage.json",
-  "coverageXmlPath": "coverage.xml"
+  "coverageXmlPath": "coverage.xml",
+  "format": "sonar"
 }
 ```
 
 - `deployCoverageJsonPath` is required to use the hook after deployments and should be the path to the code coverage JSON created by the Salesforce CLI deployment command. Recommend using a relative path.
 - `testCoverageJsonPath` is required to use the hook after test runs and should be the path to the code coverage JSON created by the Salesforce CLI test command. Recommend using a relative path.
 - `coverageXmlPath` is optional and should be the path to the code coverage XML created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.xml` in the working directory.
+- `format` is optional and should be the intended output format for the code coverage XML created by this plugin. Options are "sonar" or "cobertura". If this isn't provided, it will default to "sonar".
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
 
@@ -141,7 +147,7 @@ Error (1): ENOENT: no such file or directory: {packageDirPath}
 
 ## Example
 
-This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_no_file_exts.json) created during a Salesforce CLI deployment will be transformed into:
+This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_no_file_exts.json) created during a Salesforce CLI deployment will be transformed into this format for SonarQube:
 
 ```xml
 <?xml version="1.0"?>
@@ -212,6 +218,96 @@ This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-c
     <lineToCover lineNumber="9" covered="true"/>
     <lineToCover lineNumber="10" covered="true"/>
   </file>
+</coverage>
+```
+
+and this format for Cobertura:
+
+```xml
+<?xml version="1.0" ?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
+<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1734405832938" complexity="0" version="0.1">
+  <sources>
+    <source>.</source>
+  </sources>
+  <packages>
+    <package name="main" line-rate="0.871" branch-rate="1">
+      <classes>
+        <class name="AccountTrigger" filename="test/baselines/triggers/AccountTrigger.trigger" line-rate="0.8710" branch-rate="1">
+          <methods/>
+          <lines>
+            <line number="52" hits="0" branch="false"/>
+            <line number="53" hits="0" branch="false"/>
+            <line number="59" hits="0" branch="false"/>
+            <line number="60" hits="0" branch="false"/>
+            <line number="1" hits="1" branch="false"/>
+            <line number="2" hits="1" branch="false"/>
+            <line number="3" hits="1" branch="false"/>
+            <line number="4" hits="1" branch="false"/>
+            <line number="5" hits="1" branch="false"/>
+            <line number="6" hits="1" branch="false"/>
+            <line number="7" hits="1" branch="false"/>
+            <line number="8" hits="1" branch="false"/>
+            <line number="9" hits="1" branch="false"/>
+            <line number="10" hits="1" branch="false"/>
+            <line number="11" hits="1" branch="false"/>
+            <line number="12" hits="1" branch="false"/>
+            <line number="13" hits="1" branch="false"/>
+            <line number="14" hits="1" branch="false"/>
+            <line number="15" hits="1" branch="false"/>
+            <line number="16" hits="1" branch="false"/>
+            <line number="17" hits="1" branch="false"/>
+            <line number="18" hits="1" branch="false"/>
+            <line number="19" hits="1" branch="false"/>
+            <line number="20" hits="1" branch="false"/>
+            <line number="21" hits="1" branch="false"/>
+            <line number="22" hits="1" branch="false"/>
+            <line number="23" hits="1" branch="false"/>
+            <line number="24" hits="1" branch="false"/>
+            <line number="25" hits="1" branch="false"/>
+            <line number="26" hits="1" branch="false"/>
+            <line number="27" hits="1" branch="false"/>
+          </lines>
+        </class>
+        <class name="AccountProfile" filename="test/baselines/classes/AccountProfile.cls" line-rate="0.8710" branch-rate="1">
+          <methods/>
+          <lines>
+            <line number="52" hits="0" branch="false"/>
+            <line number="53" hits="0" branch="false"/>
+            <line number="59" hits="0" branch="false"/>
+            <line number="60" hits="0" branch="false"/>
+            <line number="54" hits="1" branch="false"/>
+            <line number="55" hits="1" branch="false"/>
+            <line number="56" hits="1" branch="false"/>
+            <line number="57" hits="1" branch="false"/>
+            <line number="58" hits="1" branch="false"/>
+            <line number="61" hits="1" branch="false"/>
+            <line number="62" hits="1" branch="false"/>
+            <line number="63" hits="1" branch="false"/>
+            <line number="64" hits="1" branch="false"/>
+            <line number="65" hits="1" branch="false"/>
+            <line number="66" hits="1" branch="false"/>
+            <line number="67" hits="1" branch="false"/>
+            <line number="68" hits="1" branch="false"/>
+            <line number="69" hits="1" branch="false"/>
+            <line number="70" hits="1" branch="false"/>
+            <line number="71" hits="1" branch="false"/>
+            <line number="72" hits="1" branch="false"/>
+            <line number="1" hits="1" branch="false"/>
+            <line number="2" hits="1" branch="false"/>
+            <line number="3" hits="1" branch="false"/>
+            <line number="4" hits="1" branch="false"/>
+            <line number="5" hits="1" branch="false"/>
+            <line number="6" hits="1" branch="false"/>
+            <line number="7" hits="1" branch="false"/>
+            <line number="8" hits="1" branch="false"/>
+            <line number="9" hits="1" branch="false"/>
+            <line number="10" hits="1" branch="false"/>
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
 </coverage>
 ```
 
