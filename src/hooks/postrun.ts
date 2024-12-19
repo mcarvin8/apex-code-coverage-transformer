@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { Hook } from '@oclif/core';
 
 import TransformerTransform from '../commands/acc-transformer/transform.js';
-import { ConfigFile } from '../helpers/types.js';
+import { HookFile } from '../helpers/types.js';
 import { getRepoRoot } from '../helpers/getRepoRoot.js';
 
 export const postrun: Hook<'postrun'> = async function (options) {
@@ -23,7 +23,7 @@ export const postrun: Hook<'postrun'> = async function (options) {
   } else {
     return;
   }
-  let configFile: ConfigFile;
+  let configFile: HookFile;
   const { repoRoot } = await getRepoRoot();
   if (!repoRoot) {
     return;
@@ -32,7 +32,7 @@ export const postrun: Hook<'postrun'> = async function (options) {
 
   try {
     const jsonString: string = await readFile(configPath, 'utf-8');
-    configFile = JSON.parse(jsonString) as ConfigFile;
+    configFile = JSON.parse(jsonString) as HookFile;
   } catch (error) {
     return;
   }

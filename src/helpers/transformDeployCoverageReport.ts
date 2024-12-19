@@ -2,7 +2,13 @@
 /* eslint-disable no-await-in-loop */
 
 import { create } from 'xmlbuilder2';
-import { DeployCoverageData, CoverageObject, CoberturaCoverageObject, FileObject, CoberturaClass } from './types.js';
+import {
+  DeployCoverageData,
+  SonarCoverageObject,
+  CoberturaCoverageObject,
+  SonarClass,
+  CoberturaClass,
+} from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { setCoveredLinesSonar } from './setCoveredLinesSonar.js';
@@ -18,7 +24,7 @@ export async function transformDeployCoverageReport(
   const { repoRoot, packageDirectories } = await getPackageDirectories();
 
   if (format === 'sonar') {
-    const coverageObj: CoverageObject = { coverage: { '@version': '1', file: [] } };
+    const coverageObj: SonarCoverageObject = { coverage: { '@version': '1', file: [] } };
 
     for (const fileName in data) {
       if (!Object.hasOwn(data, fileName)) continue;
@@ -36,7 +42,7 @@ export async function transformDeployCoverageReport(
         .filter((lineNumber) => fileInfo.s[lineNumber] === 1)
         .map(Number);
 
-      const fileObj: FileObject = {
+      const fileObj: SonarClass = {
         '@path': normalizePathToUnix(relativeFilePath),
         lineToCover: uncoveredLines.map((lineNumber: number) => ({
           '@lineNumber': lineNumber,

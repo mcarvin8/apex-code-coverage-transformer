@@ -3,14 +3,14 @@
 import { join } from 'node:path';
 
 import { getTotalLines } from './getTotalLines.js';
-import { FileObject } from './types.js';
+import { SonarClass } from './types.js';
 
 export async function setCoveredLinesSonar(
   coveredLines: number[],
   uncoveredLines: number[],
   repoRoot: string,
   filePath: string,
-  fileObj: FileObject
+  fileObj: SonarClass
 ): Promise<void> {
   const randomLines: number[] = [];
   const totalLines = await getTotalLines(join(repoRoot, filePath));

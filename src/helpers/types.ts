@@ -35,24 +35,24 @@ export type SfdxProject = {
   packageDirectories: Array<{ path: string }>;
 };
 
-type LineToCover = {
+type SonarLine = {
   '@lineNumber': number;
   '@covered': string;
 };
 
-export type FileObject = {
+export type SonarClass = {
   '@path': string;
-  lineToCover: LineToCover[];
+  lineToCover: SonarLine[];
 };
 
-export type CoverageObject = {
+export type SonarCoverageObject = {
   coverage: {
-    file: FileObject[];
+    file: SonarClass[];
     '@version': string;
   };
 };
 
-export type ConfigFile = {
+export type HookFile = {
   deployCoverageJsonPath: string;
   testCoverageJsonPath: string;
   coverageXmlPath: string;

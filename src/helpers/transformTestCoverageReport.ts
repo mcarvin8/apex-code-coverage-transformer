@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 
 import { create } from 'xmlbuilder2';
-import { TestCoverageData, CoverageObject, FileObject, CoberturaCoverageObject, CoberturaClass } from './types.js';
+import { TestCoverageData, SonarCoverageObject, SonarClass, CoberturaCoverageObject, CoberturaClass } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
@@ -20,7 +20,7 @@ export async function transformTestCoverageReport(
   }
 
   if (format === 'sonar') {
-    const coverageObj: CoverageObject = { coverage: { '@version': '1', file: [] } };
+    const coverageObj: SonarCoverageObject = { coverage: { '@version': '1', file: [] } };
 
     for (const data of coverageData) {
       const name = data?.name;
@@ -35,7 +35,7 @@ export async function transformTestCoverageReport(
         continue;
       }
 
-      const fileObj: FileObject = {
+      const fileObj: SonarClass = {
         '@path': normalizePathToUnix(relativeFilePath),
         lineToCover: [],
       };
