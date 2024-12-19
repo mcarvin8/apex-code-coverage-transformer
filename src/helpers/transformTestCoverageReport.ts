@@ -91,7 +91,7 @@ export async function transformTestCoverageReport(
       .map(([lineNumber]) => Number(lineNumber));
 
     if (format === 'sonar') {
-      handleSonarFormat(relativeFilePath, lines, repoRoot, coverageObj as SonarCoverageObject);
+      handleSonarFormat(relativeFilePath, lines, coverageObj as SonarCoverageObject);
     } else {
       handleCoberturaFormat(
         relativeFilePath,
@@ -99,7 +99,6 @@ export async function transformTestCoverageReport(
         lines,
         uncoveredLines,
         coveredLines,
-        repoRoot,
         coverageObj as CoberturaCoverageObject,
         packageObj!
       );
@@ -111,12 +110,7 @@ export async function transformTestCoverageReport(
   return { xml, warnings, filesProcessed };
 }
 
-function handleSonarFormat(
-  filePath: string,
-  lines: Record<string, number>,
-  repoRoot: string,
-  coverageObj: SonarCoverageObject
-): void {
+function handleSonarFormat(filePath: string, lines: Record<string, number>, coverageObj: SonarCoverageObject): void {
   const fileObj: SonarClass = {
     '@path': normalizePathToUnix(filePath),
     lineToCover: [],
@@ -138,7 +132,6 @@ function handleCoberturaFormat(
   lines: Record<string, number>,
   uncoveredLines: number[],
   coveredLines: number[],
-  repoRoot: string,
   coverageObj: CoberturaCoverageObject,
   packageObj: CoberturaPackage
 ): void {
