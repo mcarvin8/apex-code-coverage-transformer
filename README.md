@@ -230,14 +230,14 @@ and this format for Cobertura:
 ```xml
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1734405832938" complexity="0" version="0.1">
+<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1734621101529" complexity="0" version="0.1">
   <sources>
     <source>.</source>
   </sources>
   <packages>
     <package name="main" line-rate="0.871" branch-rate="1">
       <classes>
-        <class name="AccountTrigger" filename="test/baselines/triggers/AccountTrigger.trigger" line-rate="0.8710" branch-rate="1">
+        <class name="AccountTrigger" filename="packaged/triggers/AccountTrigger.trigger" line-rate="0.8710" branch-rate="1">
           <methods/>
           <lines>
             <line number="52" hits="0" branch="false"/>
@@ -273,7 +273,7 @@ and this format for Cobertura:
             <line number="27" hits="1" branch="false"/>
           </lines>
         </class>
-        <class name="AccountProfile" filename="test/baselines/classes/AccountProfile.cls" line-rate="0.8710" branch-rate="1">
+        <class name="AccountProfile" filename="force-app/main/default/classes/AccountProfile.cls" line-rate="0.8710" branch-rate="1">
           <methods/>
           <lines>
             <line number="52" hits="0" branch="false"/>
