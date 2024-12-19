@@ -76,7 +76,7 @@ export type CoberturaClass = {
   };
 };
 
-type CoberturaPackage = {
+export type CoberturaPackage = {
   '@name': string;
   '@line-rate': number;
   '@branch-rate': number;
