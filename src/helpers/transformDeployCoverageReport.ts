@@ -11,8 +11,6 @@ import {
 } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
-import { setCoveredLinesSonar } from './setCoveredLinesSonar.js';
-import { setCoveredLinesCobertura } from './setCoveredLinesCobertura.js';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
 import { generateXml } from './generateXml.js';
 
@@ -87,20 +85,13 @@ export async function transformDeployCoverageReport(
       .map(Number);
 
     if (format === 'sonar') {
-      await handleSonarFormat(
-        relativeFilePath,
-        uncoveredLines,
-        coveredLines,
-        repoRoot,
-        coverageObj as SonarCoverageObject
-      );
+      handleSonarFormat(relativeFilePath, fileInfo.s, coverageObj as SonarCoverageObject);
     } else {
-      await handleCoberturaFormat(
+      handleCoberturaFormat(
         relativeFilePath,
         formattedFileName,
         uncoveredLines,
         coveredLines,
-        repoRoot,
         coverageObj as CoberturaCoverageObject,
         packageObj!
       );
@@ -113,34 +104,32 @@ export async function transformDeployCoverageReport(
   return { xml, warnings, filesProcessed };
 }
 
-async function handleSonarFormat(
-  filePath: string,
-  uncoveredLines: number[],
-  coveredLines: number[],
-  repoRoot: string,
-  coverageObj: SonarCoverageObject
-): Promise<void> {
+function handleSonarFormat(filePath: string, lines: Record<string, number>, coverageObj: SonarCoverageObject): void {
   const fileObj: SonarClass = {
     '@path': normalizePathToUnix(filePath),
-    lineToCover: uncoveredLines.map((lineNumber) => ({
-      '@lineNumber': lineNumber,
-      '@covered': 'false',
-    })),
+    lineToCover: [],
   };
 
-  await setCoveredLinesSonar(coveredLines, uncoveredLines, repoRoot, filePath, fileObj);
+  for (const lineNumberString in lines) {
+    if (!Object.hasOwn(lines, lineNumberString)) continue;
+    const covered = lines[lineNumberString] === 1 ? 'true' : 'false';
+    fileObj.lineToCover.push({
+      '@lineNumber': Number(lineNumberString),
+      '@covered': covered,
+    });
+  }
+
   coverageObj.coverage.file.push(fileObj);
 }
 
-async function handleCoberturaFormat(
+function handleCoberturaFormat(
   filePath: string,
   fileName: string,
   uncoveredLines: number[],
   coveredLines: number[],
-  repoRoot: string,
   coverageObj: CoberturaCoverageObject,
   packageObj: CoberturaPackage
-): Promise<void> {
+): void {
   const classObj: CoberturaClass = {
     '@name': fileName,
     '@filename': normalizePathToUnix(filePath),
@@ -154,11 +143,14 @@ async function handleCoberturaFormat(
           '@hits': 0,
           '@branch': 'false',
         })),
+        ...coveredLines.map((lineNumber) => ({
+          '@number': lineNumber,
+          '@hits': 1,
+          '@branch': 'false',
+        })),
       ],
     },
   };
-
-  await setCoveredLinesCobertura(coveredLines, uncoveredLines, repoRoot, filePath, classObj);
 
   coverageObj.coverage['@lines-valid'] += uncoveredLines.length + coveredLines.length;
   coverageObj.coverage['@lines-covered'] += coveredLines.length;
