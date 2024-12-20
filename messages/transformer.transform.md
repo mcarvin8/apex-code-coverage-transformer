@@ -1,15 +1,16 @@
 # summary
 
-Transforms the Code Coverage JSON into SonarQube or Cobertura format.
+Transforms the Code Coverage JSON into SonarQube, Clover, or Cobertura format.
 
 # description
 
-Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube or Cobertura format.
+Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube, Clover, or Cobertura format.
 
 # examples
 
 - `sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "sonar"`
 - `sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "cobertura"`
+- `sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "clover"`
 
 # flags.coverage-json.summary
 

@@ -26,6 +26,9 @@ describe('main', () => {
   const coberturaXmlPath1 = resolve('cobertura1.xml');
   const coberturaXmlPath2 = resolve('cobertura2.xml');
   const coberturaXmlPath3 = resolve('cobertura3.xml');
+  const cloverXmlPath1 = resolve('clover1.xml');
+  const cloverXmlPath2 = resolve('clover2.xml');
+  const cloverXmlPath3 = resolve('clover3.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -64,6 +67,9 @@ describe('main', () => {
     await rm(coberturaXmlPath1);
     await rm(coberturaXmlPath2);
     await rm(coberturaXmlPath3);
+    await rm(cloverXmlPath1);
+    await rm(cloverXmlPath2);
+    await rm(cloverXmlPath3);
   });
 
   it('transform the test JSON file without file extensions into Sonar format without any warnings.', async () => {
@@ -195,6 +201,59 @@ describe('main', () => {
       .flatMap((c) => c.args)
       .join('\n');
     expect(output).to.include(`The coverage XML has been written to ${coberturaXmlPath3}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the test JSON file without file extensions into Clover format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      deployCoverageNoExts,
+      '--xml',
+      cloverXmlPath1,
+      '--format',
+      'clover',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage XML has been written to ${cloverXmlPath1}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the test JSON file with file extensions into Clover format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      deployCoverageWithExts,
+      '--xml',
+      cloverXmlPath2,
+      '--format',
+      'clover',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage XML has been written to ${cloverXmlPath2}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the JSON file from a test command into Clover format without any warnings.', async () => {
+    await TransformerTransform.run(['--coverage-json', testCoverage, '--xml', cloverXmlPath3, '--format', 'clover']);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage XML has been written to ${cloverXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)

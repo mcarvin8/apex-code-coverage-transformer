@@ -9,6 +9,7 @@ import { DeployCoverageData, TestCoverageData, TransformerTransformResult } from
 import { transformDeployCoverageReport } from '../../helpers/transformDeployCoverageReport.js';
 import { transformTestCoverageReport } from '../../helpers/transformTestCoverageReport.js';
 import { checkCoverageDataType } from '../../helpers/setCoverageDataType.js';
+import { formatOptions } from '../../helpers/constants.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('apex-code-coverage-transformer', 'transformer.transform');
@@ -38,7 +39,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       required: true,
       multiple: false,
       default: 'sonar',
-      options: ['sonar', 'cobertura'],
+      options: formatOptions,
     }),
   };
 

@@ -23,6 +23,9 @@ describe('acc-transformer transform NUTs', () => {
   const coberturaXmlPath1 = resolve('cobertura1.xml');
   const coberturaXmlPath2 = resolve('cobertura2.xml');
   const coberturaXmlPath3 = resolve('cobertura3.xml');
+  const cloverXmlPath1 = resolve('clover1.xml');
+  const cloverXmlPath2 = resolve('clover2.xml');
+  const cloverXmlPath3 = resolve('clover3.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -55,6 +58,9 @@ describe('acc-transformer transform NUTs', () => {
     await rm(coberturaXmlPath1);
     await rm(coberturaXmlPath2);
     await rm(coberturaXmlPath3);
+    await rm(cloverXmlPath1);
+    await rm(cloverXmlPath2);
+    await rm(cloverXmlPath3);
   });
 
   it('runs transform on the deploy coverage file without file extensions in Sonar format.', async () => {
@@ -127,5 +133,25 @@ describe('acc-transformer transform NUTs', () => {
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
     expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coberturaXmlPath3}`);
+  });
+  it('runs transform on the deploy coverage file without file extensions in Clover format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${cloverXmlPath1}" --format clover`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${cloverXmlPath1}`);
+  });
+
+  it('runs transform on the deploy coverage file with file extensions in Clover format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${cloverXmlPath2}" --format clover`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${cloverXmlPath2}`);
+  });
+
+  it('runs transform on the test coverage file in Clover format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${cloverXmlPath3}" --format clover`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${cloverXmlPath3}`);
   });
 });
