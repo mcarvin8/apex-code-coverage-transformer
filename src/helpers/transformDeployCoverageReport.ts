@@ -1,26 +1,32 @@
 'use strict';
 /* eslint-disable no-await-in-loop */
+/* eslint-disable no-param-reassign */
 
 import {
   DeployCoverageData,
   SonarCoverageObject,
   CoberturaCoverageObject,
+  CloverCoverageObject,
   SonarClass,
   CoberturaClass,
   CoberturaPackage,
+  CloverFile,
 } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { setCoveredLinesSonar } from './setCoveredLinesSonar.js';
 import { setCoveredLinesCobertura } from './setCoveredLinesCobertura.js';
+import { setCoveredLinesClover } from './setCoveredLinesClover.js';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
 import { generateXml } from './generateXml.js';
+import { formatOptions } from './constants.js';
+import { initializeCoverageObject } from './initializeCoverageObject.js';
 
 export async function transformDeployCoverageReport(
   data: DeployCoverageData,
   format: string
 ): Promise<{ xml: string; warnings: string[]; filesProcessed: number }> {
-  if (!['sonar', 'cobertura'].includes(format)) {
+  if (!formatOptions.includes(format)) {
     throw new Error(`Unsupported format: ${format}`);
   }
 
@@ -28,44 +34,7 @@ export async function transformDeployCoverageReport(
   let filesProcessed: number = 0;
   const { repoRoot, packageDirectories } = await getPackageDirectories();
 
-  // Initialize format-specific coverage objects
-  let coverageObj: SonarCoverageObject | CoberturaCoverageObject;
-
-  if (format === 'sonar') {
-    coverageObj = {
-      coverage: { '@version': '1', file: [] },
-    } as SonarCoverageObject;
-  } else {
-    coverageObj = {
-      coverage: {
-        '@lines-valid': 0,
-        '@lines-covered': 0,
-        '@line-rate': 0,
-        '@branches-valid': 0,
-        '@branches-covered': 0,
-        '@branch-rate': 1,
-        '@timestamp': Date.now(),
-        '@complexity': 0,
-        '@version': '0.1',
-        sources: { source: ['.'] },
-        packages: { package: [] },
-      },
-    } as CoberturaCoverageObject;
-  }
-
-  const packageObj =
-    format === 'cobertura'
-      ? {
-          '@name': 'main',
-          '@line-rate': 0,
-          '@branch-rate': 1,
-          classes: { class: [] as CoberturaClass[] },
-        }
-      : null;
-
-  if (packageObj) {
-    (coverageObj as CoberturaCoverageObject).coverage.packages.package.push(packageObj);
-  }
+  const { coverageObj, packageObj } = initializeCoverageObject(format);
 
   for (const fileName in data) {
     if (!Object.hasOwn(data, fileName)) continue;
@@ -94,7 +63,7 @@ export async function transformDeployCoverageReport(
         repoRoot,
         coverageObj as SonarCoverageObject
       );
-    } else {
+    } else if (format === 'cobertura') {
       await handleCoberturaFormat(
         relativeFilePath,
         formattedFileName,
@@ -103,6 +72,15 @@ export async function transformDeployCoverageReport(
         repoRoot,
         coverageObj as CoberturaCoverageObject,
         packageObj!
+      );
+    } else {
+      await handleCloverFormat(
+        relativeFilePath,
+        formattedFileName,
+        uncoveredLines,
+        coveredLines,
+        repoRoot,
+        coverageObj as CloverCoverageObject
       );
     }
 
@@ -168,4 +146,47 @@ async function handleCoberturaFormat(
     (coverageObj.coverage['@lines-covered'] / coverageObj.coverage['@lines-valid']).toFixed(4)
   );
   coverageObj.coverage['@line-rate'] = packageObj['@line-rate'];
+}
+
+async function handleCloverFormat(
+  filePath: string,
+  fileName: string,
+  uncoveredLines: number[],
+  coveredLines: number[],
+  repoRoot: string,
+  coverageObj: CloverCoverageObject
+): Promise<void> {
+  const cloverFile: CloverFile = {
+    '@name': fileName,
+    '@path': normalizePathToUnix(filePath),
+    metrics: {
+      '@statements': uncoveredLines.length + coveredLines.length,
+      '@coveredstatements': coveredLines.length,
+      '@conditionals': 0,
+      '@coveredconditionals': 0,
+      '@methods': 0,
+      '@coveredmethods': 0,
+    },
+    line: [
+      ...uncoveredLines.map((lineNumber) => ({
+        '@num': lineNumber,
+        '@count': 0,
+        '@type': 'stmt',
+      })),
+    ],
+  };
+
+  await setCoveredLinesClover(coveredLines, uncoveredLines, repoRoot, filePath, cloverFile);
+
+  coverageObj.coverage.project.file.push(cloverFile);
+  const projectMetrics = coverageObj.coverage.project.metrics;
+
+  projectMetrics['@statements'] += uncoveredLines.length + coveredLines.length;
+  projectMetrics['@coveredstatements'] += coveredLines.length;
+  projectMetrics['@elements'] += uncoveredLines.length + coveredLines.length;
+  projectMetrics['@coveredelements'] += coveredLines.length;
+  projectMetrics['@files'] += 1;
+  projectMetrics['@classes'] += 1;
+  projectMetrics['@loc'] += uncoveredLines.length + coveredLines.length;
+  projectMetrics['@ncloc'] += uncoveredLines.length + coveredLines.length;
 }

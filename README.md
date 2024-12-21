@@ -18,7 +18,7 @@
 - [License](#license)
 </details>
 
-A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into SonarQube format or Cobertura format.
+A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into SonarQube, Cobertura, or Clover format.
 
 ## Install
 
@@ -36,7 +36,7 @@ When the plugin is unable to find the Apex file from the Salesforce CLI coverage
 
 ## Creating Code Coverage Files with the Salesforce CLI
 
-**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use the "json-summary" or "cobertura" format from the Salesforce CLI.**
+**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use the "json-summary", "clover", or "cobertura" format from the Salesforce CLI.**
 
 To create the code coverage JSON when deploying or validating, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
@@ -72,19 +72,21 @@ FLAGS
   -x, --xml=<value>           Path to the code coverage XML file that will be created by this plugin.
                               [default: "coverage.xml"]
   -f, --format=<value>        Output format for the code coverage format.
-                              Valid options are "sonar" or "cobertura".
+                              Valid options are "sonar", "clover", or "cobertura".
                               [default: "sonar"]
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube or Cobertura format.
+  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube, Clover, or Cobertura format.
 
 EXAMPLES
     $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "sonar"
 
     $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "cobertura"
+
+    $ sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "clover"
 ```
 
 ## Hook
@@ -109,7 +111,7 @@ The `.apexcodecovtransformer.config.json` should look like this:
 - `deployCoverageJsonPath` is required to use the hook after deployments and should be the path to the code coverage JSON created by the Salesforce CLI deployment command. Recommend using a relative path.
 - `testCoverageJsonPath` is required to use the hook after test runs and should be the path to the code coverage JSON created by the Salesforce CLI test command. Recommend using a relative path.
 - `coverageXmlPath` is optional and should be the path to the code coverage XML created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.xml` in the working directory.
-- `format` is optional and should be the intended output format for the code coverage XML created by this plugin. Options are "sonar" or "cobertura". If this isn't provided, it will default to "sonar".
+- `format` is optional and should be the intended output format for the code coverage XML created by this plugin. Options are "sonar", "clover", or "cobertura". If this isn't provided, it will default to "sonar".
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
 
@@ -312,6 +314,85 @@ and this format for Cobertura:
       </classes>
     </package>
   </packages>
+</coverage>
+```
+
+and this format for Clover:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1734733618708" clover="3.2.0">
+  <project timestamp="1734733618708" name="All files">
+    <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="62" coveredelements="54" complexity="0" loc="62" ncloc="62" packages="1" files="2" classes="2"/>
+    <file name="AccountTrigger" path="packaged/triggers/AccountTrigger.trigger">
+      <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <line num="52" count="0" type="stmt"/>
+      <line num="53" count="0" type="stmt"/>
+      <line num="59" count="0" type="stmt"/>
+      <line num="60" count="0" type="stmt"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="14" count="1" type="stmt"/>
+      <line num="15" count="1" type="stmt"/>
+      <line num="16" count="1" type="stmt"/>
+      <line num="17" count="1" type="stmt"/>
+      <line num="18" count="1" type="stmt"/>
+      <line num="19" count="1" type="stmt"/>
+      <line num="20" count="1" type="stmt"/>
+      <line num="21" count="1" type="stmt"/>
+      <line num="22" count="1" type="stmt"/>
+      <line num="23" count="1" type="stmt"/>
+      <line num="24" count="1" type="stmt"/>
+      <line num="25" count="1" type="stmt"/>
+      <line num="26" count="1" type="stmt"/>
+      <line num="27" count="1" type="stmt"/>
+    </file>
+    <file name="AccountProfile" path="force-app/main/default/classes/AccountProfile.cls">
+      <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <line num="52" count="0" type="stmt"/>
+      <line num="53" count="0" type="stmt"/>
+      <line num="59" count="0" type="stmt"/>
+      <line num="60" count="0" type="stmt"/>
+      <line num="54" count="1" type="stmt"/>
+      <line num="55" count="1" type="stmt"/>
+      <line num="56" count="1" type="stmt"/>
+      <line num="57" count="1" type="stmt"/>
+      <line num="58" count="1" type="stmt"/>
+      <line num="61" count="1" type="stmt"/>
+      <line num="62" count="1" type="stmt"/>
+      <line num="63" count="1" type="stmt"/>
+      <line num="64" count="1" type="stmt"/>
+      <line num="65" count="1" type="stmt"/>
+      <line num="66" count="1" type="stmt"/>
+      <line num="67" count="1" type="stmt"/>
+      <line num="68" count="1" type="stmt"/>
+      <line num="69" count="1" type="stmt"/>
+      <line num="70" count="1" type="stmt"/>
+      <line num="71" count="1" type="stmt"/>
+      <line num="72" count="1" type="stmt"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+    </file>
+  </project>
 </coverage>
 ```
 

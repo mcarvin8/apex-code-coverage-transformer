@@ -104,3 +104,55 @@ export type CoberturaCoverageObject = {
     };
   };
 };
+
+export type CloverLine = {
+  '@num': number;
+  '@count': number;
+  '@type': string;
+};
+
+export type CloverFile = {
+  '@name': string;
+  '@path': string;
+  metrics: {
+    '@statements': number;
+    '@coveredstatements': number;
+    '@conditionals': number;
+    '@coveredconditionals': number;
+    '@methods': number;
+    '@coveredmethods': number;
+  };
+  line: CloverLine[];
+};
+
+export type CloverProjectMetrics = {
+  '@statements': number;
+  '@coveredstatements': number;
+  '@conditionals': number;
+  '@coveredconditionals': number;
+  '@methods': number;
+  '@coveredmethods': number;
+  '@elements': number;
+  '@coveredelements': number;
+  '@complexity': number;
+  '@loc': number;
+  '@ncloc': number;
+  '@packages': number;
+  '@files': number;
+  '@classes': number;
+};
+
+export type CloverProject = {
+  '@timestamp': number;
+  '@name': string;
+  metrics: CloverProjectMetrics;
+  file: CloverFile[];
+};
+
+export type CloverCoverageObject = {
+  coverage: {
+    '@generated': number;
+    '@clover': string;
+    project: CloverProject;
+  };
+};

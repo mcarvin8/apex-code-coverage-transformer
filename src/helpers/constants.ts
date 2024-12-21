@@ -1,0 +1,1 @@
+export const formatOptions: string[] = ['sonar', 'cobertura', 'clover'];
