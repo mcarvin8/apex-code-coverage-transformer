@@ -2,22 +2,15 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
 
-import {
-  TestCoverageData,
-  SonarCoverageObject,
-  CoberturaCoverageObject,
-  CloverCoverageObject,
-  SonarClass,
-  CoberturaClass,
-  CoberturaPackage,
-  CloverFile,
-} from './types.js';
+import { TestCoverageData, SonarCoverageObject, CoberturaCoverageObject, CloverCoverageObject } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
-import { normalizePathToUnix } from './normalizePathToUnix.js';
 import { generateXml } from './generateXml.js';
 import { formatOptions } from './constants.js';
 import { initializeCoverageObject } from './initializeCoverageObject.js';
+import { handleSonarFormat } from './handleSonarFormat.js';
+import { handleCloverFormat } from './handleCloverFormat.js';
+import { handleCoberturaFormat } from './handleCoberturaFormat.js';
 
 export async function transformTestCoverageReport(
   testCoverageData: TestCoverageData[],
@@ -85,101 +78,4 @@ export async function transformTestCoverageReport(
   }
   const xml = generateXml(coverageObj, format);
   return { xml, warnings, filesProcessed };
-}
-
-function handleSonarFormat(filePath: string, lines: Record<string, number>, coverageObj: SonarCoverageObject): void {
-  const fileObj: SonarClass = {
-    '@path': normalizePathToUnix(filePath),
-    lineToCover: [],
-  };
-
-  for (const [lineNumber, isCovered] of Object.entries(lines)) {
-    fileObj.lineToCover.push({
-      '@lineNumber': Number(lineNumber),
-      '@covered': `${isCovered === 1}`,
-    });
-  }
-
-  coverageObj.coverage.file.push(fileObj);
-}
-
-function handleCoberturaFormat(
-  filePath: string,
-  fileName: string,
-  lines: Record<string, number>,
-  uncoveredLines: number[],
-  coveredLines: number[],
-  coverageObj: CoberturaCoverageObject,
-  packageObj: CoberturaPackage
-): void {
-  const classObj: CoberturaClass = {
-    '@name': fileName,
-    '@filename': normalizePathToUnix(filePath),
-    '@line-rate': (coveredLines.length / (coveredLines.length + uncoveredLines.length)).toFixed(4),
-    '@branch-rate': '1',
-    methods: {},
-    lines: {
-      line: [],
-    },
-  };
-
-  for (const [lineNumber, isCovered] of Object.entries(lines)) {
-    classObj.lines.line.push({
-      '@number': Number(lineNumber),
-      '@hits': isCovered === 1 ? 1 : 0,
-      '@branch': 'false',
-    });
-  }
-
-  coverageObj.coverage['@lines-valid'] += uncoveredLines.length + coveredLines.length;
-  coverageObj.coverage['@lines-covered'] += coveredLines.length;
-  packageObj.classes.class.push(classObj);
-
-  packageObj['@line-rate'] = Number(
-    (coverageObj.coverage['@lines-covered'] / coverageObj.coverage['@lines-valid']).toFixed(4)
-  );
-  coverageObj.coverage['@line-rate'] = packageObj['@line-rate'];
-}
-
-function handleCloverFormat(
-  filePath: string,
-  fileName: string,
-  lines: Record<string, number>,
-  uncoveredLines: number[],
-  coveredLines: number[],
-  coverageObj: CloverCoverageObject
-): void {
-  const cloverFile: CloverFile = {
-    '@name': fileName,
-    '@path': normalizePathToUnix(filePath),
-    metrics: {
-      '@statements': uncoveredLines.length + coveredLines.length,
-      '@coveredstatements': coveredLines.length,
-      '@conditionals': 0,
-      '@coveredconditionals': 0,
-      '@methods': 0,
-      '@coveredmethods': 0,
-    },
-    line: [],
-  };
-
-  for (const [lineNumber, isCovered] of Object.entries(lines)) {
-    cloverFile.line.push({
-      '@num': Number(lineNumber),
-      '@count': isCovered === 1 ? 1 : 0,
-      '@type': 'stmt',
-    });
-  }
-
-  coverageObj.coverage.project.file.push(cloverFile);
-  const projectMetrics = coverageObj.coverage.project.metrics;
-
-  projectMetrics['@statements'] += uncoveredLines.length + coveredLines.length;
-  projectMetrics['@coveredstatements'] += coveredLines.length;
-  projectMetrics['@elements'] += uncoveredLines.length + coveredLines.length;
-  projectMetrics['@coveredelements'] += coveredLines.length;
-  projectMetrics['@files'] += 1;
-  projectMetrics['@classes'] += 1;
-  projectMetrics['@loc'] += uncoveredLines.length + coveredLines.length;
-  projectMetrics['@ncloc'] += uncoveredLines.length + coveredLines.length;
 }
