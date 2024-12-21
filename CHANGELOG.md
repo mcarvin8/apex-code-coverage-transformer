@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.3.0...v2.4.0) (2024-12-21)
+
+
+### Features
+
+* add support for clover format ([00ffa74](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/00ffa742455609028f36d48f9a4cabc86aa32ecb))
+
 ## [2.3.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.2.1...v2.3.0) (2024-12-17)
 
 
