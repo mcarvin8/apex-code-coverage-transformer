@@ -321,11 +321,11 @@ and this format for Clover:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1734733618708" clover="3.2.0">
-  <project timestamp="1734733618708" name="All files">
+<coverage generated="1734898566028" clover="3.2.0">
+  <project timestamp="1734898566028" name="All files">
     <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="62" coveredelements="54" complexity="0" loc="62" ncloc="62" packages="1" files="2" classes="2"/>
     <file name="AccountTrigger" path="packaged/triggers/AccountTrigger.trigger">
-      <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="31" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <line num="52" count="0" type="stmt"/>
       <line num="53" count="0" type="stmt"/>
       <line num="59" count="0" type="stmt"/>
@@ -359,7 +359,7 @@ and this format for Clover:
       <line num="27" count="1" type="stmt"/>
     </file>
     <file name="AccountProfile" path="force-app/main/default/classes/AccountProfile.cls">
-      <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="31" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <line num="52" count="0" type="stmt"/>
       <line num="53" count="0" type="stmt"/>
       <line num="59" count="0" type="stmt"/>

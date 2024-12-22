@@ -42,14 +42,4 @@ export async function setCoveredLinesClover(
       fileObj.line.push(coveredLineObj);
     }
   }
-
-  // Update Clover file-level metrics
-  fileObj.metrics['@statements'] += coveredLines.length + uncoveredLines.length;
-  fileObj.metrics['@coveredstatements'] += coveredLines.length;
-
-  // Optionally calculate derived metrics
-  fileObj.metrics['@conditionals'] ??= 0; // Add default if missing
-  fileObj.metrics['@coveredconditionals'] ??= 0;
-  fileObj.metrics['@methods'] ??= 0;
-  fileObj.metrics['@coveredmethods'] ??= 0;
 }
