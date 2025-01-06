@@ -59,13 +59,13 @@ The code coverage JSONs created by the Salesforce CLI aren't accepted automatica
 1. The coverage XMLs created by this plugin will add correct file-paths per your Salesforce DX repository. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage XML created in this plugin will only contain Apex coverage results against files found in your Salesforce DX repository, allowing you to use these reports in external code quality tools like SonarQube.
 2. Normalizes the coverage reports created by the Salesforce CLI deploy and test command. The coverage reports created by both CLI commands follow different formats and have different coverage format options. These differences cause issues when trying to have external tools like SonarQube parse the coverage reports. This plugin handles parsing both command coverage reports and converting them into common formats accepted by external tools like SonarQube and GitLab.
 3. The coverage XMLs created by this plugin "fixes" an issue with Salesforce CLI deploy command coverage reports. The coverage reports created by the deploy command contains several inaccuracies in their covered lines.
-    1. Salesforce's deploy covered report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
-    2. Salesforce's deploy covered report may report extra lines than the total lines in the apex class, i.e. 120 lines are included in the deploy coverage report for a 100-line apex class.
-    3. The coverage percentage may vary based on how many lines the API returns in the original deploy coverage report.
-    4. I had to add a re-numbering function to this plugin to work-around these inaccuracies and ensure the transformed coverage reports are accepted by external tools like SonarQube.
-    5. Once the Salesforce server team fixes the API to correctly return coverage in deploy command reports, I will remove this re-numbering function in this plugin.
-    6. See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
-    7. **NOTE**: This does not affect coverage reports created by the Salesforce CLI test commands.
+   1. Salesforce's deploy covered report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
+   2. Salesforce's deploy covered report may report extra lines than the total lines in the apex class, i.e. 120 lines are included in the deploy coverage report for a 100-line apex class.
+   3. The coverage percentage may vary based on how many lines the API returns in the original deploy coverage report.
+   4. I had to add a re-numbering function to this plugin to work-around these inaccuracies and ensure the transformed coverage reports are accepted by external tools like SonarQube.
+   5. Once the Salesforce server team fixes the API to correctly return coverage in deploy command reports, I will remove this re-numbering function in this plugin.
+   6. See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
+   7. **NOTE**: This does not affect coverage reports created by the Salesforce CLI test commands.
 
 ## Command
 
@@ -244,7 +244,7 @@ and this format for Cobertura:
 ```xml
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1734621101529" complexity="0" version="0.1">
+<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1736192099557" complexity="0" version="0.1">
   <sources>
     <source>.</source>
   </sources>
@@ -333,8 +333,8 @@ and this format for Clover:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1734898566028" clover="3.2.0">
-  <project timestamp="1734898566028" name="All files">
+<coverage generated="1736192099668" clover="3.2.0">
+  <project timestamp="1736192099668" name="All files">
     <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="62" coveredelements="54" complexity="0" loc="62" ncloc="62" packages="1" files="2" classes="2"/>
     <file name="AccountTrigger" path="packaged/triggers/AccountTrigger.trigger">
       <metrics statements="31" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>

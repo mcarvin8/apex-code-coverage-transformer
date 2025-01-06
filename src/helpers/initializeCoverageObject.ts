@@ -8,18 +8,21 @@ import {
   CoberturaPackage,
 } from './types.js';
 
-export function initializeCoverageObject(format: string): {
+type CoverageFactory = () => {
   coverageObj: SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject;
   packageObj: CoberturaPackage | null;
-} {
-  let coverageObj: SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject;
+};
 
-  if (format === 'sonar') {
-    coverageObj = {
+const coverageFactories: Record<string, CoverageFactory> = {
+  sonar: () => ({
+    coverageObj: {
       coverage: { '@version': '1', file: [] },
-    } as SonarCoverageObject;
-  } else if (format === 'cobertura') {
-    coverageObj = {
+    } as SonarCoverageObject,
+    packageObj: null,
+  }),
+
+  cobertura: () => {
+    const coverageObj = {
       coverage: {
         '@lines-valid': 0,
         '@lines-covered': 0,
@@ -34,8 +37,21 @@ export function initializeCoverageObject(format: string): {
         packages: { package: [] },
       },
     } as CoberturaCoverageObject;
-  } else {
-    coverageObj = {
+
+    const packageObj: CoberturaPackage = {
+      '@name': 'main',
+      '@line-rate': 0,
+      '@branch-rate': 1,
+      classes: { class: [] as CoberturaClass[] },
+    };
+
+    coverageObj.coverage.packages.package.push(packageObj);
+
+    return { coverageObj, packageObj };
+  },
+
+  clover: () => ({
+    coverageObj: {
       coverage: {
         '@generated': Date.now(),
         '@clover': '3.2.0',
@@ -61,22 +77,18 @@ export function initializeCoverageObject(format: string): {
           file: [],
         },
       },
-    } as CloverCoverageObject;
+    } as CloverCoverageObject,
+    packageObj: null,
+  }),
+};
+
+export function initializeCoverageObject(format: string): {
+  coverageObj: SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject;
+  packageObj: CoberturaPackage | null;
+} {
+  const factory = coverageFactories[format];
+  if (!factory) {
+    throw new Error(`Unsupported format: ${format}`);
   }
-
-  const packageObj =
-    format === 'cobertura'
-      ? ({
-          '@name': 'main',
-          '@line-rate': 0,
-          '@branch-rate': 1,
-          classes: { class: [] as CoberturaClass[] },
-        } as CoberturaPackage)
-      : null;
-
-  if (packageObj) {
-    (coverageObj as CoberturaCoverageObject).coverage.packages.package.push(packageObj);
-  }
-
-  return { coverageObj, packageObj };
+  return factory();
 }
