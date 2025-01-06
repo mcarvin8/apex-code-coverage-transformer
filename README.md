@@ -244,7 +244,7 @@ and this format for Cobertura:
 ```xml
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1736198593573" complexity="0" version="0.1">
+<coverage lines-valid="62" lines-covered="54" line-rate="0.871" branches-valid="0" branches-covered="0" branch-rate="1" timestamp="1736198880235" complexity="0" version="0.1">
   <sources>
     <source>.</source>
   </sources>
@@ -333,9 +333,9 @@ and this format for Clover:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736198593671" clover="3.2.0">
-  <project timestamp="1736198593671" name="All files">
-    <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="62" coveredelements="54" files="2" complexity="0" loc="62" ncloc="62" packages="1" classes="2"/>
+<coverage generated="1736198880331" clover="3.2.0">
+  <project timestamp="1736198880331" name="All files">
+    <metrics statements="62" coveredstatements="54" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="62" coveredelements="54" complexity="0" loc="62" ncloc="62" packages="1" files="2" classes="2"/>
     <file name="AccountTrigger" path="packaged/triggers/AccountTrigger.trigger">
       <metrics statements="31" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <line num="52" count="0" type="stmt"/>
