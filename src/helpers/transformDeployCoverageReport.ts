@@ -1,6 +1,5 @@
 'use strict';
 /* eslint-disable no-await-in-loop */
-/* eslint-disable no-param-reassign */
 
 import { getCoverageHandler } from '../handlers/getCoverageHandler.js';
 import { DeployCoverageData } from './types.js';

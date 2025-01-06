@@ -1,13 +1,11 @@
 'use strict';
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-param-reassign */
 
 import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass, CoverageHandler } from '../helpers/types.js';
 import { setCoveredLinesCobertura } from '../helpers/setCoveredLinesCobertura.js';
 import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class CoberturaCoverageHandler implements CoverageHandler {
-  private coverageObj: CoberturaCoverageObject;
+  private readonly coverageObj: CoberturaCoverageObject;
   private packageObj: CoberturaPackage;
 
   public constructor() {
@@ -62,13 +60,11 @@ export class CoberturaCoverageHandler implements CoverageHandler {
         });
       }
     } else if (reportType === 'deploy') {
-      // Process uncovered lines first
       classObj.lines.line = uncoveredLines.map((lineNumber) => ({
         '@number': lineNumber,
         '@hits': 0,
         '@branch': 'false',
       }));
-      // Process covered lines using `setCoveredLinesCobertura`
       await setCoveredLinesCobertura(coveredLines, uncoveredLines, repoRoot, filePath, classObj);
     }
 

@@ -1,6 +1,5 @@
 'use strict';
 /* eslint-disable no-await-in-loop */
-/* eslint-disable no-param-reassign */
 
 import { getCoverageHandler } from '../handlers/getCoverageHandler.js';
 import { TestCoverageData } from './types.js';
@@ -20,7 +19,7 @@ export async function transformTestCoverageReport(
   const warnings: string[] = [];
   let filesProcessed = 0;
   const { repoRoot, packageDirectories } = await getPackageDirectories();
-  const handler = getCoverageHandler(format); // Use the handler for the specified format
+  const handler = getCoverageHandler(format);
 
   let coverageData = testCoverageData;
   if (!Array.isArray(coverageData)) {
@@ -31,7 +30,7 @@ export async function transformTestCoverageReport(
     const name = data?.name;
     const lines = data?.lines;
 
-    if (!name || !lines) continue; // Skip if name or lines are missing
+    if (!name || !lines) continue;
 
     const formattedFileName = name.replace(/no-map[\\/]+/, '');
     const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
@@ -48,7 +47,6 @@ export async function transformTestCoverageReport(
       .filter(([, isCovered]) => isCovered === 1)
       .map(([lineNumber]) => Number(lineNumber));
 
-    // Call the handler's processFile method, passing 'test' as report type
     await handler.processFile(
       relativeFilePath,
       formattedFileName,
@@ -62,8 +60,8 @@ export async function transformTestCoverageReport(
     filesProcessed++;
   }
 
-  const coverageObj = handler.finalize(); // Finalize the coverage data
-  const xml = generateXml(coverageObj, format); // Generate the XML for the specified format
+  const coverageObj = handler.finalize();
+  const xml = generateXml(coverageObj, format);
 
   return { xml, warnings, filesProcessed };
 }

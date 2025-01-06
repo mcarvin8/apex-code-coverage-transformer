@@ -1,6 +1,4 @@
 'use strict';
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-param-reassign */
 
 import { CoverageHandler } from '../helpers/types.js';
 import { CloverCoverageHandler } from './cloverCoverageHandler.js';

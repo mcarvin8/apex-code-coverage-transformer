@@ -1,6 +1,4 @@
 'use strict';
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-param-reassign */
 
 import { CloverCoverageObject, CloverFile, CoverageHandler } from '../helpers/types.js';
 import { setCoveredLinesClover } from '../helpers/setCoveredLinesClover.js';
@@ -71,17 +69,10 @@ export class CloverCoverageHandler implements CoverageHandler {
         });
       }
     } else if (reportType === 'deploy') {
-      // Process uncovered lines first
       fileObj.line = [...uncoveredLines.map((lineNumber) => ({ '@num': lineNumber, '@count': 0, '@type': 'stmt' }))];
-
-      // Process covered lines using `setCoveredLinesClover`
       await setCoveredLinesClover(coveredLines, uncoveredLines, repoRoot, filePath, fileObj);
-
-      // Then, add covered lines
       fileObj.line.push(...coveredLines.map((lineNumber) => ({ '@num': lineNumber, '@count': 1, '@type': 'stmt' })));
     }
-
-    // Add the processed file object to the Clover project
     this.coverageObj.coverage.project.file.push(fileObj);
   }
 
