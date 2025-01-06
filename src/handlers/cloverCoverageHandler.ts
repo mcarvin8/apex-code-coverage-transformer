@@ -28,7 +28,7 @@ export class CloverCoverageHandler implements CoverageHandler {
             '@complexity': 0,
             '@loc': 0,
             '@ncloc': 0,
-            '@packages': 0,
+            '@packages': 1,
             '@classes': 0,
           },
           file: [],
@@ -71,9 +71,18 @@ export class CloverCoverageHandler implements CoverageHandler {
     } else if (reportType === 'deploy') {
       fileObj.line = [...uncoveredLines.map((lineNumber) => ({ '@num': lineNumber, '@count': 0, '@type': 'stmt' }))];
       await setCoveredLinesClover(coveredLines, uncoveredLines, repoRoot, filePath, fileObj);
-      fileObj.line.push(...coveredLines.map((lineNumber) => ({ '@num': lineNumber, '@count': 1, '@type': 'stmt' })));
     }
     this.coverageObj.coverage.project.file.push(fileObj);
+    const projectMetrics = this.coverageObj.coverage.project.metrics;
+
+    projectMetrics['@statements'] += uncoveredLines.length + coveredLines.length;
+    projectMetrics['@coveredstatements'] += coveredLines.length;
+    projectMetrics['@elements'] += uncoveredLines.length + coveredLines.length;
+    projectMetrics['@coveredelements'] += coveredLines.length;
+    projectMetrics['@files'] += 1;
+    projectMetrics['@classes'] += 1;
+    projectMetrics['@loc'] += uncoveredLines.length + coveredLines.length;
+    projectMetrics['@ncloc'] += uncoveredLines.length + coveredLines.length;
   }
 
   public finalize(): CloverCoverageObject {

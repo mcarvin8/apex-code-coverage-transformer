@@ -51,6 +51,10 @@ export class CoberturaCoverageHandler implements CoverageHandler {
       lines: { line: [] },
     };
 
+    const totalLines = uncoveredLines.length + coveredLines.length;
+    const coveredLineCount = coveredLines.length;
+
+    // Process lines for 'test' or 'deploy' reports
     if (reportType === 'test') {
       for (const [lineNumber, isCovered] of Object.entries(lines)) {
         classObj.lines.line.push({
@@ -68,9 +72,11 @@ export class CoberturaCoverageHandler implements CoverageHandler {
       await setCoveredLinesCobertura(coveredLines, uncoveredLines, repoRoot, filePath, classObj);
     }
 
-    // Update coverage metrics
-    const totalLines = uncoveredLines.length + coveredLines.length;
-    const coveredLineCount = coveredLines.length;
+    // Calculate and set the line rate for this class
+    if (totalLines > 0) {
+      const lineRate = (coveredLineCount / totalLines).toFixed(4);
+      classObj['@line-rate'] = lineRate;
+    }
 
     this.coverageObj.coverage['@lines-valid'] += totalLines;
     this.coverageObj.coverage['@lines-covered'] += coveredLineCount;
