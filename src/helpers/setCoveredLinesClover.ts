@@ -1,5 +1,4 @@
 'use strict';
-/* eslint-disable no-param-reassign */
 
 import { join } from 'node:path';
 import { getTotalLines } from './getTotalLines.js';

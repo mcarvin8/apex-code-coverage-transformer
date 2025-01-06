@@ -156,3 +156,16 @@ export type CloverCoverageObject = {
     project: CloverProject;
   };
 };
+
+export type CoverageHandler = {
+  processFile(
+    filePath: string,
+    fileName: string,
+    lines: Record<string, number>,
+    uncoveredLines: number[],
+    coveredLines: number[],
+    repoRoot: string,
+    reportType: string
+  ): Promise<void>;
+  finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject;
+};
