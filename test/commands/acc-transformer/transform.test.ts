@@ -18,8 +18,8 @@ describe('main', () => {
   const deployCoverageWithExts = resolve('test/deploy_coverage_with_file_exts.json');
   const testCoverage = resolve('test/test_coverage.json');
   const invalidJson = resolve('test/invalid.json');
-  const deployBaselineXmlPath = resolve('test/deploy_coverage_baseline.xml');
-  const testBaselineXmlPath = resolve('test/test_coverage_baseline.xml');
+  const sonarDeployBaselinePath = resolve('test/deploy_coverage_baseline_sonar.xml');
+  const sonarTestBaselinePath = resolve('test/test_coverage_baseline_sonar.xml');
   const sonarXmlPath1 = resolve('sonar1.xml');
   const sonarXmlPath2 = resolve('sonar2.xml');
   const sonarXmlPath3 = resolve('sonar3.xml');
@@ -129,22 +129,22 @@ describe('main', () => {
     const deployXml1 = await readFile(sonarXmlPath1, 'utf-8');
     const deployXml2 = await readFile(sonarXmlPath2, 'utf-8');
     const testXml = await readFile(sonarXmlPath3, 'utf-8');
-    const deployBaselineXmlContent = await readFile(deployBaselineXmlPath, 'utf-8');
-    const testBaselineXmlContent = await readFile(testBaselineXmlPath, 'utf-8');
+    const sonarDeployBaselineXmlContent = await readFile(sonarDeployBaselinePath, 'utf-8');
+    const testBaselineXmlContent = await readFile(sonarTestBaselinePath, 'utf-8');
     strictEqual(
       deployXml1,
-      deployBaselineXmlContent,
-      `File content is different between ${sonarXmlPath1} and ${deployBaselineXmlPath}`
+      sonarDeployBaselineXmlContent,
+      `File content is different between ${sonarXmlPath1} and ${sonarDeployBaselinePath}`
     );
     strictEqual(
       deployXml2,
-      deployBaselineXmlContent,
-      `File content is different between ${sonarXmlPath2} and ${deployBaselineXmlPath}`
+      sonarDeployBaselineXmlContent,
+      `File content is different between ${sonarXmlPath2} and ${sonarDeployBaselinePath}`
     );
     strictEqual(
       testXml,
       testBaselineXmlContent,
-      `File content is different between ${sonarXmlPath3} and ${testBaselineXmlPath}`
+      `File content is different between ${sonarXmlPath3} and ${sonarTestBaselinePath}`
     );
   });
   it('transform the test JSON file without file extensions into Cobertura format without any warnings.', async () => {
