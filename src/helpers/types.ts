@@ -125,7 +125,7 @@ export type CloverFile = {
   line: CloverLine[];
 };
 
-export type CloverProjectMetrics = {
+type CloverProjectMetrics = {
   '@statements': number;
   '@coveredstatements': number;
   '@conditionals': number;
@@ -142,7 +142,7 @@ export type CloverProjectMetrics = {
   '@classes': number;
 };
 
-export type CloverProject = {
+type CloverProject = {
   '@timestamp': number;
   '@name': string;
   metrics: CloverProjectMetrics;
@@ -170,7 +170,7 @@ export type CoverageHandler = {
   finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject | LcovCoverageObject;
 };
 
-export type LcovLine = {
+type LcovLine = {
   lineNumber: number;
   hitCount: number;
 };
