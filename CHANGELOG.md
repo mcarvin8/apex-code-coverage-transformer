@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.4.1...v2.5.0) (2025-01-08)
+
+
+### Features
+
+* add support for lcovonly info format ([a663cb2](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/a663cb2db49e62a8c6cf278fe6a7e28c9e0a94c6))
+* rename xml flag to output-report ([bb25a47](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/bb25a478e285dc7de612368c51243e0525a71b02))
+
 ## [2.4.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.4.0...v2.4.1) (2024-12-22)
 
 
