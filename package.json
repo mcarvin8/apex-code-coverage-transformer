@@ -1,7 +1,7 @@
 {
   "name": "apex-code-coverage-transformer",
   "description": "Transforms the Apex code coverage JSON created during Salesforce deployments and test runs into SonarQube, Clover, LCovOnly, or Cobertura format.",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "dependencies": {
     "@oclif/core": "^4.0.37",
     "@salesforce/core": "^8.8.0",
