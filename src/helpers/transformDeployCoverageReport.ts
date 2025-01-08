@@ -6,16 +6,11 @@ import { DeployCoverageData } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { generateXml } from './generateXml.js';
-import { formatOptions } from './constants.js';
 
 export async function transformDeployCoverageReport(
   data: DeployCoverageData,
   format: string
 ): Promise<{ xml: string; warnings: string[]; filesProcessed: number }> {
-  if (!formatOptions.includes(format)) {
-    throw new Error(`Unsupported format: ${format}`);
-  }
-
   const warnings: string[] = [];
   let filesProcessed = 0;
   const { repoRoot, packageDirectories } = await getPackageDirectories();
