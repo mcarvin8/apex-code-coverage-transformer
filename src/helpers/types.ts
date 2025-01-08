@@ -55,7 +55,7 @@ export type SonarCoverageObject = {
 export type HookFile = {
   deployCoverageJsonPath: string;
   testCoverageJsonPath: string;
-  coverageXmlPath: string;
+  outputReportPath: string;
   format: string;
 };
 

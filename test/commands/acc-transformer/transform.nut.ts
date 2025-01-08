@@ -64,24 +64,24 @@ describe('acc-transformer transform NUTs', () => {
   });
 
   it('runs transform on the deploy coverage file without file extensions in Sonar format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${sonarXmlPath1}"`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --output-report "${sonarXmlPath1}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${sonarXmlPath1}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${sonarXmlPath1}`);
   });
 
   it('runs transform on the deploy coverage file with file extensions in Sonar format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${sonarXmlPath2}"`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --output-report "${sonarXmlPath2}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${sonarXmlPath2}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${sonarXmlPath2}`);
   });
 
   it('runs transform on the test coverage file in Sonar format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${sonarXmlPath3}"`;
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --output-report "${sonarXmlPath3}"`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${sonarXmlPath3}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${sonarXmlPath3}`);
   });
   it('confirms a failure on an invalid JSON file.', async () => {
     const command = `acc-transformer transform --coverage-json "${invalidJson}"`;
@@ -115,43 +115,43 @@ describe('acc-transformer transform NUTs', () => {
     );
   });
   it('runs transform on the deploy coverage file without file extensions in Cobertura format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${coberturaXmlPath1}" --format cobertura`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --output-report "${coberturaXmlPath1}" --format cobertura`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coberturaXmlPath1}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${coberturaXmlPath1}`);
   });
 
   it('runs transform on the deploy coverage file with file extensions in Cobertura format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${coberturaXmlPath2}" --format cobertura`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --output-report "${coberturaXmlPath2}" --format cobertura`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coberturaXmlPath2}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${coberturaXmlPath2}`);
   });
 
   it('runs transform on the test coverage file in Cobertura format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${coberturaXmlPath3}" --format cobertura`;
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --output-report "${coberturaXmlPath3}" --format cobertura`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${coberturaXmlPath3}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${coberturaXmlPath3}`);
   });
   it('runs transform on the deploy coverage file without file extensions in Clover format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --xml "${cloverXmlPath1}" --format clover`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageNoExts}" --output-report "${cloverXmlPath1}" --format clover`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${cloverXmlPath1}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${cloverXmlPath1}`);
   });
 
   it('runs transform on the deploy coverage file with file extensions in Clover format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --xml "${cloverXmlPath2}" --format clover`;
+    const command = `acc-transformer transform --coverage-json "${deployCoverageWithExts}" --output-report "${cloverXmlPath2}" --format clover`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${cloverXmlPath2}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${cloverXmlPath2}`);
   });
 
   it('runs transform on the test coverage file in Clover format.', async () => {
-    const command = `acc-transformer transform --coverage-json "${testCoverage}" --xml "${cloverXmlPath3}" --format clover`;
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --output-report "${cloverXmlPath3}" --format clover`;
     const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-    expect(output.replace('\n', '')).to.equal(`The coverage XML has been written to ${cloverXmlPath3}`);
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${cloverXmlPath3}`);
   });
 });

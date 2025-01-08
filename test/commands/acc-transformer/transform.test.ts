@@ -73,12 +73,12 @@ describe('main', () => {
   });
 
   it('transform the test JSON file without file extensions into Sonar format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--xml', sonarXmlPath1]);
+    await TransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--output-report', sonarXmlPath1]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${sonarXmlPath1}`);
+    expect(output).to.include(`The coverage report has been written to ${sonarXmlPath1}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -86,12 +86,12 @@ describe('main', () => {
     expect(warnings).to.include('');
   });
   it('transform the test JSON file with file extensions into Sonar format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--xml', sonarXmlPath2]);
+    await TransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--output-report', sonarXmlPath2]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${sonarXmlPath2}`);
+    expect(output).to.include(`The coverage report has been written to ${sonarXmlPath2}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -99,12 +99,12 @@ describe('main', () => {
     expect(warnings).to.include('');
   });
   it('transform the JSON file from a test command into Sonar format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', testCoverage, '--xml', sonarXmlPath3]);
+    await TransformerTransform.run(['--coverage-json', testCoverage, '--output-report', sonarXmlPath3]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${sonarXmlPath3}`);
+    expect(output).to.include(`The coverage report has been written to ${sonarXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -151,7 +151,7 @@ describe('main', () => {
     await TransformerTransform.run([
       '--coverage-json',
       deployCoverageNoExts,
-      '--xml',
+      '--output-report',
       coberturaXmlPath1,
       '--format',
       'cobertura',
@@ -160,7 +160,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${coberturaXmlPath1}`);
+    expect(output).to.include(`The coverage report has been written to ${coberturaXmlPath1}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -171,7 +171,7 @@ describe('main', () => {
     await TransformerTransform.run([
       '--coverage-json',
       deployCoverageWithExts,
-      '--xml',
+      '--output-report',
       coberturaXmlPath2,
       '--format',
       'cobertura',
@@ -180,7 +180,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${coberturaXmlPath2}`);
+    expect(output).to.include(`The coverage report has been written to ${coberturaXmlPath2}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -191,7 +191,7 @@ describe('main', () => {
     await TransformerTransform.run([
       '--coverage-json',
       testCoverage,
-      '--xml',
+      '--output-report',
       coberturaXmlPath3,
       '--format',
       'cobertura',
@@ -200,7 +200,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${coberturaXmlPath3}`);
+    expect(output).to.include(`The coverage report has been written to ${coberturaXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -211,7 +211,7 @@ describe('main', () => {
     await TransformerTransform.run([
       '--coverage-json',
       deployCoverageNoExts,
-      '--xml',
+      '--output-report',
       cloverXmlPath1,
       '--format',
       'clover',
@@ -220,7 +220,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${cloverXmlPath1}`);
+    expect(output).to.include(`The coverage report has been written to ${cloverXmlPath1}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -231,7 +231,7 @@ describe('main', () => {
     await TransformerTransform.run([
       '--coverage-json',
       deployCoverageWithExts,
-      '--xml',
+      '--output-report',
       cloverXmlPath2,
       '--format',
       'clover',
@@ -240,7 +240,7 @@ describe('main', () => {
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${cloverXmlPath2}`);
+    expect(output).to.include(`The coverage report has been written to ${cloverXmlPath2}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -248,12 +248,19 @@ describe('main', () => {
     expect(warnings).to.include('');
   });
   it('transform the JSON file from a test command into Clover format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', testCoverage, '--xml', cloverXmlPath3, '--format', 'clover']);
+    await TransformerTransform.run([
+      '--coverage-json',
+      testCoverage,
+      '--output-report',
+      cloverXmlPath3,
+      '--format',
+      'clover',
+    ]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage XML has been written to ${cloverXmlPath3}`);
+    expect(output).to.include(`The coverage report has been written to ${cloverXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)

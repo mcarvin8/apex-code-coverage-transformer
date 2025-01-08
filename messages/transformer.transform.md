@@ -8,17 +8,17 @@ Transform the Apex code coverage JSON file created by the Salesforce CLI deploy 
 
 # examples
 
-- `sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "sonar"`
-- `sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "cobertura"`
-- `sf acc-transformer transform -j "coverage.json" -x "coverage.xml" -f "clover"`
+- `sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "sonar"`
+- `sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "cobertura"`
+- `sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "clover"`
 
 # flags.coverage-json.summary
 
 Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
 
-# flags.xml.summary
+# flags.output-report.summary
 
-Path to the code coverage XML file that will be created by this plugin.
+Path to the code coverage file that will be created by this plugin.
 
 # flags.format.summary
 

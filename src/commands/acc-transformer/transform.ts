@@ -26,9 +26,10 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       required: true,
       exists: true,
     }),
-    xml: Flags.file({
-      summary: messages.getMessage('flags.xml.summary'),
-      char: 'x',
+    'output-report': Flags.file({
+      summary: messages.getMessage('flags.output-report.summary'),
+      // eslint-disable-next-line sf-plugin/dash-o
+      char: 'o',
       required: true,
       exists: false,
       default: 'coverage.xml',
@@ -46,7 +47,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
     const jsonFilePath = resolve(flags['coverage-json']);
-    const xmlFilePath = resolve(flags['xml']);
+    const xmlFilePath = resolve(flags['output-report']);
     const format = flags['format'];
     const jsonData = await readFile(jsonFilePath, 'utf-8');
 
@@ -81,11 +82,11 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     }
 
     if (filesProcessed === 0) {
-      this.warn('None of the files listed in the coverage JSON were processed. The coverage XML will be empty.');
+      this.warn('None of the files listed in the coverage JSON were processed. The coverage report will be empty.');
     }
 
     await writeFile(xmlFilePath, xmlData);
-    this.log(`The coverage XML has been written to ${xmlFilePath}`);
+    this.log(`The coverage report has been written to ${xmlFilePath}`);
     return { path: xmlFilePath };
   }
 }
