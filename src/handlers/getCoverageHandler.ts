@@ -4,7 +4,7 @@ import { CoverageHandler } from '../helpers/types.js';
 import { CloverCoverageHandler } from './cloverCoverageHandler.js';
 import { CoberturaCoverageHandler } from './coberturaCoverageHandler.js';
 import { SonarCoverageHandler } from './sonarCoverageHandler.js';
-import { LcovCoverageHandler } from './lcovonlyCoverageHandler.js';
+import { LcovCoverageHandler } from './lcovCoverageHandler.js';
 
 export function getCoverageHandler(format: string): CoverageHandler {
   const handlers: Record<string, CoverageHandler> = {
