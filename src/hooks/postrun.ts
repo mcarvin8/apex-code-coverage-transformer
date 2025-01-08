@@ -37,7 +37,7 @@ export const postrun: Hook<'postrun'> = async function (options) {
     return;
   }
 
-  const coverageXml: string = configFile.coverageXmlPath || 'coverage.xml';
+  const outputReport: string = configFile.outputReportPath || 'coverage.xml';
   const coverageFormat: string = configFile.format || 'sonar';
 
   if (commandType === 'deploy') {
@@ -51,7 +51,7 @@ export const postrun: Hook<'postrun'> = async function (options) {
   }
 
   const coverageJsonPath = resolve(coverageJson);
-  const coverageXmlPath = resolve(coverageXml);
+  const outputReportPath = resolve(outputReport);
 
   if (!existsSync(coverageJsonPath)) {
     return;
@@ -60,8 +60,8 @@ export const postrun: Hook<'postrun'> = async function (options) {
   const commandArgs: string[] = [];
   commandArgs.push('--coverage-json');
   commandArgs.push(coverageJsonPath);
-  commandArgs.push('--xml');
-  commandArgs.push(coverageXmlPath);
+  commandArgs.push('--output-report');
+  commandArgs.push(outputReportPath);
   commandArgs.push('--format');
   commandArgs.push(coverageFormat);
   await TransformerTransform.run(commandArgs);
