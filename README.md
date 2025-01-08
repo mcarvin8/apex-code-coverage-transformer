@@ -125,7 +125,7 @@ The `.apexcodecovtransformer.config.json` should look like this:
 - `deployCoverageJsonPath` is required to use the hook after deployments and should be the path to the code coverage JSON created by the Salesforce CLI deployment command. Recommend using a relative path.
 - `testCoverageJsonPath` is required to use the hook after test runs and should be the path to the code coverage JSON created by the Salesforce CLI test command. Recommend using a relative path.
 - `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.[xml/info]` in the working directory.
-- `format` is optional and should be the intended output format for the code coverage file created by this plugin. Options are "sonar", "clover", or "cobertura". If this isn't provided, it will default to "sonar".
+- `format` is optional and should be the intended output format for the code coverage file created by this plugin. Options are "sonar", "clover", "lcovonly", or "cobertura". If this isn't provided, it will default to "sonar".
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
 
