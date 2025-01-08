@@ -19,7 +19,7 @@
 - [License](#license)
 </details>
 
-A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into SonarQube, Cobertura, or Clover format.
+A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into SonarQube, Cobertura, LCovOnly, or Clover format.
 
 ## Install
 
@@ -37,7 +37,7 @@ When the plugin is unable to find the Apex file from the Salesforce CLI coverage
 
 ## Creating Code Coverage Files with the Salesforce CLI
 
-**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use the "json-summary", "clover", or "cobertura" format from the Salesforce CLI.**
+**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use the "json-summary", "clover", "lcovonly", or "cobertura" format from the Salesforce CLI.**
 
 To create the code coverage JSON when deploying or validating, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
@@ -82,16 +82,16 @@ USAGE
 FLAGS
   -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
   -o, --output-report=<value> Path to the code coverage file that will be created by this plugin.
-                              [default: "coverage.xml"]
+                              [default: "coverage.[xml/info]"]
   -f, --format=<value>        Output format for the code coverage format.
-                              Valid options are "sonar", "clover", or "cobertura".
+                              Valid options are "sonar", "clover", "lcovonly", or "cobertura".
                               [default: "sonar"]
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube, Clover, or Cobertura format.
+  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube, Clover, LCovOnly, or Cobertura format.
 
 EXAMPLES
     $ sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "sonar"
@@ -99,6 +99,8 @@ EXAMPLES
     $ sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "cobertura"
 
     $ sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "clover"
+
+    $ sf acc-transformer transform -j "coverage.json" -o "coverage.info" -f "lcovonly"
 ```
 
 ## Hook
@@ -122,7 +124,7 @@ The `.apexcodecovtransformer.config.json` should look like this:
 
 - `deployCoverageJsonPath` is required to use the hook after deployments and should be the path to the code coverage JSON created by the Salesforce CLI deployment command. Recommend using a relative path.
 - `testCoverageJsonPath` is required to use the hook after test runs and should be the path to the code coverage JSON created by the Salesforce CLI test command. Recommend using a relative path.
-- `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.xml` in the working directory.
+- `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.[xml/info]` in the working directory.
 - `format` is optional and should be the intended output format for the code coverage file created by this plugin. Options are "sonar", "clover", or "cobertura". If this isn't provided, it will default to "sonar".
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
@@ -406,6 +408,91 @@ and this format for Clover:
     </file>
   </project>
 </coverage>
+```
+
+and this format for LCovOnly:
+
+```info
+TN:
+SF:packaged/triggers/AccountTrigger.trigger
+FNF:0
+FNH:0
+DA:52,0
+DA:53,0
+DA:59,0
+DA:60,0
+DA:1,1
+DA:2,1
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:11,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:15,1
+DA:16,1
+DA:17,1
+DA:18,1
+DA:19,1
+DA:20,1
+DA:21,1
+DA:22,1
+DA:23,1
+DA:24,1
+DA:25,1
+DA:26,1
+DA:27,1
+LF:31
+LH:27
+BRF:0
+BRH:0
+end_of_record
+TN:
+SF:force-app/main/default/classes/AccountProfile.cls
+FNF:0
+FNH:0
+DA:52,0
+DA:53,0
+DA:59,0
+DA:60,0
+DA:54,1
+DA:55,1
+DA:56,1
+DA:57,1
+DA:58,1
+DA:61,1
+DA:62,1
+DA:63,1
+DA:64,1
+DA:65,1
+DA:66,1
+DA:67,1
+DA:68,1
+DA:69,1
+DA:70,1
+DA:71,1
+DA:72,1
+DA:1,1
+DA:2,1
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+LF:31
+LH:27
+BRF:0
+BRH:0
+end_of_record
 ```
 
 ## Issues

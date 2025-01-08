@@ -47,7 +47,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
     const jsonFilePath = resolve(flags['coverage-json']);
-    const xmlFilePath = resolve(flags['output-report']);
+    let outputReportPath = resolve(flags['output-report']);
     const format = flags['format'];
     const jsonData = await readFile(jsonFilePath, 'utf-8');
 
@@ -85,8 +85,16 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       this.warn('None of the files listed in the coverage JSON were processed. The coverage report will be empty.');
     }
 
-    await writeFile(xmlFilePath, xmlData);
-    this.log(`The coverage report has been written to ${xmlFilePath}`);
-    return { path: xmlFilePath };
+    // Adjust the output file extension if the format is lcovonly
+    if (format === 'lcovonly' && !outputReportPath.endsWith('.info')) {
+      outputReportPath = outputReportPath.replace(/\.xml$/, '.info'); // Replace .xml with .info if it exists
+      if (!outputReportPath.endsWith('.info')) {
+        outputReportPath += '.info'; // Ensure the extension is .info
+      }
+    }
+
+    await writeFile(outputReportPath, xmlData);
+    this.log(`The coverage report has been written to ${outputReportPath}`);
+    return { path: outputReportPath };
   }
 }

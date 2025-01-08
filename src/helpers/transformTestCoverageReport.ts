@@ -5,7 +5,7 @@ import { getCoverageHandler } from '../handlers/getCoverageHandler.js';
 import { TestCoverageData } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
-import { generateXml } from './generateXml.js';
+import { generateReport } from './generateReport.js';
 
 export async function transformTestCoverageReport(
   testCoverageData: TestCoverageData[],
@@ -56,7 +56,7 @@ export async function transformTestCoverageReport(
   }
 
   const coverageObj = handler.finalize();
-  const xml = generateXml(coverageObj, format);
+  const xml = generateReport(coverageObj, format);
 
   return { xml, warnings, filesProcessed };
 }

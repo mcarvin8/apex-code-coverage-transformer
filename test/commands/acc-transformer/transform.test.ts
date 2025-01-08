@@ -20,6 +20,8 @@ describe('main', () => {
   const invalidJson = resolve('test/invalid.json');
   const sonarDeployBaselinePath = resolve('test/deploy_coverage_baseline_sonar.xml');
   const sonarTestBaselinePath = resolve('test/test_coverage_baseline_sonar.xml');
+  const lcovDeployBaselinePath = resolve('test/deploy_coverage_baseline_lcov.info');
+  const lcovTestBaselinePath = resolve('test/test_coverage_baseline_lcov.info');
   const sonarXmlPath1 = resolve('sonar1.xml');
   const sonarXmlPath2 = resolve('sonar2.xml');
   const sonarXmlPath3 = resolve('sonar3.xml');
@@ -29,6 +31,9 @@ describe('main', () => {
   const cloverXmlPath1 = resolve('clover1.xml');
   const cloverXmlPath2 = resolve('clover2.xml');
   const cloverXmlPath3 = resolve('clover3.xml');
+  const lcovPath1 = resolve('lcov1.info');
+  const lcovPath2 = resolve('lcov2.info');
+  const lcovPath3 = resolve('lcov3.info');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -70,6 +75,9 @@ describe('main', () => {
     await rm(cloverXmlPath1);
     await rm(cloverXmlPath2);
     await rm(cloverXmlPath3);
+    await rm(lcovPath1);
+    await rm(lcovPath2);
+    await rm(lcovPath3);
   });
 
   it('transform the test JSON file without file extensions into Sonar format without any warnings.', async () => {
@@ -125,28 +133,7 @@ describe('main', () => {
       }
     }
   });
-  it('confirm the XML files created are the same as the baselines.', async () => {
-    const deployXml1 = await readFile(sonarXmlPath1, 'utf-8');
-    const deployXml2 = await readFile(sonarXmlPath2, 'utf-8');
-    const testXml = await readFile(sonarXmlPath3, 'utf-8');
-    const sonarDeployBaselineXmlContent = await readFile(sonarDeployBaselinePath, 'utf-8');
-    const testBaselineXmlContent = await readFile(sonarTestBaselinePath, 'utf-8');
-    strictEqual(
-      deployXml1,
-      sonarDeployBaselineXmlContent,
-      `File content is different between ${sonarXmlPath1} and ${sonarDeployBaselinePath}`
-    );
-    strictEqual(
-      deployXml2,
-      sonarDeployBaselineXmlContent,
-      `File content is different between ${sonarXmlPath2} and ${sonarDeployBaselinePath}`
-    );
-    strictEqual(
-      testXml,
-      testBaselineXmlContent,
-      `File content is different between ${sonarXmlPath3} and ${sonarTestBaselinePath}`
-    );
-  });
+
   it('transform the test JSON file without file extensions into Cobertura format without any warnings.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
@@ -266,5 +253,107 @@ describe('main', () => {
       .flatMap((c) => c.args)
       .join('\n');
     expect(warnings).to.include('');
+  });
+  it('transform the test JSON file without file extensions into Lcov format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      deployCoverageNoExts,
+      '--output-report',
+      lcovPath1,
+      '--format',
+      'lcovonly',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage report has been written to ${lcovPath1}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the test JSON file with file extensions into Lcov format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      deployCoverageWithExts,
+      '--output-report',
+      lcovPath2,
+      '--format',
+      'lcovonly',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage report has been written to ${lcovPath2}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the JSON file from a test command into Lcov format without any warnings.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      testCoverage,
+      '--output-report',
+      lcovPath3,
+      '--format',
+      'lcovonly',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage report has been written to ${lcovPath3}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('confirm the reports created are the same as the baselines.', async () => {
+    const sonarXml1 = await readFile(sonarXmlPath1, 'utf-8');
+    const sonarXml2 = await readFile(sonarXmlPath2, 'utf-8');
+    const sonarXml3 = await readFile(sonarXmlPath3, 'utf-8');
+    const lcov1 = await readFile(lcovPath1, 'utf-8');
+    const lcov2 = await readFile(lcovPath2, 'utf-8');
+    const lcov3 = await readFile(lcovPath3, 'utf-8');
+    const sonarDeployBaselineXmlContent = await readFile(sonarDeployBaselinePath, 'utf-8');
+    const sonarTestBaselineXmlContent = await readFile(sonarTestBaselinePath, 'utf-8');
+    const lcovDeployBaselineContent = await readFile(lcovDeployBaselinePath, 'utf-8');
+    const lcovTestBaselineContent = await readFile(lcovTestBaselinePath, 'utf-8');
+    strictEqual(
+      sonarXml1,
+      sonarDeployBaselineXmlContent,
+      `File content is different between ${sonarXmlPath1} and ${sonarDeployBaselinePath}`
+    );
+    strictEqual(
+      sonarXml2,
+      sonarDeployBaselineXmlContent,
+      `File content is different between ${sonarXmlPath2} and ${sonarDeployBaselinePath}`
+    );
+    strictEqual(
+      sonarXml3,
+      sonarTestBaselineXmlContent,
+      `File content is different between ${sonarXmlPath3} and ${sonarTestBaselinePath}`
+    );
+    strictEqual(
+      lcov1,
+      lcovDeployBaselineContent,
+      `File content is different between ${lcovPath1} and ${lcovDeployBaselinePath}`
+    );
+    strictEqual(
+      lcov2,
+      lcovDeployBaselineContent,
+      `File content is different between ${lcovPath2} and ${lcovDeployBaselinePath}`
+    );
+    strictEqual(
+      lcov3,
+      lcovTestBaselineContent,
+      `File content is different between ${lcovPath3} and ${lcovTestBaselinePath}`
+    );
   });
 });

@@ -167,5 +167,21 @@ export type CoverageHandler = {
     repoRoot: string,
     reportType: string
   ): Promise<void>;
-  finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject;
+  finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject | LcovCoverageObject;
+};
+
+export type LcovLine = {
+  lineNumber: number;
+  hitCount: number;
+};
+
+export type LcovFile = {
+  sourceFile: string;
+  lines: LcovLine[];
+  totalLines: number;
+  coveredLines: number;
+};
+
+export type LcovCoverageObject = {
+  files: LcovFile[];
 };
