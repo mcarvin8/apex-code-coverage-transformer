@@ -8,10 +8,10 @@ Transform the Apex code coverage JSON file created by the Salesforce CLI deploy 
 
 # examples
 
-- `sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "sonar"`
-- `sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "cobertura"`
-- `sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "clover"`
-- `sf acc-transformer transform -j "coverage.json" -o "coverage.info" -f "lcovonly"`
+- `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"`
+- `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`
+- `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"`
+- `sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"`
 
 # flags.coverage-json.summary
 

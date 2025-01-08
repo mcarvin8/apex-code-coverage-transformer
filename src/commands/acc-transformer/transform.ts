@@ -28,8 +28,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     }),
     'output-report': Flags.file({
       summary: messages.getMessage('flags.output-report.summary'),
-      // eslint-disable-next-line sf-plugin/dash-o
-      char: 'o',
+      char: 'r',
       required: true,
       exists: false,
       default: 'coverage.xml',

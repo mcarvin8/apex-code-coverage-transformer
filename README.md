@@ -77,11 +77,11 @@ The `apex-code-coverage-transformer` has 1 command:
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> -o <value> -f <value> [--json]
+  $ sf acc-transformer transform -j <value> -r <value> -f <value> [--json]
 
 FLAGS
   -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
-  -o, --output-report=<value> Path to the code coverage file that will be created by this plugin.
+  -r, --output-report=<value> Path to the code coverage file that will be created by this plugin.
                               [default: "coverage.[xml/info]"]
   -f, --format=<value>        Output format for the code coverage format.
                               Valid options are "sonar", "clover", "lcovonly", or "cobertura".
@@ -94,13 +94,13 @@ DESCRIPTION
   Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube, Clover, LCovOnly, or Cobertura format.
 
 EXAMPLES
-    $ sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "sonar"
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"
 
-    $ sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "cobertura"
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"
 
-    $ sf acc-transformer transform -j "coverage.json" -o "coverage.xml" -f "clover"
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"
 
-    $ sf acc-transformer transform -j "coverage.json" -o "coverage.info" -f "lcovonly"
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"
 ```
 
 ## Hook

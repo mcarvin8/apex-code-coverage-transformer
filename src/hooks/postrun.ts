@@ -60,7 +60,7 @@ export const postrun: Hook<'postrun'> = async function (options) {
   const commandArgs: string[] = [];
   commandArgs.push('--coverage-json');
   commandArgs.push(coverageJsonPath);
-  commandArgs.push('--xml');
+  commandArgs.push('--output-report');
   commandArgs.push(outputReportPath);
   commandArgs.push('--format');
   commandArgs.push(coverageFormat);
