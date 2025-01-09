@@ -1,7 +1,6 @@
 'use strict';
 
 import { SonarCoverageObject, SonarClass, CoverageHandler } from '../helpers/types.js';
-import { setCoveredLinesSonar } from '../helpers/setCoveredLinesSonar.js';
 import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class SonarCoverageHandler implements CoverageHandler {
@@ -11,35 +10,22 @@ export class SonarCoverageHandler implements CoverageHandler {
     this.coverageObj = { coverage: { '@version': '1', file: [] } };
   }
 
-  public async processFile(
+  public processFile(
     filePath: string,
     _fileName: string,
     lines: Record<string, number>,
-    uncoveredLines: number[],
-    coveredLines: number[],
-    repoRoot: string,
-    reportType: 'test' | 'deploy'
-  ): Promise<void> {
+  ): void {
     const fileObj: SonarClass = {
       '@path': normalizePathToUnix(filePath),
       lineToCover: [],
     };
-
-    if (reportType === 'test') {
-      for (const lineNumberString in lines) {
-        if (!Object.hasOwn(lines, lineNumberString)) continue;
-        const covered = lines[lineNumberString] === 1 ? 'true' : 'false';
-        fileObj.lineToCover.push({
-          '@lineNumber': Number(lineNumberString),
-          '@covered': covered,
-        });
-      }
-    } else if (reportType === 'deploy') {
-      fileObj.lineToCover = uncoveredLines.map((lineNumber) => ({
-        '@lineNumber': lineNumber,
-        '@covered': 'false',
-      }));
-      await setCoveredLinesSonar(coveredLines, uncoveredLines, repoRoot, filePath, fileObj);
+    for (const lineNumberString in lines) {
+      if (!Object.hasOwn(lines, lineNumberString)) continue;
+      const covered = lines[lineNumberString] === 1 ? 'true' : 'false';
+      fileObj.lineToCover.push({
+        '@lineNumber': Number(lineNumberString),
+        '@covered': covered,
+      });
     }
 
     this.coverageObj.coverage.file.push(fileObj);

@@ -42,14 +42,12 @@ export async function transformTestCoverageReport(
       .filter(([, isCovered]) => isCovered === 1)
       .map(([lineNumber]) => Number(lineNumber));
 
-    await handler.processFile(
+    handler.processFile(
       relativeFilePath,
       formattedFileName,
       lines,
       uncoveredLines,
       coveredLines,
-      repoRoot,
-      'test'
     );
 
     filesProcessed++;
