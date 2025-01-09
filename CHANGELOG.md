@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.5.0...v2.5.1) (2025-01-09)
+
+
+### Bug Fixes
+
+* set covered lines before processing format ([d96bd88](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/d96bd88b341dbb8abe49ece21252e998abae617b))
+
 ## [2.5.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.4.1...v2.5.0) (2025-01-08)
 
 
