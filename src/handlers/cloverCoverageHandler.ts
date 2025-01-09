@@ -1,8 +1,6 @@
 'use strict';
 
 import { CloverCoverageObject, CloverFile, CoverageHandler } from '../helpers/types.js';
-import { setCoveredLinesClover } from '../helpers/setCoveredLinesClover.js';
-import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class CloverCoverageHandler implements CoverageHandler {
   private readonly coverageObj: CloverCoverageObject;
@@ -37,18 +35,16 @@ export class CloverCoverageHandler implements CoverageHandler {
     };
   }
 
-  public async processFile(
+  public processFile(
     filePath: string,
     fileName: string,
     lines: Record<string, number>,
     uncoveredLines: number[],
     coveredLines: number[],
-    repoRoot: string,
-    reportType: 'test' | 'deploy'
-  ): Promise<void> {
+  ): void {
     const fileObj: CloverFile = {
       '@name': fileName,
-      '@path': normalizePathToUnix(filePath),
+      '@path': filePath,
       metrics: {
         '@statements': uncoveredLines.length + coveredLines.length,
         '@coveredstatements': coveredLines.length,
@@ -59,18 +55,12 @@ export class CloverCoverageHandler implements CoverageHandler {
       },
       line: [],
     };
-
-    if (reportType === 'test') {
-      for (const [lineNumber, isCovered] of Object.entries(lines)) {
-        fileObj.line.push({
-          '@num': Number(lineNumber),
-          '@count': isCovered === 1 ? 1 : 0,
-          '@type': 'stmt',
-        });
-      }
-    } else if (reportType === 'deploy') {
-      fileObj.line = [...uncoveredLines.map((lineNumber) => ({ '@num': lineNumber, '@count': 0, '@type': 'stmt' }))];
-      await setCoveredLinesClover(coveredLines, uncoveredLines, repoRoot, filePath, fileObj);
+    for (const [lineNumber, isCovered] of Object.entries(lines)) {
+      fileObj.line.push({
+        '@num': Number(lineNumber),
+        '@count': isCovered === 1 ? 1 : 0,
+        '@type': 'stmt',
+      });
     }
     this.coverageObj.coverage.project.file.push(fileObj);
     const projectMetrics = this.coverageObj.coverage.project.metrics;

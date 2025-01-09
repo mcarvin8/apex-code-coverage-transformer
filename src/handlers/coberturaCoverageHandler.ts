@@ -1,8 +1,6 @@
 'use strict';
 
 import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass, CoverageHandler } from '../helpers/types.js';
-import { setCoveredLinesCobertura } from '../helpers/setCoveredLinesCobertura.js';
-import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class CoberturaCoverageHandler implements CoverageHandler {
   private readonly coverageObj: CoberturaCoverageObject;
@@ -33,18 +31,16 @@ export class CoberturaCoverageHandler implements CoverageHandler {
     this.coverageObj.coverage.packages.package.push(this.packageObj);
   }
 
-  public async processFile(
+  public processFile(
     filePath: string,
     fileName: string,
     lines: Record<string, number>,
     uncoveredLines: number[],
     coveredLines: number[],
-    repoRoot: string,
-    reportType: 'test' | 'deploy'
-  ): Promise<void> {
+  ): void {
     const classObj: CoberturaClass = {
       '@name': fileName,
-      '@filename': normalizePathToUnix(filePath),
+      '@filename': filePath,
       '@line-rate': '0',
       '@branch-rate': '1',
       methods: {},
@@ -54,22 +50,12 @@ export class CoberturaCoverageHandler implements CoverageHandler {
     const totalLines = uncoveredLines.length + coveredLines.length;
     const coveredLineCount = coveredLines.length;
 
-    // Process lines for 'test' or 'deploy' reports
-    if (reportType === 'test') {
-      for (const [lineNumber, isCovered] of Object.entries(lines)) {
-        classObj.lines.line.push({
-          '@number': Number(lineNumber),
-          '@hits': isCovered === 1 ? 1 : 0,
-          '@branch': 'false',
-        });
-      }
-    } else if (reportType === 'deploy') {
-      classObj.lines.line = uncoveredLines.map((lineNumber) => ({
-        '@number': lineNumber,
-        '@hits': 0,
+    for (const [lineNumber, isCovered] of Object.entries(lines)) {
+      classObj.lines.line.push({
+        '@number': Number(lineNumber),
+        '@hits': isCovered === 1 ? 1 : 0,
         '@branch': 'false',
-      }));
-      await setCoveredLinesCobertura(coveredLines, uncoveredLines, repoRoot, filePath, classObj);
+      });
     }
 
     // Calculate and set the line rate for this class

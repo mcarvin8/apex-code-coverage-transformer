@@ -164,9 +164,7 @@ export type CoverageHandler = {
     lines: Record<string, number>,
     uncoveredLines: number[],
     coveredLines: number[],
-    repoRoot: string,
-    reportType: string
-  ): Promise<void>;
+  ): void;
   finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject | LcovCoverageObject;
 };
 

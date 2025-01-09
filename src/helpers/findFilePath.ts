@@ -3,6 +3,7 @@
 
 import { readdir, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
+import { normalizePathToUnix } from './normalizePathToUnix.js';
 
 export async function findFilePath(
   fileName: string,
@@ -13,6 +14,7 @@ export async function findFilePath(
   for (const directory of packageDirectories) {
     relativeFilePath = await findFilePathinDirectory(fileName, directory, repoRoot);
     if (relativeFilePath !== undefined) {
+      relativeFilePath = normalizePathToUnix(relativeFilePath)
       break;
     }
   }
