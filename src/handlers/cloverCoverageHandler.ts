@@ -1,7 +1,6 @@
 'use strict';
 
 import { CloverCoverageObject, CloverFile, CoverageHandler } from '../helpers/types.js';
-import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class CloverCoverageHandler implements CoverageHandler {
   private readonly coverageObj: CloverCoverageObject;
@@ -45,7 +44,7 @@ export class CloverCoverageHandler implements CoverageHandler {
   ): void {
     const fileObj: CloverFile = {
       '@name': fileName,
-      '@path': normalizePathToUnix(filePath),
+      '@path': filePath,
       metrics: {
         '@statements': uncoveredLines.length + coveredLines.length,
         '@coveredstatements': coveredLines.length,

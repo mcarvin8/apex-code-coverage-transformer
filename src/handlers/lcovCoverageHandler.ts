@@ -1,7 +1,6 @@
 'use strict';
 
 import { CoverageHandler, LcovCoverageObject, LcovFile } from '../helpers/types.js';
-import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class LcovCoverageHandler implements CoverageHandler {
   private readonly coverageObj: LcovCoverageObject;
@@ -18,7 +17,7 @@ export class LcovCoverageHandler implements CoverageHandler {
     coveredLines: number[],
   ): void {
     const lcovFile: LcovFile = {
-      sourceFile: normalizePathToUnix(filePath),
+      sourceFile: filePath,
       lines: [],
       totalLines: uncoveredLines.length + coveredLines.length,
       coveredLines: coveredLines.length,

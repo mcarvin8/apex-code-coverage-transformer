@@ -1,7 +1,6 @@
 'use strict';
 
 import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass, CoverageHandler } from '../helpers/types.js';
-import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class CoberturaCoverageHandler implements CoverageHandler {
   private readonly coverageObj: CoberturaCoverageObject;
@@ -41,7 +40,7 @@ export class CoberturaCoverageHandler implements CoverageHandler {
   ): void {
     const classObj: CoberturaClass = {
       '@name': fileName,
-      '@filename': normalizePathToUnix(filePath),
+      '@filename': filePath,
       '@line-rate': '0',
       '@branch-rate': '1',
       methods: {},

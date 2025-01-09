@@ -1,7 +1,6 @@
 'use strict';
 
 import { SonarCoverageObject, SonarClass, CoverageHandler } from '../helpers/types.js';
-import { normalizePathToUnix } from '../helpers/normalizePathToUnix.js';
 
 export class SonarCoverageHandler implements CoverageHandler {
   private readonly coverageObj: SonarCoverageObject;
@@ -16,7 +15,7 @@ export class SonarCoverageHandler implements CoverageHandler {
     lines: Record<string, number>,
   ): void {
     const fileObj: SonarClass = {
-      '@path': normalizePathToUnix(filePath),
+      '@path': filePath,
       lineToCover: [],
     };
     for (const lineNumberString in lines) {
