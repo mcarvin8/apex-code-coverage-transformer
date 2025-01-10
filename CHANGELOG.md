@@ -5,6 +5,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.5.1...v2.5.2) (2025-01-10)
+
+
+### Bug Fixes
+
+* confirm deploy report lines are sorted before covered line adjustment ([9ffb7f5](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/9ffb7f55343c45b876006015ebc11818c63174ce))
+* only set uncovered and covered lines when needed ([45f77ae](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/45f77aed39fbb1cac8329c0502cc9de8253be666))
+* warn instead of fail when json is not found ([7445801](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/744580187ca9ed67964f13e80f26a207d45a62bf))
+
 ## [2.5.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.5.0...v2.5.1) (2025-01-09)
 
 
