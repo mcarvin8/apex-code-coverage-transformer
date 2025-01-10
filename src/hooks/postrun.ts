@@ -13,12 +13,12 @@ export const postrun: Hook<'postrun'> = async function (options) {
   let commandType: string;
   let coverageJson: string;
   if (
-    ['project:deploy:validate', 'project:deploy:start', 'project:deploy:report', 'project:deploy:resume'].includes(
+    ['project:deploy:validate', 'project:deploy:start', 'project:deploy:report', 'project:deploy:resume', 'hardis:project:deploy:smart'].includes(
       options.Command.id
     )
   ) {
     commandType = 'deploy';
-  } else if (['apex:run:test', 'apex:get:test'].includes(options.Command.id)) {
+  } else if (['apex:run:test', 'apex:get:test', 'hardis:org:test:apex'].includes(options.Command.id)) {
     commandType = 'test';
   } else {
     return;
