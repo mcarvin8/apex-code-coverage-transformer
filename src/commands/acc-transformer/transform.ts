@@ -24,13 +24,11 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       summary: messages.getMessage('flags.coverage-json.summary'),
       char: 'j',
       required: true,
-      exists: true,
     }),
     'output-report': Flags.file({
       summary: messages.getMessage('flags.output-report.summary'),
       char: 'r',
       required: true,
-      exists: false,
       default: 'coverage.xml',
     }),
     format: Flags.string({
@@ -48,7 +46,13 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     const jsonFilePath = resolve(flags['coverage-json']);
     let outputReportPath = resolve(flags['output-report']);
     const format = flags['format'];
-    const jsonData = await readFile(jsonFilePath, 'utf-8');
+    let jsonData: string;
+    try {
+      jsonData = await readFile(jsonFilePath, 'utf-8');
+    } catch (error) {
+      this.warn(`Failed to read ${jsonFilePath}. Confirm file exists.`)
+      return { path: jsonFilePath };
+    }
 
     let xmlData: string;
     let warnings: string[] = [];
