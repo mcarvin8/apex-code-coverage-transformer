@@ -40,7 +40,6 @@ export async function transformTestCoverageReport(
       formattedFileName,
       lines,
     );
-
     filesProcessed++;
   }
 

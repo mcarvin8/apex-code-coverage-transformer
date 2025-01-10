@@ -6,7 +6,7 @@ import { DeployCoverageData } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { generateReport } from './generateReport.js';
-import { renumberLines } from './setCoveredLines.js';
+import { setCoveredLines } from './setCoveredLines.js';
 
 export async function transformDeployCoverageReport(
   data: DeployCoverageData,
@@ -29,9 +29,8 @@ export async function transformDeployCoverageReport(
       continue;
     }
 
-    const updatedLines = await renumberLines(relativeFilePath, repoRoot, fileInfo.s);
-    fileInfo.s = updatedLines; // Safe reassignment outside the function
-
+    const updatedLines = await setCoveredLines(relativeFilePath, repoRoot, fileInfo.s);
+    fileInfo.s = updatedLines;
 
     handler.processFile(
       relativeFilePath,
