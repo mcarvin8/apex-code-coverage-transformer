@@ -39,9 +39,14 @@ export class CloverCoverageHandler implements CoverageHandler {
     filePath: string,
     fileName: string,
     lines: Record<string, number>,
-    uncoveredLines: number[],
-    coveredLines: number[],
   ): void {
+    const uncoveredLines = Object.keys(lines)
+      .filter((lineNumber) => lines[lineNumber] === 0)
+      .map(Number);
+    const coveredLines = Object.keys(lines)
+      .filter((lineNumber) => lines[lineNumber] === 1)
+      .map(Number);
+
     const fileObj: CloverFile = {
       '@name': fileName,
       '@path': filePath,

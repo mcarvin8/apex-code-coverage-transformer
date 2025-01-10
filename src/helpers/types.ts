@@ -162,8 +162,6 @@ export type CoverageHandler = {
     filePath: string,
     fileName: string,
     lines: Record<string, number>,
-    uncoveredLines: number[],
-    coveredLines: number[],
   ): void;
   finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject | LcovCoverageObject;
 };

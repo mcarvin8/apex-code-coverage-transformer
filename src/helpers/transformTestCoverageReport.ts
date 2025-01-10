@@ -35,19 +35,10 @@ export async function transformTestCoverageReport(
       continue;
     }
 
-    const uncoveredLines = Object.entries(lines)
-      .filter(([, isCovered]) => isCovered === 0)
-      .map(([lineNumber]) => Number(lineNumber));
-    const coveredLines = Object.entries(lines)
-      .filter(([, isCovered]) => isCovered === 1)
-      .map(([lineNumber]) => Number(lineNumber));
-
     handler.processFile(
       relativeFilePath,
       formattedFileName,
       lines,
-      uncoveredLines,
-      coveredLines,
     );
 
     filesProcessed++;

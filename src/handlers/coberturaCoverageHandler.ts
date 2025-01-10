@@ -35,8 +35,6 @@ export class CoberturaCoverageHandler implements CoverageHandler {
     filePath: string,
     fileName: string,
     lines: Record<string, number>,
-    uncoveredLines: number[],
-    coveredLines: number[],
   ): void {
     const classObj: CoberturaClass = {
       '@name': fileName,
@@ -46,6 +44,13 @@ export class CoberturaCoverageHandler implements CoverageHandler {
       methods: {},
       lines: { line: [] },
     };
+
+    const uncoveredLines = Object.keys(lines)
+      .filter((lineNumber) => lines[lineNumber] === 0)
+      .map(Number);
+    const coveredLines = Object.keys(lines)
+      .filter((lineNumber) => lines[lineNumber] === 1)
+      .map(Number);
 
     const totalLines = uncoveredLines.length + coveredLines.length;
     const coveredLineCount = coveredLines.length;

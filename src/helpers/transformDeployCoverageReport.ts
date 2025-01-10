@@ -29,13 +29,6 @@ export async function transformDeployCoverageReport(
       continue;
     }
 
-    const uncoveredLines = Object.keys(fileInfo.s)
-      .filter((lineNumber) => fileInfo.s[lineNumber] === 0)
-      .map(Number);
-    const coveredLines = Object.keys(fileInfo.s)
-      .filter((lineNumber) => fileInfo.s[lineNumber] === 1)
-      .map(Number);
-
     const updatedLines = await renumberLines(relativeFilePath, repoRoot, fileInfo.s);
     fileInfo.s = updatedLines; // Safe reassignment outside the function
 
@@ -44,8 +37,6 @@ export async function transformDeployCoverageReport(
       relativeFilePath,
       formattedFileName,
       fileInfo.s,
-      uncoveredLines,
-      coveredLines,
     );
     filesProcessed++;
   }
