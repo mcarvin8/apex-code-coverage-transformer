@@ -129,6 +129,14 @@ The `.apexcodecovtransformer.config.json` should look like this:
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
 
+The post-run hook can also run after the [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) commands `hardis:project:deploy:smart` (only if `COVERAGE_FORMATTER_JSON=true` environment variable is defined) and `hardis:org:test:apex` assuming you:
+
+- Install both plugins, apex-code-coverage-transformer and sfdx-hardis, with the Salesforce CLI
+- Create the `.apexcodecovtransformer.config.json` file in the root of your repo
+- Set `deployCoverageJsonPath` and `testCoverageJsonPath` in `.apexcodecovtransformer.config.json` to `hardis-report/apex-coverage-results.json`
+
+Since sfdx-hardis invokes Salesforce CLI commands, the hooks will fire twice per hardis command, once after the Salesforce CLI command and once after the sfdx-hardis command. The hook will end early without errors after the Salesforce CLI command and will run successfully after the sfdx-hardis command assuming the hardis report is found.
+
 ## Errors and Warnings
 
 Any file in the coverage JSON that isn't found in any package directory will result in this warning:
