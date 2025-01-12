@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.5.2...v2.6.0) (2025-01-12)
+
+
+### Features
+
+* allow hook to run after hardis commands ([962847d](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/962847d640237bd8c6c16f7319e2756b005713ea))
+
 ## [2.5.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.5.1...v2.5.2) (2025-01-10)
 
 
