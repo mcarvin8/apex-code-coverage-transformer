@@ -1,0 +1,6 @@
+{
+  "deployCoverageJsonPath": "hardis-report/apex-coverage-results.json",
+  "testCoverageJsonPath": "hardis-report/apex-coverage-results.json",
+  "outputReportPath": "coverage.xml",
+  "format": "sonar"
+}

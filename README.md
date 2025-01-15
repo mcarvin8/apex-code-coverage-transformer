@@ -9,6 +9,7 @@
 - [Install](#install)
 - [Who is the Plugin For?](#who-is-the-plugin-for)
 - [Creating Code Coverage Files with the Salesforce CLI](#creating-code-coverage-files-with-the-salesforce-cli)
+- [Creating Code Coverage Files with SFDX Hardis](#creating-code-coverage-files-with-sfdx-hardis)
 - [What this Plugin fixes in the Salesforce CLI Coverage Reports](#what-this-plugin-fixes-in-the-salesforce-cli-coverage-reports)
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
@@ -45,7 +46,7 @@ To create the code coverage JSON when deploying or validating, append `--coverag
 sf project deploy [start/validate] --coverage-formatters json --results-dir "coverage"
 ```
 
-To create the code coverage JSON when running tests directly in the org, append `--code-coverage --result-format json --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in a folder named "coverage".
+To create the code coverage JSON when running tests directly in the org, append `--code-coverage --result-format json --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in this relative path - `coverage/test-result-codecoverage.json`
 
 ```
 sf apex run test --code-coverage --result-format json --output-dir "coverage"
@@ -53,6 +54,12 @@ sf apex get test --test-run-id <test run id> --code-coverage --result-format jso
 ```
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX repositories and needs to be converted using this plugin.
+
+## Creating Code Coverage Files with SFDX Hardis
+
+This plugin can be used after running [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) commands `hardis:project:deploy:smart` (only if `COVERAGE_FORMATTER_JSON=true` environment variable is defined) and `hardis:org:test:apex` assuming you have sfdx-hardis and this plugin installed.
+
+Both hardis commands will create the code coverage JSON to transform here: `hardis-report/apex-coverage-results.json`. Provide this relative path as the `--coverage-json`/`-j` input for this plugin.
 
 ## What this Plugin fixes in the Salesforce CLI Coverage Reports
 
@@ -105,37 +112,29 @@ EXAMPLES
 
 ## Hook
 
-A post-run hook has been configured if you elect to use it.
+A post-run hook has been configured if you opt into using it by creating a `.apexcodecovtransformer.config.json` config file in the root of your repo. If the config file is found, the post-run hook will automatically run after the following commands:
 
-The post-run hook will automatically transform the code coverage JSON file after every Salesforce CLI deployment (`sf project deploy start`, `sf project deploy validate`, `sf project deploy report`, `sf project deploy resume` commands) and test run (`sf apex run test` and `sf apex get test` commands) if the JSON is found.
+- `sf project deploy start`
+- `sf project deploy validate`
+- `sf project deploy report`
+- `sf project deploy resume`
+- `sf apex run test`
+- `sf apex get test`
+- `hardis:project:deploy:smart` (only if sfdx-hardis is installed and `COVERAGE_FORMATTER_JSON=true` environment variable is defined)
+- `hardis:org:test:apex` (only if sfdx-hardis is installed)
 
-The hook requires you to create this file in the root of your repo: `.apexcodecovtransformer.config.json`
+You can copy the sample [Salesforce CLI .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), which assumes you are running the Salesforce CLI commands and specifying the `--results-dir`/`--output-dir` directory as "coverage". Update this sample with your desired output report path and format.
 
-The `.apexcodecovtransformer.config.json` should look like this:
+You can copy the sample [SFDX Hardis .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json), which assumes you are running the SFDX Hardis commands. Update this sample with your desired output report path and format.
 
-```json
-{
-  "deployCoverageJsonPath": "coverage/coverage/coverage.json",
-  "testCoverageJsonPath": "coverage/test-coverage.json",
-  "outputReportPath": "coverage.xml",
-  "format": "sonar"
-}
-```
+The `.apexcodecovtransformer.config.json` follows this structure:
 
-- `deployCoverageJsonPath` is required to use the hook after deployments and should be the path to the code coverage JSON created by the Salesforce CLI deployment command. Recommend using a relative path.
-- `testCoverageJsonPath` is required to use the hook after test runs and should be the path to the code coverage JSON created by the Salesforce CLI test command. Recommend using a relative path.
+- `deployCoverageJsonPath` is required to use the hook after deploy commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis deploy command. Recommend using a relative path.
+- `testCoverageJsonPath` is required to use the hook after test commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis test command. Recommend using a relative path.
 - `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.[xml/info]` in the working directory.
 - `format` is optional and should be the intended output format for the code coverage file created by this plugin. Options are "sonar", "clover", "lcovonly", or "cobertura". If this isn't provided, it will default to "sonar".
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
-
-The post-run hook can also run after the [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) commands `hardis:project:deploy:smart` (only if `COVERAGE_FORMATTER_JSON=true` environment variable is defined) and `hardis:org:test:apex` assuming you:
-
-- Install both plugins, apex-code-coverage-transformer and sfdx-hardis, with the Salesforce CLI
-- Create the `.apexcodecovtransformer.config.json` file in the root of your repo
-- Set `deployCoverageJsonPath` and `testCoverageJsonPath` in `.apexcodecovtransformer.config.json` to `hardis-report/apex-coverage-results.json`
-
-Since sfdx-hardis invokes Salesforce CLI commands, the hooks will fire twice per hardis command, once after the Salesforce CLI command and once after the sfdx-hardis command. The hook will end early without errors after the Salesforce CLI command and will run successfully after the sfdx-hardis command assuming the hardis report is found.
 
 ## Errors and Warnings
 
