@@ -1,6 +1,6 @@
 'use strict';
 
-import { copyFile, readFile, writeFile, rm, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, rm, mkdir } from 'node:fs/promises';
 import { strictEqual } from 'node:assert';
 import { resolve } from 'node:path';
 
@@ -12,8 +12,10 @@ import TransformerTransform from '../../../src/commands/acc-transformer/transfor
 describe('main', () => {
   const $$ = new TestContext();
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
-  const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
-  const baselineTriggerPath = resolve('test/baselines/triggers/AccountTrigger.trigger');
+  const mockClassContent = '// Test Apex Class';
+  const mockTriggerContent = '// Test Apex Trigger';
+  const baselineClassPath = resolve('force-app/main/default/classes/AccountProfile.cls');
+  const baselineTriggerPath = resolve('packaged/triggers/AccountTrigger.trigger');
   const deployCoverageNoExts = resolve('test/deploy_coverage_no_file_exts.json');
   const deployCoverageWithExts = resolve('test/deploy_coverage_with_file_exts.json');
   const testCoverage = resolve('test/test_coverage.json');
@@ -40,16 +42,15 @@ describe('main', () => {
     packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
     namespace: '',
     sfdcLoginUrl: 'https://login.salesforce.com',
-    sourceApiVersion: '58.0',
   };
   const configJsonString = JSON.stringify(configFile, null, 2);
 
   before(async () => {
+    await writeFile(sfdxConfigFile, configJsonString);
     await mkdir('force-app/main/default/classes', { recursive: true });
     await mkdir('packaged/triggers', { recursive: true });
-    await copyFile(baselineClassPath, 'force-app/main/default/classes/AccountProfile.cls');
-    await copyFile(baselineTriggerPath, 'packaged/triggers/AccountTrigger.trigger');
-    await writeFile(sfdxConfigFile, configJsonString);
+    await writeFile(baselineClassPath, mockClassContent);
+    await writeFile(baselineTriggerPath, mockTriggerContent);
   });
 
   beforeEach(() => {
@@ -62,8 +63,8 @@ describe('main', () => {
 
   after(async () => {
     await rm(sfdxConfigFile);
-    await rm('force-app/main/default/classes/AccountProfile.cls');
-    await rm('packaged/triggers/AccountTrigger.trigger');
+    await rm(baselineClassPath);
+    await rm(baselineTriggerPath);
     await rm('force-app', { recursive: true });
     await rm('packaged', { recursive: true });
     await rm(sonarXmlPath1);
