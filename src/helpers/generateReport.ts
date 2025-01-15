@@ -10,6 +10,7 @@ export function generateReport(
   if (format === 'lcovonly') {
     if ('files' in coverageObj) {
       let lcovOutput = '';
+      coverageObj.files.sort((a, b) => a.sourceFile.localeCompare(b.sourceFile));
       for (const file of coverageObj.files) {
         lcovOutput += `TN:\nSF:${file.sourceFile}\n`;
         lcovOutput += 'FNF:0\nFNH:0\n';
@@ -28,6 +29,9 @@ export function generateReport(
   }
 
   const isHeadless = format === 'cobertura' || format === 'clover';
+  if ('files' in coverageObj) {
+    coverageObj.files.sort((a, b) => a.sourceFile.localeCompare(b.sourceFile));
+  }
   let xml = create(coverageObj).end({ prettyPrint: true, indent: '  ', headless: isHeadless });
 
   if (format === 'cobertura') {

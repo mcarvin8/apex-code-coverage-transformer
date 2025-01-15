@@ -6,6 +6,7 @@
     "@oclif/core": "^4.0.37",
     "@salesforce/core": "^8.8.0",
     "@salesforce/sf-plugins-core": "^12.1.1",
+    "async": "^3.2.6",
     "xmlbuilder2": "^3.1.1"
   },
   "devDependencies": {
@@ -14,6 +15,7 @@
     "@oclif/plugin-command-snapshot": "^5.2.24",
     "@salesforce/cli-plugins-testkit": "^5.3.39",
     "@salesforce/dev-scripts": "^10.2.11",
+    "@types/async": "^3.2.24",
     "@types/node": "18",
     "eslint-plugin-sf-plugin": "^1.20.13",
     "husky": "^9.1.7",

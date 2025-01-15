@@ -1,11 +1,14 @@
 'use strict';
 /* eslint-disable no-await-in-loop */
 
+import async from 'async';
+
 import { getCoverageHandler } from '../handlers/getCoverageHandler.js';
 import { TestCoverageData } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { generateReport } from './generateReport.js';
+import { getConcurrencyThreshold } from './getConcurrencyThreshold.js';
 
 export async function transformTestCoverageReport(
   testCoverageData: TestCoverageData[],
@@ -16,32 +19,34 @@ export async function transformTestCoverageReport(
   const { repoRoot, packageDirectories } = await getPackageDirectories();
   const handler = getCoverageHandler(format);
 
-  let coverageData = testCoverageData;
-  if (!Array.isArray(coverageData)) {
-    coverageData = [coverageData]; // Ensure the data is an array
-  }
+  // Ensure testCoverageData is an array
+  const coverageData = Array.isArray(testCoverageData) ? testCoverageData : [testCoverageData];
 
-  for (const data of coverageData) {
+  const processFile = async (data: TestCoverageData): Promise<boolean> => {
     const name = data?.name;
     const lines = data?.lines;
 
-    if (!name || !lines) continue;
+    if (!name || !lines) return false;
 
     const formattedFileName = name.replace(/no-map[\\/]+/, '');
     const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
 
-    if (relativeFilePath === undefined) {
+    if (!relativeFilePath) {
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
-      continue;
+      return false;
     }
 
-    handler.processFile(
-      relativeFilePath,
-      formattedFileName,
-      lines,
-    );
-    filesProcessed++;
-  }
+    handler.processFile(relativeFilePath, formattedFileName, lines);
+    return true;
+  };
+
+  const concurrencyLimit = getConcurrencyThreshold();
+  await async.mapLimit(coverageData, concurrencyLimit, async (data: TestCoverageData) => {
+    const result = await processFile(data);
+    if (result) {
+      filesProcessed++;
+    }
+  });
 
   const coverageObj = handler.finalize();
   const xml = generateReport(coverageObj, format);
