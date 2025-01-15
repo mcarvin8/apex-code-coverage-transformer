@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.6.0...v2.6.1) (2025-01-15)
+
+
+### Bug Fixes
+
+* fix default test command path in doc and provide defaults ([c8dc711](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/c8dc71177d3ed9cae8dc7a41b7843fdc9d09ad5d))
+
 ## [2.6.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.5.2...v2.6.0) (2025-01-12)
 
 
