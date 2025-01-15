@@ -1,12 +1,15 @@
 'use strict';
 /* eslint-disable no-await-in-loop */
 
+import async from 'async';
+
 import { getCoverageHandler } from '../handlers/getCoverageHandler.js';
 import { DeployCoverageData } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { generateReport } from './generateReport.js';
 import { setCoveredLines } from './setCoveredLines.js';
+import { getConcurrencyThreshold } from './getConcurrencyThreshold.js';
 
 export async function transformDeployCoverageReport(
   data: DeployCoverageData,
@@ -17,28 +20,30 @@ export async function transformDeployCoverageReport(
   const { repoRoot, packageDirectories } = await getPackageDirectories();
   const handler = getCoverageHandler(format);
 
-  for (const fileName in data) {
-    if (!Object.hasOwn(data, fileName)) continue;
-
+  const processFile = async (fileName: string): Promise<boolean> => {
     const fileInfo = data[fileName];
     const formattedFileName = fileName.replace(/no-map[\\/]+/, '');
     const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
 
     if (!relativeFilePath) {
       warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
-      continue;
+      return false;
     }
 
     const updatedLines = await setCoveredLines(relativeFilePath, repoRoot, fileInfo.s);
     fileInfo.s = updatedLines;
 
-    handler.processFile(
-      relativeFilePath,
-      formattedFileName,
-      fileInfo.s,
-    );
-    filesProcessed++;
-  }
+    handler.processFile(relativeFilePath, formattedFileName, fileInfo.s);
+    return true;
+  };
+
+  const concurrencyLimit = getConcurrencyThreshold();
+  await async.mapLimit(Object.keys(data).filter((fileName) => Object.hasOwn(data, fileName)), concurrencyLimit, async (fileName: string) => {
+    const result = await processFile(fileName);
+    if (result) {
+      filesProcessed++;
+    }
+  });
 
   const coverageObj = handler.finalize();
   const xml = generateReport(coverageObj, format);
