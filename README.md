@@ -46,11 +46,11 @@ To create the code coverage JSON when deploying or validating, append `--coverag
 sf project deploy [start/validate] --coverage-formatters json --results-dir "coverage"
 ```
 
-To create the code coverage JSON when running tests directly in the org, append `--code-coverage --result-format json --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in this relative path - `coverage/test-result-codecoverage.json`
+To create the code coverage JSON when running tests directly in the org, append `--code-coverage --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in this relative path - `coverage/test-result-codecoverage.json`
 
 ```
-sf apex run test --code-coverage --result-format json --output-dir "coverage"
-sf apex get test --test-run-id <test run id> --code-coverage --result-format json --output-dir "coverage"
+sf apex run test --code-coverage --output-dir "coverage"
+sf apex get test --test-run-id <test run id> --code-coverage --output-dir "coverage"
 ```
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX repositories and needs to be converted using this plugin.
