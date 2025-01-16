@@ -120,8 +120,8 @@ A post-run hook has been configured if you opt into using it by creating a `.ape
 - `sf project deploy resume`
 - `sf apex run test`
 - `sf apex get test`
-- `hardis:project:deploy:smart` (only if sfdx-hardis is installed and `COVERAGE_FORMATTER_JSON=true` environment variable is defined)
-- `hardis:org:test:apex` (only if sfdx-hardis is installed)
+- `sf hardis project deploy smart` (only if sfdx-hardis is installed and `COVERAGE_FORMATTER_JSON=true` environment variable is defined)
+- `sf hardis org test apex` (only if sfdx-hardis is installed)
 
 You can copy the sample [Salesforce CLI .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), which assumes you are running the Salesforce CLI commands and specifying the `--results-dir`/`--output-dir` directory as "coverage". Update this sample with your desired output report path and format.
 
