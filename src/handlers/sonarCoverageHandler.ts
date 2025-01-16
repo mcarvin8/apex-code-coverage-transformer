@@ -31,6 +31,11 @@ export class SonarCoverageHandler implements CoverageHandler {
   }
 
   public finalize(): SonarCoverageObject {
+    if (this.coverageObj.coverage?.file) {
+      this.coverageObj.coverage.file.sort((a, b) =>
+        a['@path'].localeCompare(b['@path'])
+      );
+    }
     return this.coverageObj;
   }
 }

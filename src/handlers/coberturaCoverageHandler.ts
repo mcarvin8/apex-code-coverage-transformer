@@ -81,6 +81,18 @@ export class CoberturaCoverageHandler implements CoverageHandler {
   }
 
   public finalize(): CoberturaCoverageObject {
+    if (this.coverageObj.coverage?.packages?.package) {
+      this.coverageObj.coverage.packages.package.sort((a, b) =>
+        a['@name'].localeCompare(b['@name'])
+      );
+      for (const pkg of this.coverageObj.coverage.packages.package) {
+        if (pkg.classes?.class) {
+          pkg.classes.class.sort((a, b) =>
+            a['@filename'].localeCompare(b['@filename'])
+          );
+        }
+      }
+    }
     return this.coverageObj;
   }
 }
