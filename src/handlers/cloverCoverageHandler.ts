@@ -81,6 +81,11 @@ export class CloverCoverageHandler implements CoverageHandler {
   }
 
   public finalize(): CloverCoverageObject {
+    if (this.coverageObj.coverage?.project?.file) {
+      this.coverageObj.coverage.project.file.sort((a, b) =>
+        a['@path'].localeCompare(b['@path'])
+      );
+    }
     return this.coverageObj;
   }
 }

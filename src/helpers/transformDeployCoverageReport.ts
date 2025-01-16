@@ -1,6 +1,6 @@
 'use strict';
 
-import async from 'async';
+import { mapLimit } from 'async';
 
 import { getCoverageHandler } from '../handlers/getCoverageHandler.js';
 import { DeployCoverageData } from './types.js';
@@ -37,7 +37,7 @@ export async function transformDeployCoverageReport(
   };
 
   const concurrencyLimit = getConcurrencyThreshold();
-  await async.mapLimit(Object.keys(data).filter((fileName) => Object.hasOwn(data, fileName)), concurrencyLimit, async (fileName: string) => {
+  await mapLimit(Object.keys(data).filter((fileName) => Object.hasOwn(data, fileName)), concurrencyLimit, async (fileName: string) => {
     const result = await processFile(fileName);
     if (result) {
       filesProcessed++;
