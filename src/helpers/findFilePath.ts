@@ -1,5 +1,4 @@
 'use strict';
-/* eslint-disable no-await-in-loop */
 
 import { readdir, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
@@ -10,56 +9,52 @@ export async function findFilePath(
   packageDirectories: string[],
   repoRoot: string
 ): Promise<string | undefined> {
-  let relativeFilePath: string | undefined;
-  for (const directory of packageDirectories) {
-    relativeFilePath = await findFilePathinDirectory(fileName, directory, repoRoot);
-    if (relativeFilePath !== undefined) {
-      relativeFilePath = normalizePathToUnix(relativeFilePath)
-      break;
-    }
-  }
-  return relativeFilePath;
+  const relativePaths = await Promise.all(
+    packageDirectories.map((directory) => findFilePathInDirectory(fileName, directory, repoRoot))
+  );
+
+  // Return the first non-undefined result
+  const foundPath = relativePaths.find((path) => path !== undefined);
+  return foundPath ? normalizePathToUnix(foundPath) : undefined;
 }
 
 async function searchRecursively(fileName: string, dxDirectory: string): Promise<string | undefined> {
   const files = await readdir(dxDirectory);
-  for (const file of files) {
+
+  const searchPromises = files.map(async (file) => {
     const filePath = join(dxDirectory, file);
-    const stats = await stat(filePath);
-    if (stats.isDirectory()) {
-      const result = await searchRecursively(fileName, filePath);
-      if (result) {
-        return result;
-      }
+    const fileStats = await stat(filePath);
+
+    if (fileStats.isDirectory()) {
+      return searchRecursively(fileName, filePath);
     } else if (file === fileName) {
       return filePath;
     }
-  }
-  return undefined;
+    return undefined;
+  });
+
+  const results = await Promise.all(searchPromises);
+  return results.find((result) => result !== undefined);
 }
 
-async function findFilePathinDirectory(
+async function findFilePathInDirectory(
   fileName: string,
   dxDirectory: string,
   repoRoot: string
 ): Promise<string | undefined> {
   const fileExtension = fileName.split('.').slice(1).join('.');
-  let relativeFilePath: string | undefined;
 
   if (fileExtension) {
     // If file extension is defined, search recursively with that extension
     const absoluteFilePath = await searchRecursively(fileName, dxDirectory);
-    if (absoluteFilePath !== undefined) relativeFilePath = relative(repoRoot, absoluteFilePath);
+    return absoluteFilePath ? relative(repoRoot, absoluteFilePath) : undefined;
   } else {
-    // If file extension is not defined, test each extension option
-    const fileExts: string[] = ['cls', 'trigger'];
-    for (const ext of fileExts) {
-      const absoluteFilePath = await searchRecursively(`${fileName}.${ext}`, dxDirectory);
-      if (absoluteFilePath !== undefined) {
-        relativeFilePath = relative(repoRoot, absoluteFilePath);
-        break;
-      }
-    }
+    // If file extension is not defined, test each extension option in parallel
+    const fileExts = ['cls', 'trigger'];
+    const results = await Promise.all(
+      fileExts.map((ext) => searchRecursively(`${fileName}.${ext}`, dxDirectory))
+    );
+    const absoluteFilePath = results.find((result) => result !== undefined);
+    return absoluteFilePath ? relative(repoRoot, absoluteFilePath) : undefined;
   }
-  return relativeFilePath;
 }
