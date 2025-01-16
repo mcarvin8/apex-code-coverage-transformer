@@ -1,5 +1,4 @@
 'use strict';
-/* eslint-disable no-await-in-loop */
 
 import async from 'async';
 
