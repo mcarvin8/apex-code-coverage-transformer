@@ -14,7 +14,7 @@
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
 - [Hook](#hook)
-- [Errors and Warnings](#errors-and-warnings)
+- [Debugging](#debugging)
 - [Example](#example)
 - [Issues](#issues)
 - [License](#license)
@@ -34,7 +34,7 @@ This plugin is intended for users who deploy their Apex codebase (Apex classes a
 
 This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. Since files from managed and unlocked packages aren't retrieved into Salesforce DX repositories, these files cannot be included in your code coverage reports.
 
-When the plugin is unable to find the Apex file from the Salesforce CLI coverage report in your repository, it will print a warning and not add that file's coverage data to the coverage report created by this plugin. A warning will be printed for each file not found in a package directory in your repository. See [Errors and Warnings](https://github.com/mcarvin8/apex-code-coverage-transformer?tab=readme-ov-file#errors-and-warnings) for more information.
+When the plugin is unable to find the Apex file from the Salesforce CLI coverage report in your repository, it will print a warning and not add that file's coverage data to the coverage report created by this plugin. A warning will be printed for each file not found in a package directory in your repository. See [Debugging](https://github.com/mcarvin8/apex-code-coverage-transformer?tab=readme-ov-file#errors-and-warnings) for more information.
 
 ## Creating Code Coverage Files with the Salesforce CLI
 
@@ -136,7 +136,7 @@ The `.apexcodecovtransformer.config.json` follows this structure:
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
 
-## Errors and Warnings
+## Debugging
 
 Any file in the coverage JSON that isn't found in any package directory will result in this warning:
 
@@ -154,7 +154,7 @@ Warning: The file name AccountProfile was not found in any package directory.
 Warning: None of the files listed in the coverage JSON were processed. The coverage report will be empty.
 ```
 
-The code coverage JSON files created by the Salesforce CLI deployment commands follow a different format than the code coverage files created by the test commands. If the code coverage JSON file provided does not match one of the 2 expected coverage data types, the plugin will fail with:
+The code coverage JSON files created by the Salesforce CLI deploy and test commands follow different formats. If the code coverage JSON file provided does not match 1 of the 2 expected coverage data types, the plugin will fail with:
 
 ```
 Error (1): The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.
