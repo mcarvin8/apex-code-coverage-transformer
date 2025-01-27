@@ -20,7 +20,13 @@
 - [License](#license)
 </details>
 
-A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into SonarQube, Cobertura, LCovOnly, or Clover format.
+A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into the following formats:
+- SonarQube (XML)
+- Cobertura (XML)
+- LCovOnly (INFO)
+- Clover (XML)
+
+If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
 
 ## Install
 
