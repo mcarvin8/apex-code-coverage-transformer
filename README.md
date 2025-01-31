@@ -26,6 +26,8 @@ A Salesforce CLI plugin to transform the Apex code coverage JSON files created d
 - LCovOnly (INFO)
 - Clover (XML)
 
+These formats are accepted by SonarQube, GitHub, GitLab, etc.
+
 If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
 
 ## Install
