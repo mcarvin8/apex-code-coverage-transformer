@@ -38,16 +38,15 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 
 ## Who is the Plugin For?
 
-This plugin is intended for users who deploy their Apex codebase (Apex classes and triggers) from any Salesforce DX repository (`sfdx-project.json` file), not just git-based ones. You should be running this plugin somewhere inside your Salesforce DX repository (root folder preferred). This plugin searches for your repository's `sfdx-project.json` file to know which package directories to search into. The Apex files must be found in one of your package directories.
+This plugin is intended for users who deploy their Apex classes and triggers from any Salesforce DX project (`sfdx-project.json` file). You should be running this plugin somewhere inside your Salesforce DX project. This plugin searches for your repository's `sfdx-project.json` file to know which package directories to search into.
 
-This plugin will work if you run local tests or run all tests in an org, including tests that originate from installed managed and unlocked packages. Since files from managed and unlocked packages aren't retrieved into Salesforce DX repositories, these files cannot be included in your code coverage reports.
+This plugin will work regardless of your testing strategy (running all tests, running specified tests, running all local tests). The files in the original coverage JSON has to be found in one of the package directories to be added to the final report. This ensures external tools like SonarQube can match files in the coverage report to a file in the project.
 
-When the plugin is unable to find the Apex file from the Salesforce CLI coverage report in your repository, it will print a warning and not add that file's coverage data to the coverage report created by this plugin. A warning will be printed for each file not found in a package directory in your repository. See [Debugging](#debugging) for more information.
+When the plugin is unable to find a matching Apex file in your project (i.e. Apex from managed and unlocked packages), it will print a warning and not add that file's coverage data to the final coverage report. See [Debugging](#debugging) for more information.
 
 ## Creating Code Coverage Files with the Salesforce CLI
 
-**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use the "json-summary", "clover", "lcovonly", or "cobertura" format from the Salesforce CLI.**
-
+**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.
 To create the code coverage JSON when deploying or validating, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
 ```
