@@ -16,7 +16,6 @@
 - [Coverage Report Formats](#coverage-report-formats)
 - [Hook](#hook)
 - [Debugging](#debugging)
-- [Example](#example)
 - [Issues](#issues)
 - [License](#license)
 </details>
@@ -115,12 +114,12 @@ EXAMPLES
 
 The `-f`/`--format` flag allows you to specify the format of the coverage report.
 
-| Flag Option  | Description |
-|-------------|-------------|
-| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option. |
-| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools. |
-| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. |
-| `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting. |
+| Flag Option  | Description | Example |
+|-------------|-------------| -------------|
+| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option. | [sonar example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_sonar.xml) |
+| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools. | [Clover example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_clover.xml) |
+| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [LCovOnly example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_lcov.info) |
+| `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting. | [Cobertura example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_cobertura.xml) |
 
 ## Hook
 
@@ -183,15 +182,6 @@ Any ENOENT failures indicate that the plugin had issues finding one of the packa
 ```
 Error (1): ENOENT: no such file or directory: {packageDirPath}
 ```
-
-## Example
-
-This [code coverage JSON file](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_no_file_exts.json) created during a Salesforce CLI deployment can be transformed into:
-
-- [SonarQube format](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_sonar.xml)
-- [Cobertura format](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_cobertura.xml)
-- [Clover format](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_clover.xml)
-- [LCovOnly format](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_lcov.info)
 
 ## Issues
 
