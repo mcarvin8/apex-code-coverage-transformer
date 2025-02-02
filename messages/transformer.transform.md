@@ -1,10 +1,10 @@
 # summary
 
-Transforms the Code Coverage JSON into SonarQube, Clover, or Cobertura format.
+Transform Salesforce Apex code coverage JSONs created during deployments and test runs into other formats accepted by SonarQube, GitHub, GitLab, etc.
 
 # description
 
-Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube, Clover, LCovOnly or Cobertura format.
+Transform Salesforce Apex code coverage JSONs created during deployments and test runs into other formats accepted by SonarQube, GitHub, GitLab, etc.
 
 # examples
 
