@@ -1,7 +1,7 @@
 {
   "name": "apex-code-coverage-transformer",
   "description": "Transform Salesforce Apex code coverage JSONs created during deployments and test runs into other formats accepted by SonarQube, GitHub, GitLab, etc.",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "dependencies": {
     "@oclif/core": "^4.0.37",
     "@salesforce/core": "^8.8.0",
