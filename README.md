@@ -13,6 +13,7 @@
 - [What this Plugin fixes in the Salesforce CLI Coverage Reports](#what-this-plugin-fixes-in-the-salesforce-cli-coverage-reports)
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
+- [Coverage Report Formats](#coverage-report-formats)
 - [Hook](#hook)
 - [Debugging](#debugging)
 - [Example](#example)
@@ -20,13 +21,7 @@
 - [License](#license)
 </details>
 
-A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into the following formats:
-- SonarQube (XML)
-- Cobertura (XML)
-- LCovOnly (INFO)
-- Clover (XML)
-
-These formats are accepted by SonarQube, GitHub, GitLab, etc.
+A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into various formats accepted by SonarQube, GitHub, GitLab, etc.
 
 If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
 
@@ -98,7 +93,6 @@ FLAGS
   -r, --output-report=<value> Path to the code coverage file that will be created by this plugin.
                               [default: "coverage.[xml/info]"]
   -f, --format=<value>        Output format for the code coverage format.
-                              Valid options are "sonar", "clover", "lcovonly", or "cobertura".
                               [default: "sonar"]
 
 GLOBAL FLAGS
@@ -116,6 +110,17 @@ EXAMPLES
 
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"
 ```
+
+## Coverage Report Formats
+
+The `-f'/`--format` flag allows you to specify the format of the coverage report.
+
+| Flag Option  | Description |
+|-------------|-------------|
+| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option. |
+| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools. |
+| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. |
+| `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting. |
 
 ## Hook
 
