@@ -40,7 +40,8 @@ When the plugin is unable to find a matching Apex file in your project (i.e. Ape
 
 ## Creating Code Coverage Files with the Salesforce CLI
 
-**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.
+**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.**
+
 To create the code coverage JSON when deploying or validating, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
 ```
