@@ -16,6 +16,7 @@
 - [Coverage Report Formats](#coverage-report-formats)
 - [Hook](#hook)
 - [Debugging](#debugging)
+- [Contributing](#contributing)
 - [Issues](#issues)
 - [License](#license)
 </details>
@@ -183,6 +184,10 @@ Any ENOENT failures indicate that the plugin had issues finding one of the packa
 ```
 Error (1): ENOENT: no such file or directory: {packageDirPath}
 ```
+
+## Contributing
+
+Contributions are welcome! See [Contributing](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
 
 ## Issues
 
