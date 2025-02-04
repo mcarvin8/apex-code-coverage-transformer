@@ -62,5 +62,5 @@ export type CoverageHandler = {
 3. Create a new coverage handler class in `src/handlers` with a `constructor`, `processFile` and `finalize` class.
     1. The `finalize` class should sort items in the coverage object before returning.
 4. Add new coverage handler class to `src/handlers/getCoverageHandler.ts`.
-5. Add new coverage handler object type to `src/helpers/generateReport.ts` and add anything needed to create the final report for that format.
+5. Add new `{format}CoverageObject` type to `src/helpers/generateReport.ts` and add anything needed to create the final report for that format.
 6. Add new unit and non-unit tests for new format to `test/commands/acc-transformer`.
