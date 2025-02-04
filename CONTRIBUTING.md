@@ -51,7 +51,7 @@ To add new coverage formats to the transformer:
 2. Add new coverage types to `src/helpers/types.ts`
 3. Add new coverage object type to `CoverageHandler` type in `src/helpers/types.ts`
 4. Create a new coverage handler class in `src/handlers` with a `constructor`, `processFile` and `finalize` class
-  1. The `finalize` class should sort items in the coverage object before returning
+    1. The `finalize` class should sort items in the coverage object before returning
 5. Add new coverage handler class to `src/handlers/getCoverageHandler.ts`
 6. Add new coverage handler object type to `src/helpers/generateReport.ts` and add anything needed to create the final report for that format
 7. Add tests for new format to `test/commands/acc-transformer`
