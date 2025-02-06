@@ -21,7 +21,7 @@
 - [License](#license)
 </details>
 
-A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into various [formats](#coverage-report-formats) accepted by SonarQube, GitHub, GitLab, etc.
+A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into various [formats](#coverage-report-formats) accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
 
 If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
 
