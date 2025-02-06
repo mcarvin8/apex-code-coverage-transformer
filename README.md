@@ -33,7 +33,7 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 
 ## Who is the Plugin For?
 
-This plugin is intended for users who deploy their Apex classes and triggers from any Salesforce DX project (`sfdx-project.json` file). You should be running this plugin somewhere inside your Salesforce DX project. This plugin searches for your repository's `sfdx-project.json` file to know which package directories to search into.
+This plugin is intended for users who deploy their Apex classes and triggers from any Salesforce DX project (`sfdx-project.json` file). You should be running this plugin somewhere inside your Salesforce DX project. This plugin searches for your project's `sfdx-project.json` file to know which package directories to search into.
 
 This plugin will work regardless of your testing strategy (running all tests, running specified tests, running all local tests). The files in the original coverage JSON has to be found in one of the package directories to be added to the final report. This ensures external tools like SonarQube can match files in the coverage report to a file in the project.
 
@@ -100,7 +100,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into SonarQube, Clover, LCovOnly, or Cobertura format.
+  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into other formats accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
 
 EXAMPLES
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"
@@ -145,7 +145,7 @@ The `.apexcodecovtransformer.config.json` follows this structure:
 - `deployCoverageJsonPath` is required to use the hook after deploy commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis deploy command. Recommend using a relative path.
 - `testCoverageJsonPath` is required to use the hook after test commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis test command. Recommend using a relative path.
 - `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.[xml/info]` in the working directory.
-- `format` is optional and should be the intended output format for the code coverage file created by this plugin. Options are "sonar", "clover", "lcovonly", or "cobertura". If this isn't provided, it will default to "sonar".
+- `format` is optional and should be the intended coverage report format created by this plugin. If this isn't provided, it will default to "sonar".
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
 
