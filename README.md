@@ -21,7 +21,7 @@
 - [License](#license)
 </details>
 
-A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into various [formats](#coverage-report-formats) accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
+A Salesforce CLI plugin to transform the Apex code coverage JSON files created during deployments and test runs into other [formats](#coverage-report-formats) accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
 
 If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
 
@@ -66,16 +66,16 @@ Both hardis commands will create the code coverage JSON to transform here: `hard
 
 ## What this Plugin fixes in the Salesforce CLI Coverage Reports
 
-1. The coverage reports created by this plugin will add correct file-paths per your Salesforce DX repository. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage report created in this plugin will only contain Apex coverage results against files found in your Salesforce DX repository, allowing you to use these reports in external code quality tools like SonarQube.
-2. Normalizes the coverage reports created by the Salesforce CLI deploy and test command. The coverage reports created by both CLI commands follow different formats and have different coverage format options. These differences cause issues when trying to have external tools like SonarQube parse the coverage reports. This plugin handles parsing both command coverage reports and converting them into common formats accepted by external tools like SonarQube and GitLab.
-3. The coverage reports created by this plugin "fixes" an issue with Salesforce CLI deploy command coverage reports. The coverage reports created by the deploy command contains several inaccuracies in their covered lines.
-   1. Salesforce's deploy covered report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
-   2. Salesforce's deploy covered report may report extra lines than the total lines in the apex class, i.e. 120 lines are included in the deploy coverage report for a 100-line apex class.
-   3. The coverage percentage may vary based on how many lines the API returns in the original deploy coverage report.
-   4. I had to add a re-numbering function to this plugin to work-around these inaccuracies and ensure the transformed coverage reports are accepted by external tools like SonarQube.
-   5. Once the Salesforce server team fixes the API to correctly return coverage in deploy command reports, I will remove this re-numbering function in this plugin.
-   6. See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
-   7. **NOTE**: This does not affect coverage reports created by the Salesforce CLI test commands.
+- The coverage reports created by this plugin will add correct file-paths per your Salesforce DX repository. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage report created in this plugin will only contain Apex coverage results against files found in your Salesforce DX repository, allowing you to use these reports in external code quality tools like SonarQube.
+- Normalizes the coverage reports created by the Salesforce CLI deploy and test command. The coverage reports created by both CLI commands follow different formats and have different coverage format options. These differences cause issues when trying to have external tools like SonarQube parse the coverage reports. This plugin handles parsing both command coverage reports and converting them into common formats accepted by external tools like SonarQube and GitLab.
+- The coverage reports created by this plugin "fixes" an issue with Salesforce CLI deploy command coverage reports. The coverage reports created by the deploy command contains several inaccuracies in their covered lines.
+   - Salesforce's deploy covered report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
+   - Salesforce's deploy covered report may report extra lines than the total lines in the apex class, i.e. 120 lines are included in the deploy coverage report for a 100-line apex class.
+   - The coverage percentage may vary based on how many lines the API returns in the original deploy coverage report.
+   - I had to add a re-numbering function to this plugin to work-around these inaccuracies and ensure the transformed coverage reports are accepted by external tools like SonarQube.
+   - Once the Salesforce server team fixes the API to correctly return coverage in deploy command reports, I will remove this re-numbering function in this plugin.
+   - See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
+   - **NOTE**: This does not affect coverage reports created by the Salesforce CLI test commands.
 
 ## Command
 
