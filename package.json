@@ -59,7 +59,8 @@
     "gitlab",
     "github",
     "azure",
-    "bitbucket"
+    "bitbucket",
+    "jacoco"
   ],
   "license": "MIT",
   "oclif": {
