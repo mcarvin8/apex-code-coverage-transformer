@@ -14,26 +14,22 @@ describe('main', () => {
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
   const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
   const baselineTriggerPath = resolve('test/baselines/triggers/AccountTrigger.trigger');
-  const deployCoverageNoExts = resolve('test/deploy_coverage_no_file_exts.json');
-  const deployCoverageWithExts = resolve('test/deploy_coverage_with_file_exts.json');
+  const deployCoverage = resolve('test/deploy_coverage.json');
   const testCoverage = resolve('test/test_coverage.json');
   const invalidJson = resolve('test/invalid.json');
-  const sonarDeployBaselinePath = resolve('test/deploy_coverage_baseline_sonar.xml');
-  const sonarTestBaselinePath = resolve('test/test_coverage_baseline_sonar.xml');
-  const lcovDeployBaselinePath = resolve('test/deploy_coverage_baseline_lcov.info');
-  const lcovTestBaselinePath = resolve('test/test_coverage_baseline_lcov.info');
+  const sonarBaselinePath = resolve('test/sonar_baseline.xml');
+  const jacocoBaselinePath = resolve('test/jacoco_baseline.xml');
+  const lcovBaselinePath = resolve('test/lcov_baseline.info');
   const sonarXmlPath1 = resolve('sonar1.xml');
   const sonarXmlPath2 = resolve('sonar2.xml');
-  const sonarXmlPath3 = resolve('sonar3.xml');
   const coberturaXmlPath1 = resolve('cobertura1.xml');
   const coberturaXmlPath2 = resolve('cobertura2.xml');
-  const coberturaXmlPath3 = resolve('cobertura3.xml');
   const cloverXmlPath1 = resolve('clover1.xml');
   const cloverXmlPath2 = resolve('clover2.xml');
-  const cloverXmlPath3 = resolve('clover3.xml');
   const lcovPath1 = resolve('lcov1.info');
   const lcovPath2 = resolve('lcov2.info');
-  const lcovPath3 = resolve('lcov3.info');
+  const jacocoXmlPath1 = resolve('jacoco1.xml');
+  const jacocoXmlPath2 = resolve('jacoco2.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -68,20 +64,18 @@ describe('main', () => {
     await rm('packaged', { recursive: true });
     await rm(sonarXmlPath1);
     await rm(sonarXmlPath2);
-    await rm(sonarXmlPath3);
     await rm(coberturaXmlPath1);
     await rm(coberturaXmlPath2);
-    await rm(coberturaXmlPath3);
     await rm(cloverXmlPath1);
     await rm(cloverXmlPath2);
-    await rm(cloverXmlPath3);
     await rm(lcovPath1);
     await rm(lcovPath2);
-    await rm(lcovPath3);
+    await rm(jacocoXmlPath1);
+    await rm(jacocoXmlPath2);
   });
 
-  it('transform the test JSON file without file extensions into Sonar format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageNoExts, '--output-report', sonarXmlPath1]);
+  it('transform the deploy command JSON file into Sonar format.', async () => {
+    await TransformerTransform.run(['--coverage-json', deployCoverage, '--output-report', sonarXmlPath1]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
@@ -93,26 +87,13 @@ describe('main', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the test JSON file with file extensions into Sonar format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', deployCoverageWithExts, '--output-report', sonarXmlPath2]);
+  it('transform the test command JSON file into Sonar format.', async () => {
+    await TransformerTransform.run(['--coverage-json', testCoverage, '--output-report', sonarXmlPath2]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
     expect(output).to.include(`The coverage report has been written to ${sonarXmlPath2}`);
-    const warnings = sfCommandStubs.warn
-      .getCalls()
-      .flatMap((c) => c.args)
-      .join('\n');
-    expect(warnings).to.include('');
-  });
-  it('transform the JSON file from a test command into Sonar format without any warnings.', async () => {
-    await TransformerTransform.run(['--coverage-json', testCoverage, '--output-report', sonarXmlPath3]);
-    const output = sfCommandStubs.log
-      .getCalls()
-      .flatMap((c) => c.args)
-      .join('\n');
-    expect(output).to.include(`The coverage report has been written to ${sonarXmlPath3}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -134,10 +115,10 @@ describe('main', () => {
     }
   });
 
-  it('transform the test JSON file without file extensions into Cobertura format without any warnings.', async () => {
+  it('transform the deploy command JSON file into Cobertura format.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
-      deployCoverageNoExts,
+      deployCoverage,
       '--output-report',
       coberturaXmlPath1,
       '--format',
@@ -154,10 +135,10 @@ describe('main', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the test JSON file with file extensions into Cobertura format without any warnings.', async () => {
+  it('transform the test command JSON file into Cobertura format.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
-      deployCoverageWithExts,
+      testCoverage,
       '--output-report',
       coberturaXmlPath2,
       '--format',
@@ -174,30 +155,10 @@ describe('main', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the JSON file from a test command into Cobertura format without any warnings.', async () => {
+  it('transform the deploy command JSON file into Clover format.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
-      testCoverage,
-      '--output-report',
-      coberturaXmlPath3,
-      '--format',
-      'cobertura',
-    ]);
-    const output = sfCommandStubs.log
-      .getCalls()
-      .flatMap((c) => c.args)
-      .join('\n');
-    expect(output).to.include(`The coverage report has been written to ${coberturaXmlPath3}`);
-    const warnings = sfCommandStubs.warn
-      .getCalls()
-      .flatMap((c) => c.args)
-      .join('\n');
-    expect(warnings).to.include('');
-  });
-  it('transform the test JSON file without file extensions into Clover format without any warnings.', async () => {
-    await TransformerTransform.run([
-      '--coverage-json',
-      deployCoverageNoExts,
+      deployCoverage,
       '--output-report',
       cloverXmlPath1,
       '--format',
@@ -214,10 +175,10 @@ describe('main', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the test JSON file with file extensions into Clover format without any warnings.', async () => {
+  it('transform the test command JSON file into Clover format.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
-      deployCoverageWithExts,
+      testCoverage,
       '--output-report',
       cloverXmlPath2,
       '--format',
@@ -234,30 +195,10 @@ describe('main', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the JSON file from a test command into Clover format without any warnings.', async () => {
+  it('transform the deploy command JSON file into Lcov format.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
-      testCoverage,
-      '--output-report',
-      cloverXmlPath3,
-      '--format',
-      'clover',
-    ]);
-    const output = sfCommandStubs.log
-      .getCalls()
-      .flatMap((c) => c.args)
-      .join('\n');
-    expect(output).to.include(`The coverage report has been written to ${cloverXmlPath3}`);
-    const warnings = sfCommandStubs.warn
-      .getCalls()
-      .flatMap((c) => c.args)
-      .join('\n');
-    expect(warnings).to.include('');
-  });
-  it('transform the test JSON file without file extensions into Lcov format without any warnings.', async () => {
-    await TransformerTransform.run([
-      '--coverage-json',
-      deployCoverageNoExts,
+      deployCoverage,
       '--output-report',
       lcovPath1,
       '--format',
@@ -274,10 +215,10 @@ describe('main', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the test JSON file with file extensions into Lcov format without any warnings.', async () => {
+  it('transform the test command JSON file into Lcov format.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
-      deployCoverageWithExts,
+      testCoverage,
       '--output-report',
       lcovPath2,
       '--format',
@@ -294,20 +235,40 @@ describe('main', () => {
       .join('\n');
     expect(warnings).to.include('');
   });
-  it('transform the JSON file from a test command into Lcov format without any warnings.', async () => {
+  it('transform the deploy command JSON file into JaCoCo format.', async () => {
     await TransformerTransform.run([
       '--coverage-json',
-      testCoverage,
+      deployCoverage,
       '--output-report',
-      lcovPath3,
+      jacocoXmlPath1,
       '--format',
-      'lcovonly',
+      'jacoco',
     ]);
     const output = sfCommandStubs.log
       .getCalls()
       .flatMap((c) => c.args)
       .join('\n');
-    expect(output).to.include(`The coverage report has been written to ${lcovPath3}`);
+    expect(output).to.include(`The coverage report has been written to ${jacocoXmlPath1}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('');
+  });
+  it('transform the test command JSON file into JaCoCo format.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      testCoverage,
+      '--output-report',
+      jacocoXmlPath2,
+      '--format',
+      'jacoco',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage report has been written to ${jacocoXmlPath2}`);
     const warnings = sfCommandStubs.warn
       .getCalls()
       .flatMap((c) => c.args)
@@ -317,43 +278,34 @@ describe('main', () => {
   it('confirm the reports created are the same as the baselines.', async () => {
     const sonarXml1 = await readFile(sonarXmlPath1, 'utf-8');
     const sonarXml2 = await readFile(sonarXmlPath2, 'utf-8');
-    const sonarXml3 = await readFile(sonarXmlPath3, 'utf-8');
     const lcov1 = await readFile(lcovPath1, 'utf-8');
     const lcov2 = await readFile(lcovPath2, 'utf-8');
-    const lcov3 = await readFile(lcovPath3, 'utf-8');
-    const sonarDeployBaselineXmlContent = await readFile(sonarDeployBaselinePath, 'utf-8');
-    const sonarTestBaselineXmlContent = await readFile(sonarTestBaselinePath, 'utf-8');
-    const lcovDeployBaselineContent = await readFile(lcovDeployBaselinePath, 'utf-8');
-    const lcovTestBaselineContent = await readFile(lcovTestBaselinePath, 'utf-8');
+    const jacocoXml1 = await readFile(jacocoXmlPath1, 'utf-8');
+    const jacocoXml2 = await readFile(jacocoXmlPath2, 'utf-8');
+    const sonarBaselineContent = await readFile(sonarBaselinePath, 'utf-8');
+    const lcovBaselineContent = await readFile(lcovBaselinePath, 'utf-8');
+    const jacocoBaselineContent = await readFile(jacocoBaselinePath, 'utf-8');
     strictEqual(
       sonarXml1,
-      sonarDeployBaselineXmlContent,
-      `File content is different between ${sonarXmlPath1} and ${sonarDeployBaselinePath}`
+      sonarBaselineContent,
+      `File content is different between ${sonarXmlPath1} and ${sonarBaselinePath}`
     );
     strictEqual(
       sonarXml2,
-      sonarDeployBaselineXmlContent,
-      `File content is different between ${sonarXmlPath2} and ${sonarDeployBaselinePath}`
+      sonarBaselineContent,
+      `File content is different between ${sonarXmlPath2} and ${sonarBaselinePath}`
+    );
+    strictEqual(lcov1, lcovBaselineContent, `File content is different between ${lcovPath1} and ${lcovBaselinePath}`);
+    strictEqual(lcov2, lcovBaselineContent, `File content is different between ${lcovPath2} and ${lcovBaselinePath}`);
+    strictEqual(
+      jacocoXml1,
+      jacocoBaselineContent,
+      `File content is different between ${jacocoXmlPath1} and ${jacocoBaselinePath}`
     );
     strictEqual(
-      sonarXml3,
-      sonarTestBaselineXmlContent,
-      `File content is different between ${sonarXmlPath3} and ${sonarTestBaselinePath}`
-    );
-    strictEqual(
-      lcov1,
-      lcovDeployBaselineContent,
-      `File content is different between ${lcovPath1} and ${lcovDeployBaselinePath}`
-    );
-    strictEqual(
-      lcov2,
-      lcovDeployBaselineContent,
-      `File content is different between ${lcovPath2} and ${lcovDeployBaselinePath}`
-    );
-    strictEqual(
-      lcov3,
-      lcovTestBaselineContent,
-      `File content is different between ${lcovPath3} and ${lcovTestBaselinePath}`
+      jacocoXml2,
+      jacocoBaselineContent,
+      `File content is different between ${jacocoXmlPath2} and ${jacocoBaselinePath}`
     );
   });
 });

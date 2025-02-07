@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<coverage version="1">
+  <file path="force-app/main/default/classes/AccountProfile.cls">
+    <lineToCover lineNumber="52" covered="false"/>
+    <lineToCover lineNumber="53" covered="false"/>
+    <lineToCover lineNumber="54" covered="true"/>
+    <lineToCover lineNumber="55" covered="true"/>
+    <lineToCover lineNumber="56" covered="true"/>
+    <lineToCover lineNumber="57" covered="true"/>
+    <lineToCover lineNumber="58" covered="true"/>
+    <lineToCover lineNumber="59" covered="false"/>
+    <lineToCover lineNumber="60" covered="false"/>
+    <lineToCover lineNumber="61" covered="true"/>
+    <lineToCover lineNumber="62" covered="true"/>
+    <lineToCover lineNumber="63" covered="true"/>
+    <lineToCover lineNumber="64" covered="true"/>
+    <lineToCover lineNumber="65" covered="true"/>
+    <lineToCover lineNumber="66" covered="true"/>
+    <lineToCover lineNumber="67" covered="true"/>
+    <lineToCover lineNumber="68" covered="true"/>
+    <lineToCover lineNumber="69" covered="true"/>
+    <lineToCover lineNumber="70" covered="true"/>
+    <lineToCover lineNumber="71" covered="true"/>
+    <lineToCover lineNumber="72" covered="true"/>
+    <lineToCover lineNumber="73" covered="true"/>
+    <lineToCover lineNumber="74" covered="true"/>
+    <lineToCover lineNumber="75" covered="true"/>
+    <lineToCover lineNumber="76" covered="true"/>
+    <lineToCover lineNumber="77" covered="true"/>
+    <lineToCover lineNumber="78" covered="true"/>
+    <lineToCover lineNumber="79" covered="true"/>
+    <lineToCover lineNumber="80" covered="true"/>
+    <lineToCover lineNumber="81" covered="true"/>
+    <lineToCover lineNumber="82" covered="true"/>
+  </file>
+  <file path="packaged/triggers/AccountTrigger.trigger">
+    <lineToCover lineNumber="52" covered="false"/>
+    <lineToCover lineNumber="53" covered="false"/>
+    <lineToCover lineNumber="54" covered="true"/>
+    <lineToCover lineNumber="55" covered="true"/>
+    <lineToCover lineNumber="56" covered="true"/>
+    <lineToCover lineNumber="57" covered="true"/>
+    <lineToCover lineNumber="58" covered="true"/>
+    <lineToCover lineNumber="59" covered="false"/>
+    <lineToCover lineNumber="60" covered="false"/>
+    <lineToCover lineNumber="61" covered="true"/>
+    <lineToCover lineNumber="62" covered="true"/>
+    <lineToCover lineNumber="63" covered="true"/>
+    <lineToCover lineNumber="64" covered="true"/>
+    <lineToCover lineNumber="65" covered="true"/>
+    <lineToCover lineNumber="66" covered="true"/>
+    <lineToCover lineNumber="67" covered="true"/>
+    <lineToCover lineNumber="68" covered="true"/>
+    <lineToCover lineNumber="69" covered="true"/>
+    <lineToCover lineNumber="70" covered="true"/>
+    <lineToCover lineNumber="71" covered="true"/>
+    <lineToCover lineNumber="72" covered="true"/>
+    <lineToCover lineNumber="73" covered="true"/>
+    <lineToCover lineNumber="74" covered="true"/>
+    <lineToCover lineNumber="75" covered="true"/>
+    <lineToCover lineNumber="76" covered="true"/>
+    <lineToCover lineNumber="77" covered="true"/>
+    <lineToCover lineNumber="78" covered="true"/>
+    <lineToCover lineNumber="79" covered="true"/>
+    <lineToCover lineNumber="80" covered="true"/>
+    <lineToCover lineNumber="81" covered="true"/>
+    <lineToCover lineNumber="82" covered="true"/>
+  </file>
+</coverage>

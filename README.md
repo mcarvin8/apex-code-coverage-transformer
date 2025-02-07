@@ -69,13 +69,13 @@ Both hardis commands will create the code coverage JSON to transform here: `hard
 - The coverage reports created by this plugin will add correct file-paths per your Salesforce DX repository. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage report created in this plugin will only contain Apex coverage results against files found in your Salesforce DX repository, allowing you to use these reports in external code quality tools like SonarQube.
 - Normalizes the coverage reports created by the Salesforce CLI deploy and test command. The coverage reports created by both CLI commands follow different formats and have different coverage format options. These differences cause issues when trying to have external tools like SonarQube parse the coverage reports. This plugin handles parsing both command coverage reports and converting them into common formats accepted by external tools like SonarQube and GitLab.
 - The coverage reports created by this plugin "fixes" an issue with Salesforce CLI deploy command coverage reports. The coverage reports created by the deploy command contains several inaccuracies in their covered lines.
-   - Salesforce's deploy covered report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
-   - Salesforce's deploy covered report may report extra lines than the total lines in the apex class, i.e. 120 lines are included in the deploy coverage report for a 100-line apex class.
-   - The coverage percentage may vary based on how many lines the API returns in the original deploy coverage report.
-   - I had to add a re-numbering function to this plugin to work-around these inaccuracies and ensure the transformed coverage reports are accepted by external tools like SonarQube.
-   - Once the Salesforce server team fixes the API to correctly return coverage in deploy command reports, I will remove this re-numbering function in this plugin.
-   - See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
-   - **NOTE**: This does not affect coverage reports created by the Salesforce CLI test commands.
+  - Salesforce's deploy covered report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
+  - Salesforce's deploy covered report may report extra lines than the total lines in the apex class, i.e. 120 lines are included in the deploy coverage report for a 100-line apex class.
+  - The coverage percentage may vary based on how many lines the API returns in the original deploy coverage report.
+  - I had to add a re-numbering function to this plugin to work-around these inaccuracies and ensure the transformed coverage reports are accepted by external tools like SonarQube.
+  - Once the Salesforce server team fixes the API to correctly return coverage in deploy command reports, I will remove this re-numbering function in this plugin.
+  - See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
+  - **NOTE**: This does not affect coverage reports created by the Salesforce CLI test commands.
 
 ## Command
 
@@ -116,12 +116,13 @@ EXAMPLES
 
 The `-f`/`--format` flag allows you to specify the format of the coverage report.
 
-| Flag Option  | Description | Example |
-|-------------|-------------| -------------|
-| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option. | [sonar example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_sonar.xml) |
-| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools. | [Clover example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_clover.xml) |
-| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [LCovOnly example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_lcov.info) |
-| `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting. | [Cobertura example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/deploy_coverage_baseline_cobertura.xml) |
+| Flag Option | Description                                                                         | Example                                                                                                                         |
+| ----------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option.       | [sonar example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)         |
+| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools.            | [Clover example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)       |
+| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [LCovOnly example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)      |
+| `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting.        | [Cobertura example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/cobertura_baseline.xml) |
+| `jacoco`    | Creates a JaCoCo XML report, a format for Java.                                     | [JaCoCo example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
 
 ## Hook
 

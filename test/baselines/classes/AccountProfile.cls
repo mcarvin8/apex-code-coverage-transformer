@@ -69,4 +69,22 @@ global class PrepareMySandbox implements SandboxPostCopy {
         }
         System.debug('Passwords reset for ' + users.size() + ' users.');
     }
+    private void resetPasswords(List<User> users) {
+        for (User u : users) {
+            System.resetPassword(u.Id, true); // The second parameter generates a new password and sends an email
+        }
+        System.debug('Passwords reset for ' + users.size() + ' users.');
+    }
+    private void resetPasswords(List<User> users) {
+        for (User u : users) {
+            System.resetPassword(u.Id, true); // The second parameter generates a new password and sends an email
+        }
+        System.debug('Passwords reset for ' + users.size() + ' users.');
+    }
+    private void resetPasswords(List<User> users) {
+        for (User u : users) {
+            System.resetPassword(u.Id, true); // The second parameter generates a new password and sends an email
+        }
+        System.debug('Passwords reset for ' + users.size() + ' users.');
+    }
 }

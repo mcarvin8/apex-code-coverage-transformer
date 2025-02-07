@@ -158,12 +158,13 @@ export type CloverCoverageObject = {
 };
 
 export type CoverageHandler = {
-  processFile(
-    filePath: string,
-    fileName: string,
-    lines: Record<string, number>,
-  ): void;
-  finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject | LcovCoverageObject;
+  processFile(filePath: string, fileName: string, lines: Record<string, number>): void;
+  finalize():
+    | SonarCoverageObject
+    | CoberturaCoverageObject
+    | CloverCoverageObject
+    | LcovCoverageObject
+    | JaCoCoCoverageObject;
 };
 
 type LcovLine = {
@@ -180,4 +181,50 @@ export type LcovFile = {
 
 export type LcovCoverageObject = {
   files: LcovFile[];
+};
+
+export type JaCoCoCounter = {
+  '@type': 'INSTRUCTION' | 'BRANCH' | 'LINE' | 'METHOD' | 'CLASS';
+  '@missed': number;
+  '@covered': number;
+};
+
+export type JaCoCoLine = {
+  '@nr': number;
+  '@mi': number;
+  '@ci': number;
+};
+
+export type JaCoCoClass = {
+  '@name': string;
+  '@sourcefile': string;
+  lines: {
+    line: JaCoCoLine[];
+  };
+  counters: {
+    counter: JaCoCoCounter[];
+  };
+};
+
+export type JaCoCoPackage = {
+  '@name': string;
+  classes: {
+    class: JaCoCoClass[];
+  };
+};
+
+export type JaCoCoSessionInfo = {
+  '@id': string;
+  '@start': number;
+  '@dump': number;
+};
+
+export type JaCoCoCoverageObject = {
+  report: {
+    '@name': string;
+    sessionInfo: JaCoCoSessionInfo[];
+    packages: {
+      package: JaCoCoPackage[];
+    };
+  };
 };

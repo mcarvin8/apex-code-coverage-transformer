@@ -1,10 +1,21 @@
 'use strict';
 
 import { create } from 'xmlbuilder2';
-import { SonarCoverageObject, CoberturaCoverageObject, CloverCoverageObject, LcovCoverageObject } from './types.js';
+import {
+  SonarCoverageObject,
+  CoberturaCoverageObject,
+  CloverCoverageObject,
+  LcovCoverageObject,
+  JaCoCoCoverageObject,
+} from './types.js';
 
 export function generateReport(
-  coverageObj: SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject | LcovCoverageObject,
+  coverageObj:
+    | SonarCoverageObject
+    | CoberturaCoverageObject
+    | CloverCoverageObject
+    | LcovCoverageObject
+    | JaCoCoCoverageObject,
   format: string
 ): string {
   if (format === 'lcovonly') {
