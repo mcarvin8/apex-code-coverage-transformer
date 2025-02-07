@@ -56,7 +56,7 @@ sf apex run test --code-coverage --output-dir "coverage"
 sf apex get test --test-run-id <test run id> --code-coverage --output-dir "coverage"
 ```
 
-The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX repositories and needs to be converted using this plugin.
+The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX projects and needs to be converted using this plugin.
 
 ## Creating Code Coverage Files with SFDX Hardis
 
@@ -66,7 +66,7 @@ Both hardis commands will create the code coverage JSON to transform here: `hard
 
 ## What this Plugin fixes in the Salesforce CLI Coverage Reports
 
-- The coverage reports created by this plugin will add correct file-paths per your Salesforce DX repository. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage report created in this plugin will only contain Apex coverage results against files found in your Salesforce DX repository, allowing you to use these reports in external code quality tools like SonarQube.
+- The coverage reports created by this plugin will add correct file-paths per your Salesforce DX project. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage report created in this plugin will only contain Apex coverage results against files found in your Salesforce DX project, allowing you to use these reports in external code quality tools like SonarQube.
 - Normalizes the coverage reports created by the Salesforce CLI deploy and test command. The coverage reports created by both CLI commands follow different formats and have different coverage format options. These differences cause issues when trying to have external tools like SonarQube parse the coverage reports. This plugin handles parsing both command coverage reports and converting them into common formats accepted by external tools like SonarQube and GitLab.
 - The coverage reports created by this plugin "fixes" an issue with Salesforce CLI deploy command coverage reports. The coverage reports created by the deploy command contains several inaccuracies in their covered lines.
   - Salesforce's deploy covered report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
@@ -174,7 +174,7 @@ The code coverage JSON files created by the Salesforce CLI deploy and test comma
 Error (1): The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.
 ```
 
-If the `sfdx-project.json` file was not found in your repository's root folder, the plugin will fail with:
+If the `sfdx-project.json` file was not found in your project's root folder, the plugin will fail with:
 
 ```
 Error (1): sfdx-project.json not found in any parent directory.
@@ -192,7 +192,7 @@ Contributions are welcome! See [Contributing](https://github.com/mcarvin8/apex-c
 
 ## Issues
 
-If you encounter any issues, please create an issue in the repository's [issue tracker](https://github.com/mcarvin8/apex-code-coverage-transformer/issues). Please also create issues to suggest any new features.
+If you encounter any issues, please create an issue in the [issue tracker](https://github.com/mcarvin8/apex-code-coverage-transformer/issues). Please also create issues to suggest any new features.
 
 ## License
 
