@@ -4,7 +4,7 @@
     <package name="main">
       <classes>
         <class name="AccountProfile">
-          <sourcefile name="AccountProfile">
+          <sourcefile name="force-app/main/default/classes/AccountProfile.cls">
             <lines>
               <line nr="52" mi="1" ci="0"/>
               <line nr="53" mi="1" ci="0"/>
@@ -44,7 +44,7 @@
           </sourcefile>
         </class>
         <class name="AccountTrigger">
-          <sourcefile name="AccountTrigger">
+          <sourcefile name="packaged/triggers/AccountTrigger.trigger">
             <lines>
               <line nr="52" mi="1" ci="0"/>
               <line nr="53" mi="1" ci="0"/>

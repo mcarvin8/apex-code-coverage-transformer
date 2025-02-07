@@ -23,7 +23,7 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
 
   public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
     const sourceFileObj: JaCoCoSourceFile = {
-      '@name': fileName,
+      '@name': filePath,
       lines: { line: [] },
       counters: { counter: [] },
     };
