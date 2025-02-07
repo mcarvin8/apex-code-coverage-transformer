@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.8.0...v2.8.1) (2025-02-07)
+
+
+### Bug Fixes
+
+* jacoco sourcefile structure ([0a1275f](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/0a1275f2d6ef5732c06568d183e4aa8e5def8951))
+
 ## [2.8.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.7.2...v2.8.0) (2025-02-07)
 
 
