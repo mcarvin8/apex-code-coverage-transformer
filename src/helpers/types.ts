@@ -183,7 +183,7 @@ export type LcovCoverageObject = {
   files: LcovFile[];
 };
 
-export type JaCoCoCounter = {
+type JaCoCoCounter = {
   '@type': 'INSTRUCTION' | 'BRANCH' | 'LINE' | 'METHOD' | 'CLASS';
   '@missed': number;
   '@covered': number;
@@ -195,15 +195,19 @@ export type JaCoCoLine = {
   '@ci': number;
 };
 
-export type JaCoCoClass = {
+export type JaCoCoSourceFile = {
   '@name': string;
-  '@sourcefile': string;
   lines: {
     line: JaCoCoLine[];
   };
   counters: {
     counter: JaCoCoCounter[];
   };
+};
+
+export type JaCoCoClass = {
+  '@name': string;
+  sourcefile: JaCoCoSourceFile;
 };
 
 export type JaCoCoPackage = {
@@ -213,7 +217,7 @@ export type JaCoCoPackage = {
   };
 };
 
-export type JaCoCoSessionInfo = {
+type JaCoCoSessionInfo = {
   '@id': string;
   '@start': number;
   '@dump': number;

@@ -1,6 +1,6 @@
 'use strict';
 
-import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoClass, JaCoCoLine, CoverageHandler } from '../helpers/types.js';
+import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoClass, JaCoCoSourceFile, JaCoCoLine, CoverageHandler } from '../helpers/types.js';
 
 export class JaCoCoCoverageHandler implements CoverageHandler {
   private readonly coverageObj: JaCoCoCoverageObject;
@@ -22,9 +22,8 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
   }
 
   public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
-    const classObj: JaCoCoClass = {
+    const sourceFileObj: JaCoCoSourceFile = {
       '@name': fileName,
-      '@sourcefile': filePath,
       lines: { line: [] },
       counters: { counter: [] },
     };
@@ -41,14 +40,19 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
         '@mi': isCovered === 0 ? 1 : 0,
         '@ci': isCovered === 1 ? 1 : 0,
       };
-      classObj.lines.line.push(lineObj);
+      sourceFileObj.lines.line.push(lineObj);
     }
 
-    classObj.counters.counter.push({
+    sourceFileObj.counters.counter.push({
       '@type': 'LINE',
       '@missed': totalLines - coveredLines,
       '@covered': coveredLines,
     });
+
+    const classObj: JaCoCoClass = {
+      '@name': fileName,
+      sourcefile: sourceFileObj,
+    };
 
     this.packageObj.classes.class.push(classObj);
   }
@@ -58,7 +62,7 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
       this.coverageObj.report.packages.package.sort((a, b) => a['@name'].localeCompare(b['@name']));
       for (const pkg of this.coverageObj.report.packages.package) {
         if (pkg.classes?.class) {
-          pkg.classes.class.sort((a, b) => a['@sourcefile'].localeCompare(b['@sourcefile']));
+          pkg.classes.class.sort((a, b) => a.sourcefile['@name'].localeCompare(b.sourcefile['@name']));
         }
       }
     }
