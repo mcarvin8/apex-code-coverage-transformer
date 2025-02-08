@@ -35,7 +35,6 @@
       <line nr="81" mi="0" ci="1" mb="0" cb="0"/>
       <line nr="82" mi="0" ci="1" mb="0" cb="0"/>
       <counter type="LINE" missed="4" covered="27"/>
-      <counter type="CLASS" missed="0" covered="1"/>
     </sourcefile>
     <counter type="LINE" missed="4" covered="27"/>
     <counter type="CLASS" missed="0" covered="1"/>
@@ -75,10 +74,10 @@
       <line nr="81" mi="0" ci="1" mb="0" cb="0"/>
       <line nr="82" mi="0" ci="1" mb="0" cb="0"/>
       <counter type="LINE" missed="4" covered="27"/>
-      <counter type="CLASS" missed="0" covered="1"/>
     </sourcefile>
     <counter type="LINE" missed="4" covered="27"/>
     <counter type="CLASS" missed="0" covered="1"/>
   </package>
   <counter type="LINE" missed="8" covered="54"/>
+  <counter type="CLASS" missed="0" covered="2"/>
 </report>

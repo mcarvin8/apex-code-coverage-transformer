@@ -44,59 +44,75 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
       sourceFileObj.line.push(lineObj);
     }
 
-    sourceFileObj.counter.push(
-      {
-        '@type': 'LINE',
-        '@missed': totalLines - coveredLines,
-        '@covered': coveredLines,
-      },
-      {
-        '@type': 'CLASS',
-        '@missed': coveredLines === 0 ? 1 : 0,
-        '@covered': coveredLines > 0 ? 1 : 0,
-      }
-    );
+    // Add line coverage counter for the source file
+    sourceFileObj.counter.push({
+      '@type': 'LINE',
+      '@missed': totalLines - coveredLines,
+      '@covered': coveredLines,
+    });
+
+    // Create and associate the class with the source file
+    const classObj: JaCoCoClass = {
+      '@name': fileName.split('.')[0], // Get the part before the first period
+      '@sourcefilename': filePath,
+    };    
 
     packageObj.sourcefile.push(sourceFileObj);
-
-    const classObj: JaCoCoClass = {
-      '@name': fileName.replace('.cls', ''), // Remove .cls to match SFDX output
-      '@sourcefilename': filePath,
-    };
-
     packageObj.class.push(classObj);
   }
 
   public finalize(): JaCoCoCoverageObject {
+    let totalClassCovered = 0;
+    let totalClassMissed = 0;
+    let overallCovered = 0;
+    let overallMissed = 0;
+
     for (const packageObj of Object.values(this.packageMap)) {
       packageObj.class.sort((a, b) => a['@name'].localeCompare(b['@name']));
       packageObj.sourcefile.sort((a, b) => a['@name'].localeCompare(b['@name']));
 
-      const totalCovered = packageObj.sourcefile.reduce((acc, sf) => acc + sf.counter[0]['@covered'], 0);
-      const totalMissed = packageObj.sourcefile.reduce((acc, sf) => acc + sf.counter[0]['@missed'], 0);
+      let packageClassCovered = 0;
+      let packageClassMissed = 0;
+      let packageCovered = 0;
+      let packageMissed = 0;
+
+      for (const sf of packageObj.sourcefile) {
+        packageCovered += sf.counter[0]['@covered'];
+        packageMissed += sf.counter[0]['@missed'];
+      }
+
+      packageClassCovered = packageCovered > 0 ? packageObj.class.length : 0;
+      packageClassMissed = packageCovered === 0 ? packageObj.class.length : 0;
 
       packageObj.counter.push(
         {
           '@type': 'LINE',
-          '@missed': totalMissed,
-          '@covered': totalCovered,
+          '@missed': packageMissed,
+          '@covered': packageCovered,
         },
         {
           '@type': 'CLASS',
-          '@missed': totalCovered === 0 ? 1 : 0,
-          '@covered': totalCovered > 0 ? 1 : 0,
+          '@missed': packageClassMissed,
+          '@covered': packageClassCovered,
         }
       );
-    }
 
-    const overallCovered = Object.values(this.packageMap).reduce((acc, pkg) => acc + pkg.counter[0]['@covered'], 0);
-    const overallMissed = Object.values(this.packageMap).reduce((acc, pkg) => acc + pkg.counter[0]['@missed'], 0);
+      overallCovered += packageCovered;
+      overallMissed += packageMissed;
+      totalClassCovered += packageClassCovered;
+      totalClassMissed += packageClassMissed;
+    }
 
     this.coverageObj.report.counter.push(
       {
         '@type': 'LINE',
         '@missed': overallMissed,
         '@covered': overallCovered,
+      },
+      {
+        '@type': 'CLASS',
+        '@missed': totalClassMissed,
+        '@covered': totalClassCovered,
       }
     );
 
