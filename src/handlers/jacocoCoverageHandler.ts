@@ -65,6 +65,24 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
           pkg.classes.class.sort((a, b) => a.sourcefile['@name'].localeCompare(b.sourcefile['@name']));
         }
       }
+      
+      const totalCovered = this.packageObj.classes.class.reduce(
+        (acc, classObj) => acc + classObj.sourcefile.counters.counter[0]['@covered'], 
+        0
+      );
+
+      const totalMissed = this.packageObj.classes.class.reduce(
+        (acc, classObj) => acc + classObj.sourcefile.counters.counter[0]['@missed'], 
+        0
+      );
+
+      this.packageObj.counters = {
+        counter: [{
+          '@type': 'PACKAGE',
+          '@missed': totalMissed,
+          '@covered': totalCovered,
+        }],
+      };
     }
     return this.coverageObj;
   }

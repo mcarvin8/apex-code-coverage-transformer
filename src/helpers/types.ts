@@ -184,7 +184,7 @@ export type LcovCoverageObject = {
 };
 
 type JaCoCoCounter = {
-  '@type': 'INSTRUCTION' | 'BRANCH' | 'LINE' | 'METHOD' | 'CLASS';
+  '@type': 'INSTRUCTION' | 'BRANCH' | 'LINE' | 'METHOD' | 'CLASS' | 'PACKAGE';
   '@missed': number;
   '@covered': number;
 };
@@ -214,6 +214,9 @@ export type JaCoCoPackage = {
   '@name': string;
   classes: {
     class: JaCoCoClass[];
+  };
+  counters?: {
+    counter: JaCoCoCounter[];
   };
 };
 

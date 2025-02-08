@@ -84,6 +84,9 @@
           </sourcefile>
         </class>
       </classes>
+      <counters>
+        <counter type="PACKAGE" missed="8" covered="54"/>
+      </counters>
     </package>
   </packages>
 </report>
