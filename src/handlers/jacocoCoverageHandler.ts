@@ -4,28 +4,27 @@ import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoClass, JaCoCoSourceFile, JaC
 
 export class JaCoCoCoverageHandler implements CoverageHandler {
   private readonly coverageObj: JaCoCoCoverageObject;
-  private packageObj: JaCoCoPackage;
+  private packageMap: Record<string, JaCoCoPackage>;
 
   public constructor() {
     this.coverageObj = {
       report: {
         '@name': 'JaCoCo Coverage Report',
-        sessionInfo: [],
-        packages: { package: [] },
+        package: [], // List of packages
+        counter: [], // Report-level counters
       },
     };
-    this.packageObj = {
-      '@name': 'main',
-      classes: { class: [] },
-    };
-    this.coverageObj.report.packages.package.push(this.packageObj);
+    this.packageMap = {}; // Stores packages by directory
   }
 
   public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
+    const packageName = filePath.split('/')[0]; // Extract root directory as package name
+    const packageObj = this.getOrCreatePackage(packageName);
+
     const sourceFileObj: JaCoCoSourceFile = {
       '@name': filePath,
-      lines: { line: [] },
-      counters: { counter: [] },
+      line: [],
+      counter: [],
     };
 
     let coveredLines = 0;
@@ -39,51 +38,81 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
         '@nr': Number(lineNumber),
         '@mi': isCovered === 0 ? 1 : 0,
         '@ci': isCovered === 1 ? 1 : 0,
+        '@mb': 0,
+        '@cb': 0,
       };
-      sourceFileObj.lines.line.push(lineObj);
+      sourceFileObj.line.push(lineObj);
     }
 
-    sourceFileObj.counters.counter.push({
-      '@type': 'LINE',
-      '@missed': totalLines - coveredLines,
-      '@covered': coveredLines,
-    });
+    sourceFileObj.counter.push(
+      {
+        '@type': 'LINE',
+        '@missed': totalLines - coveredLines,
+        '@covered': coveredLines,
+      },
+      {
+        '@type': 'CLASS',
+        '@missed': coveredLines === 0 ? 1 : 0,
+        '@covered': coveredLines > 0 ? 1 : 0,
+      }
+    );
+
+    packageObj.sourcefile.push(sourceFileObj);
 
     const classObj: JaCoCoClass = {
-      '@name': fileName,
-      sourcefile: sourceFileObj,
+      '@name': fileName.replace('.cls', ''), // Remove .cls to match SFDX output
+      '@sourcefilename': filePath,
     };
 
-    this.packageObj.classes.class.push(classObj);
+    packageObj.class.push(classObj);
   }
 
   public finalize(): JaCoCoCoverageObject {
-    if (this.coverageObj.report?.packages?.package) {
-      this.coverageObj.report.packages.package.sort((a, b) => a['@name'].localeCompare(b['@name']));
-      for (const pkg of this.coverageObj.report.packages.package) {
-        if (pkg.classes?.class) {
-          pkg.classes.class.sort((a, b) => a.sourcefile['@name'].localeCompare(b.sourcefile['@name']));
-        }
-      }
-      
-      const totalCovered = this.packageObj.classes.class.reduce(
-        (acc, classObj) => acc + classObj.sourcefile.counters.counter[0]['@covered'], 
-        0
-      );
+    for (const packageObj of Object.values(this.packageMap)) {
+      packageObj.class.sort((a, b) => a['@name'].localeCompare(b['@name']));
+      packageObj.sourcefile.sort((a, b) => a['@name'].localeCompare(b['@name']));
 
-      const totalMissed = this.packageObj.classes.class.reduce(
-        (acc, classObj) => acc + classObj.sourcefile.counters.counter[0]['@missed'], 
-        0
-      );
+      const totalCovered = packageObj.sourcefile.reduce((acc, sf) => acc + sf.counter[0]['@covered'], 0);
+      const totalMissed = packageObj.sourcefile.reduce((acc, sf) => acc + sf.counter[0]['@missed'], 0);
 
-      this.packageObj.counters = {
-        counter: [{
-          '@type': 'PACKAGE',
+      packageObj.counter.push(
+        {
+          '@type': 'LINE',
           '@missed': totalMissed,
           '@covered': totalCovered,
-        }],
-      };
+        },
+        {
+          '@type': 'CLASS',
+          '@missed': totalCovered === 0 ? 1 : 0,
+          '@covered': totalCovered > 0 ? 1 : 0,
+        }
+      );
     }
+
+    const overallCovered = Object.values(this.packageMap).reduce((acc, pkg) => acc + pkg.counter[0]['@covered'], 0);
+    const overallMissed = Object.values(this.packageMap).reduce((acc, pkg) => acc + pkg.counter[0]['@missed'], 0);
+
+    this.coverageObj.report.counter.push(
+      {
+        '@type': 'LINE',
+        '@missed': overallMissed,
+        '@covered': overallCovered,
+      }
+    );
+
     return this.coverageObj;
+  }
+
+  private getOrCreatePackage(packageName: string): JaCoCoPackage {
+    if (!this.packageMap[packageName]) {
+      this.packageMap[packageName] = {
+        '@name': packageName,
+        class: [],
+        sourcefile: [],
+        counter: [],
+      };
+      this.coverageObj.report.package.push(this.packageMap[packageName]);
+    }
+    return this.packageMap[packageName];
   }
 }
