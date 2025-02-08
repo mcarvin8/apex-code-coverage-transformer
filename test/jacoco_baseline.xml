@@ -1,92 +1,84 @@
 <?xml version="1.0"?>
 <report name="JaCoCo Coverage Report">
-  <packages>
-    <package name="main">
-      <classes>
-        <class name="AccountProfile">
-          <sourcefile name="force-app/main/default/classes/AccountProfile.cls">
-            <lines>
-              <line nr="52" mi="1" ci="0"/>
-              <line nr="53" mi="1" ci="0"/>
-              <line nr="54" mi="0" ci="1"/>
-              <line nr="55" mi="0" ci="1"/>
-              <line nr="56" mi="0" ci="1"/>
-              <line nr="57" mi="0" ci="1"/>
-              <line nr="58" mi="0" ci="1"/>
-              <line nr="59" mi="1" ci="0"/>
-              <line nr="60" mi="1" ci="0"/>
-              <line nr="61" mi="0" ci="1"/>
-              <line nr="62" mi="0" ci="1"/>
-              <line nr="63" mi="0" ci="1"/>
-              <line nr="64" mi="0" ci="1"/>
-              <line nr="65" mi="0" ci="1"/>
-              <line nr="66" mi="0" ci="1"/>
-              <line nr="67" mi="0" ci="1"/>
-              <line nr="68" mi="0" ci="1"/>
-              <line nr="69" mi="0" ci="1"/>
-              <line nr="70" mi="0" ci="1"/>
-              <line nr="71" mi="0" ci="1"/>
-              <line nr="72" mi="0" ci="1"/>
-              <line nr="73" mi="0" ci="1"/>
-              <line nr="74" mi="0" ci="1"/>
-              <line nr="75" mi="0" ci="1"/>
-              <line nr="76" mi="0" ci="1"/>
-              <line nr="77" mi="0" ci="1"/>
-              <line nr="78" mi="0" ci="1"/>
-              <line nr="79" mi="0" ci="1"/>
-              <line nr="80" mi="0" ci="1"/>
-              <line nr="81" mi="0" ci="1"/>
-              <line nr="82" mi="0" ci="1"/>
-            </lines>
-            <counters>
-              <counter type="LINE" missed="4" covered="27"/>
-            </counters>
-          </sourcefile>
-        </class>
-        <class name="AccountTrigger">
-          <sourcefile name="packaged/triggers/AccountTrigger.trigger">
-            <lines>
-              <line nr="52" mi="1" ci="0"/>
-              <line nr="53" mi="1" ci="0"/>
-              <line nr="54" mi="0" ci="1"/>
-              <line nr="55" mi="0" ci="1"/>
-              <line nr="56" mi="0" ci="1"/>
-              <line nr="57" mi="0" ci="1"/>
-              <line nr="58" mi="0" ci="1"/>
-              <line nr="59" mi="1" ci="0"/>
-              <line nr="60" mi="1" ci="0"/>
-              <line nr="61" mi="0" ci="1"/>
-              <line nr="62" mi="0" ci="1"/>
-              <line nr="63" mi="0" ci="1"/>
-              <line nr="64" mi="0" ci="1"/>
-              <line nr="65" mi="0" ci="1"/>
-              <line nr="66" mi="0" ci="1"/>
-              <line nr="67" mi="0" ci="1"/>
-              <line nr="68" mi="0" ci="1"/>
-              <line nr="69" mi="0" ci="1"/>
-              <line nr="70" mi="0" ci="1"/>
-              <line nr="71" mi="0" ci="1"/>
-              <line nr="72" mi="0" ci="1"/>
-              <line nr="73" mi="0" ci="1"/>
-              <line nr="74" mi="0" ci="1"/>
-              <line nr="75" mi="0" ci="1"/>
-              <line nr="76" mi="0" ci="1"/>
-              <line nr="77" mi="0" ci="1"/>
-              <line nr="78" mi="0" ci="1"/>
-              <line nr="79" mi="0" ci="1"/>
-              <line nr="80" mi="0" ci="1"/>
-              <line nr="81" mi="0" ci="1"/>
-              <line nr="82" mi="0" ci="1"/>
-            </lines>
-            <counters>
-              <counter type="LINE" missed="4" covered="27"/>
-            </counters>
-          </sourcefile>
-        </class>
-      </classes>
-      <counters>
-        <counter type="PACKAGE" missed="8" covered="54"/>
-      </counters>
-    </package>
-  </packages>
+  <package name="force-app">
+    <class name="AccountProfile" sourcefilename="force-app/main/default/classes/AccountProfile.cls"/>
+    <sourcefile name="force-app/main/default/classes/AccountProfile.cls">
+      <line nr="52" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="53" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="54" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="55" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="56" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="57" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="58" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="59" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="60" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="61" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="62" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="63" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="64" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="65" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="66" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="67" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="68" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="69" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="70" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="71" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="72" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="73" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="74" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="75" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="76" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="77" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="78" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="79" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="80" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="81" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="82" mi="0" ci="1" mb="0" cb="0"/>
+      <counter type="LINE" missed="4" covered="27"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </sourcefile>
+    <counter type="LINE" missed="4" covered="27"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+  </package>
+  <package name="packaged">
+    <class name="AccountTrigger" sourcefilename="packaged/triggers/AccountTrigger.trigger"/>
+    <sourcefile name="packaged/triggers/AccountTrigger.trigger">
+      <line nr="52" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="53" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="54" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="55" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="56" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="57" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="58" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="59" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="60" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="61" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="62" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="63" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="64" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="65" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="66" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="67" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="68" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="69" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="70" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="71" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="72" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="73" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="74" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="75" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="76" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="77" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="78" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="79" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="80" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="81" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="82" mi="0" ci="1" mb="0" cb="0"/>
+      <counter type="LINE" missed="4" covered="27"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </sourcefile>
+    <counter type="LINE" missed="4" covered="27"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+  </package>
+  <counter type="LINE" missed="8" covered="54"/>
 </report>

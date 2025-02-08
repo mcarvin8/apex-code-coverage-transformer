@@ -183,55 +183,42 @@ export type LcovCoverageObject = {
   files: LcovFile[];
 };
 
-type JaCoCoCounter = {
-  '@type': 'INSTRUCTION' | 'BRANCH' | 'LINE' | 'METHOD' | 'CLASS' | 'PACKAGE';
-  '@missed': number;
-  '@covered': number;
-};
-
-export type JaCoCoLine = {
-  '@nr': number;
-  '@mi': number;
-  '@ci': number;
-};
-
-export type JaCoCoSourceFile = {
-  '@name': string;
-  lines: {
-    line: JaCoCoLine[];
-  };
-  counters: {
+export type JaCoCoCoverageObject = {
+  report: {
+    '@name': string;
+    package: JaCoCoPackage[];
     counter: JaCoCoCounter[];
   };
-};
-
-export type JaCoCoClass = {
-  '@name': string;
-  sourcefile: JaCoCoSourceFile;
 };
 
 export type JaCoCoPackage = {
   '@name': string;
-  classes: {
-    class: JaCoCoClass[];
-  };
-  counters?: {
-    counter: JaCoCoCounter[];
-  };
+  class: JaCoCoClass[];
+  sourcefile: JaCoCoSourceFile[];
+  counter: JaCoCoCounter[];
 };
 
-type JaCoCoSessionInfo = {
-  '@id': string;
-  '@start': number;
-  '@dump': number;
+export type JaCoCoClass = {
+  '@name': string;
+  '@sourcefilename': string;
 };
 
-export type JaCoCoCoverageObject = {
-  report: {
-    '@name': string;
-    sessionInfo: JaCoCoSessionInfo[];
-    packages: {
-      package: JaCoCoPackage[];
-    };
-  };
+export type JaCoCoSourceFile = {
+  '@name': string;
+  line: JaCoCoLine[];
+  counter: JaCoCoCounter[];
+};
+
+export type JaCoCoLine = {
+  '@nr': number;  // Line number
+  '@mi': number;  // Missed (0 = not covered, 1 = covered)
+  '@ci': number;  // Covered (1 = covered, 0 = missed)
+  '@mb'?: number; // Missed Branch (optional, can be adjusted if needed)
+  '@cb'?: number; // Covered Branch (optional, can be adjusted if needed)
+};
+
+export type JaCoCoCounter = {
+  '@type': 'INSTRUCTION' | 'BRANCH' | 'LINE' | 'METHOD' | 'CLASS' | 'PACKAGE';
+  '@missed': number;
+  '@covered': number;
 };
