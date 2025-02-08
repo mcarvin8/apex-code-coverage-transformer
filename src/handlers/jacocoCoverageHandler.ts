@@ -1,6 +1,6 @@
 'use strict';
 
-import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoClass, JaCoCoSourceFile, JaCoCoLine, CoverageHandler } from '../helpers/types.js';
+import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoSourceFile, JaCoCoLine, CoverageHandler } from '../helpers/types.js';
 
 export class JaCoCoCoverageHandler implements CoverageHandler {
   private readonly coverageObj: JaCoCoCoverageObject;
@@ -9,9 +9,9 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
   public constructor() {
     this.coverageObj = {
       report: {
-        '@name': 'JaCoCo Coverage Report',
-        package: [], // List of packages
-        counter: [], // Report-level counters
+        '@name': 'JaCoCo',
+        package: [],
+        counter: [],
       },
     };
     this.packageMap = {}; // Stores packages by directory
@@ -49,30 +49,18 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
       '@type': 'LINE',
       '@missed': totalLines - coveredLines,
       '@covered': coveredLines,
-    });
-
-    // Create and associate the class with the source file
-    const classObj: JaCoCoClass = {
-      '@name': fileName.split('.')[0], // Get the part before the first period
-      '@sourcefilename': filePath,
-    };    
+    });  
 
     packageObj.sourcefile.push(sourceFileObj);
-    packageObj.class.push(classObj);
   }
 
   public finalize(): JaCoCoCoverageObject {
-    let totalClassCovered = 0;
-    let totalClassMissed = 0;
     let overallCovered = 0;
     let overallMissed = 0;
 
     for (const packageObj of Object.values(this.packageMap)) {
-      packageObj.class.sort((a, b) => a['@name'].localeCompare(b['@name']));
       packageObj.sourcefile.sort((a, b) => a['@name'].localeCompare(b['@name']));
 
-      let packageClassCovered = 0;
-      let packageClassMissed = 0;
       let packageCovered = 0;
       let packageMissed = 0;
 
@@ -81,26 +69,16 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
         packageMissed += sf.counter[0]['@missed'];
       }
 
-      packageClassCovered = packageCovered > 0 ? packageObj.class.length : 0;
-      packageClassMissed = packageCovered === 0 ? packageObj.class.length : 0;
-
       packageObj.counter.push(
         {
           '@type': 'LINE',
           '@missed': packageMissed,
           '@covered': packageCovered,
-        },
-        {
-          '@type': 'CLASS',
-          '@missed': packageClassMissed,
-          '@covered': packageClassCovered,
         }
       );
 
       overallCovered += packageCovered;
       overallMissed += packageMissed;
-      totalClassCovered += packageClassCovered;
-      totalClassMissed += packageClassMissed;
     }
 
     this.coverageObj.report.counter.push(
@@ -108,11 +86,6 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
         '@type': 'LINE',
         '@missed': overallMissed,
         '@covered': overallCovered,
-      },
-      {
-        '@type': 'CLASS',
-        '@missed': totalClassMissed,
-        '@covered': totalClassCovered,
       }
     );
 
@@ -123,7 +96,6 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
     if (!this.packageMap[packageName]) {
       this.packageMap[packageName] = {
         '@name': packageName,
-        class: [],
         sourcefile: [],
         counter: [],
       };

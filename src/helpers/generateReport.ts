@@ -38,13 +38,15 @@ export function generateReport(
     }
   }
 
-  const isHeadless = format === 'cobertura' || format === 'clover';
+  const isHeadless = format === 'cobertura' || format === 'clover' || format === 'jacoco';
   let xml = create(coverageObj).end({ prettyPrint: true, indent: '  ', headless: isHeadless });
 
   if (format === 'cobertura') {
     xml = `<?xml version="1.0" ?>\n<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">\n${xml}`;
   } else if (format === 'clover') {
     xml = `<?xml version="1.0" encoding="UTF-8"?>\n${xml}`;
+  } else if (format === 'jacoco') {
+    xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">\n${xml}`;
   }
 
   return xml;

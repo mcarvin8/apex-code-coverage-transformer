@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
-<report name="JaCoCo Coverage Report">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">
+<report name="JaCoCo">
   <package name="force-app">
-    <class name="AccountProfile" sourcefilename="force-app/main/default/classes/AccountProfile.cls"/>
     <sourcefile name="force-app/main/default/classes/AccountProfile.cls">
       <line nr="52" mi="1" ci="0" mb="0" cb="0"/>
       <line nr="53" mi="1" ci="0" mb="0" cb="0"/>
@@ -37,10 +37,8 @@
       <counter type="LINE" missed="4" covered="27"/>
     </sourcefile>
     <counter type="LINE" missed="4" covered="27"/>
-    <counter type="CLASS" missed="0" covered="1"/>
   </package>
   <package name="packaged">
-    <class name="AccountTrigger" sourcefilename="packaged/triggers/AccountTrigger.trigger"/>
     <sourcefile name="packaged/triggers/AccountTrigger.trigger">
       <line nr="52" mi="1" ci="0" mb="0" cb="0"/>
       <line nr="53" mi="1" ci="0" mb="0" cb="0"/>
@@ -76,8 +74,6 @@
       <counter type="LINE" missed="4" covered="27"/>
     </sourcefile>
     <counter type="LINE" missed="4" covered="27"/>
-    <counter type="CLASS" missed="0" covered="1"/>
   </package>
   <counter type="LINE" missed="8" covered="54"/>
-  <counter type="CLASS" missed="0" covered="2"/>
 </report>

@@ -193,14 +193,8 @@ export type JaCoCoCoverageObject = {
 
 export type JaCoCoPackage = {
   '@name': string;
-  class: JaCoCoClass[];
   sourcefile: JaCoCoSourceFile[];
   counter: JaCoCoCounter[];
-};
-
-export type JaCoCoClass = {
-  '@name': string;
-  '@sourcefilename': string;
 };
 
 export type JaCoCoSourceFile = {
