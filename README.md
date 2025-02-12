@@ -122,7 +122,7 @@ The `-f`/`--format` flag allows you to specify the format of the coverage report
 | `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools.            | [Clover example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)       |
 | `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [LCovOnly example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)      |
 | `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting.        | [Cobertura example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/cobertura_baseline.xml) |
-| `jacoco`    | Creates a JaCoCo XML report, a format for Java.                                     | [JaCoCo example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
+| `jacoco`    | Creates a JaCoCo XML report, the standard for Java projects.                                     | [JaCoCo example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
 
 ## Hook
 
