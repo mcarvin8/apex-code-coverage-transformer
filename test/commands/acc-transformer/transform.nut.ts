@@ -6,6 +6,7 @@ import { resolve } from 'node:path';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
+import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 
 describe('acc-transformer transform NUTs', () => {
   let session: TestSession;
@@ -17,6 +18,8 @@ describe('acc-transformer transform NUTs', () => {
   const sonarBaselinePath = resolve('test/sonar_baseline.xml');
   const jacocoBaselinePath = resolve('test/jacoco_baseline.xml');
   const lcovBaselinePath = resolve('test/lcov_baseline.info');
+  const coberturaBaselinePath = resolve('test/cobertura_baseline.xml');
+  const cloverBaselinePath = resolve('test/clover_baseline.xml');
   const sonarXmlPath1 = resolve('sonar1.xml');
   const sonarXmlPath2 = resolve('sonar2.xml');
   const coberturaXmlPath1 = resolve('cobertura1.xml');
@@ -141,30 +144,44 @@ describe('acc-transformer transform NUTs', () => {
     const lcov2 = await readFile(lcovPath2, 'utf-8');
     const jacocoXml1 = await readFile(jacocoXmlPath1, 'utf-8');
     const jacocoXml2 = await readFile(jacocoXmlPath2, 'utf-8');
+    const coberturaXml1 = await readFile(coberturaXmlPath1, 'utf-8');
+    const coberturaXml2 = await readFile(coberturaXmlPath2, 'utf-8');
+    const cloverXml1 = await readFile(cloverXmlPath1, 'utf-8');
+    const cloverXml2 = await readFile(cloverXmlPath2, 'utf-8');
+  
     const sonarBaselineContent = await readFile(sonarBaselinePath, 'utf-8');
     const lcovBaselineContent = await readFile(lcovBaselinePath, 'utf-8');
     const jacocoBaselineContent = await readFile(jacocoBaselinePath, 'utf-8');
+    const coberturaBaselineContent = await readFile(coberturaBaselinePath, 'utf-8');
+    const cloverBaselineContent = await readFile(cloverBaselinePath, 'utf-8');
+  
+    strictEqual(sonarXml1, sonarBaselineContent, `Mismatch between ${sonarXmlPath1} and ${sonarBaselinePath}`);
+    strictEqual(sonarXml2, sonarBaselineContent, `Mismatch between ${sonarXmlPath2} and ${sonarBaselinePath}`);
+    strictEqual(lcov1, lcovBaselineContent, `Mismatch between ${lcovPath1} and ${lcovBaselinePath}`);
+    strictEqual(lcov2, lcovBaselineContent, `Mismatch between ${lcovPath2} and ${lcovBaselinePath}`);
+    strictEqual(jacocoXml1, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath1} and ${jacocoBaselinePath}`);
+    strictEqual(jacocoXml2, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath2} and ${jacocoBaselinePath}`);
+  
+    // Normalize before comparing reports with timestamps
     strictEqual(
-      sonarXml1,
-      sonarBaselineContent,
-      `File content is different between ${sonarXmlPath1} and ${sonarBaselinePath}`
+      normalizeCoverageReport(coberturaXml1),
+      normalizeCoverageReport(coberturaBaselineContent),
+      `Mismatch between ${coberturaXmlPath1} and ${coberturaBaselinePath}`
     );
     strictEqual(
-      sonarXml2,
-      sonarBaselineContent,
-      `File content is different between ${sonarXmlPath2} and ${sonarBaselinePath}`
-    );
-    strictEqual(lcov1, lcovBaselineContent, `File content is different between ${lcovPath1} and ${lcovBaselinePath}`);
-    strictEqual(lcov2, lcovBaselineContent, `File content is different between ${lcovPath2} and ${lcovBaselinePath}`);
-    strictEqual(
-      jacocoXml1,
-      jacocoBaselineContent,
-      `File content is different between ${jacocoXmlPath1} and ${jacocoBaselinePath}`
+      normalizeCoverageReport(coberturaXml2),
+      normalizeCoverageReport(coberturaBaselineContent),
+      `Mismatch between ${coberturaXmlPath2} and ${coberturaBaselinePath}`
     );
     strictEqual(
-      jacocoXml2,
-      jacocoBaselineContent,
-      `File content is different between ${jacocoXmlPath2} and ${jacocoBaselinePath}`
+      normalizeCoverageReport(cloverXml1),
+      normalizeCoverageReport(cloverBaselineContent),
+      `Mismatch between ${cloverXmlPath1} and ${cloverBaselinePath}`
+    );
+    strictEqual(
+      normalizeCoverageReport(cloverXml2),
+      normalizeCoverageReport(cloverBaselineContent),
+      `Mismatch between ${cloverXmlPath2} and ${cloverBaselinePath}`
     );
   });
 });
