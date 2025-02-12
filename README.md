@@ -118,11 +118,11 @@ The `-f`/`--format` flag allows you to specify the format of the coverage report
 
 | Flag Option | Description                                                                         | Example                                                                                                                         |
 | ----------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option.       | [sonar example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)         |
+| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option.       | [Sonar example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)         |
 | `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools.            | [Clover example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)       |
 | `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [LCovOnly example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)      |
 | `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting.        | [Cobertura example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/cobertura_baseline.xml) |
-| `jacoco`    | Creates a JaCoCo XML report, the standard for Java projects.                                     | [JaCoCo example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
+| `jacoco`    | Creates a JaCoCo XML report, the standard for Java projects.                        | [JaCoCo example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
 
 ## Hook
 
