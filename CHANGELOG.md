@@ -5,6 +5,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.7](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.8.6...v2.8.7) (2025-02-13)
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 4.2.5 to 4.2.6 ([b1988e7](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/b1988e7975c907c94a69e580778b8ded326619ba))
+* **deps:** bump @salesforce/sf-plugins-core from 12.1.3 to 12.1.4 ([cce162f](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/cce162f9c9db5b5353c2301c160c70a717198cc9))
+* fix jacoco source file paths ([1a0af9f](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/1a0af9fb6825e21e9b481e06faaa8bf0c8740dc2))
+
 ## [2.8.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.8.5...v2.8.6) (2025-02-08)
 
 
