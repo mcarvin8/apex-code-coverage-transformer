@@ -1,6 +1,12 @@
 'use strict';
 
-import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoSourceFile, JaCoCoLine, CoverageHandler } from '../helpers/types.js';
+import {
+  JaCoCoCoverageObject,
+  JaCoCoPackage,
+  JaCoCoSourceFile,
+  JaCoCoLine,
+  CoverageHandler,
+} from '../helpers/types.js';
 
 export class JaCoCoCoverageHandler implements CoverageHandler {
   private readonly coverageObj: JaCoCoCoverageObject;
@@ -18,11 +24,15 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
   }
 
   public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
-    const packageName = filePath.split('/')[0]; // Extract root directory as package name
+    const pathParts = filePath.split('/');
+    const fileNamewithExt = pathParts.pop()!;
+    const packageName = pathParts.join('/');
+
     const packageObj = this.getOrCreatePackage(packageName);
 
+    // Ensure source file only contains the filename, not the full path
     const sourceFileObj: JaCoCoSourceFile = {
-      '@name': filePath,
+      '@name': fileNamewithExt,
       line: [],
       counter: [],
     };
@@ -49,7 +59,7 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
       '@type': 'LINE',
       '@missed': totalLines - coveredLines,
       '@covered': coveredLines,
-    });  
+    });
 
     packageObj.sourcefile.push(sourceFileObj);
   }
@@ -69,25 +79,21 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
         packageMissed += sf.counter[0]['@missed'];
       }
 
-      packageObj.counter.push(
-        {
-          '@type': 'LINE',
-          '@missed': packageMissed,
-          '@covered': packageCovered,
-        }
-      );
+      packageObj.counter.push({
+        '@type': 'LINE',
+        '@missed': packageMissed,
+        '@covered': packageCovered,
+      });
 
       overallCovered += packageCovered;
       overallMissed += packageMissed;
     }
 
-    this.coverageObj.report.counter.push(
-      {
-        '@type': 'LINE',
-        '@missed': overallMissed,
-        '@covered': overallCovered,
-      }
-    );
+    this.coverageObj.report.counter.push({
+      '@type': 'LINE',
+      '@missed': overallMissed,
+      '@covered': overallCovered,
+    });
 
     return this.coverageObj;
   }
