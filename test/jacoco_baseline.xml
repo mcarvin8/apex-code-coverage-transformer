@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">
 <report name="JaCoCo">
-  <package name="force-app">
-    <sourcefile name="force-app/main/default/classes/AccountProfile.cls">
+  <package name="force-app/main/default/classes">
+    <sourcefile name="AccountProfile.cls">
       <line nr="52" mi="1" ci="0" mb="0" cb="0"/>
       <line nr="53" mi="1" ci="0" mb="0" cb="0"/>
       <line nr="54" mi="0" ci="1" mb="0" cb="0"/>
@@ -38,8 +38,8 @@
     </sourcefile>
     <counter type="LINE" missed="4" covered="27"/>
   </package>
-  <package name="packaged">
-    <sourcefile name="packaged/triggers/AccountTrigger.trigger">
+  <package name="packaged/triggers">
+    <sourcefile name="AccountTrigger.trigger">
       <line nr="52" mi="1" ci="0" mb="0" cb="0"/>
       <line nr="53" mi="1" ci="0" mb="0" cb="0"/>
       <line nr="54" mi="0" ci="1" mb="0" cb="0"/>
