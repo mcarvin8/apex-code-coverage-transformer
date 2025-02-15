@@ -19,7 +19,7 @@
     "@types/node": "18",
     "eslint-plugin-sf-plugin": "^1.20.13",
     "husky": "^9.1.7",
-    "oclif": "^4.17.7",
+    "oclif": "^4.17.27",
     "shx": "0.3.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
