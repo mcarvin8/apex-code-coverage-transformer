@@ -7,7 +7,6 @@ import { DeployCoverageData } from './types.js';
 import { getPackageDirectories } from './getPackageDirectories.js';
 import { findFilePath } from './findFilePath.js';
 import { generateReport } from './generateReport.js';
-import { setCoveredLines } from './setCoveredLines.js';
 import { getConcurrencyThreshold } from './getConcurrencyThreshold.js';
 
 export async function transformDeployCoverageReport(
@@ -29,20 +28,21 @@ export async function transformDeployCoverageReport(
       return false;
     }
 
-    const updatedLines = await setCoveredLines(relativeFilePath, repoRoot, fileInfo.s);
-    fileInfo.s = updatedLines;
-
     handler.processFile(relativeFilePath, formattedFileName, fileInfo.s);
     return true;
   };
 
   const concurrencyLimit = getConcurrencyThreshold();
-  await mapLimit(Object.keys(data).filter((fileName) => Object.hasOwn(data, fileName)), concurrencyLimit, async (fileName: string) => {
-    const result = await processFile(fileName);
-    if (result) {
-      filesProcessed++;
+  await mapLimit(
+    Object.keys(data).filter((fileName) => Object.hasOwn(data, fileName)),
+    concurrencyLimit,
+    async (fileName: string) => {
+      const result = await processFile(fileName);
+      if (result) {
+        filesProcessed++;
+      }
     }
-  });
+  );
 
   const coverageObj = handler.finalize();
   const xml = generateReport(coverageObj, format);
