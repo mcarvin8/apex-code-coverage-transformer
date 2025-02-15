@@ -1,6 +1,6 @@
 'use strict';
 
-import { copyFile, writeFile, readFile, rm, mkdir } from 'node:fs/promises';
+import { writeFile, readFile, rm, mkdir } from 'node:fs/promises';
 import { strictEqual } from 'node:assert';
 import { resolve } from 'node:path';
 
@@ -10,8 +10,10 @@ import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 
 describe('acc-transformer transform NUTs', () => {
   let session: TestSession;
-  const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
-  const baselineTriggerPath = resolve('test/baselines/triggers/AccountTrigger.trigger');
+  const mockClassContent = '// Test Apex Class';
+  const mockTriggerContent = '// Test Apex Trigger';
+  const baselineClassPath = resolve('force-app/main/default/classes/AccountProfile.cls');
+  const baselineTriggerPath = resolve('packaged/triggers/AccountTrigger.trigger');
   const deployCoverage = resolve('test/deploy_coverage.json');
   const testCoverage = resolve('test/test_coverage.json');
   const invalidJson = resolve('test/invalid.json');
@@ -45,15 +47,15 @@ describe('acc-transformer transform NUTs', () => {
     await writeFile(sfdxConfigFile, configJsonString);
     await mkdir('force-app/main/default/classes', { recursive: true });
     await mkdir('packaged/triggers', { recursive: true });
-    await copyFile(baselineClassPath, 'force-app/main/default/classes/AccountProfile.cls');
-    await copyFile(baselineTriggerPath, 'packaged/triggers/AccountTrigger.trigger');
+    await writeFile(baselineClassPath, mockClassContent);
+    await writeFile(baselineTriggerPath, mockTriggerContent);
   });
 
   after(async () => {
     await session?.clean();
     await rm(sfdxConfigFile);
-    await rm('force-app/main/default/classes/AccountProfile.cls');
-    await rm('packaged/triggers/AccountTrigger.trigger');
+    await rm(baselineClassPath);
+    await rm(baselineTriggerPath);
     await rm('force-app', { recursive: true });
     await rm('packaged', { recursive: true });
     await rm(sonarXmlPath1);
@@ -148,20 +150,20 @@ describe('acc-transformer transform NUTs', () => {
     const coberturaXml2 = await readFile(coberturaXmlPath2, 'utf-8');
     const cloverXml1 = await readFile(cloverXmlPath1, 'utf-8');
     const cloverXml2 = await readFile(cloverXmlPath2, 'utf-8');
-  
+
     const sonarBaselineContent = await readFile(sonarBaselinePath, 'utf-8');
     const lcovBaselineContent = await readFile(lcovBaselinePath, 'utf-8');
     const jacocoBaselineContent = await readFile(jacocoBaselinePath, 'utf-8');
     const coberturaBaselineContent = await readFile(coberturaBaselinePath, 'utf-8');
     const cloverBaselineContent = await readFile(cloverBaselinePath, 'utf-8');
-  
+
     strictEqual(sonarXml1, sonarBaselineContent, `Mismatch between ${sonarXmlPath1} and ${sonarBaselinePath}`);
     strictEqual(sonarXml2, sonarBaselineContent, `Mismatch between ${sonarXmlPath2} and ${sonarBaselinePath}`);
     strictEqual(lcov1, lcovBaselineContent, `Mismatch between ${lcovPath1} and ${lcovBaselinePath}`);
     strictEqual(lcov2, lcovBaselineContent, `Mismatch between ${lcovPath2} and ${lcovBaselinePath}`);
     strictEqual(jacocoXml1, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath1} and ${jacocoBaselinePath}`);
     strictEqual(jacocoXml2, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath2} and ${jacocoBaselinePath}`);
-  
+
     // Normalize before comparing reports with timestamps
     strictEqual(
       normalizeCoverageReport(coberturaXml1),
