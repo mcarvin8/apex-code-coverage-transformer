@@ -39,18 +39,25 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       default: 'sonar',
       options: formatOptions,
     }),
+    'ignore-package-directory': Flags.directory({
+      summary: messages.getMessage('flags.ignore-package-directory.summary'),
+      char: 'i',
+      required: false,
+      multiple: true,
+    }),
   };
 
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
     const jsonFilePath = resolve(flags['coverage-json']);
     let outputReportPath = resolve(flags['output-report']);
+    const ignoreDirs = flags['ignore-package-directory'] ?? [];
     const format = flags['format'];
     let jsonData: string;
     try {
       jsonData = await readFile(jsonFilePath, 'utf-8');
     } catch (error) {
-      this.warn(`Failed to read ${jsonFilePath}. Confirm file exists.`)
+      this.warn(`Failed to read ${jsonFilePath}. Confirm file exists.`);
       return { path: jsonFilePath };
     }
 
@@ -62,12 +69,12 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
     // Determine the type of coverage data using type guards
     if (commandType === 'TestCoverageData') {
-      const result = await transformTestCoverageReport(parsedData as TestCoverageData[], format);
+      const result = await transformTestCoverageReport(parsedData as TestCoverageData[], format, ignoreDirs);
       xmlData = result.xml;
       warnings = result.warnings;
       filesProcessed = result.filesProcessed;
     } else if (commandType === 'DeployCoverageData') {
-      const result = await transformDeployCoverageReport(parsedData as DeployCoverageData, format);
+      const result = await transformDeployCoverageReport(parsedData as DeployCoverageData, format, ignoreDirs);
       xmlData = result.xml;
       warnings = result.warnings;
       filesProcessed = result.filesProcessed;

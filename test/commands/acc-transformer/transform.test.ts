@@ -33,6 +33,7 @@ describe('main', () => {
   const lcovPath2 = resolve('lcov2.info');
   const jacocoXmlPath1 = resolve('jacoco1.xml');
   const jacocoXmlPath2 = resolve('jacoco2.xml');
+  const defaultPath = resolve('coverage.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
 
   const configFile = {
@@ -75,6 +76,7 @@ describe('main', () => {
     await rm(lcovPath2);
     await rm(jacocoXmlPath1);
     await rm(jacocoXmlPath2);
+    await rm(defaultPath);
   });
 
   it('transform the deploy command JSON file into Sonar format.', async () => {
@@ -289,20 +291,20 @@ describe('main', () => {
     const coberturaXml2 = await readFile(coberturaXmlPath2, 'utf-8');
     const cloverXml1 = await readFile(cloverXmlPath1, 'utf-8');
     const cloverXml2 = await readFile(cloverXmlPath2, 'utf-8');
-  
+
     const sonarBaselineContent = await readFile(sonarBaselinePath, 'utf-8');
     const lcovBaselineContent = await readFile(lcovBaselinePath, 'utf-8');
     const jacocoBaselineContent = await readFile(jacocoBaselinePath, 'utf-8');
     const coberturaBaselineContent = await readFile(coberturaBaselinePath, 'utf-8');
     const cloverBaselineContent = await readFile(cloverBaselinePath, 'utf-8');
-  
+
     strictEqual(sonarXml1, sonarBaselineContent, `Mismatch between ${sonarXmlPath1} and ${sonarBaselinePath}`);
     strictEqual(sonarXml2, sonarBaselineContent, `Mismatch between ${sonarXmlPath2} and ${sonarBaselinePath}`);
     strictEqual(lcov1, lcovBaselineContent, `Mismatch between ${lcovPath1} and ${lcovBaselinePath}`);
     strictEqual(lcov2, lcovBaselineContent, `Mismatch between ${lcovPath2} and ${lcovBaselinePath}`);
     strictEqual(jacocoXml1, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath1} and ${jacocoBaselinePath}`);
     strictEqual(jacocoXml2, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath2} and ${jacocoBaselinePath}`);
-  
+
     // Normalize before comparing reports with timestamps
     strictEqual(
       normalizeCoverageReport(coberturaXml1),
@@ -324,5 +326,25 @@ describe('main', () => {
       normalizeCoverageReport(cloverBaselineContent),
       `Mismatch between ${cloverXmlPath2} and ${cloverBaselinePath}`
     );
+  });
+  it('ignore a package directory and produce a warning.', async () => {
+    await TransformerTransform.run([
+      '--coverage-json',
+      deployCoverage,
+      '--output-report',
+      defaultPath,
+      '--ignore-package-directory',
+      'packaged',
+    ]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include(`The coverage report has been written to ${defaultPath}`);
+    const warnings = sfCommandStubs.warn
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(warnings).to.include('The file name AccountTrigger was not found in any package directory.');
   });
 });

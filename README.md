@@ -87,14 +87,17 @@ The `apex-code-coverage-transformer` has 1 command:
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> -r <value> -f <value> [--json]
+  $ sf acc-transformer transform -j <value> -r <value> -f <value> -i <value> [--json]
 
 FLAGS
-  -j, --coverage-json=<value> Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
-  -r, --output-report=<value> Path to the code coverage file that will be created by this plugin.
-                              [default: "coverage.[xml/info]"]
-  -f, --format=<value>        Output format for the code coverage format.
-                              [default: "sonar"]
+  -j, --coverage-json=<value>             Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
+  -r, --output-report=<value>             Path to the code coverage file that will be created by this plugin.
+                                          [default: "coverage.[xml/info]"]
+  -f, --format=<value>                    Output format for the code coverage format.
+                                          [default: "sonar"]
+  -i, --ignore-package-directory=<value>  Package directories to ignore when looking for matching files in the coverage report.
+                                          Should be as they appear in the "sfdx-project.json".
+                                          Can be declared multiple times.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -110,6 +113,8 @@ EXAMPLES
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"
 
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"
+
+    $ sf acc-transformer transform -j "coverage.json" -i "force-app"
 ```
 
 ## Coverage Report Formats

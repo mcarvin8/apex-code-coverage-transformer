@@ -11,11 +11,12 @@ import { getConcurrencyThreshold } from './getConcurrencyThreshold.js';
 
 export async function transformTestCoverageReport(
   testCoverageData: TestCoverageData[],
-  format: string
+  format: string,
+  ignoreDirs: string[]
 ): Promise<{ xml: string; warnings: string[]; filesProcessed: number }> {
   const warnings: string[] = [];
   let filesProcessed = 0;
-  const { repoRoot, packageDirectories } = await getPackageDirectories();
+  const { repoRoot, packageDirectories } = await getPackageDirectories(ignoreDirs);
   const handler = getCoverageHandler(format);
 
   // Ensure testCoverageData is an array
