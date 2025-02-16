@@ -33,13 +33,13 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 
 ## Usage
 
-This plugin is intended for users who deploy their Apex or invoke Apex tests in their orgs from any Salesforce DX project (`sfdx-project.json` file). You should be running this plugin somewhere inside your Salesforce DX project. This plugin searches for your project's `sfdx-project.json` file to know which package directories to search into.
+This plugin is intended for users who deploy their Apex or invoke Apex tests in their orgs from any Salesforce DX project (`sfdx-project.json` file) and would like to import the code coverage reports into external tools. The code coverage reports created by the Salesforce CLI aren't accepted automatically by external tools and needs to be transformed using this plugin.
 
 This plugin will work regardless of your testing strategy (running all tests, running specified tests, running all local tests). The files in the original coverage JSON has to be found in one of the package directories to be added to the final report. This ensures external tools like SonarQube can match files in the coverage report to a file in the project.
 
 When the plugin is unable to find a matching Apex file in your project (i.e. Apex from managed and unlocked packages), it will print a warning and not add that file's coverage data to the final coverage report. See [Debugging](#debugging) for more information.
 
-You should run this plugin after you deploy or invoke Apex tests in your org either using the Salesforce CLI or sfdx-hardis.
+You should run this plugin after you deploy or invoke Apex tests in your org either using the Salesforce CLI or sfdx-hardis. See [Hook](#hook) if you'd like to automatically transform the coverage JSON after you run Salesforce CLI or sfdx-hardis commands.
 
 ### Salesforce CLI
 
@@ -57,8 +57,6 @@ To create the code coverage JSON when running tests directly in the org, append 
 sf apex run test --code-coverage --output-dir "coverage"
 sf apex get test --test-run-id <test run id> --code-coverage --output-dir "coverage"
 ```
-
-The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX projects and needs to be converted using this plugin.
 
 ### SFDX Hardis
 
