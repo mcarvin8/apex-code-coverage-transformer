@@ -12,11 +12,12 @@ import { getConcurrencyThreshold } from './getConcurrencyThreshold.js';
 
 export async function transformDeployCoverageReport(
   data: DeployCoverageData,
-  format: string
+  format: string,
+  ignoreDirs: string[]
 ): Promise<{ xml: string; warnings: string[]; filesProcessed: number }> {
   const warnings: string[] = [];
   let filesProcessed = 0;
-  const { repoRoot, packageDirectories } = await getPackageDirectories();
+  const { repoRoot, packageDirectories } = await getPackageDirectories(ignoreDirs);
   const handler = getCoverageHandler(format);
 
   const processFile = async (fileName: string): Promise<boolean> => {
@@ -37,12 +38,16 @@ export async function transformDeployCoverageReport(
   };
 
   const concurrencyLimit = getConcurrencyThreshold();
-  await mapLimit(Object.keys(data).filter((fileName) => Object.hasOwn(data, fileName)), concurrencyLimit, async (fileName: string) => {
-    const result = await processFile(fileName);
-    if (result) {
-      filesProcessed++;
+  await mapLimit(
+    Object.keys(data).filter((fileName) => Object.hasOwn(data, fileName)),
+    concurrencyLimit,
+    async (fileName: string) => {
+      const result = await processFile(fileName);
+      if (result) {
+        filesProcessed++;
+      }
     }
-  });
+  );
 
   const coverageObj = handler.finalize();
   const xml = generateReport(coverageObj, format);

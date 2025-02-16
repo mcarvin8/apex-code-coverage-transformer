@@ -12,6 +12,7 @@ Transform Salesforce Apex code coverage JSONs created during deployments and tes
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"`
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"`
+- `sf acc-transformer transform -j "coverage.json" -i "force-app"`
 
 # flags.coverage-json.summary
 
@@ -24,3 +25,7 @@ Path to the code coverage file that will be created by this plugin.
 # flags.format.summary
 
 Output format for the coverage report.
+
+# flags.ignore-package-directory.summary
+
+Ignore a package directory when looking for matching files in the coverage report.
