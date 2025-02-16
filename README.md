@@ -7,9 +7,9 @@
   <summary>Table of Contents</summary>
 
 - [Install](#install)
-- [Who is the Plugin For?](#who-is-the-plugin-for)
-- [Creating Code Coverage Files with the Salesforce CLI](#creating-code-coverage-files-with-the-salesforce-cli)
-- [Creating Code Coverage Files with SFDX Hardis](#creating-code-coverage-files-with-sfdx-hardis)
+- [Usage](#usage)
+  - [Create Code Coverage JSON with the Salesforce CLI](#create-code-coverage-json-with-salesforce-cli)
+  - [Create Code Coverage JSON with SFDX Hardis](#create-code-coverage-json-with-sfdx-hardis)
 - [What this Plugin fixes in the Salesforce CLI Coverage Reports](#what-this-plugin-fixes-in-the-salesforce-cli-coverage-reports)
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
@@ -31,17 +31,19 @@ If there's a coverage format not yet supported by this plugin, feel free to prov
 sf plugins install apex-code-coverage-transformer@x.y.z
 ```
 
-## Who is the Plugin For?
+## Usage
 
-This plugin is intended for users who deploy their Apex classes and triggers from any Salesforce DX project (`sfdx-project.json` file). You should be running this plugin somewhere inside your Salesforce DX project. This plugin searches for your project's `sfdx-project.json` file to know which package directories to search into.
+This plugin is intended for users who deploy their Apex or invoke Apex tests in their orgs from any Salesforce DX project (`sfdx-project.json` file). You should be running this plugin somewhere inside your Salesforce DX project. This plugin searches for your project's `sfdx-project.json` file to know which package directories to search into.
 
 This plugin will work regardless of your testing strategy (running all tests, running specified tests, running all local tests). The files in the original coverage JSON has to be found in one of the package directories to be added to the final report. This ensures external tools like SonarQube can match files in the coverage report to a file in the project.
 
 When the plugin is unable to find a matching Apex file in your project (i.e. Apex from managed and unlocked packages), it will print a warning and not add that file's coverage data to the final coverage report. See [Debugging](#debugging) for more information.
 
-## Creating Code Coverage Files with the Salesforce CLI
+You should run this plugin after you deploy or invoke Apex tests in your org either using the Salesforce CLI or sfdx-hardis.
 
-**This tool will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.**
+### Create Code Coverage JSON with Salesforce CLI
+
+**This plugin will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.**
 
 To create the code coverage JSON when deploying or validating, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
@@ -58,7 +60,7 @@ sf apex get test --test-run-id <test run id> --code-coverage --output-dir "cover
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX projects and needs to be converted using this plugin.
 
-## Creating Code Coverage Files with SFDX Hardis
+### Create Code Coverage JSON with SFDX Hardis
 
 This plugin can be used after running [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) commands `hardis:project:deploy:smart` (only if `COVERAGE_FORMATTER_JSON=true` environment variable is defined) and `hardis:org:test:apex` assuming you have sfdx-hardis and this plugin installed.
 
