@@ -10,7 +10,7 @@
 - [Usage](#usage)
   - [Salesforce CLI](#salesforce-cli)
   - [SFDX Hardis](#sfdx-hardis)
-- [What this Plugin fixes in the Salesforce CLI Coverage Reports](#what-this-plugin-fixes-in-the-salesforce-cli-coverage-reports)
+- [What This Fixes](#what-this-fixes)
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
 - [Coverage Report Formats](#coverage-report-formats)
@@ -66,7 +66,7 @@ This plugin can be used after running [sfdx-hardis](https://github.com/hardisgro
 
 Both hardis commands will create the code coverage JSON to transform here: `hardis-report/apex-coverage-results.json`. Provide this relative path as the `--coverage-json`/`-j` input for this plugin.
 
-## What this Plugin fixes in the Salesforce CLI Coverage Reports
+## What this fixes
 
 - The coverage reports created by this plugin will add correct file-paths per your Salesforce DX project. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage report created in this plugin will only contain Apex coverage results against files found in your Salesforce DX project, allowing you to use these reports in external code quality tools like SonarQube.
 - Normalizes the coverage reports created by the Salesforce CLI deploy and test command. The coverage reports created by both CLI commands follow different formats and have different coverage format options. These differences cause issues when trying to have external tools like SonarQube parse the coverage reports. This plugin handles parsing both command coverage reports and converting them into common formats accepted by external tools like SonarQube and GitLab.
