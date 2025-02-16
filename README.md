@@ -8,8 +8,8 @@
 
 - [Install](#install)
 - [Usage](#usage)
-  - [Create Code Coverage JSON with the Salesforce CLI](#create-code-coverage-json-with-salesforce-cli)
-  - [Create Code Coverage JSON with SFDX Hardis](#create-code-coverage-json-with-sfdx-hardis)
+  - [Salesforce CLI](#salesforce-cli)
+  - [SFDX Hardis](#sfdx-hardis)
 - [What this Plugin fixes in the Salesforce CLI Coverage Reports](#what-this-plugin-fixes-in-the-salesforce-cli-coverage-reports)
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
@@ -41,7 +41,7 @@ When the plugin is unable to find a matching Apex file in your project (i.e. Ape
 
 You should run this plugin after you deploy or invoke Apex tests in your org either using the Salesforce CLI or sfdx-hardis.
 
-### Create Code Coverage JSON with Salesforce CLI
+### Salesforce CLI
 
 **This plugin will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.**
 
@@ -60,7 +60,7 @@ sf apex get test --test-run-id <test run id> --code-coverage --output-dir "cover
 
 The code coverage JSONs created by the Salesforce CLI aren't accepted automatically for Salesforce DX projects and needs to be converted using this plugin.
 
-### Create Code Coverage JSON with SFDX Hardis
+### SFDX Hardis
 
 This plugin can be used after running [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) commands `hardis:project:deploy:smart` (only if `COVERAGE_FORMATTER_JSON=true` environment variable is defined) and `hardis:org:test:apex` assuming you have sfdx-hardis and this plugin installed.
 
