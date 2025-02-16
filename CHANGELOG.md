@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.8.7...v2.9.0) (2025-02-16)
+
+
+### Features
+
+* add ignore package directories flag ([3666c59](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/3666c59bdd675c1610c2409bddbd11fe4ed03719))
+
 ## [2.8.7](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.8.6...v2.8.7) (2025-02-13)
 
 
