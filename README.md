@@ -95,7 +95,7 @@ FLAGS
                                           [default: "coverage.[xml/info]"]
   -f, --format=<value>                    Output format for the code coverage format.
                                           [default: "sonar"]
-  -i, --ignore-package-directory=<value>  Package directories to ignore when looking for matching files in the coverage report.
+  -i, --ignore-package-directory=<value>  Package directory to ignore when looking for matching files in the coverage report.
                                           Should be as they appear in the "sfdx-project.json".
                                           Can be declared multiple times.
 
