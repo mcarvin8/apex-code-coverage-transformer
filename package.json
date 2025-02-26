@@ -3,7 +3,7 @@
   "description": "Transform Salesforce Apex code coverage JSONs created during deployments and test runs into other formats accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.",
   "version": "2.9.0",
   "dependencies": {
-    "@oclif/core": "^4.2.6",
+    "@oclif/core": "^4.2.8",
     "@salesforce/core": "^8.8.0",
     "@salesforce/sf-plugins-core": "^12.1.4",
     "async": "^3.2.6",
