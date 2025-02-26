@@ -5,6 +5,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.9.0...v2.10.0) (2025-02-26)
+
+
+### Features
+
+* dynamically determine cobertura package names from file paths ([cbf63df](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/cbf63dfc44ec79c9ec4e58bdc68bb9458f925e4f))
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 4.2.6 to 4.2.8 ([b838b3f](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/b838b3f6a47eb8fee04d6d8a1321fc82c949cfe4))
+* **deps:** bump @salesforce/core from 8.8.2 to 8.8.3 ([c395e9c](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/c395e9cf8e38fdd606b594589376b9670e7f220c))
+
 ## [2.9.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.8.7...v2.9.0) (2025-02-16)
 
 
