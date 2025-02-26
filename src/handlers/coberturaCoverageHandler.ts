@@ -4,7 +4,7 @@ import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass, CoverageHand
 
 export class CoberturaCoverageHandler implements CoverageHandler {
   private readonly coverageObj: CoberturaCoverageObject;
-  private packageObj: CoberturaPackage;
+  private packageMap: Map<string, CoberturaPackage>;
 
   public constructor() {
     this.coverageObj = {
@@ -22,20 +22,23 @@ export class CoberturaCoverageHandler implements CoverageHandler {
         packages: { package: [] },
       },
     };
-    this.packageObj = {
-      '@name': 'main',
-      '@line-rate': 0,
-      '@branch-rate': 1,
-      classes: { class: [] },
-    };
-    this.coverageObj.coverage.packages.package.push(this.packageObj);
+    this.packageMap = new Map();
   }
 
-  public processFile(
-    filePath: string,
-    fileName: string,
-    lines: Record<string, number>,
-  ): void {
+  public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
+    const packageName = filePath.split('/')[0]; // Extract root directory as package name
+
+    if (!this.packageMap.has(packageName)) {
+      this.packageMap.set(packageName, {
+        '@name': packageName,
+        '@line-rate': 0,
+        '@branch-rate': 1,
+        classes: { class: [] },
+      });
+    }
+
+    const packageObj = this.packageMap.get(packageName)!;
+
     const classObj: CoberturaClass = {
       '@name': fileName,
       '@filename': filePath,
@@ -63,36 +66,41 @@ export class CoberturaCoverageHandler implements CoverageHandler {
       });
     }
 
-    // Calculate and set the line rate for this class
     if (totalLines > 0) {
-      const lineRate = (coveredLineCount / totalLines).toFixed(4);
-      classObj['@line-rate'] = lineRate;
+      classObj['@line-rate'] = (coveredLineCount / totalLines).toFixed(4);
     }
 
     this.coverageObj.coverage['@lines-valid'] += totalLines;
     this.coverageObj.coverage['@lines-covered'] += coveredLineCount;
 
-    this.packageObj['@line-rate'] = Number(
-      (this.coverageObj.coverage['@lines-covered'] / this.coverageObj.coverage['@lines-valid']).toFixed(4)
-    );
-    this.coverageObj.coverage['@line-rate'] = this.packageObj['@line-rate'];
-
-    this.packageObj.classes.class.push(classObj);
+    packageObj.classes.class.push(classObj);
+    this.packageMap.set(packageName, packageObj);
   }
 
   public finalize(): CoberturaCoverageObject {
-    if (this.coverageObj.coverage?.packages?.package) {
-      this.coverageObj.coverage.packages.package.sort((a, b) =>
-        a['@name'].localeCompare(b['@name'])
+    this.coverageObj.coverage.packages.package = Array.from(this.packageMap.values());
+
+    for (const pkg of this.coverageObj.coverage.packages.package) {
+      const totalLines = pkg.classes.class.reduce(
+        (sum, cls) => sum + parseFloat(cls['@line-rate']) * cls.lines.line.length,
+        0
       );
-      for (const pkg of this.coverageObj.coverage.packages.package) {
-        if (pkg.classes?.class) {
-          pkg.classes.class.sort((a, b) =>
-            a['@filename'].localeCompare(b['@filename'])
-          );
-        }
+      const totalClasses = pkg.classes.class.reduce((sum, cls) => sum + cls.lines.line.length, 0);
+
+      pkg['@line-rate'] = totalClasses > 0 ? parseFloat((totalLines / totalClasses).toFixed(4)) : 0;
+    }
+
+    this.coverageObj.coverage['@line-rate'] = parseFloat(
+      (this.coverageObj.coverage['@lines-covered'] / this.coverageObj.coverage['@lines-valid']).toFixed(4)
+    );
+
+    this.coverageObj.coverage.packages.package.sort((a, b) => a['@name'].localeCompare(b['@name']));
+    for (const pkg of this.coverageObj.coverage.packages.package) {
+      if (pkg.classes?.class) {
+        pkg.classes.class.sort((a, b) => a['@filename'].localeCompare(b['@filename']));
       }
     }
+
     return this.coverageObj;
   }
 }
