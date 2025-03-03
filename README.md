@@ -15,9 +15,9 @@
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
 - [Coverage Report Formats](#coverage-report-formats)
 - [Hook](#hook)
-- [Debugging](#debugging)
-- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
 - [Issues](#issues)
+- [Contributing](#contributing)
 - [License](#license)
 </details>
 
@@ -43,7 +43,7 @@ You should run this plugin after you deploy or invoke Apex tests in your org eit
 
 ### Salesforce CLI
 
-**This plugin will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.**
+> This plugin will only support the "json" coverage format from the Salesforce CLI. Do not use other coverage formats from the Salesforce CLI.
 
 To create the code coverage JSON when deploying or validating, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
@@ -123,11 +123,11 @@ The `-f`/`--format` flag allows you to specify the format of the coverage report
 
 | Flag Option | Description                                                                         | Example                                                                                                                         |
 | ----------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option.       | [Sonar example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)         |
-| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools.            | [Clover example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)       |
-| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [LCovOnly example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)      |
-| `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting.        | [Cobertura example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/cobertura_baseline.xml) |
-| `jacoco`    | Creates a JaCoCo XML report, the standard for Java projects.                        | [JaCoCo example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
+| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option.       | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)         |
+| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools.            | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)       |
+| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)      |
+| `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting.        | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/cobertura_baseline.xml) |
+| `jacoco`    | Creates a JaCoCo XML report, the standard for Java projects.                        | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
 
 ## Hook
 
@@ -155,7 +155,7 @@ The `.apexcodecovtransformer.config.json` follows this structure:
 
 If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
 
-## Debugging
+## Troubleshooting
 
 Any file in the coverage JSON that isn't found in any package directory will result in this warning:
 
@@ -191,13 +191,13 @@ Any ENOENT failures indicate that the plugin had issues finding one of the packa
 Error (1): ENOENT: no such file or directory: {packageDirPath}
 ```
 
+## Issues
+
+If you encounter any issues or would like to suggest features, please create an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues).
+
 ## Contributing
 
 Contributions are welcome! See [Contributing](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
-
-## Issues
-
-If you encounter any issues, please create an issue in the [issue tracker](https://github.com/mcarvin8/apex-code-coverage-transformer/issues). Please also create issues to suggest any new features.
 
 ## License
 
