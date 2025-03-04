@@ -60,8 +60,8 @@ sf apex get test --test-run-id <test run id> --code-coverage --output-dir "cover
 
 This plugin can be used after running the below [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) commands:
 
-- `hardis:project:deploy:smart` (only if `COVERAGE_FORMATTER_JSON=true` environment variable is defined)
-- `hardis:org:test:apex`
+- `sf hardis project deploy smart` (only if `COVERAGE_FORMATTER_JSON=true` environment variable is defined)
+- `sf hardis org test apex`
 
 Both hardis commands will create the code coverage JSON to transform here: `hardis-report/apex-coverage-results.json`.
 
