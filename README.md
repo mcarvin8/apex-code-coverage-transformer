@@ -130,16 +130,13 @@ The `-f`/`--format` flag allows you to specify the format of the coverage report
 
 ## Hook
 
-A post-run hook has been configured if you opt into using it by creating a `.apexcodecovtransformer.config.json` config file in the root of your repo. If the config file is found, the post-run hook will automatically run after the following commands:
+To enable automatic transformation after the below `sf` commands complete, create `.apexcodecovtransformer.config.json` in your project’s root directory.
 
-- `sf project deploy start`
-- `sf project deploy validate`
-- `sf project deploy report`
-- `sf project deploy resume`
+- `sf project deploy [start/validate/report/resume]`
 - `sf apex run test`
 - `sf apex get test`
-- `sf hardis project deploy smart` (only if sfdx-hardis is installed and `COVERAGE_FORMATTER_JSON=true` environment variable is defined)
-- `sf hardis org test apex` (only if sfdx-hardis is installed)
+- `sf hardis project deploy smart` (only if `sfdx-hardis` is installed and `COVERAGE_FORMATTER_JSON=true` environment variable is defined)
+- `sf hardis org test apex` (only if `sfdx-hardis` is installed)
 
 You can copy the sample [Salesforce CLI .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), which assumes you are running the Salesforce CLI commands and specifying the `--results-dir`/`--output-dir` directory as "coverage". Update this sample with your desired output report path and format.
 
@@ -150,19 +147,17 @@ The `.apexcodecovtransformer.config.json` follows this structure:
 - `deployCoverageJsonPath` is required to use the hook after deploy commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis deploy command. Recommend using a relative path.
 - `testCoverageJsonPath` is required to use the hook after test commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis test command. Recommend using a relative path.
 - `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.[xml/info]` in the working directory.
-- `format` is optional and should be the intended coverage report format created by this plugin. If this isn't provided, it will default to "sonar".
+- `format` is optional and should be the intended coverage report [format](#coverage-report-formats) created by this plugin. If this isn't provided, it will default to "sonar".
 
-If the `.apexcodecovtransformer.config.json` file isn't found, the hook will be skipped.
+If `.apexcodecovtransformer.config.json` is missing, the hook will not run.
 
 ## Troubleshooting
 
-Any file in the coverage JSON that isn't found in any package directory will result in this warning:
+Any file in the coverage JSON that isn't found in any package directory will result in this warning and will not be added to the transformed report:
 
 ```
 Warning: The file name AccountTrigger was not found in any package directory.
 ```
-
-Files not found in any package directory will not be added to the output coverage report. This includes Apex classes that originate from installed managed and unlocked packages when running all tests in your org.
 
 If none of the files listed in the coverage JSON were found in a package directory, the plugin will print an additional warning stating no files were processed. In this case, the output coverage report generated will be an empty file.
 
