@@ -118,7 +118,7 @@ EXAMPLES
 
 ## Coverage Report Formats
 
-The `-f`/`--format` flag allows you to specify the format of the coverage report.
+The `-f`/`--format` flag allows you to specify the format of the transformed coverage report.
 
 | Flag Option | Description                                                                         | Example                                                                                                                         |
 | ----------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -159,7 +159,7 @@ Any file in the coverage JSON that isn't found in any package directory will res
 Warning: The file name AccountTrigger was not found in any package directory.
 ```
 
-If none of the files listed in the coverage JSON were found in a package directory, the plugin will print an additional warning stating no files were processed. In this case, the output coverage report generated will be an empty file.
+If none of the files listed in the coverage JSON were found in a package directory, the plugin will print an additional warning stating no files were processed. In this case, the transformed report generated will be an empty file.
 
 ```
 Warning: The file name AccountTrigger was not found in any package directory.
