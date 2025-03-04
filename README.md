@@ -46,7 +46,7 @@ To automate coverage transformation after deployments or test executions, see [H
 To create the code coverage JSON when deploying or validating, append `--coverage-formatters json --results-dir "coverage"` to the `sf project deploy` command. This will create a coverage JSON in this relative path - `coverage/coverage/coverage.json`.
 
 ```
-sf project deploy [start/validate] --coverage-formatters json --results-dir "coverage"
+sf project deploy [start/validate/report/resume] --coverage-formatters json --results-dir "coverage"
 ```
 
 To create the code coverage JSON when running tests directly in the org, append `--code-coverage --output-dir "coverage"` to the `sf apex run test` or `sf apex get test` command. This will create the code coverage JSON in this relative path - `coverage/test-result-codecoverage.json`
