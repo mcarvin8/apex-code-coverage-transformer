@@ -64,16 +64,14 @@ Both hardis commands will create the code coverage JSON to transform here: `hard
 
 ## What this fixes
 
-- The coverage reports created by this plugin will add correct file-paths per your Salesforce DX project. Salesforce CLI coverage reports have the `no-map/` prefix hard-coded into their coverage reports. The coverage report created in this plugin will only contain Apex coverage results against files found in your Salesforce DX project, allowing you to use these reports in external code quality tools like SonarQube.
-- Normalizes the coverage reports created by the Salesforce CLI deploy and test command. The coverage reports created by both CLI commands follow different formats and have different coverage format options. These differences cause issues when trying to have external tools like SonarQube parse the coverage reports. This plugin handles parsing both command coverage reports and converting them into common formats accepted by external tools like SonarQube and GitLab.
-- The coverage reports created by this plugin "fixes" an issue with Salesforce CLI deploy command coverage reports. The coverage reports created by the deploy command contains several inaccuracies in their covered lines.
-  - Salesforce's deploy coverage report may report out-of-range lines as "covered", i.e. line 100 in a 98-line apex class is reported as "covered".
-  - Salesforce's deploy coverage report may report extra lines than the total lines in the apex class, i.e. 120 lines are included in the deploy coverage report for a 100-line apex class.
-  - The coverage percentage may vary based on how many lines the API returns in the original deploy coverage report.
-  - To work around these inaccuracies, I added a re-numbering function which only runs against deploy coverage reports to ensure the transformed coverage reports are accepted by external tools.
-  - Once the Salesforce server team fixes the API to correctly return coverage in deploy command coverage reports, I will remove this re-numbering function.
-  - See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
-  - **NOTE**: This does not affect coverage reports created by the Salesforce CLI test commands.
+- Maps file paths in coverage reports to match the Salesforce DX project structure.
+- Normalizes coverage reports across deploy and test commands for better compatibility with external tools.
+- "Fixes" inaccuracies in Salesforce CLI deploy coverage reports (out-of-range covered lines, incorrect total line counts, etc.).
+  - i.e. line 100 in a 98-line apex class is reported as "covered" or 120 lines are included in the deploy coverage report for a 100-line apex class.
+  - To work around these inaccuracies, this plugin has a re-numbering function which only runs against deploy coverage reports. This function will re-number out-of-range lines to un-used lines.
+  - Once the Salesforce server team fixes the API to correctly return coverage in deploy command coverage reports, this re-numbering function will be removed via a new breaking release.
+      - See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
+  - **NOTE**: This does **not** affect coverage reports created by the Salesforce CLI test commands.
 
 ## Command
 
