@@ -68,7 +68,7 @@ Both hardis commands will create the code coverage JSON to transform here: `hard
 - Normalizes coverage reports across deploy and test commands for better compatibility with external tools.
 - "Fixes" inaccuracies in Salesforce CLI deploy coverage reports (out-of-range covered lines, incorrect total line counts, etc.).
   - i.e. line 100 in a 98-line apex class is reported as "covered" or 120 lines are included in the deploy coverage report for a 100-line apex class.
-  - To work around these inaccuracies, this plugin has a re-numbering function which only runs against deploy coverage reports. This function will re-number out-of-range lines to un-used lines.
+  - To work around these inaccuracies, this plugin has a re-numbering function which only runs against deploy coverage reports. This function will re-number out-of-range covered lines to un-used lines. The **uncovered** lines are always **correctly** returned by the Salesforce CLI deploy command.
   - Once the Salesforce server team fixes the API to correctly return coverage in deploy command coverage reports, this re-numbering function will be removed via a new breaking release.
       - See issues [5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [1568](https://github.com/forcedotcom/cli/issues/1568).
   - **NOTE**: This does **not** affect coverage reports created by the Salesforce CLI test commands.
