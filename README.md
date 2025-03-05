@@ -105,13 +105,23 @@ DESCRIPTION
   Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into other formats accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
 
 EXAMPLES
+  Transform the JSON into Sonar format:
+
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"
+
+  Transform the JSON into Cobertura format:
 
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"
 
+  Transform the JSON into Clover format:
+
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"
 
+  Transform the JSON into LCovOnly format:
+
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"
+
+  Transform the JSON into Sonar format, ignoring Apex in the "force-app" directory:
 
     $ sf acc-transformer transform -j "coverage.json" -i "force-app"
 ```
