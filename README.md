@@ -35,7 +35,7 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 
 This plugin is designed for users deploying Apex or running Apex tests within Salesforce DX projects (`sfdx-project.json`). It transforms Salesforce CLI JSON coverage reports into formats recognized by external tools.
 
-The plugin ensures that coverage data is only reported for files found in your package directories, preventing mismatches in tools like SonarQube. If Apex files are missing from your project (i.e. Apex from managed or unlocked packages), they will be excluded from the final report with a warning (see [Troubleshooting](#troubleshooting)).
+The plugin ensures that coverage data is only reported for files found in your package directories, preventing mismatches in tools like SonarQube. If Apex files are missing from your project (i.e. Apex from managed or unlocked packages), they will be excluded from the final report with a [warning](#troubleshooting).
 
 To automate coverage transformation after deployments or test executions, see [Hook](#hook).
 
