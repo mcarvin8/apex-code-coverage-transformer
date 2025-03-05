@@ -5,7 +5,7 @@
   "dependencies": {
     "@oclif/core": "^4.2.8",
     "@salesforce/core": "^8.8.3",
-    "@salesforce/sf-plugins-core": "^12.1.4",
+    "@salesforce/sf-plugins-core": "^12.2.0",
     "async": "^3.2.6",
     "xmlbuilder2": "^3.1.1"
   },
