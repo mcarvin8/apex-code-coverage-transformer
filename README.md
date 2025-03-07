@@ -133,13 +133,13 @@ EXAMPLES
 
 The `-f`/`--format` flag allows you to specify the format of the transformed coverage report.
 
-| Flag Option | Description                                                                         | Example                                                                                                                         |
-| ----------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option.       | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)         |
-| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools.            | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)       |
-| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)      |
+| Flag Option | Description                                                                         | Example                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `sonar`     | Generates a SonarQube-compatible coverage report. This is the default option.       | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)     |
+| `clover`    | Produces a Clover XML report format, commonly used with Atlassian tools.            | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)    |
+| `lcovonly`  | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)     |
 | `cobertura` | Creates a Cobertura XML report, a widely used format for coverage reporting.        | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/cobertura_baseline.xml) |
-| `jacoco`    | Creates a JaCoCo XML report, the standard for Java projects.                        | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       |
+| `jacoco`    | Creates a JaCoCo XML report, the standard for Java projects.                        | [example](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)    |
 
 ## Hook
 
@@ -148,7 +148,7 @@ To enable automatic transformation after the below `sf` commands complete, creat
 - `sf project deploy [start/validate/report/resume]`
 - `sf apex run test`
 - `sf apex get test`
-- `sf hardis project deploy smart` 
+- `sf hardis project deploy smart`
   - only if `sfdx-hardis` is installed
   - `COVERAGE_FORMATTER_JSON=true` must be set in the environment variables
 - `sf hardis org test apex`
@@ -164,6 +164,7 @@ The `.apexcodecovtransformer.config.json` follows this structure:
 - `testCoverageJsonPath` is required to use the hook after test commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis test command. Recommend using a relative path.
 - `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.[xml/info]` in the working directory.
 - `format` is optional and should be the intended coverage report [format](#coverage-report-formats) created by this plugin. If this isn't provided, it will default to "sonar".
+- `ignorePackageDirectories` is optional and should be a comma-separated string of package directories to ignore when looking for matching files in the coverage report. Package directories should match how they appear in the `sfdx-project.json` file.
 
 If `.apexcodecovtransformer.config.json` is missing, the hook will not run.
 

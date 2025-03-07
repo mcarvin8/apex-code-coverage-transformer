@@ -57,6 +57,7 @@ export type HookFile = {
   testCoverageJsonPath: string;
   outputReportPath: string;
   format: string;
+  ignorePackageDirectories: string;
 };
 
 export type CoberturaLine = {
@@ -204,9 +205,9 @@ export type JaCoCoSourceFile = {
 };
 
 export type JaCoCoLine = {
-  '@nr': number;  // Line number
-  '@mi': number;  // Missed (0 = not covered, 1 = covered)
-  '@ci': number;  // Covered (1 = covered, 0 = missed)
+  '@nr': number; // Line number
+  '@mi': number; // Missed (0 = not covered, 1 = covered)
+  '@ci': number; // Covered (1 = covered, 0 = missed)
   '@mb'?: number; // Missed Branch (optional, can be adjusted if needed)
   '@cb'?: number; // Covered Branch (optional, can be adjusted if needed)
 };
