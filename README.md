@@ -10,7 +10,7 @@
 - [Usage](#usage)
   - [Salesforce CLI](#salesforce-cli)
   - [SFDX Hardis](#sfdx-hardis)
-- [What This Fixes](#what-this-fixes)
+- [Fixes and Enhancements](#fixes-and-enhancements)
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
 - [Coverage Report Formats](#coverage-report-formats)
@@ -65,10 +65,11 @@ This plugin can be used after running the below [sfdx-hardis](https://github.com
 
 Both hardis commands will create the code coverage JSON to transform here: `hardis-report/apex-coverage-results.json`.
 
-## What this fixes
+## Fixes and Enhancements
 
-- Maps file paths in coverage reports to match the Salesforce DX project structure.
+- Maps Apex file names in the original coverage report (e.g., `no-map/AccountTriggerHandler`) to their corresponding relative file paths in the Salesforce DX project (e.g., `force-app/main/default/classes/AccountTriggerHandler.cls`).
 - Normalizes coverage reports across deploy and test commands for better compatibility with external tools.
+- Provides additional coverage formats beyond those available with the default deploy and test commands in the Salesforce CLI.
 - "Fixes" inaccuracies in Salesforce CLI deploy coverage reports (out-of-range covered lines, incorrect total line counts, etc.).
   - i.e. line 100 in a 98-line apex class is reported as "covered" or 120 lines are included in the deploy coverage report for a 100-line apex class.
   - To work around these inaccuracies, this plugin has a re-numbering function which only runs against deploy coverage reports. This function will re-number out-of-range covered lines to un-used lines. The **uncovered** lines are always **correctly** returned by the Salesforce CLI deploy command.
