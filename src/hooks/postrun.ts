@@ -13,9 +13,13 @@ export const postrun: Hook<'postrun'> = async function (options) {
   let commandType: string;
   let coverageJson: string;
   if (
-    ['project:deploy:validate', 'project:deploy:start', 'project:deploy:report', 'project:deploy:resume', 'hardis:project:deploy:smart'].includes(
-      options.Command.id
-    )
+    [
+      'project:deploy:validate',
+      'project:deploy:start',
+      'project:deploy:report',
+      'project:deploy:resume',
+      'hardis:project:deploy:smart',
+    ].includes(options.Command.id)
   ) {
     commandType = 'deploy';
   } else if (['apex:run:test', 'apex:get:test', 'hardis:org:test:apex'].includes(options.Command.id)) {
@@ -39,6 +43,7 @@ export const postrun: Hook<'postrun'> = async function (options) {
 
   const outputReport: string = configFile.outputReportPath || 'coverage.xml';
   const coverageFormat: string = configFile.format || 'sonar';
+  const ignorePackageDirs: string = configFile.ignorePackageDirectories || '';
 
   if (commandType === 'deploy') {
     coverageJson = configFile.deployCoverageJsonPath || '.';
@@ -64,5 +69,13 @@ export const postrun: Hook<'postrun'> = async function (options) {
   commandArgs.push(outputReportPath);
   commandArgs.push('--format');
   commandArgs.push(coverageFormat);
+  if (ignorePackageDirs.trim() !== '') {
+    const ignorePackageDirArray: string[] = ignorePackageDirs.split(',');
+    for (const dirs of ignorePackageDirArray) {
+      const sanitizedDir = dirs.replace(/,/g, '');
+      commandArgs.push('--ignore-package-directory');
+      commandArgs.push(sanitizedDir);
+    }
+  }
   await TransformerTransform.run(commandArgs);
 };
