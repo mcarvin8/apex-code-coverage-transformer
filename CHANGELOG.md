@@ -10,7 +10,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* include ignore package directories flag in hook ([fded594](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/fded594ccb229035aecfa426da972c5819a212a5))
 * include ignore package directories flag in hook ([a7294a4](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/a7294a47a85141d4b1d0e21854ac14d4f19b9e14))
 
 
