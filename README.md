@@ -65,7 +65,7 @@ This plugin can be used after running the below [sfdx-hardis](https://github.com
 
 Both hardis commands will create the code coverage JSON to transform here: `hardis-report/apex-coverage-results.json`.
 
-### Fixes and Enhancements
+## Fixes and Enhancements
 
 - **Maps Apex file names** in the original coverage report (e.g., `no-map/AccountTriggerHandler`) to their corresponding relative file paths in the Salesforce DX project (e.g., `force-app/main/default/classes/AccountTriggerHandler.cls`).
 - **Normalizes coverage reports** across both deploy and test commands, improving compatibility with external tools.
