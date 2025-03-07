@@ -5,6 +5,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.10.0...v2.11.0) (2025-03-07)
+
+
+### Features
+
+* include ignore package directories flag in hook ([fded594](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/fded594ccb229035aecfa426da972c5819a212a5))
+* include ignore package directories flag in hook ([a7294a4](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/a7294a47a85141d4b1d0e21854ac14d4f19b9e14))
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/sf-plugins-core from 12.1.4 to 12.2.0 ([b96e83c](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/b96e83cc28c5f3ae82422c069fa157caa5e805b1))
+
 ## [2.10.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.9.0...v2.10.0) (2025-02-26)
 
 
