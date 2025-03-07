@@ -60,7 +60,8 @@
     "github",
     "azure",
     "bitbucket",
-    "jacoco"
+    "jacoco",
+    "lcov"
   ],
   "license": "MIT",
   "oclif": {
