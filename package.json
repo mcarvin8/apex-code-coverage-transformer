@@ -17,7 +17,7 @@
     "@salesforce/dev-scripts": "^10.2.11",
     "@types/async": "^3.2.24",
     "@types/node": "18",
-    "eslint-plugin-sf-plugin": "^1.20.14",
+    "eslint-plugin-sf-plugin": "^1.20.16",
     "husky": "^9.1.7",
     "oclif": "^4.17.34",
     "shx": "0.3.4",
