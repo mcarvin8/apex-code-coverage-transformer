@@ -70,9 +70,7 @@ Both hardis commands will create the code coverage JSON to transform here: `hard
 - **Maps Apex file names** in the original coverage report (e.g., `no-map/AccountTriggerHandler`) to their corresponding relative file paths in the Salesforce DX project (e.g., `force-app/main/default/classes/AccountTriggerHandler.cls`).
 - **Normalizes coverage reports** across both deploy and test commands, improving compatibility with external tools.
 - **Adds additional coverage formats** not available in the default Salesforce CLI deploy and test commands.
-- **"Fixes" inaccuracies** in Salesforce CLI deploy command coverage reports, such as:
-  - Out-of-range covered lines (e.g., line 100 reported as "covered" in a 98-line Apex class).
-  - Incorrect total line counts (e.g., 120 lines reported for a 100-line Apex class).
+- **"Fixes" inaccuracies** in Salesforce CLI deploy command coverage reports, such as out-of-range covered lines (e.g., line 100 reported as "covered" in a 98-line Apex class) and incorrect total line counts (e.g., 120 lines reported for a 100-line Apex class).
   - To address these inaccuracies, the plugin includes a **re-numbering function** that only applies to deploy coverage reports. This function reassigns out-of-range `covered` lines to unused lines, ensuring reports are accepted by external tools.
   - The `uncovered` lines are always correctly reported by the deploy command.
   - Once Salesforce resolves the issue with the API that affects deploy command coverage reports, the re-numbering function will be removed in a future **breaking** release.
