@@ -20,7 +20,7 @@
     "eslint-plugin-sf-plugin": "^1.20.16",
     "husky": "^9.1.7",
     "oclif": "^4.17.34",
-    "shx": "0.3.4",
+    "shx": "0.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   },
