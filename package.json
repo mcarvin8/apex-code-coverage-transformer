@@ -61,7 +61,8 @@
     "azure",
     "bitbucket",
     "jacoco",
-    "lcov"
+    "lcov",
+    "json2xml"
   ],
   "license": "MIT",
   "oclif": {
