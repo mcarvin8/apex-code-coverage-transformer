@@ -165,13 +165,13 @@ You can copy & update the sample [SFDX Hardis .apexcodecovtransformer.config.jso
 
 ## Troubleshooting
 
-Any file in the coverage JSON that isn't found in any package directory will result in this warning and will not be added to the transformed report:
+If a file listed in the coverage JSON cannot be found in any package directory, a warning is displayed, and the file will not be included in the transformed report:
 
 ```
 Warning: The file name AccountTrigger was not found in any package directory.
 ```
 
-If none of the files listed in the coverage JSON were found in a package directory, the plugin will print an additional warning stating no files were processed. In this case, the transformed report generated will be an empty file.
+If **none** of the files in the coverage JSON are found in a package directory, the plugin will print an additional warning, and the generated report will be empty:
 
 ```
 Warning: The file name AccountTrigger was not found in any package directory.
@@ -179,22 +179,22 @@ Warning: The file name AccountProfile was not found in any package directory.
 Warning: None of the files listed in the coverage JSON were processed. The coverage report will be empty.
 ```
 
-The code coverage JSON files created by the Salesforce CLI deploy and test commands follow different structures. If the code coverage JSON file provided does not match 1 of the 2 expected coverage data types, the plugin will fail with:
+Salesforce CLI generates code coverage JSONs in two different structures (deploy and test command formats). If the provided coverage JSON does not match one of these expected structures, the plugin will fail with:
 
 ```
 Error (1): The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.
 ```
 
-If the `sfdx-project.json` file was not found in your project's root folder, the plugin will fail with:
+If `sfdx-project.json` file is missing from the project root, the plugin will fail with:
 
 ```
 Error (1): sfdx-project.json not found in any parent directory.
 ```
 
-Any ENOENT failures indicate that the plugin had issues finding one of the package directories in the `sfdx-project.json` file:
+If a package directory listed in `sfdx-project.json` cannot be found, the plugin will encounter a **ENOENT** error
 
 ```
-Error (1): ENOENT: no such file or directory: {packageDirPath}
+Error (1): ENOENT: no such file or directory: {packageDir}
 ```
 
 ## Issues
