@@ -23,7 +23,7 @@
 
 Transform the Salesforce Apex code coverage JSON files created during deployments and test runs into other [formats](#coverage-report-formats) accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
 
-If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
+> If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
 
 ## Install
 
@@ -191,7 +191,7 @@ If `sfdx-project.json` file is missing from the project root, the plugin will fa
 Error (1): sfdx-project.json not found in any parent directory.
 ```
 
-If a package directory listed in `sfdx-project.json` cannot be found, the plugin will encounter a **ENOENT** error
+If a package directory listed in `sfdx-project.json` cannot be found, the plugin will encounter a **ENOENT** error:
 
 ```
 Error (1): ENOENT: no such file or directory: {packageDir}
