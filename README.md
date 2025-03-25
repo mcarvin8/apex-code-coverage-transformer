@@ -87,7 +87,7 @@ The `apex-code-coverage-transformer` has 1 command:
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> -r <value> -f <value> -i <value> [--json]
+  $ sf acc-transformer transform -j <value> [-r <value>] [-f <value>] [-i <value>] [--json]
 
 FLAGS
   -j, --coverage-json=<value>             Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
@@ -101,9 +101,6 @@ FLAGS
 
 GLOBAL FLAGS
   --json  Format output as json.
-
-DESCRIPTION
-  Transform the Apex code coverage JSON file created by the Salesforce CLI deploy and test command into other formats accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
 
 EXAMPLES
   Transform the JSON into Sonar format:
@@ -141,7 +138,7 @@ The `-f`/`--format` flag allows you to specify the format of the transformed cov
 
 ## Hook
 
-To enable automatic transformation after the below `sf` commands complete, create `.apexcodecovtransformer.config.json` in your project’s root directory.
+To enable automatic transformation after the below `sf` commands complete, create a `.apexcodecovtransformer.config.json` in your project’s root directory.
 
 - `sf project deploy [start/validate/report/resume]`
 - `sf apex run test`
@@ -152,17 +149,19 @@ To enable automatic transformation after the below `sf` commands complete, creat
 - `sf hardis org test apex`
   - only if `sfdx-hardis` is installed
 
-You can copy the sample [Salesforce CLI .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), which assumes you are running the Salesforce CLI commands and specifying the `--results-dir`/`--output-dir` directory as "coverage". Update this sample with your desired output report path and format.
+You can copy & update the sample [Salesforce CLI .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), which assumes you are running the Salesforce CLI commands and specifying the `--results-dir`/`--output-dir` directory as "coverage".
 
-You can copy the sample [SFDX Hardis .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json), which assumes you are running the SFDX Hardis commands. Update this sample with your desired output report path and format.
+You can copy & update the sample [SFDX Hardis .apexcodecovtransformer.config.json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json), which assumes you are running the SFDX Hardis commands.
 
-The `.apexcodecovtransformer.config.json` follows this structure:
+**`.apexcodecovtransformer.config.json` structure**
 
-- `deployCoverageJsonPath` is required to use the hook after deploy commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis deploy command. Recommend using a relative path.
-- `testCoverageJsonPath` is required to use the hook after test commands and should be the path to the code coverage JSON created by the Salesforce CLI/SFDX Hardis test command. Recommend using a relative path.
-- `outputReportPath` is optional and should be the path to the code coverage file created by this plugin. Recommend using a relative path. If this isn't provided, it will default to `coverage.[xml/info]` in the working directory.
-- `format` is optional and should be the intended coverage report [format](#coverage-report-formats) created by this plugin. If this isn't provided, it will default to "sonar".
-- `ignorePackageDirectories` is optional and should be a comma-separated string of package directories to ignore when looking for matching files in the coverage report. Package directories should match how they appear in the `sfdx-project.json` file.
+| JSON Key                   | Required                               | Description                                                                                   |
+| -------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `deployCoverageJsonPath`   | Yes (for deploy command)               | Code coverage JSON created by the Salesforce CLI deploy commands.                             |
+| `testCoverageJsonPath`     | Yes (for test command)                 | Code coverage JSON created by the Salesforce CLI test commands.                               |
+| `outputReportPath`         | No (defaults to `coverage.[xml/info]`) | Transformed code coverage report path.                                                        |
+| `format`                   | No (defaults to `sonar`)               | Transformed code coverage report [format](#coverage-report-formats).                          |
+| `ignorePackageDirectories` | No                                     | Comma-separated string of package directories to ignore when looking for matching Apex files. |
 
 If `.apexcodecovtransformer.config.json` is missing, the hook will not run.
 
@@ -182,7 +181,7 @@ Warning: The file name AccountProfile was not found in any package directory.
 Warning: None of the files listed in the coverage JSON were processed. The coverage report will be empty.
 ```
 
-The code coverage JSON files created by the Salesforce CLI deploy and test commands follow different formats. If the code coverage JSON file provided does not match 1 of the 2 expected coverage data types, the plugin will fail with:
+The code coverage JSON files created by the Salesforce CLI deploy and test commands follow different structures. If the code coverage JSON file provided does not match 1 of the 2 expected coverage data types, the plugin will fail with:
 
 ```
 Error (1): The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.
