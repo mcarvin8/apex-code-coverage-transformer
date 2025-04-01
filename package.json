@@ -16,13 +16,16 @@
     "@salesforce/cli-plugins-testkit": "^5.3.39",
     "@salesforce/dev-scripts": "^10.2.11",
     "@types/async": "^3.2.24",
+    "@types/mocha": "^10.0.10",
     "@types/node": "18",
     "eslint-plugin-sf-plugin": "^1.20.17",
     "husky": "^9.1.7",
+    "mocha": "^11.1.0",
     "oclif": "^4.17.41",
     "shx": "0.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "wireit": "^0.14.11"
   },
   "engines": {
     "node": ">=18.0.0"
