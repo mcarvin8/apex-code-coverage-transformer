@@ -1,1 +1,1 @@
-export const formatOptions: string[] = ['sonar', 'cobertura', 'clover', 'lcovonly', 'jacoco'];
+export const formatOptions: string[] = ['sonar', 'cobertura', 'clover', 'lcovonly', 'jacoco', 'json'];
