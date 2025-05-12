@@ -31,6 +31,9 @@ describe('acc-transformer transform NUTs', () => {
   const jacocoXmlPath1 = resolve('jacoco1.xml');
   const jacocoXmlPath2 = resolve('jacoco2.xml');
   const sfdxConfigFile = resolve('sfdx-project.json');
+  const outputJsonPath1 = resolve('coverage1.json');
+  const outputJsonPath2 = resolve('coverage2.json');
+  const jsonBaselinePath = resolve('test/json_baseline.json');
 
   const configFile = {
     packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
@@ -66,6 +69,8 @@ describe('acc-transformer transform NUTs', () => {
     await rm(lcovPath2);
     await rm(jacocoXmlPath1);
     await rm(jacocoXmlPath2);
+    await rm(outputJsonPath1);
+    await rm(outputJsonPath2);
   });
 
   it('runs transform on the deploy command coverage file in Sonar format.', async () => {
@@ -137,6 +142,18 @@ describe('acc-transformer transform NUTs', () => {
 
     expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${jacocoXmlPath2}`);
   });
+  it('runs transform on the deploy command coverage file in JSON format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverage}" --output-report "${outputJsonPath1}" --format json`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${outputJsonPath1}`);
+  });
+  it('runs transform on the test command coverage file in JSON format.', async () => {
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --output-report "${outputJsonPath2}" --format json`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+
+    expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${outputJsonPath2}`);
+  });
   it('confirm the reports created are the same as the baselines.', async () => {
     const sonarXml1 = await readFile(sonarXmlPath1, 'utf-8');
     const sonarXml2 = await readFile(sonarXmlPath2, 'utf-8');
@@ -148,12 +165,15 @@ describe('acc-transformer transform NUTs', () => {
     const coberturaXml2 = await readFile(coberturaXmlPath2, 'utf-8');
     const cloverXml1 = await readFile(cloverXmlPath1, 'utf-8');
     const cloverXml2 = await readFile(cloverXmlPath2, 'utf-8');
-  
+    const json1 = await readFile(outputJsonPath1, 'utf-8');
+    const json2 = await readFile(outputJsonPath2, 'utf-8');
+
     const sonarBaselineContent = await readFile(sonarBaselinePath, 'utf-8');
     const lcovBaselineContent = await readFile(lcovBaselinePath, 'utf-8');
     const jacocoBaselineContent = await readFile(jacocoBaselinePath, 'utf-8');
     const coberturaBaselineContent = await readFile(coberturaBaselinePath, 'utf-8');
     const cloverBaselineContent = await readFile(cloverBaselinePath, 'utf-8');
+    const jsonBaselineContent = await readFile(jsonBaselinePath, 'utf-8');
   
     strictEqual(sonarXml1, sonarBaselineContent, `Mismatch between ${sonarXmlPath1} and ${sonarBaselinePath}`);
     strictEqual(sonarXml2, sonarBaselineContent, `Mismatch between ${sonarXmlPath2} and ${sonarBaselinePath}`);
@@ -161,6 +181,8 @@ describe('acc-transformer transform NUTs', () => {
     strictEqual(lcov2, lcovBaselineContent, `Mismatch between ${lcovPath2} and ${lcovBaselinePath}`);
     strictEqual(jacocoXml1, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath1} and ${jacocoBaselinePath}`);
     strictEqual(jacocoXml2, jacocoBaselineContent, `Mismatch between ${jacocoXmlPath2} and ${jacocoBaselinePath}`);
+    strictEqual(json1, jsonBaselineContent, `Mismatch between ${outputJsonPath1} and ${jsonBaselinePath}`);
+    strictEqual(json2, jsonBaselineContent, `Mismatch between ${outputJsonPath2} and ${jsonBaselinePath}`);
   
     // Normalize before comparing reports with timestamps
     strictEqual(

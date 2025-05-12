@@ -103,6 +103,13 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       }
     }
 
+    if (format === 'json' && !outputReportPath.endsWith('.json')) {
+      outputReportPath = outputReportPath.replace(/\.xml$/, '.json'); // Replace .xml with .json if it exists
+      if (!outputReportPath.endsWith('.json')) {
+        outputReportPath += '.json'; // Ensure the extension is .json
+      }
+    }
+
     await writeFile(outputReportPath, xmlData);
     this.log(`The coverage report has been written to ${outputReportPath}`);
     return { path: outputReportPath };

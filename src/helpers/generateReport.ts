@@ -7,6 +7,7 @@ import {
   CloverCoverageObject,
   LcovCoverageObject,
   JaCoCoCoverageObject,
+  IstanbulCoverageObject
 } from './types.js';
 
 export function generateReport(
@@ -15,13 +16,16 @@ export function generateReport(
     | CoberturaCoverageObject
     | CloverCoverageObject
     | LcovCoverageObject
-    | JaCoCoCoverageObject,
+    | JaCoCoCoverageObject 
+    | IstanbulCoverageObject,
   format: string
 ): string {
   if (format === 'lcovonly') {
+    // This must be LcovCoverageObject
     if ('files' in coverageObj) {
+      const lcovFiles = (coverageObj as LcovCoverageObject).files;
       let lcovOutput = '';
-      for (const file of coverageObj.files) {
+      for (const file of lcovFiles) {
         lcovOutput += `TN:\nSF:${file.sourceFile}\n`;
         lcovOutput += 'FNF:0\nFNH:0\n';
 
@@ -36,6 +40,10 @@ export function generateReport(
       }
       return lcovOutput;
     }
+  }
+
+  if (format === 'json') {
+    return JSON.stringify(coverageObj, null, 2); // Pretty-print JSON
   }
 
   const isHeadless = format === 'cobertura' || format === 'clover' || format === 'jacoco';
