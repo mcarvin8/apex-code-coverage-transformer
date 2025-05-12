@@ -39,7 +39,6 @@ export class IstanbulJsonCoverageHandler implements CoverageHandler {
       s: {},
       f: {},
       b: {},
-      _coverageSchema: '1a1cf5c040b70cfc75ec2b2c4aab8e59',
       hash: fileHash,
     };
 
