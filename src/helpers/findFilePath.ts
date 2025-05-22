@@ -10,56 +10,50 @@ export async function findFilePath(
   packageDirectories: string[],
   repoRoot: string
 ): Promise<string | undefined> {
-  let relativeFilePath: string | undefined;
   for (const directory of packageDirectories) {
-    relativeFilePath = await findFilePathinDirectory(fileName, directory, repoRoot);
-    if (relativeFilePath !== undefined) {
-      relativeFilePath = normalizePathToUnix(relativeFilePath)
-      break;
-    }
-  }
-  return relativeFilePath;
-}
-
-async function searchRecursively(fileName: string, dxDirectory: string): Promise<string | undefined> {
-  const files = await readdir(dxDirectory);
-  for (const file of files) {
-    const filePath = join(dxDirectory, file);
-    const stats = await stat(filePath);
-    if (stats.isDirectory()) {
-      const result = await searchRecursively(fileName, filePath);
-      if (result) {
-        return result;
-      }
-    } else if (file === fileName) {
-      return filePath;
+    const result = await resolveFilePath(fileName, directory, repoRoot);
+    if (result) {
+      return normalizePathToUnix(result);
     }
   }
   return undefined;
 }
 
-async function findFilePathinDirectory(
-  fileName: string,
-  dxDirectory: string,
-  repoRoot: string
-): Promise<string | undefined> {
-  const fileExtension = fileName.split('.').slice(1).join('.');
-  let relativeFilePath: string | undefined;
+async function resolveFilePath(fileName: string, dxDirectory: string, repoRoot: string): Promise<string | undefined> {
+  const extensionsToTry = getExtensionsToTry(fileName);
 
-  if (fileExtension) {
-    // If file extension is defined, search recursively with that extension
-    const absoluteFilePath = await searchRecursively(fileName, dxDirectory);
-    if (absoluteFilePath !== undefined) relativeFilePath = relative(repoRoot, absoluteFilePath);
-  } else {
-    // If file extension is not defined, test each extension option
-    const fileExts: string[] = ['cls', 'trigger'];
-    for (const ext of fileExts) {
-      const absoluteFilePath = await searchRecursively(`${fileName}.${ext}`, dxDirectory);
-      if (absoluteFilePath !== undefined) {
-        relativeFilePath = relative(repoRoot, absoluteFilePath);
-        break;
-      }
+  for (const name of extensionsToTry) {
+    const absolutePath = await searchRecursively(name, dxDirectory);
+    if (absolutePath) {
+      return relative(repoRoot, absolutePath);
     }
   }
-  return relativeFilePath;
+
+  return undefined;
+}
+
+function getExtensionsToTry(fileName: string): string[] {
+  const parts = fileName.split('.');
+  if (parts.length > 1) {
+    return [fileName];
+  }
+  return ['cls', 'trigger'].map((ext) => `${fileName}.${ext}`);
+}
+
+async function searchRecursively(fileName: string, directory: string): Promise<string | undefined> {
+  const entries = await readdir(directory);
+
+  for (const entry of entries) {
+    const fullPath = join(directory, entry);
+    const stats = await stat(fullPath);
+
+    if (stats.isDirectory()) {
+      const nestedResult = await searchRecursively(fileName, fullPath);
+      if (nestedResult) return nestedResult;
+    } else if (entry === fileName) {
+      return fullPath;
+    }
+  }
+
+  return undefined;
 }

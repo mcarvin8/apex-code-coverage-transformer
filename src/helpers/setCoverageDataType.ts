@@ -2,70 +2,61 @@
 
 import { DeployCoverageData, TestCoverageData } from './types.js';
 
-// Type guard for DeployCoverageData
-function isDeployCoverageData(data: unknown): data is DeployCoverageData {
-  if (typeof data !== 'object' || data === null) return false;
+function isObject(val: unknown): val is Record<string, unknown> {
+  return typeof val === 'object' && val !== null;
+}
 
-  return Object.entries(data).every(([, item]) => {
-    if (typeof item !== 'object' || item === null) return false;
+function isValidPosition(pos: unknown): boolean {
+  return isObject(pos) && typeof pos.line === 'number' && typeof pos.column === 'number';
+}
 
-    const { path, fnMap, branchMap, f, b, s, statementMap } = item as {
-      path: unknown;
-      fnMap: unknown;
-      branchMap: unknown;
-      f: unknown;
-      b: unknown;
-      s: unknown;
-      statementMap: unknown;
-    };
+function isValidStatementMap(statementMap: unknown): boolean {
+  if (!isObject(statementMap)) return false;
 
-    if (
-      typeof path !== 'string' ||
-      typeof fnMap !== 'object' ||
-      typeof branchMap !== 'object' ||
-      typeof f !== 'object' ||
-      typeof b !== 'object' ||
-      typeof s !== 'object' ||
-      typeof statementMap !== 'object' ||
-      statementMap === null
-    ) {
-      return false;
-    }
-
-    return Object.values(statementMap).every((statement) => {
-      if (typeof statement !== 'object' || statement === null) return false;
-      const { start, end } = statement as { start: unknown; end: unknown };
-
-      return (
-        typeof start === 'object' &&
-        start !== null &&
-        typeof (start as { line: unknown }).line === 'number' &&
-        typeof (start as { column: unknown }).column === 'number' &&
-        typeof end === 'object' &&
-        end !== null &&
-        typeof (end as { line: unknown }).line === 'number' &&
-        typeof (end as { column: unknown }).column === 'number'
-      );
-    });
+  return Object.values(statementMap).every((statement) => {
+    if (!isObject(statement)) return false;
+    const { start, end } = statement as { start: unknown; end: unknown };
+    return isValidPosition(start) && isValidPosition(end);
   });
 }
 
-// Type guard for a single TestCoverageData
-function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
+function isValidDeployItem(item: unknown): boolean {
+  if (!isObject(item)) return false;
+
+  const { path, fnMap, branchMap, f, b, s, statementMap } = item;
+
   return (
-    typeof data === 'object' &&
-    data !== null &&
-    typeof (data as TestCoverageData).id === 'string' &&
-    typeof (data as TestCoverageData).name === 'string' &&
-    typeof (data as TestCoverageData).totalLines === 'number' &&
-    typeof (data as TestCoverageData).lines === 'object' &&
-    typeof (data as TestCoverageData).totalCovered === 'number' &&
-    typeof (data as TestCoverageData).coveredPercent === 'number' &&
-    Object.values((data as TestCoverageData).lines).every((line: unknown) => typeof line === 'number')
+    typeof path === 'string' &&
+    isObject(fnMap) &&
+    isObject(branchMap) &&
+    isObject(f) &&
+    isObject(b) &&
+    isObject(s) &&
+    isValidStatementMap(statementMap)
   );
 }
 
-// Type guard for TestCoverageData array
+function isDeployCoverageData(data: unknown): data is DeployCoverageData {
+  if (!isObject(data)) return false;
+  return Object.entries(data).every(([, item]) => isValidDeployItem(item));
+}
+
+function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
+  if (!isObject(data)) return false;
+
+  const { id, name, totalLines, lines, totalCovered, coveredPercent } = data;
+
+  return (
+    typeof id === 'string' &&
+    typeof name === 'string' &&
+    typeof totalLines === 'number' &&
+    isObject(lines) &&
+    typeof totalCovered === 'number' &&
+    typeof coveredPercent === 'number' &&
+    Object.values(lines).every((line) => typeof line === 'number')
+  );
+}
+
 function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
   return Array.isArray(data) && data.every(isSingleTestCoverageData);
 }
@@ -73,10 +64,7 @@ function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
 export function checkCoverageDataType(
   data: DeployCoverageData | TestCoverageData[]
 ): 'DeployCoverageData' | 'TestCoverageData' | 'Unknown' {
-  if (isDeployCoverageData(data)) {
-    return 'DeployCoverageData';
-  } else if (isTestCoverageDataArray(data)) {
-    return 'TestCoverageData';
-  }
+  if (isDeployCoverageData(data)) return 'DeployCoverageData';
+  if (isTestCoverageDataArray(data)) return 'TestCoverageData';
   return 'Unknown';
 }
