@@ -1,6 +1,6 @@
 'use strict';
 
-import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass, CoverageHandler } from '../helpers/types.js';
+import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass, CoverageHandler } from '../utils/types.js';
 
 export class CoberturaCoverageHandler implements CoverageHandler {
   private readonly coverageObj: CoberturaCoverageObject;

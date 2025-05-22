@@ -2,7 +2,9 @@
 import { access } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 
-async function findRepoRoot(dir: string): Promise<{ repoRoot: string | undefined; dxConfigFilePath: string | undefined }> {
+async function findRepoRoot(
+  dir: string
+): Promise<{ repoRoot: string | undefined; dxConfigFilePath: string | undefined }> {
   const filePath = join(dir, 'sfdx-project.json');
   try {
     // Check if sfdx-project.json exists in the current directory

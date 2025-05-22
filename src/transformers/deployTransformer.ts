@@ -2,13 +2,13 @@
 
 import { mapLimit } from 'async';
 
-import { getCoverageHandler } from '../handlers/getCoverageHandler.js';
-import { DeployCoverageData } from './types.js';
-import { getPackageDirectories } from './getPackageDirectories.js';
-import { findFilePath } from './findFilePath.js';
-import { generateReport } from './generateReport.js';
-import { setCoveredLines } from './setCoveredLines.js';
-import { getConcurrencyThreshold } from './getConcurrencyThreshold.js';
+import { getCoverageHandler } from '../handlers/getHandler.js';
+import { DeployCoverageData } from '../utils/types.js';
+import { getPackageDirectories } from '../utils/getPackageDirectories.js';
+import { findFilePath } from '../utils/findFilePath.js';
+import { setCoveredLines } from '../utils/setCoveredLines.js';
+import { getConcurrencyThreshold } from '../utils/getConcurrencyThreshold.js';
+import { generateReport } from './reportGenerator.js';
 
 export async function transformDeployCoverageReport(
   data: DeployCoverageData,

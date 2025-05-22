@@ -1,6 +1,6 @@
 'use strict';
 
-import { CoverageHandler, LcovCoverageObject, LcovFile } from '../helpers/types.js';
+import { CoverageHandler, LcovCoverageObject, LcovFile } from '../utils/types.js';
 
 export class LcovCoverageHandler implements CoverageHandler {
   private readonly coverageObj: LcovCoverageObject;
@@ -9,11 +9,7 @@ export class LcovCoverageHandler implements CoverageHandler {
     this.coverageObj = { files: [] };
   }
 
-  public processFile(
-    filePath: string,
-    fileName: string,
-    lines: Record<string, number>,
-  ): void {
+  public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
     const uncoveredLines = Object.keys(lines)
       .filter((lineNumber) => lines[lineNumber] === 0)
       .map(Number);
@@ -40,9 +36,7 @@ export class LcovCoverageHandler implements CoverageHandler {
 
   public finalize(): LcovCoverageObject {
     if ('files' in this.coverageObj && Array.isArray(this.coverageObj.files)) {
-      this.coverageObj.files.sort((a, b) =>
-        a.sourceFile.localeCompare(b.sourceFile)
-      );
+      this.coverageObj.files.sort((a, b) => a.sourceFile.localeCompare(b.sourceFile));
     }
     return this.coverageObj;
   }
