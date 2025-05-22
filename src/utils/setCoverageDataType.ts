@@ -25,14 +25,16 @@ function isValidDeployItem(item: unknown): boolean {
 
   const { path, fnMap, branchMap, f, b, s, statementMap } = item;
 
+  const hasValidPath = typeof path === 'string';
+  const hasValidFnMap = isObject(fnMap);
+  const hasValidBranchMap = isObject(branchMap);
+  const hasValidF = isObject(f);
+  const hasValidB = isObject(b);
+  const hasValidS = isObject(s);
+  const hasValidStatementMap = isValidStatementMap(statementMap);
+
   return (
-    typeof path === 'string' &&
-    isObject(fnMap) &&
-    isObject(branchMap) &&
-    isObject(f) &&
-    isObject(b) &&
-    isObject(s) &&
-    isValidStatementMap(statementMap)
+    hasValidPath && hasValidFnMap && hasValidBranchMap && hasValidF && hasValidB && hasValidS && hasValidStatementMap
   );
 }
 
@@ -46,14 +48,22 @@ function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
 
   const { id, name, totalLines, lines, totalCovered, coveredPercent } = data;
 
+  const hasValidId = typeof id === 'string';
+  const hasValidName = typeof name === 'string';
+  const hasValidTotalLines = typeof totalLines === 'number';
+  const hasValidLines = isObject(lines);
+  const hasValidTotalCovered = typeof totalCovered === 'number';
+  const hasValidCoveredPercent = typeof coveredPercent === 'number';
+  const allLinesAreNumbers = hasValidLines && Object.values(lines).every((line) => typeof line === 'number');
+
   return (
-    typeof id === 'string' &&
-    typeof name === 'string' &&
-    typeof totalLines === 'number' &&
-    isObject(lines) &&
-    typeof totalCovered === 'number' &&
-    typeof coveredPercent === 'number' &&
-    Object.values(lines).every((line) => typeof line === 'number')
+    hasValidId &&
+    hasValidName &&
+    hasValidTotalLines &&
+    hasValidLines &&
+    hasValidTotalCovered &&
+    hasValidCoveredPercent &&
+    allLinesAreNumbers
   );
 }
 
