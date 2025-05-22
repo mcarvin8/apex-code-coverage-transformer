@@ -6,8 +6,8 @@ import { resolve } from 'node:path';
 import { Hook } from '@oclif/core';
 
 import TransformerTransform from '../commands/acc-transformer/transform.js';
-import { HookFile } from '../helpers/types.js';
-import { getRepoRoot } from '../helpers/getRepoRoot.js';
+import { HookFile } from '../utils/types.js';
+import { getRepoRoot } from '../utils/getRepoRoot.js';
 
 export const postrun: Hook<'postrun'> = async function (options) {
   let commandType: string;

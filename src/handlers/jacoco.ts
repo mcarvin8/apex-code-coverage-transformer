@@ -1,12 +1,6 @@
 'use strict';
 
-import {
-  JaCoCoCoverageObject,
-  JaCoCoPackage,
-  JaCoCoSourceFile,
-  JaCoCoLine,
-  CoverageHandler,
-} from '../helpers/types.js';
+import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoSourceFile, JaCoCoLine, CoverageHandler } from '../utils/types.js';
 
 export class JaCoCoCoverageHandler implements CoverageHandler {
   private readonly coverageObj: JaCoCoCoverageObject;

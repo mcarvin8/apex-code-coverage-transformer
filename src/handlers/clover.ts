@@ -1,6 +1,6 @@
 'use strict';
 
-import { CloverCoverageObject, CloverFile, CoverageHandler } from '../helpers/types.js';
+import { CloverCoverageObject, CloverFile, CoverageHandler } from '../utils/types.js';
 
 export class CloverCoverageHandler implements CoverageHandler {
   private readonly coverageObj: CloverCoverageObject;
@@ -35,11 +35,7 @@ export class CloverCoverageHandler implements CoverageHandler {
     };
   }
 
-  public processFile(
-    filePath: string,
-    fileName: string,
-    lines: Record<string, number>,
-  ): void {
+  public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
     const uncoveredLines = Object.keys(lines)
       .filter((lineNumber) => lines[lineNumber] === 0)
       .map(Number);
@@ -82,9 +78,7 @@ export class CloverCoverageHandler implements CoverageHandler {
 
   public finalize(): CloverCoverageObject {
     if (this.coverageObj.coverage?.project?.file) {
-      this.coverageObj.coverage.project.file.sort((a, b) =>
-        a['@path'].localeCompare(b['@path'])
-      );
+      this.coverageObj.coverage.project.file.sort((a, b) => a['@path'].localeCompare(b['@path']));
     }
     return this.coverageObj;
   }

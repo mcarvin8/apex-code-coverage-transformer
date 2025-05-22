@@ -5,11 +5,11 @@ import { writeFile, readFile } from 'node:fs/promises';
 
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import { DeployCoverageData, TestCoverageData, TransformerTransformResult } from '../../helpers/types.js';
-import { transformDeployCoverageReport } from '../../helpers/transformDeployCoverageReport.js';
-import { transformTestCoverageReport } from '../../helpers/transformTestCoverageReport.js';
-import { checkCoverageDataType } from '../../helpers/setCoverageDataType.js';
-import { formatOptions } from '../../helpers/constants.js';
+import { DeployCoverageData, TestCoverageData, TransformerTransformResult } from '../../utils/types.js';
+import { transformDeployCoverageReport } from '../../transformers/deployTransformer.js';
+import { transformTestCoverageReport } from '../../transformers/testTransformer.js';
+import { checkCoverageDataType } from '../../utils/setCoverageDataType.js';
+import { formatOptions } from '../../utils/constants.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('apex-code-coverage-transformer', 'transformer.transform');

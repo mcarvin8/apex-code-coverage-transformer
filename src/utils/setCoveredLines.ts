@@ -12,9 +12,7 @@ export async function setCoveredLines(
   const updatedLines: Record<string, number> = {};
   const usedLines = new Set<number>();
 
-  const sortedLines = Object.entries(lines).sort(([lineA], [lineB]) => 
-    parseInt(lineA, 10) - parseInt(lineB, 10)
-  );
+  const sortedLines = Object.entries(lines).sort(([lineA], [lineB]) => parseInt(lineA, 10) - parseInt(lineB, 10));
 
   for (const [line, status] of sortedLines) {
     const lineNumber = parseInt(line, 10);

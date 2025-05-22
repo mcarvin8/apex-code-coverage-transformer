@@ -1,6 +1,6 @@
 'use strict';
 
-import { SonarCoverageObject, SonarClass, CoverageHandler } from '../helpers/types.js';
+import { SonarCoverageObject, SonarClass, CoverageHandler } from '../utils/types.js';
 
 export class SonarCoverageHandler implements CoverageHandler {
   private readonly coverageObj: SonarCoverageObject;
@@ -9,11 +9,7 @@ export class SonarCoverageHandler implements CoverageHandler {
     this.coverageObj = { coverage: { '@version': '1', file: [] } };
   }
 
-  public processFile(
-    filePath: string,
-    _fileName: string,
-    lines: Record<string, number>,
-  ): void {
+  public processFile(filePath: string, _fileName: string, lines: Record<string, number>): void {
     const fileObj: SonarClass = {
       '@path': filePath,
       lineToCover: [],
@@ -32,9 +28,7 @@ export class SonarCoverageHandler implements CoverageHandler {
 
   public finalize(): SonarCoverageObject {
     if (this.coverageObj.coverage?.file) {
-      this.coverageObj.coverage.file.sort((a, b) =>
-        a['@path'].localeCompare(b['@path'])
-      );
+      this.coverageObj.coverage.file.sort((a, b) => a['@path'].localeCompare(b['@path']));
     }
     return this.coverageObj;
   }

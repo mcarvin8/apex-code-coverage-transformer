@@ -1,11 +1,11 @@
 'use strict';
 
-import { CoverageHandler } from '../helpers/types.js';
-import { CloverCoverageHandler } from './cloverCoverageHandler.js';
-import { CoberturaCoverageHandler } from './coberturaCoverageHandler.js';
-import { SonarCoverageHandler } from './sonarCoverageHandler.js';
-import { LcovCoverageHandler } from './lcovCoverageHandler.js';
-import { JaCoCoCoverageHandler } from './jacocoCoverageHandler.js';
+import { CoverageHandler } from '../utils/types.js';
+import { CloverCoverageHandler } from './clover.js';
+import { CoberturaCoverageHandler } from './cobertura.js';
+import { SonarCoverageHandler } from './sonar.js';
+import { LcovCoverageHandler } from './lcov.js';
+import { JaCoCoCoverageHandler } from './jacoco.js';
 
 export function getCoverageHandler(format: string): CoverageHandler {
   const handlers: Record<string, CoverageHandler> = {

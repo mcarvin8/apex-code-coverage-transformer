@@ -7,7 +7,7 @@ import {
   CloverCoverageObject,
   LcovCoverageObject,
   JaCoCoCoverageObject,
-} from './types.js';
+} from '../utils/types.js';
 
 export function generateReport(
   coverageObj:
