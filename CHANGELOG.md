@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.2...v2.11.3) (2025-05-22)
+
+
+### Bug Fixes
+
+* improve code quality on functions ([604300b](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/604300bf8605576a6cfc8f760f88365250627d31))
+* reduce complexity when setting coverage data type ([51d1f20](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/51d1f205aa8dbb6635e6b302cc0050dfd3b03b84))
+
 ## [2.11.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.1...v2.11.2) (2025-05-06)
 
 
