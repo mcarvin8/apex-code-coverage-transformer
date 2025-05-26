@@ -25,15 +25,17 @@ function isValidDeployItem(item: unknown): boolean {
 
   const { path, fnMap, branchMap, f, b, s, statementMap } = item;
 
-  if (typeof path !== 'string') return false;
-  if (!isObject(fnMap)) return false;
-  if (!isObject(branchMap)) return false;
-  if (!isObject(f)) return false;
-  if (!isObject(b)) return false;
-  if (!isObject(s)) return false;
-  if (!isValidStatementMap(statementMap)) return false;
+  const checks = [
+    typeof path === 'string',
+    isObject(fnMap),
+    isObject(branchMap),
+    isObject(f),
+    isObject(b),
+    isObject(s),
+    isValidStatementMap(statementMap),
+  ];
 
-  return true;
+  return checks.every(Boolean);
 }
 
 function isDeployCoverageData(data: unknown): data is DeployCoverageData {
@@ -46,15 +48,17 @@ function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
 
   const { id, name, totalLines, lines, totalCovered, coveredPercent } = data;
 
-  if (typeof id !== 'string') return false;
-  if (typeof name !== 'string') return false;
-  if (typeof totalLines !== 'number') return false;
-  if (typeof totalCovered !== 'number') return false;
-  if (typeof coveredPercent !== 'number') return false;
-  if (!isObject(lines)) return false;
-  if (!Object.values(lines).every((line) => typeof line === 'number')) return false;
+  const checks = [
+    typeof id === 'string',
+    typeof name === 'string',
+    typeof totalLines === 'number',
+    typeof totalCovered === 'number',
+    typeof coveredPercent === 'number',
+    isObject(lines),
+    isObject(lines) && Object.values(lines).every((line) => typeof line === 'number'),
+  ];
 
-  return true;
+  return checks.every(Boolean);
 }
 
 function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
