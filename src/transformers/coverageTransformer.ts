@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/await-thenable */
 import { mapLimit } from 'async';
 
 import { getCoverageHandler } from '../handlers/getHandler.js';
