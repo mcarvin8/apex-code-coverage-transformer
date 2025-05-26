@@ -6,9 +6,7 @@ import { writeFile, readFile } from 'node:fs/promises';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import { DeployCoverageData, TestCoverageData, TransformerTransformResult } from '../../utils/types.js';
-import { transformDeployCoverageReport } from '../../transformers/deployTransformer.js';
-import { transformTestCoverageReport } from '../../transformers/testTransformer.js';
-import { checkCoverageDataType } from '../../utils/setCoverageDataType.js';
+import { transformCoverageReport } from '../../transformers/coverageTransformer.js';
 import { formatOptions } from '../../utils/constants.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -65,20 +63,13 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     let warnings: string[] = [];
     let filesProcessed: number = 0;
     const parsedData = JSON.parse(jsonData) as DeployCoverageData | TestCoverageData[];
-    const commandType = checkCoverageDataType(parsedData);
 
-    // Determine the type of coverage data using type guards
-    if (commandType === 'TestCoverageData') {
-      const result = await transformTestCoverageReport(parsedData as TestCoverageData[], format, ignoreDirs);
+    try {
+      const result = await transformCoverageReport(parsedData, format, ignoreDirs);
       xmlData = result.xml;
       warnings = result.warnings;
       filesProcessed = result.filesProcessed;
-    } else if (commandType === 'DeployCoverageData') {
-      const result = await transformDeployCoverageReport(parsedData as DeployCoverageData, format, ignoreDirs);
-      xmlData = result.xml;
-      warnings = result.warnings;
-      filesProcessed = result.filesProcessed;
-    } else {
+    } catch (err) {
       this.error(
         'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
       );
