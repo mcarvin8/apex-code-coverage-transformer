@@ -47,8 +47,8 @@ yarn test:nuts
 
 To add new coverage formats to the transformer:
 
-1. Add the format flag value to `formatOptions` in `src/helpers/constants.ts`.
-2. Add new coverage types to `src/helpers/types.ts` including a `{format}CoverageObject` type. Add the new `{format}CoverageObject` type to the `CoverageHandler` type under `finalize`.
+1. Add the format flag value to `formatOptions` in `src/utils/constants.ts`.
+2. Add new coverage types to `src/utils/types.ts` including a `{format}CoverageObject` type. Add the new `{format}CoverageObject` type to the `CoverageHandler` type under `finalize`.
 
 ```typescript
 export type CoverageHandler = {
@@ -57,10 +57,10 @@ export type CoverageHandler = {
 };
 ```
 
-3. Create a new coverage handler class in `src/handlers` with a `constructor`, `processFile` and `finalize` class.
+3. Create a new coverage handler file in `src/handlers` with a `constructor`, `processFile` and `finalize` class.
    1. The `finalize` class should sort items in the coverage object before returning.
-4. Add new coverage handler class to `src/handlers/getCoverageHandler.ts`.
-5. Add new `{format}CoverageObject` type to `src/helpers/generateReport.ts` and add anything needed to create the final report for that format.
+4. Add new coverage handler class to `src/handlers/getHandler.ts`.
+5. Add new `{format}CoverageObject` type to `src/transformers/reportGenerator.ts` and add anything needed to create the final report for that format.
 6. Add new unit and non-unit tests for new format to `test/commands/acc-transformer`.
    1. 1 new test should transform the deploy command coverage JSON (`test/deploy_coverage.json`) into the new format
    2. 1 new test should transform the test command coverage JSON (`test/test_coverage.json`) into the new format
