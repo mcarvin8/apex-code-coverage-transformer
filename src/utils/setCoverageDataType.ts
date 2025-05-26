@@ -25,17 +25,12 @@ function isValidDeployItem(item: unknown): boolean {
 
   const { path, fnMap, branchMap, f, b, s, statementMap } = item;
 
-  const hasValidPath = typeof path === 'string';
-  const hasValidFnMap = isObject(fnMap);
-  const hasValidBranchMap = isObject(branchMap);
-  const hasValidF = isObject(f);
-  const hasValidB = isObject(b);
-  const hasValidS = isObject(s);
-  const hasValidStatementMap = isValidStatementMap(statementMap);
+  const structureIsValid =
+    typeof path === 'string' && isObject(fnMap) && isObject(branchMap) && isObject(f) && isObject(b) && isObject(s);
 
-  return (
-    hasValidPath && hasValidFnMap && hasValidBranchMap && hasValidF && hasValidB && hasValidS && hasValidStatementMap
-  );
+  const statementMapIsValid = isValidStatementMap(statementMap);
+
+  return structureIsValid && statementMapIsValid;
 }
 
 function isDeployCoverageData(data: unknown): data is DeployCoverageData {
@@ -48,23 +43,16 @@ function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
 
   const { id, name, totalLines, lines, totalCovered, coveredPercent } = data;
 
-  const hasValidId = typeof id === 'string';
-  const hasValidName = typeof name === 'string';
-  const hasValidTotalLines = typeof totalLines === 'number';
-  const hasValidLines = isObject(lines);
-  const hasValidTotalCovered = typeof totalCovered === 'number';
-  const hasValidCoveredPercent = typeof coveredPercent === 'number';
-  const allLinesAreNumbers = hasValidLines && Object.values(lines).every((line) => typeof line === 'number');
+  const hasValidMeta =
+    typeof id === 'string' &&
+    typeof name === 'string' &&
+    typeof totalLines === 'number' &&
+    typeof totalCovered === 'number' &&
+    typeof coveredPercent === 'number';
 
-  return (
-    hasValidId &&
-    hasValidName &&
-    hasValidTotalLines &&
-    hasValidLines &&
-    hasValidTotalCovered &&
-    hasValidCoveredPercent &&
-    allLinesAreNumbers
-  );
+  const hasValidLines = isObject(lines) && Object.values(lines).every((line) => typeof line === 'number');
+
+  return hasValidMeta && hasValidLines;
 }
 
 function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
