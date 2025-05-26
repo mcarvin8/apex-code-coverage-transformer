@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.5](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.4...v2.11.5) (2025-05-26)
+
+
+### Bug Fixes
+
+* correct complex binary expressions in type guards ([#174](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/174)) ([291672b](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/291672bc6a148252b1c8c40e4de8865adae5ab37))
+
 ## [2.11.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.3...v2.11.4) (2025-05-26)
 
 
