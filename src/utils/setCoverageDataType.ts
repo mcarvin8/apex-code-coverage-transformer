@@ -25,17 +25,17 @@ function isValidDeployItem(item: unknown): boolean {
 
   const { path, fnMap, branchMap, f, b, s, statementMap } = item;
 
-  const hasValidPath = typeof path === 'string';
-  const hasValidFnMap = isObject(fnMap);
-  const hasValidBranchMap = isObject(branchMap);
-  const hasValidF = isObject(f);
-  const hasValidB = isObject(b);
-  const hasValidS = isObject(s);
-  const hasValidStatementMap = isValidStatementMap(statementMap);
+  const checks = [
+    typeof path === 'string',
+    isObject(fnMap),
+    isObject(branchMap),
+    isObject(f),
+    isObject(b),
+    isObject(s),
+    isValidStatementMap(statementMap),
+  ];
 
-  return (
-    hasValidPath && hasValidFnMap && hasValidBranchMap && hasValidF && hasValidB && hasValidS && hasValidStatementMap
-  );
+  return checks.every(Boolean);
 }
 
 function isDeployCoverageData(data: unknown): data is DeployCoverageData {
@@ -48,23 +48,17 @@ function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
 
   const { id, name, totalLines, lines, totalCovered, coveredPercent } = data;
 
-  const hasValidId = typeof id === 'string';
-  const hasValidName = typeof name === 'string';
-  const hasValidTotalLines = typeof totalLines === 'number';
-  const hasValidLines = isObject(lines);
-  const hasValidTotalCovered = typeof totalCovered === 'number';
-  const hasValidCoveredPercent = typeof coveredPercent === 'number';
-  const allLinesAreNumbers = hasValidLines && Object.values(lines).every((line) => typeof line === 'number');
+  const checks = [
+    typeof id === 'string',
+    typeof name === 'string',
+    typeof totalLines === 'number',
+    typeof totalCovered === 'number',
+    typeof coveredPercent === 'number',
+    isObject(lines),
+    isObject(lines) && Object.values(lines).every((line) => typeof line === 'number'),
+  ];
 
-  return (
-    hasValidId &&
-    hasValidName &&
-    hasValidTotalLines &&
-    hasValidLines &&
-    hasValidTotalCovered &&
-    hasValidCoveredPercent &&
-    allLinesAreNumbers
-  );
+  return checks.every(Boolean);
 }
 
 function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
