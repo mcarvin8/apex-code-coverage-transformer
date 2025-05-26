@@ -43,16 +43,15 @@ function isSingleTestCoverageData(data: unknown): data is TestCoverageData {
 
   const { id, name, totalLines, lines, totalCovered, coveredPercent } = data;
 
-  const hasValidMeta =
-    typeof id === 'string' &&
-    typeof name === 'string' &&
-    typeof totalLines === 'number' &&
-    typeof totalCovered === 'number' &&
-    typeof coveredPercent === 'number';
+  if (typeof id !== 'string') return false;
+  if (typeof name !== 'string') return false;
+  if (typeof totalLines !== 'number') return false;
+  if (typeof totalCovered !== 'number') return false;
+  if (typeof coveredPercent !== 'number') return false;
+  if (!isObject(lines)) return false;
+  if (!Object.values(lines).every((line) => typeof line === 'number')) return false;
 
-  const hasValidLines = isObject(lines) && Object.values(lines).every((line) => typeof line === 'number');
-
-  return hasValidMeta && hasValidLines;
+  return true;
 }
 
 function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
