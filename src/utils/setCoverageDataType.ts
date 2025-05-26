@@ -25,12 +25,15 @@ function isValidDeployItem(item: unknown): boolean {
 
   const { path, fnMap, branchMap, f, b, s, statementMap } = item;
 
-  const structureIsValid =
-    typeof path === 'string' && isObject(fnMap) && isObject(branchMap) && isObject(f) && isObject(b) && isObject(s);
+  if (typeof path !== 'string') return false;
+  if (!isObject(fnMap)) return false;
+  if (!isObject(branchMap)) return false;
+  if (!isObject(f)) return false;
+  if (!isObject(b)) return false;
+  if (!isObject(s)) return false;
+  if (!isValidStatementMap(statementMap)) return false;
 
-  const statementMapIsValid = isValidStatementMap(statementMap);
-
-  return structureIsValid && statementMapIsValid;
+  return true;
 }
 
 function isDeployCoverageData(data: unknown): data is DeployCoverageData {
