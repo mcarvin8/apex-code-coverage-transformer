@@ -84,10 +84,9 @@ function prependXmlHeader(xml: string, format: string): string {
 }
 
 function getExtensionForFormat(format: string): string {
-  switch (format) {
-    case 'lcovonly':
-      return '.info';
-    default:
-      return '.xml';
+  if (format === 'lcovonly') {
+    return '.info';
   }
+
+  return '.xml';
 }
