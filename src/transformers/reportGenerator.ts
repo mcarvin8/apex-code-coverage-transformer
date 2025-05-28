@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises';
-import { extname } from 'node:path';
+import { extname, basename, dirname, join } from 'node:path';
 import { create } from 'xmlbuilder2';
 
 import {
@@ -19,12 +19,16 @@ export async function generateAndWriteReport(
     | LcovCoverageObject
     | JaCoCoCoverageObject,
   format: string
-): Promise<void> {
+): Promise<string> {
   const content = generateReportContent(coverageObj, format);
   const extension = getExtensionForFormat(format);
-  const filePath = extname(outputPath) === extension ? outputPath : `${outputPath}${extension}`;
+
+  const base = basename(outputPath, extname(outputPath)); // remove existing extension
+  const dir = dirname(outputPath);
+  const filePath = join(dir, `${base}${extension}`);
 
   await writeFile(filePath, content, 'utf-8');
+  return filePath;
 }
 
 function generateReportContent(

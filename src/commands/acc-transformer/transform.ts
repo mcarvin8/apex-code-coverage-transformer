@@ -48,12 +48,14 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     const outputReportPath = flags['output-report'];
     const ignoreDirs = flags['ignore-package-directory'] ?? [];
     const format = flags['format'];
+    let finalPath = outputReportPath;
 
     const warnings: string[] = [];
 
     try {
       const result = await transformCoverageReport(jsonFilePath, outputReportPath, format, ignoreDirs);
-      warnings.push(...result);
+      warnings.push(...result.warnings);
+      finalPath = result.finalPath;
     } catch (err) {
       this.error(
         'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
@@ -67,7 +69,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       });
     }
 
-    this.log(`The coverage report has been written to ${outputReportPath}`);
+    this.log(`The coverage report has been written to ${finalPath}`);
     return { path: outputReportPath };
   }
 }

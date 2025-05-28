@@ -17,7 +17,7 @@ export async function transformCoverageReport(
   outputReportPath: string,
   format: string,
   ignoreDirs: string[]
-): Promise<string[]> {
+): Promise<{ finalPath: string; warnings: string[] }> {
   const warnings: string[] = [];
   let filesProcessed = 0;
   let jsonData: string;
@@ -25,7 +25,7 @@ export async function transformCoverageReport(
     jsonData = await readFile(jsonFilePath, 'utf-8');
   } catch (error) {
     warnings.push(`Failed to read ${jsonFilePath}. Confirm file exists.`);
-    return warnings;
+    return { finalPath: outputReportPath, warnings };
   }
 
   const parsedData = JSON.parse(jsonData) as CoverageInput;
@@ -80,6 +80,6 @@ export async function transformCoverageReport(
   }
 
   const coverageObj = handler.finalize();
-  await generateAndWriteReport(outputReportPath, coverageObj, format);
-  return warnings;
+  const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format);
+  return { finalPath, warnings };
 }
