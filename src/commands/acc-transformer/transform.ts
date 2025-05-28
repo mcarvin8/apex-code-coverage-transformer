@@ -1,11 +1,8 @@
 'use strict';
 
-import { resolve } from 'node:path';
-import { writeFile, readFile } from 'node:fs/promises';
-
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import { DeployCoverageData, TestCoverageData, TransformerTransformResult } from '../../utils/types.js';
+import { TransformerTransformResult } from '../../utils/types.js';
 import { transformCoverageReport } from '../../transformers/coverageTransformer.js';
 import { formatOptions } from '../../utils/constants.js';
 
@@ -47,28 +44,16 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
   public async run(): Promise<TransformerTransformResult> {
     const { flags } = await this.parse(TransformerTransform);
-    const jsonFilePath = resolve(flags['coverage-json']);
-    let outputReportPath = resolve(flags['output-report']);
+    const jsonFilePath = flags['coverage-json'];
+    const outputReportPath = flags['output-report'];
     const ignoreDirs = flags['ignore-package-directory'] ?? [];
     const format = flags['format'];
-    let jsonData: string;
-    try {
-      jsonData = await readFile(jsonFilePath, 'utf-8');
-    } catch (error) {
-      this.warn(`Failed to read ${jsonFilePath}. Confirm file exists.`);
-      return { path: jsonFilePath };
-    }
 
-    let xmlData: string;
-    let warnings: string[] = [];
-    let filesProcessed: number = 0;
-    const parsedData = JSON.parse(jsonData) as DeployCoverageData | TestCoverageData[];
+    const warnings: string[] = [];
 
     try {
-      const result = await transformCoverageReport(parsedData, format, ignoreDirs);
-      xmlData = result.xml;
-      warnings = result.warnings;
-      filesProcessed = result.filesProcessed;
+      const result = await transformCoverageReport(jsonFilePath, outputReportPath, format, ignoreDirs);
+      warnings.push(...result);
     } catch (err) {
       this.error(
         'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
@@ -82,19 +67,6 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       });
     }
 
-    if (filesProcessed === 0) {
-      this.warn('None of the files listed in the coverage JSON were processed. The coverage report will be empty.');
-    }
-
-    // Adjust the output file extension if the format is lcovonly
-    if (format === 'lcovonly' && !outputReportPath.endsWith('.info')) {
-      outputReportPath = outputReportPath.replace(/\.xml$/, '.info'); // Replace .xml with .info if it exists
-      if (!outputReportPath.endsWith('.info')) {
-        outputReportPath += '.info'; // Ensure the extension is .info
-      }
-    }
-
-    await writeFile(outputReportPath, xmlData);
     this.log(`The coverage report has been written to ${outputReportPath}`);
     return { path: outputReportPath };
   }

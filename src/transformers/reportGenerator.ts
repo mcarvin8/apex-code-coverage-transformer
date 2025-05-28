@@ -1,6 +1,7 @@
-'use strict';
-
+import { writeFile } from 'node:fs/promises';
+import { extname } from 'node:path';
 import { create } from 'xmlbuilder2';
+
 import {
   SonarCoverageObject,
   CoberturaCoverageObject,
@@ -9,7 +10,24 @@ import {
   JaCoCoCoverageObject,
 } from '../utils/types.js';
 
-export function generateReport(
+export async function generateAndWriteReport(
+  outputPath: string,
+  coverageObj:
+    | SonarCoverageObject
+    | CoberturaCoverageObject
+    | CloverCoverageObject
+    | LcovCoverageObject
+    | JaCoCoCoverageObject,
+  format: string
+): Promise<void> {
+  const content = generateReportContent(coverageObj, format);
+  const extension = getExtensionForFormat(format);
+  const filePath = extname(outputPath) === extension ? outputPath : `${outputPath}${extension}`;
+
+  await writeFile(filePath, content, 'utf-8');
+}
+
+function generateReportContent(
   coverageObj:
     | SonarCoverageObject
     | CoberturaCoverageObject
@@ -58,5 +76,14 @@ function prependXmlHeader(xml: string, format: string): string {
       return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">\n${xml}`;
     default:
       return xml;
+  }
+}
+
+function getExtensionForFormat(format: string): string {
+  switch (format) {
+    case 'lcovonly':
+      return '.info';
+    default:
+      return '.xml';
   }
 }
