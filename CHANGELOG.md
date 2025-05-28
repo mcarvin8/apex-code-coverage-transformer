@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.5...v2.11.6) (2025-05-28)
+
+
+### Bug Fixes
+
+* move read and write file from command to functions ([#176](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/176)) ([f698080](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/f6980808ab168a670719c77d0cdfeb7326d3b7bc))
+
 ## [2.11.5](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.4...v2.11.5) (2025-05-26)
 
 
