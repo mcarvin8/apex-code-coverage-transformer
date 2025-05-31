@@ -157,7 +157,7 @@
       "output": []
     },
     "test": {
-      "command": "nyc --require ts-node/register mocha \"test/**/*.test.ts\"",
+      "command": "nyc --require ts-node/register  --extension .ts mocha \"test/**/*.test.ts\"",
       "env": {
         "FORCE_COLOR": "2"
       },
