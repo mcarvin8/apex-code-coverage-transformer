@@ -1,14 +1,14 @@
 {
+  "all": true,
   "extension": [".ts"],
   "include": ["src/**/*.ts"],
   "exclude": ["test/**/*.ts"],
-  "require": ["ts-node/esm"],
+  "require": ["ts-node/register"],
   "sourceMap": true,
   "instrument": true,
   "check-coverage": true,
   "lines": 75,
   "statements": 75,
   "functions": 75,
-  "branches": 75,
-  "all": true
+  "branches": 75
 }
