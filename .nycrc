@@ -3,7 +3,6 @@
   "include": ["src/**/*.ts"],
   "exclude": ["test/**/*.ts"],
   "require": ["ts-node/esm"],
-  "loader": "ts-node/esm",
   "sourceMap": true,
   "instrument": true,
   "check-coverage": true,
