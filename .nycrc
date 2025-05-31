@@ -1,4 +1,10 @@
 {
+  "extension": [".ts"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["test/**/*.ts"],
+  "require": ["ts-node/register"],
+  "sourceMap": true,
+  "instrument": true,
   "check-coverage": true,
   "lines": 75,
   "statements": 75,
