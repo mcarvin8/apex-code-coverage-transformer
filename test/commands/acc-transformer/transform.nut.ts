@@ -82,15 +82,6 @@ describe('acc-transformer transform NUTs', () => {
     });
   });
 
-  it('confirms a failure on an invalid JSON file.', async () => {
-    const command = `acc-transformer transform --coverage-json "${invalidJson}"`;
-    const error = execCmd(command, { ensureExitCode: 2 }).shellOutput.stderr;
-
-    expect(error.replace('\n', '')).to.contain(
-      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
-    );
-  });
-
   it('confirm the reports created are the same as the baselines.', async () => {
     const baselineMap = {
       sonar: sonarBaselinePath,
@@ -120,5 +111,14 @@ describe('acc-transformer transform NUTs', () => {
         }
       }
     }
+  });
+
+  it('confirms a failure on an invalid JSON file.', async () => {
+    const command = `acc-transformer transform --coverage-json "${invalidJson}"`;
+    const error = execCmd(command, { ensureExitCode: 2 }).shellOutput.stderr;
+
+    expect(error.replace('\n', '')).to.contain(
+      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+    );
   });
 });

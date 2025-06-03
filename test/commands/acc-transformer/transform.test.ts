@@ -100,21 +100,6 @@ describe('main', () => {
     });
   });
 
-  it('confirms a failure on an invalid JSON file.', async () => {
-    try {
-      await TransformerTransform.run(['--coverage-json', invalidJson]);
-      throw new Error('Command did not fail as expected');
-    } catch (error) {
-      if (error instanceof Error) {
-        expect(error.message).to.include(
-          'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
-        );
-      } else {
-        throw new Error('An unknown error type was thrown.');
-      }
-    }
-  });
-
   it('confirm the reports created are the same as the baselines.', async () => {
     const baselineMap = {
       sonar: sonarBaselinePath,
@@ -142,6 +127,21 @@ describe('main', () => {
         } else {
           strictEqual(outputContent, baselineContent, `Mismatch between ${outputPath} and ${baselineMap[format]}`);
         }
+      }
+    }
+  });
+
+  it('confirms a failure on an invalid JSON file.', async () => {
+    try {
+      await TransformerTransform.run(['--coverage-json', invalidJson]);
+      throw new Error('Command did not fail as expected');
+    } catch (error) {
+      if (error instanceof Error) {
+        expect(error.message).to.include(
+          'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+        );
+      } else {
+        throw new Error('An unknown error type was thrown.');
       }
     }
   });
