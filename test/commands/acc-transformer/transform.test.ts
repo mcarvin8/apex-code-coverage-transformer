@@ -9,6 +9,8 @@ import { expect } from 'chai';
 import { transformCoverageReport } from '../../../src/transformers/coverageTransformer.js';
 import { formatOptions } from '../../../src/utils/constants.js';
 import { getCoverageHandler } from '../../../src/handlers/getHandler.js';
+import { checkCoverageDataType } from '../../../src/utils/setCoverageDataType.js';
+import { DeployCoverageData } from '../../../src/utils/types.js';
 import { inputJsons, invalidJson, deployCoverage, testCoverage } from './testConstants.js';
 import { compareToBaselines } from './baselineCompare.js';
 import { postTestCleanup } from './testCleanup.js';
@@ -78,5 +80,23 @@ describe('main', () => {
   it('ignore a package directory and produce a warning on the test command report.', async () => {
     const result = await transformCoverageReport(testCoverage, 'coverage.xml', 'sonar', ['packaged']);
     expect(result.warnings).to.include('The file name AccountTrigger was not found in any package directory.');
+  });
+  it('test where a statementMap has a non-object value.', async () => {
+    const invalidDeployData = {
+      'someFile.js': {
+        path: 'someFile.js',
+        fnMap: {},
+        branchMap: {},
+        f: {},
+        b: {},
+        s: {},
+        statementMap: {
+          someStatement: null,
+        },
+      },
+    };
+
+    const result = checkCoverageDataType(invalidDeployData as unknown as DeployCoverageData);
+    expect(result).to.equal('Unknown');
   });
 });

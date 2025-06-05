@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 
-export const baselineClassPath = resolve('test/baselines/classes/AccountProfile.cls');
-export const baselineTriggerPath = resolve('test/baselines/triggers/AccountTrigger.trigger');
+export const baselineClassPath = resolve('samples/classes/AccountProfile.cls');
+export const baselineTriggerPath = resolve('samples/triggers/AccountTrigger.trigger');
 export const deployCoverage = resolve('test/deploy_coverage.json');
 export const testCoverage = resolve('test/test_coverage.json');
 export const invalidJson = resolve('test/invalid.json');
