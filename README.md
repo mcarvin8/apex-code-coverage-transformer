@@ -4,6 +4,7 @@
 [![Downloads/week](https://img.shields.io/npm/dw/apex-code-coverage-transformer.svg)](https://npmjs.org/package/apex-code-coverage-transformer)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md)
 [![Maintainability](https://qlty.sh/badges/11057a07-84da-41af-91fb-b3476e404242/maintainability.svg)](https://qlty.sh/gh/mcarvin8/projects/apex-code-coverage-transformer)
+[![Code Coverage](https://qlty.sh/badges/11057a07-84da-41af-91fb-b3476e404242/test_coverage.svg)](https://qlty.sh/gh/mcarvin8/projects/apex-code-coverage-transformer)
 [![Known Vulnerabilities](https://snyk.io//test/github/mcarvin8/apex-code-coverage-transformer/badge.svg?targetFile=package.json)](https://snyk.io//test/github/mcarvin8/apex-code-coverage-transformer?targetFile=package.json)
 
 <!-- TABLE OF CONTENTS -->
