@@ -72,7 +72,9 @@ export async function transformCoverageReport(
       filesProcessed++;
     });
   } else {
-    throw new Error('Unknown coverage data type. Cannot generate report.');
+    throw new Error(
+      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+    );
   }
 
   if (filesProcessed === 0) {
