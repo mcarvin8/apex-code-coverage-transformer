@@ -14,7 +14,7 @@ export const defaultPath = resolve('coverage.xml');
 export const sfdxConfigFile = resolve('sfdx-project.json');
 
 const configFile = {
-  packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }],
+  packageDirectories: [{ path: 'force-app', default: true }, { path: 'packaged' }, { path: 'samples' }],
   namespace: '',
   sfdcLoginUrl: 'https://login.salesforce.com',
   sourceApiVersion: '58.0',

@@ -29,7 +29,7 @@ describe('acc-transformer transform NUTs', () => {
       const reportExtension = format === 'lcovonly' ? 'info' : 'xml';
       const reportPath = resolve(`${format}_${label}.${reportExtension}`);
       it(`transforms the ${label} command JSON file into ${format} format`, async () => {
-        const command = `acc-transformer transform --coverage-json "${path}" --output-report "${reportPath}" --format ${format}`;
+        const command = `acc-transformer transform --coverage-json "${path}" --output-report "${reportPath}" --format ${format} -i "samples"`;
         const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
         expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${reportPath}`);

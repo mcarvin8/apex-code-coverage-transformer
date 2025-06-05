@@ -36,7 +36,7 @@ describe('main', () => {
       const reportExtension = format === 'lcovonly' ? 'info' : 'xml';
       const reportPath = resolve(`${format}_${label}.${reportExtension}`);
       it(`transforms the ${label} command JSON file into ${format} format`, async () => {
-        await transformCoverageReport(path, reportPath, format, []);
+        await transformCoverageReport(path, reportPath, format, ['samples']);
       });
     });
   });
@@ -74,11 +74,15 @@ describe('main', () => {
     expect(result.warnings).to.include('Failed to read nonexistent.json. Confirm file exists.');
   });
   it('ignore a package directory and produce a warning on the deploy command report.', async () => {
-    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', 'sonar', ['packaged', 'force-app']);
+    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', 'sonar', [
+      'packaged',
+      'force-app',
+      'samples',
+    ]);
     expect(result.warnings).to.include('The file name AccountTrigger was not found in any package directory.');
   });
   it('ignore a package directory and produce a warning on the test command report.', async () => {
-    const result = await transformCoverageReport(testCoverage, 'coverage.xml', 'sonar', ['packaged']);
+    const result = await transformCoverageReport(testCoverage, 'coverage.xml', 'sonar', ['packaged', 'samples']);
     expect(result.warnings).to.include('The file name AccountTrigger was not found in any package directory.');
   });
   it('test where a statementMap has a non-object value.', async () => {
@@ -98,5 +102,11 @@ describe('main', () => {
 
     const result = checkCoverageDataType(invalidDeployData as unknown as DeployCoverageData);
     expect(result).to.equal('Unknown');
+  });
+  it('create a cobertura report using only 1 package directory', async () => {
+    await transformCoverageReport(deployCoverage, 'coverage.xml', 'cobertura', ['packaged', 'force-app']);
+  });
+  it('create a jacoco report using only 1 package directory', async () => {
+    await transformCoverageReport(deployCoverage, 'coverage.xml', 'jacoco', ['packaged', 'force-app']);
   });
 });
