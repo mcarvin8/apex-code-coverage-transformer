@@ -2,7 +2,7 @@
 import { rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { formatOptions } from '../../../src/utils/constants.js';
+import { formatOptions } from '../../src/utils/constants.js';
 import { sfdxConfigFile, inputJsons, defaultPath } from './testConstants.js';
 
 export async function postTestCleanup(): Promise<void> {

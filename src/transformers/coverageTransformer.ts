@@ -58,8 +58,6 @@ export async function transformCoverageReport(
       const name = entry?.name;
       const lines = entry?.lines;
 
-      if (!name || !lines) return;
-
       const formattedFileName = name.replace(/no-map[\\/]+/, '');
       const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
 

@@ -7,13 +7,12 @@ import { SfdxProject } from './types.js';
 import { getRepoRoot } from './getRepoRoot.js';
 
 export async function getPackageDirectories(
-  ignoreDirectories: string[] = []
+  ignoreDirectories: string[]
 ): Promise<{ repoRoot: string; packageDirectories: string[] }> {
-  const { repoRoot, dxConfigFilePath } = await getRepoRoot();
-
-  if (!repoRoot || !dxConfigFilePath) {
-    throw new Error('Failed to retrieve repository root or sfdx-project.json path.');
-  }
+  const { repoRoot, dxConfigFilePath } = (await getRepoRoot()) as {
+    repoRoot: string;
+    dxConfigFilePath: string;
+  };
 
   const sfdxProjectRaw: string = await readFile(dxConfigFilePath, 'utf-8');
   const sfdxProject: SfdxProject = JSON.parse(sfdxProjectRaw) as SfdxProject;
