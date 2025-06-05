@@ -2,6 +2,7 @@
 'use strict';
 
 import { resolve } from 'node:path';
+import { describe, it } from '@jest/globals';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
@@ -14,12 +15,12 @@ import { preTestSetup } from '../../utils/testSetup.js';
 describe('acc-transformer transform NUTs', () => {
   let session: TestSession;
 
-  before(async () => {
+  beforeAll(async () => {
     session = await TestSession.create({ devhubAuthStrategy: 'NONE' });
     await preTestSetup();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await session?.clean();
     await postTestCleanup();
   });

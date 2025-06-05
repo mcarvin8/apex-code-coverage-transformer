@@ -1,4 +1,3 @@
-/// <reference types="jest" />
 /* eslint-disable no-await-in-loop */
 'use strict';
 import { resolve } from 'node:path';
