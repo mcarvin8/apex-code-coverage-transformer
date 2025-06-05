@@ -43,7 +43,7 @@ describe('acc-transformer transform NUTs', () => {
 
   it('confirms a failure on an invalid JSON file.', async () => {
     const command = `acc-transformer transform --coverage-json "${invalidJson}"`;
-    const error = execCmd(command, { ensureExitCode: 2 }).shellOutput.stderr;
+    const error = execCmd(command, { ensureExitCode: 1 }).shellOutput.stderr;
 
     expect(error.replace('\n', '')).to.contain(
       'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
