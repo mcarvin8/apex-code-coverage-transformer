@@ -6,10 +6,10 @@ import { resolve } from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { formatOptions } from '../../../src/utils/constants.js';
-import { inputJsons, invalidJson } from './testConstants.js';
-import { compareToBaselines } from './baselineCompare.js';
-import { postTestCleanup } from './testCleanup.js';
-import { preTestSetup } from './testSetup.js';
+import { inputJsons, invalidJson } from '../../utils/testConstants.js';
+import { compareToBaselines } from '../../utils/baselineCompare.js';
+import { postTestCleanup } from '../../utils/testCleanup.js';
+import { preTestSetup } from '../../utils/testSetup.js';
 
 describe('acc-transformer transform NUTs', () => {
   let session: TestSession;

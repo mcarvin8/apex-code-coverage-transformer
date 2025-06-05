@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { strictEqual } from 'node:assert';
 
-import { formatOptions } from '../../../src/utils/constants.js';
+import { formatOptions } from '../../src/utils/constants.js';
 import {
   jacocoBaselinePath,
   lcovBaselinePath,

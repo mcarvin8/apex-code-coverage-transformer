@@ -11,10 +11,10 @@ import { formatOptions } from '../../../src/utils/constants.js';
 import { getCoverageHandler } from '../../../src/handlers/getHandler.js';
 import { checkCoverageDataType } from '../../../src/utils/setCoverageDataType.js';
 import { DeployCoverageData } from '../../../src/utils/types.js';
-import { inputJsons, invalidJson, deployCoverage, testCoverage } from './testConstants.js';
-import { compareToBaselines } from './baselineCompare.js';
-import { postTestCleanup } from './testCleanup.js';
-import { preTestSetup } from './testSetup.js';
+import { inputJsons, invalidJson, deployCoverage, testCoverage } from '../../utils/testConstants.js';
+import { compareToBaselines } from '../../utils/baselineCompare.js';
+import { postTestCleanup } from '../../utils/testCleanup.js';
+import { preTestSetup } from '../../utils/testSetup.js';
 
 describe('main', () => {
   const $$ = new TestContext();
