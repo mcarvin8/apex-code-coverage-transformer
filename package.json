@@ -101,7 +101,7 @@
     "prepack": "sf-prepack",
     "prepare": "husky install",
     "test": "wireit",
-    "test:nuts": "oclif manifest && jest --testMatch \"**/*.nut.ts\"",
+    "test:nuts": "jest --testMatch \"**/*.nut.ts\"",
     "test:only": "wireit",
     "version": "oclif readme"
   },
