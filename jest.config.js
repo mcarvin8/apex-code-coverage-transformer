@@ -1,0 +1,32 @@
+// For a detailed explanation regarding each configuration property, visit:
+// https://jestjs.io/docs/en/configuration.html
+
+export default {
+  automock: false,
+  clearMocks: true,
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov'],
+  coverageThreshold: {
+    global: {
+      branches: 90,
+      functions: 90,
+      lines: 95,
+      statements: 95,
+    },
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '(.+)\\.js': '$1',
+    '^lodash-es$': 'lodash',
+  },
+  testEnvironment: 'node',
+  testMatch: ['**/test/**/*.test.ts'],
+  transform: {
+    '\\.[jt]sx?$': [
+      'ts-jest',
+      {
+        tsconfig: './tsconfig.json',
+      },
+    ],
+  },
+};

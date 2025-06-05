@@ -87,7 +87,7 @@ export class CoberturaCoverageHandler implements CoverageHandler {
       );
       const totalClasses = pkg.classes.class.reduce((sum, cls) => sum + cls.lines.line.length, 0);
 
-      pkg['@line-rate'] = totalClasses > 0 ? parseFloat((totalLines / totalClasses).toFixed(4)) : 0;
+      pkg['@line-rate'] = parseFloat((totalLines / totalClasses).toFixed(4));
     }
 
     this.coverageObj.coverage['@line-rate'] = parseFloat(

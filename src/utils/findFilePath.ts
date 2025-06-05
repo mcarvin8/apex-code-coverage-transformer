@@ -33,10 +33,6 @@ async function resolveFilePath(fileName: string, dxDirectory: string, repoRoot: 
 }
 
 function getExtensionsToTry(fileName: string): string[] {
-  const parts = fileName.split('.');
-  if (parts.length > 1) {
-    return [fileName];
-  }
   return ['cls', 'trigger'].map((ext) => `${fileName}.${ext}`);
 }
 
