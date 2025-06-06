@@ -1,4 +1,3 @@
-/// <reference types="jest" />
 import { expect } from 'chai';
 import { checkCoverageDataType } from '../../../src/utils/setCoverageDataType.js';
 import { DeployCoverageData } from '../../../src/utils/types.js';

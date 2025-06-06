@@ -1,4 +1,3 @@
-/// <reference types="jest" />
 import { setCoveredLines } from '../../../src/utils/setCoveredLines.js';
 
 // Mock getTotalLines to simulate a short file

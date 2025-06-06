@@ -1,4 +1,3 @@
-/// <reference types="jest" />
 import { access } from 'node:fs/promises';
 import { getRepoRoot } from '../../../src/utils/getRepoRoot.js';
 
