@@ -1,10 +1,9 @@
 /* eslint-disable no-await-in-loop */
 'use strict';
 import { resolve } from 'node:path';
-import { describe, it } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 
 import { TestContext } from '@salesforce/core/testSetup';
-import { expect } from 'chai';
 import { transformCoverageReport } from '../../../src/transformers/coverageTransformer.js';
 import { formatOptions } from '../../../src/utils/constants.js';
 import { getCoverageHandler } from '../../../src/handlers/getHandler.js';
@@ -48,7 +47,7 @@ describe('main', () => {
       throw new Error('Command did not fail as expected');
     } catch (error) {
       if (error instanceof Error) {
-        expect(error.message).to.include(
+        expect(error.message).toContain(
           'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
         );
       } else {
@@ -62,7 +61,7 @@ describe('main', () => {
       throw new Error('Command did not fail as expected');
     } catch (error) {
       if (error instanceof Error) {
-        expect(error.message).to.include('Unsupported format: invalid');
+        expect(error.message).toContain('Unsupported format: invalid');
       } else {
         throw new Error('An unknown error type was thrown.');
       }
@@ -70,7 +69,7 @@ describe('main', () => {
   });
   it('confirms a warning with a JSON file that does not exist.', async () => {
     const result = await transformCoverageReport('nonexistent.json', 'coverage.xml', 'sonar', []);
-    expect(result.warnings).to.include('Failed to read nonexistent.json. Confirm file exists.');
+    expect(result.warnings).toContain('Failed to read nonexistent.json. Confirm file exists.');
   });
   it('ignore a package directory and produce a warning on the deploy command report.', async () => {
     const result = await transformCoverageReport(deployCoverage, 'coverage.xml', 'sonar', [
@@ -78,11 +77,11 @@ describe('main', () => {
       'force-app',
       'samples',
     ]);
-    expect(result.warnings).to.include('The file name AccountTrigger was not found in any package directory.');
+    expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
   it('ignore a package directory and produce a warning on the test command report.', async () => {
     const result = await transformCoverageReport(testCoverage, 'coverage.xml', 'sonar', ['packaged', 'samples']);
-    expect(result.warnings).to.include('The file name AccountTrigger was not found in any package directory.');
+    expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
   it('test where a statementMap has a non-object value.', async () => {
     const invalidDeployData = {
@@ -100,7 +99,7 @@ describe('main', () => {
     };
 
     const result = checkCoverageDataType(invalidDeployData as unknown as DeployCoverageData);
-    expect(result).to.equal('Unknown');
+    expect(result).toStrictEqual('Unknown');
   });
   it('create a cobertura report using only 1 package directory', async () => {
     await transformCoverageReport(deployCoverage, 'coverage.xml', 'cobertura', ['packaged', 'force-app']);

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from '@jest/globals';
 import { checkCoverageDataType } from '../../../src/utils/setCoverageDataType.js';
 import { DeployCoverageData } from '../../../src/utils/types.js';
 
@@ -7,13 +7,13 @@ describe('isSingleTestCoverageData - non-object element', () => {
     const data = [123]; // Not an object
 
     const result = checkCoverageDataType(data as unknown as DeployCoverageData);
-    expect(result).to.equal('Unknown');
+    expect(result).toStrictEqual('Unknown');
   });
 });
 
 describe('isDeployCoverageData - non-object', () => {
   it('returns Unknown when data is not an object', () => {
     const result = checkCoverageDataType(42 as unknown as DeployCoverageData); // 👈 non-object input
-    expect(result).to.equal('Unknown');
+    expect(result).toStrictEqual('Unknown');
   });
 });

@@ -2,10 +2,9 @@
 'use strict';
 
 import { resolve } from 'node:path';
-import { describe, it } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { expect } from 'chai';
 import { formatOptions } from '../../../src/utils/constants.js';
 import { inputJsons, invalidJson } from '../../utils/testConstants.js';
 import { compareToBaselines } from '../../utils/baselineCompare.js';
@@ -33,7 +32,7 @@ describe('acc-transformer transform NUTs', () => {
         const command = `acc-transformer transform --coverage-json "${path}" --output-report "${reportPath}" --format ${format} -i "samples"`;
         const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-        expect(output.replace('\n', '')).to.equal(`The coverage report has been written to ${reportPath}`);
+        expect(output.replace('\n', '')).toStrictEqual(`The coverage report has been written to ${reportPath}`);
       });
     });
   });
@@ -46,7 +45,7 @@ describe('acc-transformer transform NUTs', () => {
     const command = `acc-transformer transform --coverage-json "${invalidJson}"`;
     const error = execCmd(command, { ensureExitCode: 1 }).shellOutput.stderr;
 
-    expect(error.replace('\n', '')).to.contain(
+    expect(error.replace('\n', '')).toContain(
       'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
     );
   });
