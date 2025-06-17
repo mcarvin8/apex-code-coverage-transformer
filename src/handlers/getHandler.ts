@@ -6,6 +6,7 @@ import { CoberturaCoverageHandler } from './cobertura.js';
 import { SonarCoverageHandler } from './sonar.js';
 import { LcovCoverageHandler } from './lcov.js';
 import { JaCoCoCoverageHandler } from './jacoco.js';
+import { IstanbulCoverageHandler } from './istanbulJson.js';
 
 export function getCoverageHandler(format: string): CoverageHandler {
   const handlers: Record<string, CoverageHandler> = {
@@ -14,6 +15,7 @@ export function getCoverageHandler(format: string): CoverageHandler {
     clover: new CloverCoverageHandler(),
     lcovonly: new LcovCoverageHandler(),
     jacoco: new JaCoCoCoverageHandler(),
+    json: new IstanbulCoverageHandler(),
   };
 
   const handler = handlers[format];

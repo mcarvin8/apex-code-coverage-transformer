@@ -8,6 +8,7 @@ import {
   CloverCoverageObject,
   LcovCoverageObject,
   JaCoCoCoverageObject,
+  IstanbulCoverageObject,
 } from '../utils/types.js';
 
 export async function generateAndWriteReport(
@@ -17,7 +18,8 @@ export async function generateAndWriteReport(
     | CoberturaCoverageObject
     | CloverCoverageObject
     | LcovCoverageObject
-    | JaCoCoCoverageObject,
+    | JaCoCoCoverageObject
+    | IstanbulCoverageObject,
   format: string
 ): Promise<string> {
   const content = generateReportContent(coverageObj, format);
@@ -37,11 +39,16 @@ function generateReportContent(
     | CoberturaCoverageObject
     | CloverCoverageObject
     | LcovCoverageObject
-    | JaCoCoCoverageObject,
+    | JaCoCoCoverageObject
+    | IstanbulCoverageObject,
   format: string
 ): string {
-  if (format === 'lcovonly' && 'files' in coverageObj) {
+  if (format === 'lcovonly' && isLcovCoverageObject(coverageObj)) {
     return generateLcov(coverageObj);
+  }
+
+  if (format === 'json') {
+    return JSON.stringify(coverageObj, null, 2);
   }
 
   const isHeadless = ['cobertura', 'clover', 'jacoco'].includes(format);
@@ -83,10 +90,12 @@ function prependXmlHeader(xml: string, format: string): string {
   }
 }
 
-function getExtensionForFormat(format: string): string {
-  if (format === 'lcovonly') {
-    return '.info';
-  }
-
+export function getExtensionForFormat(format: string): string {
+  if (format === 'lcovonly') return '.info';
+  if (format === 'json') return '.json';
   return '.xml';
+}
+
+function isLcovCoverageObject(obj: unknown): obj is LcovCoverageObject {
+  return typeof obj === 'object' && obj !== null && 'files' in obj;
 }

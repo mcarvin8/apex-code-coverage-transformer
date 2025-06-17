@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { strictEqual } from 'node:assert';
 
 import { formatOptions } from '../../src/utils/constants.js';
+import { getExtensionForFormat } from '../../src/transformers/reportGenerator.js';
 import {
   jacocoBaselinePath,
   lcovBaselinePath,
@@ -11,6 +12,7 @@ import {
   cloverBaselinePath,
   coberturaBaselinePath,
   inputJsons,
+  jsonBaselinePath,
 } from './testConstants.js';
 import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 
@@ -21,14 +23,15 @@ export async function compareToBaselines(): Promise<void> {
     jacoco: jacocoBaselinePath,
     cobertura: coberturaBaselinePath,
     clover: cloverBaselinePath,
+    json: jsonBaselinePath,
   } as const;
 
   const normalizationRequired = new Set(['cobertura', 'clover']);
 
   for (const format of formatOptions as Array<keyof typeof baselineMap>) {
     for (const { label } of inputJsons) {
-      const reportExtension = format === 'lcovonly' ? 'info' : 'xml';
-      const outputPath = resolve(`${format}_${label}.${reportExtension}`);
+      const reportExtension = getExtensionForFormat(format);
+      const outputPath = resolve(`${format}_${label}${reportExtension}`);
       const outputContent = await readFile(outputPath, 'utf-8');
       const baselineContent = await readFile(baselineMap[format], 'utf-8');
 

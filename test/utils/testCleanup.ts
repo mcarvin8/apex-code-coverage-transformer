@@ -3,6 +3,7 @@ import { rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 import { formatOptions } from '../../src/utils/constants.js';
+import { getExtensionForFormat } from '../../src/transformers/reportGenerator.js';
 import { sfdxConfigFile, inputJsons, defaultPath } from './testConstants.js';
 
 export async function postTestCleanup(): Promise<void> {
@@ -15,8 +16,8 @@ export async function postTestCleanup(): Promise<void> {
   const pathsToRemove = formatOptions
     .flatMap((format) =>
       inputJsons.map(({ label }) => {
-        const extension = format === 'lcovonly' ? 'info' : 'xml';
-        return resolve(`${format}_${label}.${extension}`);
+        const reportExtension = getExtensionForFormat(format);
+        return resolve(`${format}_${label}${reportExtension}`);
       })
     )
     .concat(defaultPath);
