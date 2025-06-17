@@ -29,11 +29,11 @@ Rebuild every time you made a change in the source and you need to test locally
 
 ## Testing
 
-When developing, run the provided tests for new additions.
+When developing, run the provided unit tests for new additions. New additions must meet the jest code coverage requirements.
 
 ```bash
 # run unit tests
-yarn test
+yarn test:only
 ```
 
 To run the non-unit test, ensure you re-build the application and then run:
@@ -60,9 +60,9 @@ export type CoverageHandler = {
 3. Create a new coverage handler file in `src/handlers` with a `constructor`, `processFile` and `finalize` class.
    1. The `finalize` class should sort items in the coverage object before returning.
 4. Add new coverage handler class to `src/handlers/getHandler.ts`.
-5. Add new `{format}CoverageObject` type to `src/transformers/reportGenerator.ts` and add anything needed to create the final report for that format.
-6. Add new unit and non-unit tests for new format to `test/commands/acc-transformer`.
-   1. 1 new test should transform the deploy command coverage JSON (`test/deploy_coverage.json`) into the new format
-   2. 1 new test should transform the test command coverage JSON (`test/test_coverage.json`) into the new format
-   3. A new baseline report for the new format should be added as `test/{format}_baseline.{ext}`
-   4. The existing baseline compare test should be updated to compare `test/{format}_baseline.{ext}` to the 2 reports created in the 2 new tests. Update and use the `test/commands/acc-transformer/normalizeCoverageReport.ts` to remove timestamps if the new format report has timestamps, i.e. Cobertura and Clover.
+5. Add new `{format}CoverageObject` type to `src/transformers/reportGenerator.ts` and add anything needed to create the final report for that format, including updating the report extension in the `getExtensionForFormat` function.
+6. The unit and non-unit tests will automatically run the new coverage format after it's added to the `formatOptions` constant. You will need to run the unit test suite once to generate the baseline report for the new format.
+   1. Add the newly generated baseline to the `baselines` folder named `{format}_baseline.{ext}`
+   2. Create a new test constant with the baseline path in `test/utils/testConstants.ts`
+   3. If needed, update the `test/commands/acc-transformer/normalizeCoverageReport.ts` to remove timestamps if the new format report has timestamps, i.e. Cobertura and Clover.
+   4. Re-run the unit test and confirm all tests pass, including the baseline compare test.
