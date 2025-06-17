@@ -185,8 +185,8 @@
     "prepack": {
       "command": "oclif manifest && oclif --version && oclif lock && npm shrinkwrap",
       "files": [
-        "src/commands/sgd/source/delta.ts",
-        "messages/delta.md",
+        "src/commands/acc-transformer/transform.ts",
+        "messages/transformer.transform.md",
         "README.md"
       ],
       "dependencies": [
