@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.8...v2.12.0) (2025-06-17)
+
+
+### Features
+
+* add istanbul json format ([#188](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/188)) ([9ace6a7](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/9ace6a752be3d10ee846a8f055f1231559eeb695))
+
 ## [2.11.8](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.7...v2.11.8) (2025-06-05)
 
 
