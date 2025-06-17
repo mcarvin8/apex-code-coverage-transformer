@@ -133,13 +133,14 @@ EXAMPLES
 
 The `-f`/`--format` flag allows you to specify the format of the transformed coverage report.
 
-| Flag Option                                                                                                             | Description                                                                         |
-| ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/sonar_baseline.xml)         | Generates a SonarQube-compatible coverage report. This is the default option.       |
-| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/clover_baseline.xml)       | Produces a Clover XML report format, commonly used with Atlassian tools.            |
-| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/lcov_baseline.info)      | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools. |
-| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/cobertura_baseline.xml) | Creates a Cobertura XML report, a widely used format for coverage reporting.        |
-| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/jacoco_baseline.xml)       | Creates a JaCoCo XML report, the standard for Java projects.                        |
+| Flag Option                                                                                                                  | Description                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/sonar_baseline.xml)         | Generates a SonarQube-compatible coverage report. This is the default option.              |
+| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/clover_baseline.xml)       | Produces a Clover XML report format, commonly used with Atlassian tools.                   |
+| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/lcov_baseline.info)      | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools.        |
+| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/cobertura_baseline.xml) | Creates a Cobertura XML report, a widely used format for coverage reporting.               |
+| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/jacoco_baseline.xml)       | Creates a JaCoCo XML report, the standard for Java projects.                               |
+| [json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/json_baseline.json)          | Generates a Istanbul JSON report compatible with Node.js tooling and coverage visualizers. |
 
 ## Hook
 

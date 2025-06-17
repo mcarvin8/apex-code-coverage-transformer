@@ -15,7 +15,14 @@ export async function postTestCleanup(): Promise<void> {
   const pathsToRemove = formatOptions
     .flatMap((format) =>
       inputJsons.map(({ label }) => {
-        const extension = format === 'lcovonly' ? 'info' : 'xml';
+        let extension;
+        if (format === 'lcovonly') {
+          extension = 'info';
+        } else if (format === 'json') {
+          extension = 'json';
+        } else {
+          extension = 'xml';
+        }
         return resolve(`${format}_${label}.${extension}`);
       })
     )

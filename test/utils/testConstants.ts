@@ -2,14 +2,15 @@ import { resolve } from 'node:path';
 
 export const baselineClassPath = resolve('samples/classes/AccountProfile.cls');
 export const baselineTriggerPath = resolve('samples/triggers/AccountTrigger.trigger');
-export const deployCoverage = resolve('test/deploy_coverage.json');
-export const testCoverage = resolve('test/test_coverage.json');
-export const invalidJson = resolve('test/invalid.json');
-export const sonarBaselinePath = resolve('test/sonar_baseline.xml');
-export const jacocoBaselinePath = resolve('test/jacoco_baseline.xml');
-export const lcovBaselinePath = resolve('test/lcov_baseline.info');
-export const coberturaBaselinePath = resolve('test/cobertura_baseline.xml');
-export const cloverBaselinePath = resolve('test/clover_baseline.xml');
+export const deployCoverage = resolve('inputs/deploy_coverage.json');
+export const testCoverage = resolve('inputs/test_coverage.json');
+export const invalidJson = resolve('inputs/invalid.json');
+export const sonarBaselinePath = resolve('baselines/sonar_baseline.xml');
+export const jacocoBaselinePath = resolve('baselines/jacoco_baseline.xml');
+export const lcovBaselinePath = resolve('baselines/lcov_baseline.info');
+export const coberturaBaselinePath = resolve('baselines/cobertura_baseline.xml');
+export const cloverBaselinePath = resolve('baselines/clover_baseline.xml');
+export const jsonBaselinePath = resolve('baselines/json_baseline.json');
 export const defaultPath = resolve('coverage.xml');
 export const sfdxConfigFile = resolve('sfdx-project.json');
 

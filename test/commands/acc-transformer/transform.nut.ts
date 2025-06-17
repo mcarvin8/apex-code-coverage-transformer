@@ -7,7 +7,7 @@ import { describe, it, expect } from '@jest/globals';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { formatOptions } from '../../../src/utils/constants.js';
 import { inputJsons, invalidJson } from '../../utils/testConstants.js';
-import { compareToBaselines } from '../../utils/baselineCompare.js';
+import { compareToBaselines, getExtensionForFormat } from '../../utils/baselineCompare.js';
 import { postTestCleanup } from '../../utils/testCleanup.js';
 import { preTestSetup } from '../../utils/testSetup.js';
 
@@ -26,7 +26,7 @@ describe('acc-transformer transform NUTs', () => {
 
   formatOptions.forEach((format) => {
     inputJsons.forEach(({ label, path }) => {
-      const reportExtension = format === 'lcovonly' ? 'info' : 'xml';
+      const reportExtension = getExtensionForFormat(format);
       const reportPath = resolve(`${format}_${label}.${reportExtension}`);
       it(`transforms the ${label} command JSON file into ${format} format`, async () => {
         const command = `acc-transformer transform --coverage-json "${path}" --output-report "${reportPath}" --format ${format} -i "samples"`;

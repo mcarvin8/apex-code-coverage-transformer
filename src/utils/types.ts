@@ -165,7 +165,8 @@ export type CoverageHandler = {
     | CoberturaCoverageObject
     | CloverCoverageObject
     | LcovCoverageObject
-    | JaCoCoCoverageObject;
+    | JaCoCoCoverageObject
+    | IstanbulCoverageObject;
 };
 
 type LcovLine = {
@@ -217,3 +218,44 @@ export type JaCoCoCounter = {
   '@missed': number;
   '@covered': number;
 };
+
+export type IstanbulCoverageMap = {
+  [filePath: string]: IstanbulCoverageFile;
+};
+
+export type IstanbulCoverageFile = {
+  path: string;
+  statementMap: Record<string, SourceRange>;
+  fnMap: Record<string, FunctionMapping>;
+  branchMap: Record<string, BranchMapping>;
+  s: Record<string, number>; // statement hits
+  f: Record<string, number>; // function hits
+  b: Record<string, number[]>; // branch hits
+  l: Record<string, number>; // line hits
+};
+
+export type SourcePosition = {
+  line: number;
+  column: number;
+};
+
+export type SourceRange = {
+  start: SourcePosition;
+  end: SourcePosition;
+};
+
+export type FunctionMapping = {
+  name: string;
+  decl: SourceRange;
+  loc: SourceRange;
+  line: number;
+};
+
+export type BranchMapping = {
+  loc: SourceRange;
+  type: string;
+  locations: SourceRange[];
+  line: number;
+};
+
+export type IstanbulCoverageObject = IstanbulCoverageMap; // alias for clarity
