@@ -90,7 +90,7 @@ function prependXmlHeader(xml: string, format: string): string {
   }
 }
 
-function getExtensionForFormat(format: string): string {
+export function getExtensionForFormat(format: string): string {
   if (format === 'lcovonly') return '.info';
   if (format === 'json') return '.json';
   return '.xml';
