@@ -1,1 +1,2 @@
 *.cjs/
+baselines/json_baseline.json
