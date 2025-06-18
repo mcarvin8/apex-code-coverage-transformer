@@ -67,7 +67,8 @@
     "bitbucket",
     "jacoco",
     "lcov",
-    "json2xml"
+    "json2xml",
+    "istanbul"
   ],
   "license": "MIT",
   "oclif": {
