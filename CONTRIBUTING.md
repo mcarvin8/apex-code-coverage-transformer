@@ -64,5 +64,6 @@ export type CoverageHandler = {
 6. The unit and non-unit tests will automatically run the new coverage format after it's added to the `formatOptions` constant. You will need to run the unit test suite once to generate the baseline report for the new format.
    1. Add the newly generated baseline to the `baselines` folder named `{format}_baseline.{ext}`
    2. Create a new test constant with the baseline path in `test/utils/testConstants.ts`
+   3. Add the new baseline constant to the `baselineMap` in `test/utils/baselineCompare.ts`
    3. If needed, update the `test/commands/acc-transformer/normalizeCoverageReport.ts` to remove timestamps if the new format report has timestamps, i.e. Cobertura and Clover.
    4. Re-run the unit test and confirm all tests pass, including the baseline compare test.
