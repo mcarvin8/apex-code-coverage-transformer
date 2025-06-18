@@ -57,10 +57,10 @@ export type CoverageHandler = {
 };
 ```
 
-3. Create a new coverage handler file in `src/handlers` with a `processFile` and `finalize` function.
-   1. The `finalize` class should sort items in the coverage object before returning.
-4. Add new coverage handler class to `src/handlers/getHandler.ts`.
-5. Add new `{format}CoverageObject` type to `src/transformers/reportGenerator.ts` and add anything needed to create the final report for that format, including updating the report extension in the `getExtensionForFormat` function.
+3. Create a new coverage handler class in `src/handlers` with a `processFile` and `finalize` function.
+   1. The `finalize` function should sort items in the coverage object before returning.
+4. Add the new coverage handler class to `src/handlers/getHandler.ts`.
+5. Add the new `{format}CoverageObject` type to `src/transformers/reportGenerator.ts` and add anything needed to create the final report for that format, including updating the report extension in the `getExtensionForFormat` function.
 6. The unit and non-unit tests will automatically run the new coverage format after it's added to the `formatOptions` constant. You will need to run the unit test suite once to generate the baseline report for the new format.
    1. Add the newly generated baseline to the `baselines` folder named `{format}_baseline.{ext}`
    2. Create a new test constant with the baseline path in `test/utils/testConstants.ts`
