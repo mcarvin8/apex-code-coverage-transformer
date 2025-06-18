@@ -57,7 +57,7 @@ export type CoverageHandler = {
 };
 ```
 
-3. Create a new coverage handler file in `src/handlers` with a `constructor`, `processFile` and `finalize` class.
+3. Create a new coverage handler file in `src/handlers` with a `processFile` and `finalize` function.
    1. The `finalize` class should sort items in the coverage object before returning.
 4. Add new coverage handler class to `src/handlers/getHandler.ts`.
 5. Add new `{format}CoverageObject` type to `src/transformers/reportGenerator.ts` and add anything needed to create the final report for that format, including updating the report extension in the `getExtensionForFormat` function.
