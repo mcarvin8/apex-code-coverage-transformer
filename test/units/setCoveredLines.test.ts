@@ -5,7 +5,7 @@ jest.mock('../../src/utils/getTotalLines.js', () => ({
   getTotalLines: jest.fn(() => Promise.resolve(3)), // Pretend file has only 3 lines
 }));
 
-describe('setCoveredLines', () => {
+describe('setCoveredLines unit test', () => {
   it('renumbers out-of-range covered lines into available unused lines', async () => {
     const filePath = 'some/file.cls';
     const repoRoot = '/repo';

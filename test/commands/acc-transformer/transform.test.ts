@@ -11,7 +11,7 @@ import { compareToBaselines } from '../../utils/baselineCompare.js';
 import { postTestCleanup } from '../../utils/testCleanup.js';
 import { preTestSetup } from '../../utils/testSetup.js';
 
-describe('main', () => {
+describe('acc-transformer transform unit tests', () => {
   const $$ = new TestContext();
 
   beforeAll(async () => {

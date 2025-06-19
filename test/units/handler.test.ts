@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals';
 
 import { getCoverageHandler } from '../../src/handlers/getHandler.js';
 
-describe('main', () => {
+describe('coverage handler unit test', () => {
   it('confirms a failure with an invalid format.', async () => {
     try {
       getCoverageHandler('invalid');

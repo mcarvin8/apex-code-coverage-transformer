@@ -5,7 +5,7 @@ jest.mock('node:fs/promises');
 
 const accessMock = access as jest.Mock;
 
-describe('getRepoRoot recursion', () => {
+describe('getRepoRoot recursion unit test', () => {
   it('recursively searches parent directories and eventually throws', async () => {
     // Start in a deeply nested directory
     const fakePath = '/a/b/c';
