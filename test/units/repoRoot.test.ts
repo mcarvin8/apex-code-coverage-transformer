@@ -1,5 +1,5 @@
 import { access } from 'node:fs/promises';
-import { getRepoRoot } from '../../../src/utils/getRepoRoot.js';
+import { getRepoRoot } from '../../src/utils/getRepoRoot.js';
 
 jest.mock('node:fs/promises');
 

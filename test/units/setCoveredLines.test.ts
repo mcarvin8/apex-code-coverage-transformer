@@ -1,7 +1,7 @@
-import { setCoveredLines } from '../../../src/utils/setCoveredLines.js';
+import { setCoveredLines } from '../../src/utils/setCoveredLines.js';
 
 // Mock getTotalLines to simulate a short file
-jest.mock('../../../src/utils/getTotalLines.js', () => ({
+jest.mock('../../src/utils/getTotalLines.js', () => ({
   getTotalLines: jest.fn(() => Promise.resolve(3)), // Pretend file has only 3 lines
 }));
 
