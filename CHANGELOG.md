@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.12.0...v2.12.1) (2025-06-22)
+
+
+### Bug Fixes
+
+* upgrade @salesforce/sf-plugins-core from 12.2.1 to 12.2.2 ([#191](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/191)) ([0fd939d](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/0fd939d8e2977d2f8f90238e339b5116f573affa))
+
 ## [2.12.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.11.8...v2.12.0) (2025-06-17)
 
 
