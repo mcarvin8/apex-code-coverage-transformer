@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.13.0...v2.13.1) (2025-06-24)
+
+
+### Bug Fixes
+
+* set format amount in main function ([#195](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/195)) ([b63c2a2](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/b63c2a2c6fada03986b34cf62145b126147c3f99))
+
 ## [2.13.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.12.1...v2.13.0) (2025-06-24)
 
 
