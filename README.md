@@ -165,13 +165,13 @@ You can copy & update the sample [SFDX Hardis .apexcodecovtransformer.config.jso
 
 **`.apexcodecovtransformer.config.json` structure**
 
-| JSON Key                   | Required                               | Description                                                                                   |
-| -------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `deployCoverageJsonPath`   | Yes (for deploy command)               | Code coverage JSON created by the Salesforce CLI deploy commands.                             |
-| `testCoverageJsonPath`     | Yes (for test command)                 | Code coverage JSON created by the Salesforce CLI test commands.                               |
-| `outputReportPath`         | No (defaults to `coverage.[xml/info]`) | Transformed code coverage report path.                                                        |
-| `format`                   | No (defaults to `sonar`)               | Transformed code coverage report [format](#coverage-report-formats).                          |
-| `ignorePackageDirectories` | No                                     | Comma-separated string of package directories to ignore when looking for matching Apex files. |
+| JSON Key                   | Required                               | Description                                                                                                                                                                 |
+| -------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `deployCoverageJsonPath`   | Yes (for deploy command)               | Code coverage JSON created by the Salesforce CLI deploy commands.                                                                                                           |
+| `testCoverageJsonPath`     | Yes (for test command)                 | Code coverage JSON created by the Salesforce CLI test commands.                                                                                                             |
+| `outputReportPath`         | No (defaults to `coverage.[xml/info]`) | Transformed code coverage report path.                                                                                                                                      |
+| `format`                   | No (defaults to `sonar`)               | Transformed code coverage report [format(s)](#coverage-report-formats). If you're providing multiple formats, provide a comma-separated list, i.e. `sonar,cobertura,jacoco` |
+| `ignorePackageDirectories` | No                                     | Comma-separated string of package directories to ignore when looking for matching Apex files.                                                                               |
 
 ## Troubleshooting
 
