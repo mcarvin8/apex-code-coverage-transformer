@@ -22,63 +22,34 @@ export async function transformCoverageReport(
   const warnings: string[] = [];
   const finalPaths: string[] = [];
   let filesProcessed = 0;
-  let jsonData: string;
-  try {
-    jsonData = await readFile(jsonFilePath, 'utf-8');
-  } catch (error) {
-    warnings.push(`Failed to read ${jsonFilePath}. Confirm file exists.`);
-    return { finalPaths: [outputReportPath], warnings };
-  }
+
+  const jsonData = await tryReadJson(jsonFilePath, warnings);
+  if (!jsonData) return { finalPaths: [outputReportPath], warnings };
 
   const parsedData = JSON.parse(jsonData) as CoverageInput;
-
   const { repoRoot, packageDirectories } = await getPackageDirectories(ignoreDirs);
-  // Instantiate one handler per format
-  const handlers = new Map<string, ReturnType<typeof getCoverageHandler>>();
-  for (const format of formats) {
-    handlers.set(format, getCoverageHandler(format));
-  }
+  const handlers = createHandlers(formats);
   const commandType = checkCoverageDataType(parsedData);
-
   const concurrencyLimit = getConcurrencyThreshold();
 
   if (commandType === 'DeployCoverageData') {
-    await mapLimit(Object.keys(parsedData as DeployCoverageData), concurrencyLimit, async (fileName: string) => {
-      const fileInfo = (parsedData as DeployCoverageData)[fileName];
-      const formattedFileName = fileName.replace(/no-map[\\/]+/, '');
-      const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
-
-      if (!relativeFilePath) {
-        warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
-        return;
-      }
-
-      const updatedLines = await setCoveredLines(relativeFilePath, repoRoot, fileInfo.s);
-      fileInfo.s = updatedLines;
-
-      for (const handler of handlers.values()) {
-        handler.processFile(relativeFilePath, formattedFileName, fileInfo.s);
-      }
-      filesProcessed++;
-    });
+    filesProcessed = await processDeployCoverage(
+      parsedData as DeployCoverageData,
+      handlers,
+      packageDirectories,
+      repoRoot,
+      concurrencyLimit,
+      warnings
+    );
   } else if (commandType === 'TestCoverageData') {
-    await mapLimit(parsedData as TestCoverageData[], concurrencyLimit, async (entry: TestCoverageData) => {
-      const name = entry?.name;
-      const lines = entry?.lines;
-
-      const formattedFileName = name.replace(/no-map[\\/]+/, '');
-      const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
-
-      if (!relativeFilePath) {
-        warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
-        return;
-      }
-
-      for (const handler of handlers.values()) {
-        handler.processFile(relativeFilePath, formattedFileName, lines);
-      }
-      filesProcessed++;
-    });
+    filesProcessed = await processTestCoverage(
+      parsedData as TestCoverageData[],
+      handlers,
+      packageDirectories,
+      repoRoot,
+      concurrencyLimit,
+      warnings
+    );
   } else {
     throw new Error(
       'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
@@ -94,5 +65,77 @@ export async function transformCoverageReport(
     const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format, formats);
     finalPaths.push(finalPath);
   }
+
   return { finalPaths, warnings };
+}
+
+async function tryReadJson(path: string, warnings: string[]): Promise<string | null> {
+  try {
+    return await readFile(path, 'utf-8');
+  } catch {
+    warnings.push(`Failed to read ${path}. Confirm file exists.`);
+    return null;
+  }
+}
+
+function createHandlers(formats: string[]): Map<string, ReturnType<typeof getCoverageHandler>> {
+  const handlers = new Map<string, ReturnType<typeof getCoverageHandler>>();
+  for (const format of formats) {
+    handlers.set(format, getCoverageHandler(format));
+  }
+  return handlers;
+}
+
+async function processDeployCoverage(
+  data: DeployCoverageData,
+  handlers: Map<string, ReturnType<typeof getCoverageHandler>>,
+  packageDirs: string[],
+  repoRoot: string,
+  concurrencyLimit: number,
+  warnings: string[]
+): Promise<number> {
+  let processed = 0;
+  await mapLimit(Object.keys(data), concurrencyLimit, async (fileName: string) => {
+    const fileInfo = data[fileName];
+    const formattedName = fileName.replace(/no-map[\\/]+/, '');
+    const path = await findFilePath(formattedName, packageDirs, repoRoot);
+
+    if (!path) {
+      warnings.push(`The file name ${formattedName} was not found in any package directory.`);
+      return;
+    }
+
+    fileInfo.s = await setCoveredLines(path, repoRoot, fileInfo.s);
+    for (const handler of handlers.values()) {
+      handler.processFile(path, formattedName, fileInfo.s);
+    }
+    processed++;
+  });
+  return processed;
+}
+
+async function processTestCoverage(
+  data: TestCoverageData[],
+  handlers: Map<string, ReturnType<typeof getCoverageHandler>>,
+  packageDirs: string[],
+  repoRoot: string,
+  concurrencyLimit: number,
+  warnings: string[]
+): Promise<number> {
+  let processed = 0;
+  await mapLimit(data, concurrencyLimit, async (entry: TestCoverageData) => {
+    const formattedName = entry.name.replace(/no-map[\\/]+/, '');
+    const path = await findFilePath(formattedName, packageDirs, repoRoot);
+
+    if (!path) {
+      warnings.push(`The file name ${formattedName} was not found in any package directory.`);
+      return;
+    }
+
+    for (const handler of handlers.values()) {
+      handler.processFile(path, formattedName, entry.lines);
+    }
+    processed++;
+  });
+  return processed;
 }
