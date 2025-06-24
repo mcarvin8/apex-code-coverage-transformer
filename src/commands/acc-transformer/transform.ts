@@ -29,7 +29,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     format: Flags.string({
       summary: messages.getMessage('flags.format.summary'),
       char: 'f',
-      required: true,
+      required: false,
       multiple: true,
       options: formatOptions,
     }),
