@@ -21,7 +21,7 @@ export async function generateAndWriteReport(
     | JaCoCoCoverageObject
     | IstanbulCoverageObject,
   format: string,
-  allFormats: string[] // NEW PARAMETER
+  formatAmount: number
 ): Promise<string> {
   const content = generateReportContent(coverageObj, format);
   const extension = getExtensionForFormat(format);
@@ -29,7 +29,7 @@ export async function generateAndWriteReport(
   const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
   const dir = dirname(outputPath);
 
-  const suffix = allFormats.length > 1 ? `-${format}` : '';
+  const suffix = formatAmount > 1 ? `-${format}` : '';
   const filePath = join(dir, `${base}${suffix}${extension}`);
 
   await writeFile(filePath, content, 'utf-8');

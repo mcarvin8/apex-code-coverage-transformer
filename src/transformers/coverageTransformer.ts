@@ -21,6 +21,7 @@ export async function transformCoverageReport(
 ): Promise<{ finalPaths: string[]; warnings: string[] }> {
   const warnings: string[] = [];
   const finalPaths: string[] = [];
+  const formatAmount: number = formats.length;
   let filesProcessed = 0;
 
   const jsonData = await tryReadJson(jsonFilePath, warnings);
@@ -56,7 +57,7 @@ export async function transformCoverageReport(
 
   for (const [format, handler] of handlers.entries()) {
     const coverageObj = handler.finalize();
-    const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format, formats);
+    const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format, formatAmount);
     finalPaths.push(finalPath);
   }
 
