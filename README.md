@@ -99,6 +99,8 @@ FLAGS
   -r, --output-report=<value>             Path to the code coverage file that will be created by this plugin.
                                           [default: "coverage.[xml/info]"]
   -f, --format=<value>                    Output format for the code coverage format.
+                                          Can be declared multiple times.
+                                          If declared multiple times, the output report will have the format appended to the file-name, i.e. `coverage-sonar.xml`
                                           [default: "sonar"]
   -i, --ignore-package-directory=<value>  Package directory to ignore when looking for matching files in the coverage report.
                                           Should be as they appear in the "sfdx-project.json".
@@ -132,6 +134,8 @@ EXAMPLES
 ## Coverage Report Formats
 
 The `-f`/`--format` flag allows you to specify the format of the transformed coverage report.
+
+You can provide multiple `--format` flags in a single command to create multiple reports. If multiple `--format` flags are provided, each output report will have the format appended to the name. For example, if `--output-report` is set `coverage.xml` and you supply `--format sonar --format cobertura` to the command, the output reports will be `coverage-sonar.xml` and `coverage-cobertura.xml`.
 
 | Flag Option                                                                                                                  | Description                                                                                |
 | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |

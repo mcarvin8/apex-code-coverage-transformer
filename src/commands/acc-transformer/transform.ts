@@ -30,8 +30,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       summary: messages.getMessage('flags.format.summary'),
       char: 'f',
       required: true,
-      multiple: false,
-      default: 'sonar',
+      multiple: true,
       options: formatOptions,
     }),
     'ignore-package-directory': Flags.directory({
@@ -49,11 +48,11 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     const result = await transformCoverageReport(
       flags['coverage-json'],
       flags['output-report'],
-      flags['format'],
+      flags['format'] ?? ['sonar'],
       flags['ignore-package-directory'] ?? []
     );
     warnings.push(...result.warnings);
-    const finalPath = result.finalPath;
+    const finalPath = result.finalPaths;
 
     if (warnings.length > 0) {
       warnings.forEach((warning) => {
@@ -61,7 +60,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       });
     }
 
-    this.log(`The coverage report has been written to ${finalPath}`);
+    this.log(`The coverage report has been written to: ${finalPath.join(', ')}`);
     return { path: finalPath };
   }
 }

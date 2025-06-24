@@ -1,7 +1,7 @@
 'use strict';
 
 export type TransformerTransformResult = {
-  path: string;
+  path: string[];
 };
 
 export type DeployCoverageData = {

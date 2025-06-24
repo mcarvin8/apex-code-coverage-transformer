@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 'use strict';
 import { resolve } from 'node:path';
+import { rm } from 'node:fs/promises';
 import { describe, it, expect } from '@jest/globals';
 
 import { TestContext } from '@salesforce/core/testSetup';
@@ -24,6 +25,8 @@ describe('acc-transformer transform unit tests', () => {
 
   afterAll(async () => {
     await postTestCleanup();
+    await rm('coverage-cobertura.xml');
+    await rm('coverage-sonar.xml');
   });
 
   formatOptions.forEach((format) => {
@@ -31,7 +34,7 @@ describe('acc-transformer transform unit tests', () => {
       const reportExtension = format === 'lcovonly' ? 'info' : 'xml';
       const reportPath = resolve(`${format}_${label}.${reportExtension}`);
       it(`transforms the ${label} command JSON file into ${format} format`, async () => {
-        await transformCoverageReport(path, reportPath, format, ['samples']);
+        await transformCoverageReport(path, reportPath, [format], ['samples']);
       });
     });
   });
@@ -40,7 +43,7 @@ describe('acc-transformer transform unit tests', () => {
   });
   it('confirms a failure on an invalid JSON file.', async () => {
     try {
-      await transformCoverageReport(invalidJson, 'coverage.xml', 'sonar', []);
+      await transformCoverageReport(invalidJson, 'coverage.xml', ['sonar'], []);
       throw new Error('Command did not fail as expected');
     } catch (error) {
       if (error instanceof Error) {
@@ -53,25 +56,29 @@ describe('acc-transformer transform unit tests', () => {
     }
   });
   it('confirms a warning with a JSON file that does not exist.', async () => {
-    const result = await transformCoverageReport('nonexistent.json', 'coverage.xml', 'sonar', []);
+    const result = await transformCoverageReport('nonexistent.json', 'coverage.xml', ['sonar'], []);
     expect(result.warnings).toContain('Failed to read nonexistent.json. Confirm file exists.');
   });
   it('ignore a package directory and produce a warning on the deploy command report.', async () => {
-    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', 'sonar', [
-      'packaged',
-      'force-app',
-      'samples',
-    ]);
+    const result = await transformCoverageReport(
+      deployCoverage,
+      'coverage.xml',
+      ['sonar'],
+      ['packaged', 'force-app', 'samples']
+    );
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
   it('ignore a package directory and produce a warning on the test command report.', async () => {
-    const result = await transformCoverageReport(testCoverage, 'coverage.xml', 'sonar', ['packaged', 'samples']);
+    const result = await transformCoverageReport(testCoverage, 'coverage.xml', ['sonar'], ['packaged', 'samples']);
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
   it('create a cobertura report using only 1 package directory', async () => {
-    await transformCoverageReport(deployCoverage, 'coverage.xml', 'cobertura', ['packaged', 'force-app']);
+    await transformCoverageReport(deployCoverage, 'coverage.xml', ['cobertura'], ['packaged', 'force-app']);
   });
   it('create a jacoco report using only 1 package directory', async () => {
-    await transformCoverageReport(deployCoverage, 'coverage.xml', 'jacoco', ['packaged', 'force-app']);
+    await transformCoverageReport(deployCoverage, 'coverage.xml', ['jacoco'], ['packaged', 'force-app']);
+  });
+  it('create 2 reports at once', async () => {
+    await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar', 'cobertura'], ['samples']);
   });
 });

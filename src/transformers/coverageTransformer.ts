@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { readFile } from 'node:fs/promises';
 import { mapLimit } from 'async';
 
@@ -15,23 +16,28 @@ type CoverageInput = DeployCoverageData | TestCoverageData[];
 export async function transformCoverageReport(
   jsonFilePath: string,
   outputReportPath: string,
-  format: string,
+  formats: string[],
   ignoreDirs: string[]
-): Promise<{ finalPath: string; warnings: string[] }> {
+): Promise<{ finalPaths: string[]; warnings: string[] }> {
   const warnings: string[] = [];
+  const finalPaths: string[] = [];
   let filesProcessed = 0;
   let jsonData: string;
   try {
     jsonData = await readFile(jsonFilePath, 'utf-8');
   } catch (error) {
     warnings.push(`Failed to read ${jsonFilePath}. Confirm file exists.`);
-    return { finalPath: outputReportPath, warnings };
+    return { finalPaths: [outputReportPath], warnings };
   }
 
   const parsedData = JSON.parse(jsonData) as CoverageInput;
 
   const { repoRoot, packageDirectories } = await getPackageDirectories(ignoreDirs);
-  const handler = getCoverageHandler(format);
+  // Instantiate one handler per format
+  const handlers = new Map<string, ReturnType<typeof getCoverageHandler>>();
+  for (const format of formats) {
+    handlers.set(format, getCoverageHandler(format));
+  }
   const commandType = checkCoverageDataType(parsedData);
 
   const concurrencyLimit = getConcurrencyThreshold();
@@ -50,7 +56,9 @@ export async function transformCoverageReport(
       const updatedLines = await setCoveredLines(relativeFilePath, repoRoot, fileInfo.s);
       fileInfo.s = updatedLines;
 
-      handler.processFile(relativeFilePath, formattedFileName, fileInfo.s);
+      for (const handler of handlers.values()) {
+        handler.processFile(relativeFilePath, formattedFileName, fileInfo.s);
+      }
       filesProcessed++;
     });
   } else if (commandType === 'TestCoverageData') {
@@ -66,7 +74,9 @@ export async function transformCoverageReport(
         return;
       }
 
-      handler.processFile(relativeFilePath, formattedFileName, lines);
+      for (const handler of handlers.values()) {
+        handler.processFile(relativeFilePath, formattedFileName, lines);
+      }
       filesProcessed++;
     });
   } else {
@@ -79,7 +89,10 @@ export async function transformCoverageReport(
     warnings.push('None of the files listed in the coverage JSON were processed. The coverage report will be empty.');
   }
 
-  const coverageObj = handler.finalize();
-  const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format);
-  return { finalPath, warnings };
+  for (const [format, handler] of handlers.entries()) {
+    const coverageObj = handler.finalize();
+    const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format, formats);
+    finalPaths.push(finalPath);
+  }
+  return { finalPaths, warnings };
 }

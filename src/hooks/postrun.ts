@@ -67,8 +67,14 @@ export const postrun: Hook<'postrun'> = async function (options) {
   commandArgs.push(coverageJsonPath);
   commandArgs.push('--output-report');
   commandArgs.push(outputReportPath);
-  commandArgs.push('--format');
-  commandArgs.push(coverageFormat);
+  if (coverageFormat.trim() !== '') {
+    const formatArray: string[] = coverageFormat.split(',');
+    for (const format of formatArray) {
+      const sanitizedFormat = format.replace(/,/g, '');
+      commandArgs.push('--format');
+      commandArgs.push(sanitizedFormat);
+    }
+  }
   if (ignorePackageDirs.trim() !== '') {
     const ignorePackageDirArray: string[] = ignorePackageDirs.split(',');
     for (const dirs of ignorePackageDirArray) {
