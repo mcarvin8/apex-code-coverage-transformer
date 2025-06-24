@@ -33,7 +33,7 @@ describe('acc-transformer transform NUTs', () => {
         const command = `acc-transformer transform --coverage-json "${path}" --output-report "${reportPath}" --format ${format} -i "samples"`;
         const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-        expect(output.replace('\n', '')).toStrictEqual(`The coverage report has been written to ${reportPath}`);
+        expect(output.replace('\n', '')).toStrictEqual(`The coverage report has been written to: ${reportPath}`);
       });
     });
   });

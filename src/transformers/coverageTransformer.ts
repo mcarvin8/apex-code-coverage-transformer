@@ -1,8 +1,9 @@
+/* eslint-disable no-await-in-loop */
 import { readFile } from 'node:fs/promises';
 import { mapLimit } from 'async';
 
 import { getCoverageHandler } from '../handlers/getHandler.js';
-import { DeployCoverageData, TestCoverageData } from '../utils/types.js';
+import { DeployCoverageData, TestCoverageData, CoverageProcessingContext } from '../utils/types.js';
 import { getPackageDirectories } from '../utils/getPackageDirectories.js';
 import { findFilePath } from '../utils/findFilePath.js';
 import { setCoveredLines } from '../utils/setCoveredLines.js';
@@ -15,60 +16,34 @@ type CoverageInput = DeployCoverageData | TestCoverageData[];
 export async function transformCoverageReport(
   jsonFilePath: string,
   outputReportPath: string,
-  format: string,
+  formats: string[],
   ignoreDirs: string[]
-): Promise<{ finalPath: string; warnings: string[] }> {
+): Promise<{ finalPaths: string[]; warnings: string[] }> {
   const warnings: string[] = [];
+  const finalPaths: string[] = [];
   let filesProcessed = 0;
-  let jsonData: string;
-  try {
-    jsonData = await readFile(jsonFilePath, 'utf-8');
-  } catch (error) {
-    warnings.push(`Failed to read ${jsonFilePath}. Confirm file exists.`);
-    return { finalPath: outputReportPath, warnings };
-  }
+
+  const jsonData = await tryReadJson(jsonFilePath, warnings);
+  if (!jsonData) return { finalPaths: [outputReportPath], warnings };
 
   const parsedData = JSON.parse(jsonData) as CoverageInput;
-
   const { repoRoot, packageDirectories } = await getPackageDirectories(ignoreDirs);
-  const handler = getCoverageHandler(format);
+  const handlers = createHandlers(formats);
   const commandType = checkCoverageDataType(parsedData);
-
   const concurrencyLimit = getConcurrencyThreshold();
 
+  const context: CoverageProcessingContext = {
+    handlers,
+    packageDirs: packageDirectories,
+    repoRoot,
+    concurrencyLimit,
+    warnings,
+  };
+
   if (commandType === 'DeployCoverageData') {
-    await mapLimit(Object.keys(parsedData as DeployCoverageData), concurrencyLimit, async (fileName: string) => {
-      const fileInfo = (parsedData as DeployCoverageData)[fileName];
-      const formattedFileName = fileName.replace(/no-map[\\/]+/, '');
-      const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
-
-      if (!relativeFilePath) {
-        warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
-        return;
-      }
-
-      const updatedLines = await setCoveredLines(relativeFilePath, repoRoot, fileInfo.s);
-      fileInfo.s = updatedLines;
-
-      handler.processFile(relativeFilePath, formattedFileName, fileInfo.s);
-      filesProcessed++;
-    });
+    filesProcessed = await processDeployCoverage(parsedData as DeployCoverageData, context);
   } else if (commandType === 'TestCoverageData') {
-    await mapLimit(parsedData as TestCoverageData[], concurrencyLimit, async (entry: TestCoverageData) => {
-      const name = entry?.name;
-      const lines = entry?.lines;
-
-      const formattedFileName = name.replace(/no-map[\\/]+/, '');
-      const relativeFilePath = await findFilePath(formattedFileName, packageDirectories, repoRoot);
-
-      if (!relativeFilePath) {
-        warnings.push(`The file name ${formattedFileName} was not found in any package directory.`);
-        return;
-      }
-
-      handler.processFile(relativeFilePath, formattedFileName, lines);
-      filesProcessed++;
-    });
+    filesProcessed = await processTestCoverage(parsedData as TestCoverageData[], context);
   } else {
     throw new Error(
       'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
@@ -79,7 +54,68 @@ export async function transformCoverageReport(
     warnings.push('None of the files listed in the coverage JSON were processed. The coverage report will be empty.');
   }
 
-  const coverageObj = handler.finalize();
-  const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format);
-  return { finalPath, warnings };
+  for (const [format, handler] of handlers.entries()) {
+    const coverageObj = handler.finalize();
+    const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format, formats);
+    finalPaths.push(finalPath);
+  }
+
+  return { finalPaths, warnings };
+}
+
+async function tryReadJson(path: string, warnings: string[]): Promise<string | null> {
+  try {
+    return await readFile(path, 'utf-8');
+  } catch {
+    warnings.push(`Failed to read ${path}. Confirm file exists.`);
+    return null;
+  }
+}
+
+function createHandlers(formats: string[]): Map<string, ReturnType<typeof getCoverageHandler>> {
+  const handlers = new Map<string, ReturnType<typeof getCoverageHandler>>();
+  for (const format of formats) {
+    handlers.set(format, getCoverageHandler(format));
+  }
+  return handlers;
+}
+
+async function processDeployCoverage(data: DeployCoverageData, context: CoverageProcessingContext): Promise<number> {
+  let processed = 0;
+  await mapLimit(Object.keys(data), context.concurrencyLimit, async (fileName: string) => {
+    const fileInfo = data[fileName];
+    const formattedName = fileName.replace(/no-map[\\/]+/, '');
+    const path = await findFilePath(formattedName, context.packageDirs, context.repoRoot);
+
+    if (!path) {
+      context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
+      return;
+    }
+
+    fileInfo.s = await setCoveredLines(path, context.repoRoot, fileInfo.s);
+    for (const handler of context.handlers.values()) {
+      handler.processFile(path, formattedName, fileInfo.s);
+    }
+    processed++;
+  });
+  return processed;
+}
+
+async function processTestCoverage(data: TestCoverageData[], context: CoverageProcessingContext): Promise<number> {
+  let processed = 0;
+  await mapLimit(data, context.concurrencyLimit, async (entry: TestCoverageData) => {
+    const formattedName = entry.name.replace(/no-map[\\/]+/, '');
+    const path = await findFilePath(formattedName, context.packageDirs, context.repoRoot);
+
+    if (!path) {
+      context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
+      return;
+    }
+
+    for (const handler of context.handlers.values()) {
+      handler.processFile(path, formattedName, entry.lines);
+    }
+    processed++;
+  });
+  return processed;
 }

@@ -20,14 +20,17 @@ export async function generateAndWriteReport(
     | LcovCoverageObject
     | JaCoCoCoverageObject
     | IstanbulCoverageObject,
-  format: string
+  format: string,
+  allFormats: string[] // NEW PARAMETER
 ): Promise<string> {
   const content = generateReportContent(coverageObj, format);
   const extension = getExtensionForFormat(format);
 
-  const base = basename(outputPath, extname(outputPath)); // remove existing extension
+  const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
   const dir = dirname(outputPath);
-  const filePath = join(dir, `${base}${extension}`);
+
+  const suffix = allFormats.length > 1 ? `-${format}` : '';
+  const filePath = join(dir, `${base}${suffix}${extension}`);
 
   await writeFile(filePath, content, 'utf-8');
   return filePath;

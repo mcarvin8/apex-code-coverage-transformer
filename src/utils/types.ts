@@ -1,7 +1,8 @@
 'use strict';
+import { getCoverageHandler } from '../handlers/getHandler.js';
 
 export type TransformerTransformResult = {
-  path: string;
+  path: string[];
 };
 
 export type DeployCoverageData = {
@@ -33,6 +34,14 @@ export type TestCoverageData = {
 
 export type SfdxProject = {
   packageDirectories: Array<{ path: string }>;
+};
+
+export type CoverageProcessingContext = {
+  handlers: Map<string, ReturnType<typeof getCoverageHandler>>;
+  packageDirs: string[];
+  repoRoot: string;
+  concurrencyLimit: number;
+  warnings: string[];
 };
 
 type SonarLine = {
