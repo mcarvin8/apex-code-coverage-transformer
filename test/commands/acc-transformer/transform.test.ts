@@ -1,7 +1,4 @@
-/* eslint-disable no-await-in-loop */
 'use strict';
-import { resolve } from 'node:path';
-import { rm } from 'node:fs/promises';
 import { describe, it, expect } from '@jest/globals';
 
 import { TestContext } from '@salesforce/core/testSetup';
@@ -25,17 +22,11 @@ describe('acc-transformer transform unit tests', () => {
 
   afterAll(async () => {
     await postTestCleanup();
-    await rm('coverage-cobertura.xml');
-    await rm('coverage-sonar.xml');
   });
 
-  formatOptions.forEach((format) => {
-    inputJsons.forEach(({ label, path }) => {
-      const reportExtension = format === 'lcovonly' ? 'info' : 'xml';
-      const reportPath = resolve(`${format}_${label}.${reportExtension}`);
-      it(`transforms the ${label} command JSON file into ${format} format`, async () => {
-        await transformCoverageReport(path, reportPath, [format], ['samples']);
-      });
+  inputJsons.forEach(({ label, path }) => {
+    it(`transforms the ${label} command JSON file into all output formats`, async () => {
+      await transformCoverageReport(path, `${label}.xml`, formatOptions, ['samples']);
     });
   });
   it('confirm the reports created are the same as the baselines.', async () => {
@@ -77,8 +68,5 @@ describe('acc-transformer transform unit tests', () => {
   });
   it('create a jacoco report using only 1 package directory', async () => {
     await transformCoverageReport(deployCoverage, 'coverage.xml', ['jacoco'], ['packaged', 'force-app']);
-  });
-  it('create 2 reports at once', async () => {
-    await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar', 'cobertura'], ['samples']);
   });
 });
