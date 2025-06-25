@@ -17,7 +17,7 @@ export async function postTestCleanup(): Promise<void> {
     .flatMap((format) =>
       inputJsons.map(({ label }) => {
         const reportExtension = getExtensionForFormat(format);
-        return resolve(`${format}_${label}${reportExtension}`);
+        return resolve(`${label}-${format}${reportExtension}`);
       })
     )
     .concat(defaultPath);

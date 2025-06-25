@@ -1,7 +1,5 @@
-/* eslint-disable no-await-in-loop */
 'use strict';
 
-import { resolve } from 'node:path';
 import { describe, it, expect } from '@jest/globals';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
@@ -14,6 +12,7 @@ import { preTestSetup } from '../../utils/testSetup.js';
 
 describe('acc-transformer transform NUTs', () => {
   let session: TestSession;
+  const formatString = formatOptions.map((f) => `--format ${f}`).join(' ');
 
   beforeAll(async () => {
     session = await TestSession.create({ devhubAuthStrategy: 'NONE' });
@@ -25,16 +24,21 @@ describe('acc-transformer transform NUTs', () => {
     await postTestCleanup();
   });
 
-  formatOptions.forEach((format) => {
-    inputJsons.forEach(({ label, path }) => {
-      const reportExtension = getExtensionForFormat(format);
-      const reportPath = resolve(`${format}_${label}${reportExtension}`);
-      it(`transforms the ${label} command JSON file into ${format} format`, async () => {
-        const command = `acc-transformer transform --coverage-json "${path}" --output-report "${reportPath}" --format ${format} -i "samples"`;
-        const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+  inputJsons.forEach(({ label, path }) => {
+    it(`transforms the ${label} command JSON file into all formats`, async () => {
+      const command = `acc-transformer transform --coverage-json "${path}" --output-report "${label}.xml" ${formatString} -i "samples"`;
+      const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
-        expect(output.replace('\n', '')).toStrictEqual(`The coverage report has been written to: ${reportPath}`);
-      });
+      const expectedOutput =
+        'The coverage report has been written to: ' +
+        formatOptions
+          .map((f) => {
+            const ext = getExtensionForFormat(f);
+            return `${label}-${f}${ext}`;
+          })
+          .join(', ');
+
+      expect(output.replace('\n', '')).toStrictEqual(expectedOutput);
     });
   });
 

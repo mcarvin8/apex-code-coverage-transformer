@@ -31,7 +31,7 @@ export async function compareToBaselines(): Promise<void> {
   for (const format of formatOptions as Array<keyof typeof baselineMap>) {
     for (const { label } of inputJsons) {
       const reportExtension = getExtensionForFormat(format);
-      const outputPath = resolve(`${format}_${label}${reportExtension}`);
+      const outputPath = resolve(`${label}-${format}${reportExtension}`);
       const outputContent = await readFile(outputPath, 'utf-8');
       const baselineContent = await readFile(baselineMap[format], 'utf-8');
 
