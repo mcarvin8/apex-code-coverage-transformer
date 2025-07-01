@@ -10,7 +10,7 @@
     "xmlbuilder2": "^3.1.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
+    "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@oclif/plugin-command-snapshot": "^5.2.40",
     "@salesforce/cli-plugins-testkit": "^5.3.39",
