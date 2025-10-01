@@ -18,7 +18,7 @@
     "@types/async": "^3.2.24",
     "@types/jest": "^29.5.14",
     "@types/node": "18",
-    "eslint-plugin-sf-plugin": "^1.20.26",
+    "eslint-plugin-sf-plugin": "^1.20.32",
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "oclif": "^4.17.46",
