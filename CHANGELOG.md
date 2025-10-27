@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.13.3...v2.13.4) (2025-10-27)
+
+
+### Bug Fixes
+
+* change oclif hook from postrun to finally ([#229](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/229)) ([27bb6d6](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/27bb6d62d85b616130e11398fedd7fff614f9fe3))
+
 ## [2.13.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.13.2...v2.13.3) (2025-07-14)
 
 
