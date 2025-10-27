@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.13.4...v2.14.0) (2025-10-27)
+
+
+### Features
+
+* add json-summary, simplecov, and opencover coverage formats ([#231](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/231)) ([9da086f](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/9da086f212cbdd98184f8c873792b8da882815db))
+
 ## [2.13.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.13.3...v2.13.4) (2025-10-27)
 
 
