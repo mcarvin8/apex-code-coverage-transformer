@@ -1,12 +1,30 @@
 'use strict';
 
-import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoSourceFile, JaCoCoLine, CoverageHandler } from '../utils/types.js';
+import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoSourceFile, JaCoCoLine } from '../utils/types.js';
+import { BaseHandler } from './BaseHandler.js';
+import { HandlerRegistry } from './HandlerRegistry.js';
 
-export class JaCoCoCoverageHandler implements CoverageHandler {
+/**
+ * Handler for generating JaCoCo XML coverage reports.
+ *
+ * JaCoCo is the standard code coverage library for Java projects.
+ * The format is also accepted by Codecov and other coverage tools.
+ *
+ * Compatible with:
+ * - Codecov
+ * - Jenkins
+ * - Maven
+ * - Gradle
+ * - IntelliJ IDEA
+ *
+ * @see https://www.jacoco.org/
+ */
+export class JaCoCoCoverageHandler extends BaseHandler {
   private readonly coverageObj: JaCoCoCoverageObject;
   private packageMap: Record<string, JaCoCoPackage>;
 
   public constructor() {
+    super();
     this.coverageObj = {
       report: {
         '@name': 'JaCoCo',
@@ -104,3 +122,12 @@ export class JaCoCoCoverageHandler implements CoverageHandler {
     return this.packageMap[packageName];
   }
 }
+
+// Self-register this handler
+HandlerRegistry.register({
+  name: 'jacoco',
+  description: 'JaCoCo XML format for Java projects',
+  fileExtension: '.xml',
+  handler: () => new JaCoCoCoverageHandler(),
+  compatibleWith: ['Codecov', 'Jenkins', 'Maven', 'Gradle'],
+});

@@ -13,6 +13,9 @@ import {
   coberturaBaselinePath,
   inputJsons,
   jsonBaselinePath,
+  jsonSummaryBaselinePath,
+  simplecovBaselinePath,
+  opencoverBaselinePath,
 } from './testConstants.js';
 import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 
@@ -24,9 +27,13 @@ export async function compareToBaselines(): Promise<void> {
     cobertura: coberturaBaselinePath,
     clover: cloverBaselinePath,
     json: jsonBaselinePath,
+    'json-summary': jsonSummaryBaselinePath,
+    simplecov: simplecovBaselinePath,
+    opencover: opencoverBaselinePath,
   } as const;
 
-  const normalizationRequired = new Set(['cobertura', 'clover']);
+  const normalizationRequired = new Set(['cobertura', 'clover', 'json', 'json-summary', 'simplecov', 'opencover']);
+  const jsonFormats = new Set(['json', 'json-summary', 'simplecov']);
 
   for (const format of formatOptions as Array<keyof typeof baselineMap>) {
     for (const { label } of inputJsons) {
@@ -36,9 +43,10 @@ export async function compareToBaselines(): Promise<void> {
       const baselineContent = await readFile(baselineMap[format], 'utf-8');
 
       if (normalizationRequired.has(format)) {
+        const isJson = jsonFormats.has(format);
         strictEqual(
-          normalizeCoverageReport(outputContent),
-          normalizeCoverageReport(baselineContent),
+          normalizeCoverageReport(outputContent, isJson),
+          normalizeCoverageReport(baselineContent, isJson),
           `Mismatch between ${outputPath} and ${baselineMap[format]}`
         );
       } else {

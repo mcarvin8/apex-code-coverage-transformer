@@ -1,26 +1,34 @@
 'use strict';
 
 import { CoverageHandler } from '../utils/types.js';
-import { CloverCoverageHandler } from './clover.js';
-import { CoberturaCoverageHandler } from './cobertura.js';
-import { SonarCoverageHandler } from './sonar.js';
-import { LcovCoverageHandler } from './lcov.js';
-import { JaCoCoCoverageHandler } from './jacoco.js';
-import { IstanbulCoverageHandler } from './istanbulJson.js';
+import { HandlerRegistry } from './HandlerRegistry.js';
 
+// Import all handlers to trigger self-registration
+import './sonar.js';
+import './cobertura.js';
+import './clover.js';
+import './lcov.js';
+import './jacoco.js';
+import './istanbulJson.js';
+import './jsonSummary.js';
+import './simplecov.js';
+import './opencover.js';
+
+/**
+ * Get a coverage handler for the specified format.
+ *
+ * This function uses the HandlerRegistry to retrieve the appropriate handler.
+ * All handlers are automatically registered when this module is imported.
+ *
+ * @param format - The coverage format identifier
+ * @returns A new instance of the coverage handler
+ * @throws Error if the format is not supported
+ *
+ * @example
+ * const handler = getCoverageHandler('sonar');
+ * handler.processFile('path/to/file.cls', 'ClassName', { '1': 1, '2': 0 });
+ * const report = handler.finalize();
+ */
 export function getCoverageHandler(format: string): CoverageHandler {
-  const handlers: Record<string, CoverageHandler> = {
-    sonar: new SonarCoverageHandler(),
-    cobertura: new CoberturaCoverageHandler(),
-    clover: new CloverCoverageHandler(),
-    lcovonly: new LcovCoverageHandler(),
-    jacoco: new JaCoCoCoverageHandler(),
-    json: new IstanbulCoverageHandler(),
-  };
-
-  const handler = handlers[format];
-  if (!handler) {
-    throw new Error(`Unsupported format: ${format}`);
-  }
-  return handler;
+  return HandlerRegistry.get(format);
 }

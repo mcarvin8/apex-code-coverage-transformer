@@ -1,11 +1,27 @@
 'use strict';
 
-import { CloverCoverageObject, CloverFile, CoverageHandler } from '../utils/types.js';
+import { CloverCoverageObject, CloverFile } from '../utils/types.js';
+import { BaseHandler } from './BaseHandler.js';
+import { HandlerRegistry } from './HandlerRegistry.js';
 
-export class CloverCoverageHandler implements CoverageHandler {
+/**
+ * Handler for generating Clover XML coverage reports.
+ *
+ * Clover is a code coverage tool commonly used with Atlassian tools.
+ *
+ * Compatible with:
+ * - Bamboo
+ * - Bitbucket
+ * - Jenkins
+ * - Atlassian tools
+ *
+ * @see https://openclover.org/
+ */
+export class CloverCoverageHandler extends BaseHandler {
   private readonly coverageObj: CloverCoverageObject;
 
   public constructor() {
+    super();
     this.coverageObj = {
       coverage: {
         '@generated': Date.now(),
@@ -36,19 +52,14 @@ export class CloverCoverageHandler implements CoverageHandler {
   }
 
   public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
-    const uncoveredLines = Object.keys(lines)
-      .filter((lineNumber) => lines[lineNumber] === 0)
-      .map(Number);
-    const coveredLines = Object.keys(lines)
-      .filter((lineNumber) => lines[lineNumber] === 1)
-      .map(Number);
+    const { totalLines, coveredLines } = this.calculateCoverage(lines);
 
     const fileObj: CloverFile = {
       '@name': fileName,
       '@path': filePath,
       metrics: {
-        '@statements': uncoveredLines.length + coveredLines.length,
-        '@coveredstatements': coveredLines.length,
+        '@statements': totalLines,
+        '@coveredstatements': coveredLines,
         '@conditionals': 0,
         '@coveredconditionals': 0,
         '@methods': 0,
@@ -66,20 +77,29 @@ export class CloverCoverageHandler implements CoverageHandler {
     this.coverageObj.coverage.project.file.push(fileObj);
     const projectMetrics = this.coverageObj.coverage.project.metrics;
 
-    projectMetrics['@statements'] += uncoveredLines.length + coveredLines.length;
-    projectMetrics['@coveredstatements'] += coveredLines.length;
-    projectMetrics['@elements'] += uncoveredLines.length + coveredLines.length;
-    projectMetrics['@coveredelements'] += coveredLines.length;
+    projectMetrics['@statements'] += totalLines;
+    projectMetrics['@coveredstatements'] += coveredLines;
+    projectMetrics['@elements'] += totalLines;
+    projectMetrics['@coveredelements'] += coveredLines;
     projectMetrics['@files'] += 1;
     projectMetrics['@classes'] += 1;
-    projectMetrics['@loc'] += uncoveredLines.length + coveredLines.length;
-    projectMetrics['@ncloc'] += uncoveredLines.length + coveredLines.length;
+    projectMetrics['@loc'] += totalLines;
+    projectMetrics['@ncloc'] += totalLines;
   }
 
   public finalize(): CloverCoverageObject {
     if (this.coverageObj.coverage?.project?.file) {
-      this.coverageObj.coverage.project.file.sort((a, b) => a['@path'].localeCompare(b['@path']));
+      this.coverageObj.coverage.project.file = this.sortByPath(this.coverageObj.coverage.project.file);
     }
     return this.coverageObj;
   }
 }
+
+// Self-register this handler
+HandlerRegistry.register({
+  name: 'clover',
+  description: 'Clover XML format for Atlassian tools',
+  fileExtension: '.xml',
+  handler: () => new CloverCoverageHandler(),
+  compatibleWith: ['Bamboo', 'Bitbucket', 'Jenkins'],
+});

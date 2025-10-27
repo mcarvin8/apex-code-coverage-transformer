@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoverageSession>
+  <Summary numSequencePoints="62" visitedSequencePoints="54" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="87.1" branchCoverage="0"/>
+  <Modules>
+    <Module hash="apex-module">
+      <Files>
+        <File uid="1" fullPath="force-app/main/default/classes/AccountProfile.cls"/>
+        <File uid="2" fullPath="packaged/triggers/AccountTrigger.trigger"/>
+      </Files>
+      <Classes>
+        <Class fullName="AccountProfile">
+          <Methods>
+            <Method name="AccountProfile" isConstructor="false" isStatic="false">
+              <SequencePoints>
+                <SequencePoint vc="0" sl="52" sc="0" el="52" ec="0"/>
+                <SequencePoint vc="0" sl="53" sc="0" el="53" ec="0"/>
+                <SequencePoint vc="1" sl="54" sc="0" el="54" ec="0"/>
+                <SequencePoint vc="1" sl="55" sc="0" el="55" ec="0"/>
+                <SequencePoint vc="1" sl="56" sc="0" el="56" ec="0"/>
+                <SequencePoint vc="1" sl="57" sc="0" el="57" ec="0"/>
+                <SequencePoint vc="1" sl="58" sc="0" el="58" ec="0"/>
+                <SequencePoint vc="0" sl="59" sc="0" el="59" ec="0"/>
+                <SequencePoint vc="0" sl="60" sc="0" el="60" ec="0"/>
+                <SequencePoint vc="1" sl="61" sc="0" el="61" ec="0"/>
+                <SequencePoint vc="1" sl="62" sc="0" el="62" ec="0"/>
+                <SequencePoint vc="1" sl="63" sc="0" el="63" ec="0"/>
+                <SequencePoint vc="1" sl="64" sc="0" el="64" ec="0"/>
+                <SequencePoint vc="1" sl="65" sc="0" el="65" ec="0"/>
+                <SequencePoint vc="1" sl="66" sc="0" el="66" ec="0"/>
+                <SequencePoint vc="1" sl="67" sc="0" el="67" ec="0"/>
+                <SequencePoint vc="1" sl="68" sc="0" el="68" ec="0"/>
+                <SequencePoint vc="1" sl="69" sc="0" el="69" ec="0"/>
+                <SequencePoint vc="1" sl="70" sc="0" el="70" ec="0"/>
+                <SequencePoint vc="1" sl="71" sc="0" el="71" ec="0"/>
+                <SequencePoint vc="1" sl="72" sc="0" el="72" ec="0"/>
+                <SequencePoint vc="1" sl="73" sc="0" el="73" ec="0"/>
+                <SequencePoint vc="1" sl="74" sc="0" el="74" ec="0"/>
+                <SequencePoint vc="1" sl="75" sc="0" el="75" ec="0"/>
+                <SequencePoint vc="1" sl="76" sc="0" el="76" ec="0"/>
+                <SequencePoint vc="1" sl="77" sc="0" el="77" ec="0"/>
+                <SequencePoint vc="1" sl="78" sc="0" el="78" ec="0"/>
+                <SequencePoint vc="1" sl="79" sc="0" el="79" ec="0"/>
+                <SequencePoint vc="1" sl="80" sc="0" el="80" ec="0"/>
+                <SequencePoint vc="1" sl="81" sc="0" el="81" ec="0"/>
+                <SequencePoint vc="1" sl="82" sc="0" el="82" ec="0"/>
+              </SequencePoints>
+            </Method>
+          </Methods>
+        </Class>
+        <Class fullName="AccountTrigger">
+          <Methods>
+            <Method name="AccountTrigger" isConstructor="false" isStatic="false">
+              <SequencePoints>
+                <SequencePoint vc="0" sl="52" sc="0" el="52" ec="0"/>
+                <SequencePoint vc="0" sl="53" sc="0" el="53" ec="0"/>
+                <SequencePoint vc="1" sl="54" sc="0" el="54" ec="0"/>
+                <SequencePoint vc="1" sl="55" sc="0" el="55" ec="0"/>
+                <SequencePoint vc="1" sl="56" sc="0" el="56" ec="0"/>
+                <SequencePoint vc="1" sl="57" sc="0" el="57" ec="0"/>
+                <SequencePoint vc="1" sl="58" sc="0" el="58" ec="0"/>
+                <SequencePoint vc="0" sl="59" sc="0" el="59" ec="0"/>
+                <SequencePoint vc="0" sl="60" sc="0" el="60" ec="0"/>
+                <SequencePoint vc="1" sl="61" sc="0" el="61" ec="0"/>
+                <SequencePoint vc="1" sl="62" sc="0" el="62" ec="0"/>
+                <SequencePoint vc="1" sl="63" sc="0" el="63" ec="0"/>
+                <SequencePoint vc="1" sl="64" sc="0" el="64" ec="0"/>
+                <SequencePoint vc="1" sl="65" sc="0" el="65" ec="0"/>
+                <SequencePoint vc="1" sl="66" sc="0" el="66" ec="0"/>
+                <SequencePoint vc="1" sl="67" sc="0" el="67" ec="0"/>
+                <SequencePoint vc="1" sl="68" sc="0" el="68" ec="0"/>
+                <SequencePoint vc="1" sl="69" sc="0" el="69" ec="0"/>
+                <SequencePoint vc="1" sl="70" sc="0" el="70" ec="0"/>
+                <SequencePoint vc="1" sl="71" sc="0" el="71" ec="0"/>
+                <SequencePoint vc="1" sl="72" sc="0" el="72" ec="0"/>
+                <SequencePoint vc="1" sl="73" sc="0" el="73" ec="0"/>
+                <SequencePoint vc="1" sl="74" sc="0" el="74" ec="0"/>
+                <SequencePoint vc="1" sl="75" sc="0" el="75" ec="0"/>
+                <SequencePoint vc="1" sl="76" sc="0" el="76" ec="0"/>
+                <SequencePoint vc="1" sl="77" sc="0" el="77" ec="0"/>
+                <SequencePoint vc="1" sl="78" sc="0" el="78" ec="0"/>
+                <SequencePoint vc="1" sl="79" sc="0" el="79" ec="0"/>
+                <SequencePoint vc="1" sl="80" sc="0" el="80" ec="0"/>
+                <SequencePoint vc="1" sl="81" sc="0" el="81" ec="0"/>
+                <SequencePoint vc="1" sl="82" sc="0" el="82" ec="0"/>
+              </SequencePoints>
+            </Method>
+          </Methods>
+        </Class>
+      </Classes>
+    </Module>
+  </Modules>
+</CoverageSession>

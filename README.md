@@ -177,6 +177,18 @@ EXAMPLES
 
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"
 
+  Transform the JSON into JSON Summary format:
+
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json-summary"
+
+  Transform the JSON into SimpleCov format:
+
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "simplecov"
+
+  Transform the JSON into OpenCover format:
+
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "opencover"
+
   Transform the JSON into Sonar format, ignoring Apex in the "force-app" directory:
 
     $ sf acc-transformer transform -j "coverage.json" -i "force-app"
@@ -188,14 +200,17 @@ The `-f`/`--format` flag allows you to specify the format of the transformed cov
 
 You can provide multiple `--format` flags in a single command to create multiple reports. If multiple `--format` flags are provided, each output report will have the format appended to the name. For example, if `--output-report` is set `coverage.xml` and you supply `--format sonar --format cobertura` to the command, the output reports will be `coverage-sonar.xml` and `coverage-cobertura.xml`.
 
-| Format                                                                                                                       | Description                                                                                | Compatible Platforms/Tools                                 |
-| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/sonar_baseline.xml)         | Generates a SonarQube-compatible coverage report. This is the default option.              | SonarQube, SonarCloud                                      |
-| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/cobertura_baseline.xml) | Creates a Cobertura XML report, a widely used format for coverage reporting.               | **Codecov**, Azure DevOps, Jenkins, GitLab, GitHub Actions |
-| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/jacoco_baseline.xml)       | Creates a JaCoCo XML report, the standard for Java projects.                               | **Codecov**, Jenkins, Maven, Gradle                        |
-| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/lcov_baseline.info)      | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools.        | Codecov, Coveralls, GitHub Actions                         |
-| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/clover_baseline.xml)       | Produces a Clover XML report format, commonly used with Atlassian tools.                   | Bamboo, Bitbucket, Jenkins                                 |
-| [json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/json_baseline.json)          | Generates a Istanbul JSON report compatible with Node.js tooling and coverage visualizers. | Istanbul/NYC, Codecov, custom tools                        |
+| Format                                                                                                                              | Description                                                                                | Compatible Platforms/Tools                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/sonar_baseline.xml)                | Generates a SonarQube-compatible coverage report. This is the default option.              | SonarQube, SonarCloud                                      |
+| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/cobertura_baseline.xml)        | Creates a Cobertura XML report, a widely used format for coverage reporting.               | **Codecov**, Azure DevOps, Jenkins, GitLab, GitHub Actions |
+| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/jacoco_baseline.xml)              | Creates a JaCoCo XML report, the standard for Java projects.                               | **Codecov**, Jenkins, Maven, Gradle                        |
+| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/lcov_baseline.info)             | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools.        | Codecov, Coveralls, GitHub Actions                         |
+| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/clover_baseline.xml)              | Produces a Clover XML report format, commonly used with Atlassian tools.                   | Bamboo, Bitbucket, Jenkins                                 |
+| [json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/json_baseline.json)                 | Generates a Istanbul JSON report compatible with Node.js tooling and coverage visualizers. | Istanbul/NYC, Codecov, custom tools                        |
+| [json-summary](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/json-summary_baseline.json) | Generates a concise JSON summary ideal for badges, PR comments, and quick analysis.        | GitHub Actions, GitLab CI, Custom Dashboards               |
+| [simplecov](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/simplecov_baseline.json)       | Generates SimpleCov JSON format compatible with Ruby coverage tools.                       | Codecov, SimpleCov, Ruby Tools                             |
+| [opencover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/opencover_baseline.xml)        | Generates OpenCover XML format for .NET and Azure DevOps integration.                      | Azure DevOps, Visual Studio, Codecov, JetBrains Tools      |
 
 ## CI/CD Integration Examples
 
