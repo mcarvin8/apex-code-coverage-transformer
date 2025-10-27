@@ -12,6 +12,7 @@
   <summary>Table of Contents</summary>
 
 - [Install](#install)
+- [Quick Start](#quick-start)
 - [Usage](#usage)
   - [Salesforce CLI](#salesforce-cli)
   - [SFDX Hardis](#sfdx-hardis)
@@ -19,6 +20,11 @@
 - [Command](#command)
   - [`sf acc-transformer transform`](#sf-acc-transformer-transform)
 - [Coverage Report Formats](#coverage-report-formats)
+- [CI/CD Integration Examples](#cicd-integration-examples)
+  - [Codecov](#codecov)
+  - [SonarQube](#sonarqube)
+  - [GitHub Actions](#github-actions)
+  - [GitLab CI](#gitlab-ci)
 - [Hook](#hook)
 - [Troubleshooting](#troubleshooting)
 - [Issues](#issues)
@@ -26,7 +32,7 @@
 - [License](#license)
 </details>
 
-Transform the Salesforce Apex code coverage JSON files created during deployments and test runs into other [formats](#coverage-report-formats) accepted by SonarQube, GitHub, GitLab, Azure, Bitbucket, etc.
+Transform the Salesforce Apex code coverage JSON files created during deployments and test runs into other [formats](#coverage-report-formats) accepted by SonarQube, Codecov, GitHub, GitLab, Azure, Bitbucket, etc.
 
 > If there's a coverage format not yet supported by this plugin, feel free to provide a pull request or issue for the coverage format.
 
@@ -35,6 +41,51 @@ Transform the Salesforce Apex code coverage JSON files created during deployment
 ```bash
 sf plugins install apex-code-coverage-transformer@x.y.z
 ```
+
+## Quick Start
+
+1. **Generate Salesforce code coverage in JSON format**:
+
+   **Option A - Run Apex tests directly**:
+
+   ```bash
+   sf apex run test --code-coverage --output-dir "coverage"
+   ```
+
+   **Option B - Deploy/validate with coverage**:
+
+   ```bash
+   sf project deploy start --coverage-formatters json --results-dir "coverage"
+   # or for validation
+   sf project deploy validate --coverage-formatters json --results-dir "coverage"
+   ```
+
+2. **Transform the coverage to your desired format**:
+
+   **For test command** (creates `coverage/test-result-codecoverage.json`):
+
+   ```bash
+   # For SonarQube
+   sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "sonar"
+
+   # For Codecov
+   sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+
+   # For multiple formats at once
+   sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -f "sonar" -f "cobertura" -f "jacoco"
+   ```
+
+   **For deploy command** (creates `coverage/coverage/coverage.json`):
+
+   ```bash
+   # For SonarQube
+   sf acc-transformer transform -j "coverage/coverage/coverage.json" -r "coverage.xml" -f "sonar"
+
+   # For Codecov
+   sf acc-transformer transform -j "coverage/coverage/coverage.json" -r "coverage.xml" -f "cobertura"
+   ```
+
+3. **Upload to your coverage tool** (see [CI/CD Integration Examples](#cicd-integration-examples) for platform-specific instructions).
 
 ## Usage
 
@@ -137,14 +188,215 @@ The `-f`/`--format` flag allows you to specify the format of the transformed cov
 
 You can provide multiple `--format` flags in a single command to create multiple reports. If multiple `--format` flags are provided, each output report will have the format appended to the name. For example, if `--output-report` is set `coverage.xml` and you supply `--format sonar --format cobertura` to the command, the output reports will be `coverage-sonar.xml` and `coverage-cobertura.xml`.
 
-| Flag Option                                                                                                                  | Description                                                                                |
-| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/sonar_baseline.xml)         | Generates a SonarQube-compatible coverage report. This is the default option.              |
-| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/clover_baseline.xml)       | Produces a Clover XML report format, commonly used with Atlassian tools.                   |
-| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/lcov_baseline.info)      | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools.        |
-| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/cobertura_baseline.xml) | Creates a Cobertura XML report, a widely used format for coverage reporting.               |
-| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/jacoco_baseline.xml)       | Creates a JaCoCo XML report, the standard for Java projects.                               |
-| [json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/json_baseline.json)          | Generates a Istanbul JSON report compatible with Node.js tooling and coverage visualizers. |
+| Format                                                                                                                       | Description                                                                                | Compatible Platforms/Tools                                 |
+| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/sonar_baseline.xml)         | Generates a SonarQube-compatible coverage report. This is the default option.              | SonarQube, SonarCloud                                      |
+| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/cobertura_baseline.xml) | Creates a Cobertura XML report, a widely used format for coverage reporting.               | **Codecov**, Azure DevOps, Jenkins, GitLab, GitHub Actions |
+| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/jacoco_baseline.xml)       | Creates a JaCoCo XML report, the standard for Java projects.                               | **Codecov**, Jenkins, Maven, Gradle                        |
+| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/lcov_baseline.info)      | Outputs coverage data in LCOV format, useful for integrating with LCOV-based tools.        | Codecov, Coveralls, GitHub Actions                         |
+| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/clover_baseline.xml)       | Produces a Clover XML report format, commonly used with Atlassian tools.                   | Bamboo, Bitbucket, Jenkins                                 |
+| [json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/json_baseline.json)          | Generates a Istanbul JSON report compatible with Node.js tooling and coverage visualizers. | Istanbul/NYC, Codecov, custom tools                        |
+
+## CI/CD Integration Examples
+
+### Codecov
+
+Codecov accepts multiple formats including Cobertura, JaCoCo, and LCOV. Cobertura is recommended for its wide compatibility.
+
+**Using Codecov CLI**:
+
+```bash
+# Generate Salesforce coverage
+sf apex run test --code-coverage --output-dir "coverage"
+
+# Transform to Cobertura format
+sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+
+# Upload to Codecov
+codecovcli upload-process --file coverage.xml
+```
+
+**Using Codecov GitHub Action**:
+
+```yaml
+name: Salesforce CI with Codecov
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Install Coverage Transformer Plugin
+        run: sf plugins install apex-code-coverage-transformer
+
+      - name: Authenticate to Salesforce
+        run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
+
+      - name: Run Apex Tests
+        run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+
+      - name: Transform Coverage to Cobertura
+        run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          flags: apex
+          token: ${{ secrets.CODECOV_TOKEN }}
+```
+
+### SonarQube
+
+SonarQube requires its own Generic Coverage format (Sonar format).
+
+**SonarQube Scanner Example**:
+
+```bash
+# Generate and transform coverage
+sf apex run test --code-coverage --output-dir "coverage"
+sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "sonar"
+
+# Run SonarQube scanner
+sonar-scanner \
+  -Dsonar.projectKey=your-project-key \
+  -Dsonar.sources=force-app \
+  -Dsonar.tests=force-app \
+  -Dsonar.test.inclusions=**/*Test.cls \
+  -Dsonar.apex.coverage.reportPath=coverage.xml \
+  -Dsonar.host.url=https://sonarqube.example.com \
+  -Dsonar.login=$SONAR_TOKEN
+```
+
+**SonarCloud GitHub Action**:
+
+```yaml
+name: SonarCloud Analysis
+
+on: [push, pull_request]
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Install Coverage Transformer Plugin
+        run: sf plugins install apex-code-coverage-transformer
+
+      - name: Authenticate to Salesforce
+        run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
+
+      - name: Run Apex Tests
+        run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+
+      - name: Transform Coverage to Sonar Format
+        run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "sonar"
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=your-project-key
+            -Dsonar.organization=your-org
+            -Dsonar.sources=force-app
+            -Dsonar.tests=force-app
+            -Dsonar.test.inclusions=**/*Test.cls
+            -Dsonar.apex.coverage.reportPath=coverage.xml
+```
+
+### GitHub Actions
+
+GitHub Actions can display coverage using various formats. Use Cobertura or LCOV for best compatibility.
+
+**With Coverage Report Action**:
+
+```yaml
+name: Salesforce CI with Coverage Report
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Install Coverage Transformer Plugin
+        run: sf plugins install apex-code-coverage-transformer
+
+      - name: Authenticate to Salesforce
+        run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
+
+      - name: Run Apex Tests
+        run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+
+      - name: Transform Coverage to Cobertura
+        run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+
+      - name: Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: coverage.xml
+          badge: true
+          format: markdown
+          output: both
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
+```
+
+### GitLab CI
+
+GitLab supports Cobertura format natively for coverage visualization.
+
+**`.gitlab-ci.yml` Example**:
+
+```yaml
+stages:
+  - test
+
+apex-tests:
+  stage: test
+  image: node:20
+  before_script:
+    - npm install -g @salesforce/cli
+    - sf plugins install apex-code-coverage-transformer
+    - echo $SFDX_AUTH_URL | sf org login sfdx-url --sfdx-url-stdin --alias ci-org
+  script:
+    - sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+    - sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+```
 
 ## Hook
 
