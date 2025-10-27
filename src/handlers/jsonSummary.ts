@@ -100,6 +100,16 @@ export class JsonSummaryCoverageHandler extends BaseHandler {
       this.coverageObj.total.statements.pct = pct;
     }
 
+    // Sort files object by path for deterministic output
+    const sortedKeys = Object.keys(this.coverageObj.files).sort();
+    const sortedFiles: Record<string, JsonSummaryFileCoverage> = {};
+
+    for (const key of sortedKeys) {
+      sortedFiles[key] = this.coverageObj.files[key];
+    }
+
+    this.coverageObj.files = sortedFiles;
+
     return this.coverageObj;
   }
 }

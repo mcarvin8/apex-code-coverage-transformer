@@ -173,8 +173,13 @@ export class OpenCoverCoverageHandler extends BaseHandler {
     // Sort classes by name for consistent output
     this.module.Classes.Class.sort((a, b) => a['@fullName'].localeCompare(b['@fullName']));
 
-    // Sort files by path for consistent output
+    // Sort files by path and reassign UIDs sequentially for deterministic output
     this.module.Files.File.sort((a, b) => a['@fullPath'].localeCompare(b['@fullPath']));
+
+    // Reassign UIDs based on sorted order
+    for (let i = 0; i < this.module.Files.File.length; i++) {
+      this.module.Files.File[i]['@uid'] = i + 1;
+    }
 
     return this.coverageObj;
   }

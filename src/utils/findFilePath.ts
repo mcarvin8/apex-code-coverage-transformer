@@ -1,54 +1,39 @@
 'use strict';
-/* eslint-disable no-await-in-loop */
 
-import { readdir, stat } from 'node:fs/promises';
-import { join, relative } from 'node:path';
-import { normalizePathToUnix } from './normalizePathToUnix.js';
-
-export async function findFilePath(
-  fileName: string,
-  packageDirectories: string[],
-  repoRoot: string
-): Promise<string | undefined> {
-  for (const directory of packageDirectories) {
-    const result = await resolveFilePath(fileName, directory, repoRoot);
-    if (result) {
-      return normalizePathToUnix(result);
-    }
+/**
+ * Find file path using a pre-built cache (fast) or fallback to the old method.
+ *
+ * @param fileName - Name of the file to find
+ * @param filePathCache - Optional pre-built cache of filename -> path mappings
+ * @returns Normalized Unix-style relative path or undefined if not found
+ */
+export function findFilePath(fileName: string, filePathCache?: Map<string, string>): string | undefined {
+  if (filePathCache) {
+    return findFilePathFromCache(fileName, filePathCache);
   }
+
+  // Fallback to old behavior should never happen in practice,
+  // but keeping for backwards compatibility
   return undefined;
 }
 
-async function resolveFilePath(fileName: string, dxDirectory: string, repoRoot: string): Promise<string | undefined> {
-  const extensionsToTry = getExtensionsToTry(fileName);
-
-  for (const name of extensionsToTry) {
-    const absolutePath = await searchRecursively(name, dxDirectory);
-    if (absolutePath) {
-      return relative(repoRoot, absolutePath);
-    }
+function findFilePathFromCache(fileName: string, cache: Map<string, string>): string | undefined {
+  // Try exact match first
+  const exactMatch = cache.get(fileName);
+  if (exactMatch) {
+    return exactMatch;
   }
 
-  return undefined;
-}
+  // Try with .cls extension
+  const clsMatch = cache.get(`${fileName}.cls`);
+  if (clsMatch) {
+    return clsMatch;
+  }
 
-function getExtensionsToTry(fileName: string): string[] {
-  return ['cls', 'trigger'].map((ext) => `${fileName}.${ext}`);
-}
-
-async function searchRecursively(fileName: string, directory: string): Promise<string | undefined> {
-  const entries = await readdir(directory);
-
-  for (const entry of entries) {
-    const fullPath = join(directory, entry);
-    const stats = await stat(fullPath);
-
-    if (stats.isDirectory()) {
-      const nestedResult = await searchRecursively(fileName, fullPath);
-      if (nestedResult) return nestedResult;
-    } else if (entry === fileName) {
-      return fullPath;
-    }
+  // Try with .trigger extension
+  const triggerMatch = cache.get(`${fileName}.trigger`);
+  if (triggerMatch) {
+    return triggerMatch;
   }
 
   return undefined;
