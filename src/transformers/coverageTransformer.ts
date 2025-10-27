@@ -6,6 +6,7 @@ import { getCoverageHandler } from '../handlers/getHandler.js';
 import { DeployCoverageData, TestCoverageData, CoverageProcessingContext } from '../utils/types.js';
 import { getPackageDirectories } from '../utils/getPackageDirectories.js';
 import { findFilePath } from '../utils/findFilePath.js';
+import { buildFilePathCache } from '../utils/buildFilePathCache.js';
 import { setCoveredLines } from '../utils/setCoveredLines.js';
 import { getConcurrencyThreshold } from '../utils/getConcurrencyThreshold.js';
 import { checkCoverageDataType } from '../utils/setCoverageDataType.js';
@@ -33,12 +34,16 @@ export async function transformCoverageReport(
   const commandType = checkCoverageDataType(parsedData);
   const concurrencyLimit = getConcurrencyThreshold();
 
+  // Build file path cache upfront to avoid O(n*m) directory traversals
+  const filePathCache = await buildFilePathCache(packageDirectories, repoRoot);
+
   const context: CoverageProcessingContext = {
     handlers,
     packageDirs: packageDirectories,
     repoRoot,
     concurrencyLimit,
     warnings,
+    filePathCache,
   };
 
   if (commandType === 'DeployCoverageData') {
@@ -86,7 +91,7 @@ async function processDeployCoverage(data: DeployCoverageData, context: Coverage
   await mapLimit(Object.keys(data), context.concurrencyLimit, async (fileName: string) => {
     const fileInfo = data[fileName];
     const formattedName = fileName.replace(/no-map[\\/]+/, '');
-    const path = await findFilePath(formattedName, context.packageDirs, context.repoRoot);
+    const path = findFilePath(formattedName, context.filePathCache);
 
     if (!path) {
       context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
@@ -104,9 +109,10 @@ async function processDeployCoverage(data: DeployCoverageData, context: Coverage
 
 async function processTestCoverage(data: TestCoverageData[], context: CoverageProcessingContext): Promise<number> {
   let processed = 0;
+  // eslint-disable-next-line @typescript-eslint/require-await
   await mapLimit(data, context.concurrencyLimit, async (entry: TestCoverageData) => {
     const formattedName = entry.name.replace(/no-map[\\/]+/, '');
-    const path = await findFilePath(formattedName, context.packageDirs, context.repoRoot);
+    const path = findFilePath(formattedName, context.filePathCache);
 
     if (!path) {
       context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
