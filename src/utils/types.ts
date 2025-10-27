@@ -42,6 +42,7 @@ export type CoverageProcessingContext = {
   repoRoot: string;
   concurrencyLimit: number;
   warnings: string[];
+  filePathCache: Map<string, string>;
 };
 
 type SonarLine = {

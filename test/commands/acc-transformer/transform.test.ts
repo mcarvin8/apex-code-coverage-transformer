@@ -1,7 +1,6 @@
 'use strict';
 import { describe, it, expect } from '@jest/globals';
 
-import { TestContext } from '@salesforce/core/testSetup';
 import { transformCoverageReport } from '../../../src/transformers/coverageTransformer.js';
 import { formatOptions } from '../../../src/utils/constants.js';
 import { inputJsons, invalidJson, deployCoverage, testCoverage } from '../../utils/testConstants.js';
@@ -10,14 +9,8 @@ import { postTestCleanup } from '../../utils/testCleanup.js';
 import { preTestSetup } from '../../utils/testSetup.js';
 
 describe('acc-transformer transform unit tests', () => {
-  const $$ = new TestContext();
-
   beforeAll(async () => {
     await preTestSetup();
-  });
-
-  afterEach(() => {
-    $$.restore();
   });
 
   afterAll(async () => {

@@ -80,7 +80,11 @@ export class JaCoCoCoverageHandler extends BaseHandler {
     let overallCovered = 0;
     let overallMissed = 0;
 
-    for (const packageObj of Object.values(this.packageMap)) {
+    // Sort packages by name for consistent output
+    const sortedPackages = Object.keys(this.packageMap).sort();
+
+    for (const packageName of sortedPackages) {
+      const packageObj = this.packageMap[packageName];
       packageObj.sourcefile.sort((a, b) => a['@name'].localeCompare(b['@name']));
 
       let packageCovered = 0;
@@ -100,6 +104,9 @@ export class JaCoCoCoverageHandler extends BaseHandler {
       overallCovered += packageCovered;
       overallMissed += packageMissed;
     }
+
+    // Rebuild the package array in sorted order
+    this.coverageObj.report.package = sortedPackages.map((name) => this.packageMap[name]);
 
     this.coverageObj.report.counter.push({
       '@type': 'LINE',

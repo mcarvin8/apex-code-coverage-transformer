@@ -78,6 +78,16 @@ export class SimpleCovCoverageHandler extends BaseHandler {
   }
 
   public finalize(): SimpleCovCoverageObject {
+    // Sort coverage object by file path for deterministic output
+    const sortedKeys = Object.keys(this.coverageObj.coverage).sort();
+    const sortedCoverage: Record<string, Array<number | null>> = {};
+
+    for (const key of sortedKeys) {
+      sortedCoverage[key] = this.coverageObj.coverage[key];
+    }
+
+    this.coverageObj.coverage = sortedCoverage;
+
     return this.coverageObj;
   }
 }
