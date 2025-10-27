@@ -9,7 +9,8 @@ import TransformerTransform from '../commands/acc-transformer/transform.js';
 import { HookFile } from '../utils/types.js';
 import { getRepoRoot } from '../utils/getRepoRoot.js';
 
-export const postrun: Hook<'postrun'> = async function (options) {
+export const hook: Hook<'finally'> = async function (options) {
+  const commandId = options?.Command?.id ?? '';
   let commandType: string;
   let coverageJson: string;
   if (
@@ -19,10 +20,10 @@ export const postrun: Hook<'postrun'> = async function (options) {
       'project:deploy:report',
       'project:deploy:resume',
       'hardis:project:deploy:smart',
-    ].includes(options.Command.id)
+    ].includes(commandId)
   ) {
     commandType = 'deploy';
-  } else if (['apex:run:test', 'apex:get:test', 'hardis:org:test:apex'].includes(options.Command.id)) {
+  } else if (['apex:run:test', 'apex:get:test', 'hardis:org:test:apex'].includes(commandId)) {
     commandType = 'test';
   } else {
     return;

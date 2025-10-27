@@ -81,7 +81,7 @@
       }
     },
     "hooks": {
-      "postrun": "./lib/hooks/postrun"
+      "finally": "./lib/hooks/finally"
     },
     "devPlugins": [
       "@oclif/plugin-help"
