@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.14.0...v2.14.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* **handlers:** use correct data types for sonar and cobertura attributes ([#233](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/233)) ([83ca418](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/83ca4184236dd517dfb1f64b83bc53c0656a79f5))
+* **transformer:** add file path caching ([#236](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/236)) ([b91502a](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/b91502a6e91a7ec8fff7789bb390fe1868e7755b))
+
 ## [2.14.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.13.4...v2.14.0) (2025-10-27)
 
 
