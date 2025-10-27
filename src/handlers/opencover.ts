@@ -17,13 +17,34 @@ import { HandlerRegistry } from './HandlerRegistry.js';
  * OpenCover is a code coverage tool for .NET, but its XML format
  * is also accepted by Azure DevOps, Visual Studio, and other tools.
  *
+ * **Format Origin**: OpenCover (.NET coverage tool)
+ *
+ * @see https://github.com/OpenCover/opencover
+ * @see https://github.com/OpenCover/opencover/wiki/Reports
+ *
+ * **Apex-Specific Adaptations**:
+ * - Salesforce Apex only provides line-level coverage data
+ * - Each Apex class is represented as an OpenCover "Module"
+ * - Line coverage is mapped to "SequencePoints" (executable code locations)
+ * - Branch coverage is always 0 (Apex doesn't provide branch/decision coverage)
+ * - Column information (`@sc`, `@ec`) defaults to 0 (not available in Apex)
+ *
+ * **Limitations**:
+ * - No branch/decision coverage - OpenCover supports this, Apex does not
+ * - No method-level coverage granularity - treating entire class as one method
+ * - No cyclomatic complexity metrics
+ * - No column-level positioning data
+ *
+ * **Structure Mapping**:
+ * - Apex Class → OpenCover Module/Class
+ * - Apex Class → OpenCover Method (single method per class)
+ * - Apex Lines → OpenCover SequencePoints
+ *
  * Compatible with:
  * - Azure DevOps
  * - Visual Studio
  * - Codecov
  * - JetBrains tools (ReSharper, Rider)
- *
- * @see https://github.com/OpenCover/opencover
  *
  * @example
  * ```xml
@@ -96,18 +117,22 @@ export class OpenCoverCoverageHandler extends BaseHandler {
     const { totalLines, coveredLines } = this.calculateCoverage(lines);
 
     // Create sequence points for each line
+    // In OpenCover, a SequencePoint represents an executable statement location
+    // We map each Apex line to a SequencePoint
     const sequencePoints: OpenCoverSequencePoint[] = [];
     for (const [lineNumber, hits] of Object.entries(lines)) {
       sequencePoints.push({
-        '@vc': hits, // visit count
+        '@vc': hits, // visit count (number of times this line was executed)
         '@sl': Number(lineNumber), // start line
-        '@sc': 0, // start column (not available)
-        '@el': Number(lineNumber), // end line
-        '@ec': 0, // end column (not available)
+        '@sc': 0, // start column (not available in Apex coverage data)
+        '@el': Number(lineNumber), // end line (same as start for line-level coverage)
+        '@ec': 0, // end column (not available in Apex coverage data)
       });
     }
 
-    // Create a method for this file (Apex classes are treated as methods)
+    // Create a method for this file
+    // NOTE: Apex classes are treated as a single method since we don't have
+    // method-level coverage granularity from Salesforce
     const method: OpenCoverMethod = {
       '@name': fileName,
       '@isConstructor': false,
@@ -127,7 +152,7 @@ export class OpenCoverCoverageHandler extends BaseHandler {
 
     this.module.Classes.Class.push(classObj);
 
-    // Update summary
+    // Update summary statistics
     this.coverageObj.CoverageSession.Summary['@numSequencePoints'] += totalLines;
     this.coverageObj.CoverageSession.Summary['@visitedSequencePoints'] += coveredLines;
   }
@@ -141,13 +166,14 @@ export class OpenCoverCoverageHandler extends BaseHandler {
       summary['@sequenceCoverage'] = Number(coverage.toFixed(2));
     }
 
-    // Branch coverage defaults to 0 for Apex (no branch data)
+    // Branch coverage is always 0 for Apex (no branch/decision coverage data available)
+    // In .NET environments, this would track if/else branches, switch cases, etc.
     summary['@branchCoverage'] = 0;
 
-    // Sort classes by name
+    // Sort classes by name for consistent output
     this.module.Classes.Class.sort((a, b) => a['@fullName'].localeCompare(b['@fullName']));
 
-    // Sort files by path
+    // Sort files by path for consistent output
     this.module.Files.File.sort((a, b) => a['@fullPath'].localeCompare(b['@fullPath']));
 
     return this.coverageObj;
