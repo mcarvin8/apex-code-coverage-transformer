@@ -46,7 +46,7 @@ export type CoverageProcessingContext = {
 
 type SonarLine = {
   '@lineNumber': number;
-  '@covered': string;
+  '@covered': boolean;
 };
 
 export type SonarClass = {
@@ -78,8 +78,8 @@ export type CoberturaLine = {
 export type CoberturaClass = {
   '@name': string;
   '@filename': string;
-  '@line-rate': string;
-  '@branch-rate': string;
+  '@line-rate': number;
+  '@branch-rate': number;
   methods: Record<string, never>;
   lines: {
     line: CoberturaLine[];

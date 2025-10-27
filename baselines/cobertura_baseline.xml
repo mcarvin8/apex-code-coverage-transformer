@@ -7,7 +7,7 @@
   <packages>
     <package name="force-app" line-rate="0.871" branch-rate="1">
       <classes>
-        <class name="AccountProfile" filename="force-app/main/default/classes/AccountProfile.cls" line-rate="0.8710" branch-rate="1">
+        <class name="AccountProfile" filename="force-app/main/default/classes/AccountProfile.cls" line-rate="0.871" branch-rate="1">
           <methods/>
           <lines>
             <line number="52" hits="0" branch="false"/>
@@ -47,7 +47,7 @@
     </package>
     <package name="packaged" line-rate="0.871" branch-rate="1">
       <classes>
-        <class name="AccountTrigger" filename="packaged/triggers/AccountTrigger.trigger" line-rate="0.8710" branch-rate="1">
+        <class name="AccountTrigger" filename="packaged/triggers/AccountTrigger.trigger" line-rate="0.871" branch-rate="1">
           <methods/>
           <lines>
             <line number="52" hits="0" branch="false"/>

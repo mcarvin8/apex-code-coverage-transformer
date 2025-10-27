@@ -25,7 +25,7 @@ export class SonarCoverageHandler extends BaseHandler {
       lineToCover: [],
     };
     for (const [lineNumberString, value] of Object.entries(lines)) {
-      const covered = value === 1 ? 'true' : 'false';
+      const covered = value === 1;
       fileObj.lineToCover.push({
         '@lineNumber': Number(lineNumberString),
         '@covered': covered,

@@ -54,8 +54,8 @@ export class CoberturaCoverageHandler extends BaseHandler {
     const classObj: CoberturaClass = {
       '@name': fileName,
       '@filename': filePath,
-      '@line-rate': '0',
-      '@branch-rate': '1',
+      '@line-rate': 0,
+      '@branch-rate': 1,
       methods: {},
       lines: { line: [] },
     };
@@ -69,7 +69,7 @@ export class CoberturaCoverageHandler extends BaseHandler {
     }
 
     if (totalLines > 0) {
-      classObj['@line-rate'] = (coveredLines / totalLines).toFixed(4);
+      classObj['@line-rate'] = parseFloat((coveredLines / totalLines).toFixed(4));
     }
 
     this.coverageObj.coverage['@lines-valid'] += totalLines;
@@ -83,10 +83,7 @@ export class CoberturaCoverageHandler extends BaseHandler {
     this.coverageObj.coverage.packages.package = Array.from(this.packageMap.values());
 
     for (const pkg of this.coverageObj.coverage.packages.package) {
-      const totalLines = pkg.classes.class.reduce(
-        (sum, cls) => sum + parseFloat(cls['@line-rate']) * cls.lines.line.length,
-        0
-      );
+      const totalLines = pkg.classes.class.reduce((sum, cls) => sum + cls['@line-rate'] * cls.lines.line.length, 0);
       const totalClasses = pkg.classes.class.reduce((sum, cls) => sum + cls.lines.line.length, 0);
 
       pkg['@line-rate'] = parseFloat((totalLines / totalClasses).toFixed(4));
