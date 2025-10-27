@@ -55,7 +55,15 @@ export class IstanbulCoverageHandler extends BaseHandler {
   }
 
   public finalize(): IstanbulCoverageObject {
-    return this.coverageMap;
+    // Sort coverage map by file path for deterministic output
+    const sortedKeys = Object.keys(this.coverageMap).sort();
+    const sortedMap: IstanbulCoverageMap = {};
+
+    for (const key of sortedKeys) {
+      sortedMap[key] = this.coverageMap[key];
+    }
+
+    return sortedMap;
   }
 }
 
