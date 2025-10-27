@@ -1,11 +1,21 @@
 'use strict';
 
-import { SonarCoverageObject, SonarClass, CoverageHandler } from '../utils/types.js';
+import { SonarCoverageObject, SonarClass } from '../utils/types.js';
+import { BaseHandler } from './BaseHandler.js';
+import { HandlerRegistry } from './HandlerRegistry.js';
 
-export class SonarCoverageHandler implements CoverageHandler {
+/**
+ * Handler for generating SonarQube Generic Coverage reports.
+ *
+ * This is the default format and is compatible with SonarQube and SonarCloud.
+ *
+ * @see https://docs.sonarqube.org/latest/analysis/generic-test/
+ */
+export class SonarCoverageHandler extends BaseHandler {
   private readonly coverageObj: SonarCoverageObject;
 
   public constructor() {
+    super();
     this.coverageObj = { coverage: { '@version': '1', file: [] } };
   }
 
@@ -27,8 +37,17 @@ export class SonarCoverageHandler implements CoverageHandler {
 
   public finalize(): SonarCoverageObject {
     if (this.coverageObj.coverage?.file) {
-      this.coverageObj.coverage.file.sort((a, b) => a['@path'].localeCompare(b['@path']));
+      this.coverageObj.coverage.file = this.sortByPath(this.coverageObj.coverage.file);
     }
     return this.coverageObj;
   }
 }
+
+// Self-register this handler
+HandlerRegistry.register({
+  name: 'sonar',
+  description: 'SonarQube Generic Coverage format',
+  fileExtension: '.xml',
+  handler: () => new SonarCoverageHandler(),
+  compatibleWith: ['SonarQube', 'SonarCloud'],
+});

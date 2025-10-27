@@ -1,27 +1,39 @@
 'use strict';
 
-import { CoverageHandler, LcovCoverageObject, LcovFile } from '../utils/types.js';
+import { LcovCoverageObject, LcovFile } from '../utils/types.js';
+import { BaseHandler } from './BaseHandler.js';
+import { HandlerRegistry } from './HandlerRegistry.js';
 
-export class LcovCoverageHandler implements CoverageHandler {
+/**
+ * Handler for generating LCOV coverage reports.
+ *
+ * LCOV is a widely-used format for code coverage reporting,
+ * particularly common in JavaScript/Node.js projects.
+ *
+ * Compatible with:
+ * - Codecov
+ * - Coveralls
+ * - GitHub Actions
+ * - LCOV analysis tools
+ *
+ * @see http://ltp.sourceforge.net/coverage/lcov.php
+ */
+export class LcovCoverageHandler extends BaseHandler {
   private readonly coverageObj: LcovCoverageObject;
 
   public constructor() {
+    super();
     this.coverageObj = { files: [] };
   }
 
   public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
-    const uncoveredLines = Object.keys(lines)
-      .filter((lineNumber) => lines[lineNumber] === 0)
-      .map(Number);
-    const coveredLines = Object.keys(lines)
-      .filter((lineNumber) => lines[lineNumber] === 1)
-      .map(Number);
+    const { totalLines, coveredLines } = this.calculateCoverage(lines);
 
     const lcovFile: LcovFile = {
       sourceFile: filePath,
       lines: [],
-      totalLines: uncoveredLines.length + coveredLines.length,
-      coveredLines: coveredLines.length,
+      totalLines,
+      coveredLines,
     };
 
     for (const [lineNumber, isCovered] of Object.entries(lines)) {
@@ -41,3 +53,12 @@ export class LcovCoverageHandler implements CoverageHandler {
     return this.coverageObj;
   }
 }
+
+// Self-register this handler
+HandlerRegistry.register({
+  name: 'lcovonly',
+  description: 'LCOV format for JavaScript and C/C++ coverage',
+  fileExtension: '.info',
+  handler: () => new LcovCoverageHandler(),
+  compatibleWith: ['Codecov', 'Coveralls', 'GitHub Actions'],
+});

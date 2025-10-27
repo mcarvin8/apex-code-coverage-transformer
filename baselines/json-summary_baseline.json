@@ -1,0 +1,46 @@
+{
+  "total": {
+    "lines": {
+      "total": 62,
+      "covered": 54,
+      "skipped": 0,
+      "pct": 87.1
+    },
+    "statements": {
+      "total": 62,
+      "covered": 54,
+      "skipped": 0,
+      "pct": 87.1
+    }
+  },
+  "files": {
+    "force-app/main/default/classes/AccountProfile.cls": {
+      "lines": {
+        "total": 31,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 87.1
+      },
+      "statements": {
+        "total": 31,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 87.1
+      }
+    },
+    "packaged/triggers/AccountTrigger.trigger": {
+      "lines": {
+        "total": 31,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 87.1
+      },
+      "statements": {
+        "total": 31,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 87.1
+      }
+    }
+  }
+}

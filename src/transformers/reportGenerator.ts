@@ -9,7 +9,11 @@ import {
   LcovCoverageObject,
   JaCoCoCoverageObject,
   IstanbulCoverageObject,
+  JsonSummaryCoverageObject,
+  SimpleCovCoverageObject,
+  OpenCoverCoverageObject,
 } from '../utils/types.js';
+import { HandlerRegistry } from '../handlers/HandlerRegistry.js';
 
 export async function generateAndWriteReport(
   outputPath: string,
@@ -19,12 +23,15 @@ export async function generateAndWriteReport(
     | CloverCoverageObject
     | LcovCoverageObject
     | JaCoCoCoverageObject
-    | IstanbulCoverageObject,
+    | IstanbulCoverageObject
+    | JsonSummaryCoverageObject
+    | SimpleCovCoverageObject
+    | OpenCoverCoverageObject,
   format: string,
   formatAmount: number
 ): Promise<string> {
   const content = generateReportContent(coverageObj, format);
-  const extension = getExtensionForFormat(format);
+  const extension = HandlerRegistry.getExtension(format);
 
   const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
   const dir = dirname(outputPath);
@@ -43,18 +50,21 @@ function generateReportContent(
     | CloverCoverageObject
     | LcovCoverageObject
     | JaCoCoCoverageObject
-    | IstanbulCoverageObject,
+    | IstanbulCoverageObject
+    | JsonSummaryCoverageObject
+    | SimpleCovCoverageObject
+    | OpenCoverCoverageObject,
   format: string
 ): string {
   if (format === 'lcovonly' && isLcovCoverageObject(coverageObj)) {
     return generateLcov(coverageObj);
   }
 
-  if (format === 'json') {
+  if (format === 'json' || format === 'json-summary' || format === 'simplecov') {
     return JSON.stringify(coverageObj, null, 2);
   }
 
-  const isHeadless = ['cobertura', 'clover', 'jacoco'].includes(format);
+  const isHeadless = ['cobertura', 'clover', 'jacoco', 'opencover'].includes(format);
   const xml = create(coverageObj).end({ prettyPrint: true, indent: '  ', headless: isHeadless });
 
   return prependXmlHeader(xml, format);
@@ -88,15 +98,15 @@ function prependXmlHeader(xml: string, format: string): string {
       return `<?xml version="1.0" encoding="UTF-8"?>\n${xml}`;
     case 'jacoco':
       return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">\n${xml}`;
+    case 'opencover':
+      return `<?xml version="1.0" encoding="utf-8"?>\n${xml}`;
     default:
       return xml;
   }
 }
 
 export function getExtensionForFormat(format: string): string {
-  if (format === 'lcovonly') return '.info';
-  if (format === 'json') return '.json';
-  return '.xml';
+  return HandlerRegistry.getExtension(format);
 }
 
 function isLcovCoverageObject(obj: unknown): obj is LcovCoverageObject {

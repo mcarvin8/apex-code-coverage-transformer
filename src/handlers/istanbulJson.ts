@@ -1,15 +1,29 @@
 'use strict';
 
-import {
-  IstanbulCoverageMap,
-  IstanbulCoverageFile,
-  IstanbulCoverageObject,
-  CoverageHandler,
-  SourceRange,
-} from '../utils/types.js';
+import { IstanbulCoverageMap, IstanbulCoverageFile, IstanbulCoverageObject, SourceRange } from '../utils/types.js';
+import { BaseHandler } from './BaseHandler.js';
+import { HandlerRegistry } from './HandlerRegistry.js';
 
-export class IstanbulCoverageHandler implements CoverageHandler {
+/**
+ * Handler for generating Istanbul/NYC JSON coverage reports.
+ *
+ * Istanbul is the most widely-used JavaScript code coverage tool.
+ * This format is compatible with NYC, Codecov, and many other tools.
+ *
+ * Compatible with:
+ * - Istanbul/NYC
+ * - Codecov
+ * - Coveralls
+ * - Node.js coverage tools
+ *
+ * @see https://istanbul.js.org/
+ */
+export class IstanbulCoverageHandler extends BaseHandler {
   private coverageMap: IstanbulCoverageMap = {};
+
+  public constructor() {
+    super();
+  }
 
   public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
     const statementMap: Record<string, SourceRange> = {};
@@ -44,3 +58,12 @@ export class IstanbulCoverageHandler implements CoverageHandler {
     return this.coverageMap;
   }
 }
+
+// Self-register this handler
+HandlerRegistry.register({
+  name: 'json',
+  description: 'Istanbul JSON format for Node.js and JavaScript tools',
+  fileExtension: '.json',
+  handler: () => new IstanbulCoverageHandler(),
+  compatibleWith: ['Istanbul/NYC', 'Codecov', 'Coveralls', 'Node.js Tools'],
+});

@@ -1,12 +1,23 @@
 'use strict';
 
-import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass, CoverageHandler } from '../utils/types.js';
+import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass } from '../utils/types.js';
+import { BaseHandler } from './BaseHandler.js';
+import { HandlerRegistry } from './HandlerRegistry.js';
 
-export class CoberturaCoverageHandler implements CoverageHandler {
+/**
+ * Handler for generating Cobertura XML coverage reports.
+ *
+ * Cobertura format is widely supported by many CI/CD platforms
+ * including Codecov, Azure DevOps, Jenkins, and GitLab.
+ *
+ * @see http://cobertura.github.io/cobertura/
+ */
+export class CoberturaCoverageHandler extends BaseHandler {
   private readonly coverageObj: CoberturaCoverageObject;
   private packageMap: Map<string, CoberturaPackage>;
 
   public constructor() {
+    super();
     this.coverageObj = {
       coverage: {
         '@lines-valid': 0,
@@ -38,6 +49,7 @@ export class CoberturaCoverageHandler implements CoverageHandler {
     }
 
     const packageObj = this.packageMap.get(packageName)!;
+    const { totalLines, coveredLines } = this.calculateCoverage(lines);
 
     const classObj: CoberturaClass = {
       '@name': fileName,
@@ -48,16 +60,6 @@ export class CoberturaCoverageHandler implements CoverageHandler {
       lines: { line: [] },
     };
 
-    const uncoveredLines = Object.keys(lines)
-      .filter((lineNumber) => lines[lineNumber] === 0)
-      .map(Number);
-    const coveredLines = Object.keys(lines)
-      .filter((lineNumber) => lines[lineNumber] === 1)
-      .map(Number);
-
-    const totalLines = uncoveredLines.length + coveredLines.length;
-    const coveredLineCount = coveredLines.length;
-
     for (const [lineNumber, isCovered] of Object.entries(lines)) {
       classObj.lines.line.push({
         '@number': Number(lineNumber),
@@ -67,11 +69,11 @@ export class CoberturaCoverageHandler implements CoverageHandler {
     }
 
     if (totalLines > 0) {
-      classObj['@line-rate'] = (coveredLineCount / totalLines).toFixed(4);
+      classObj['@line-rate'] = (coveredLines / totalLines).toFixed(4);
     }
 
     this.coverageObj.coverage['@lines-valid'] += totalLines;
-    this.coverageObj.coverage['@lines-covered'] += coveredLineCount;
+    this.coverageObj.coverage['@lines-covered'] += coveredLines;
 
     packageObj.classes.class.push(classObj);
     this.packageMap.set(packageName, packageObj);
@@ -104,3 +106,12 @@ export class CoberturaCoverageHandler implements CoverageHandler {
     return this.coverageObj;
   }
 }
+
+// Self-register this handler
+HandlerRegistry.register({
+  name: 'cobertura',
+  description: 'Cobertura XML format for wide CI/CD compatibility',
+  fileExtension: '.xml',
+  handler: () => new CoberturaCoverageHandler(),
+  compatibleWith: ['Codecov', 'Azure DevOps', 'Jenkins', 'GitLab', 'GitHub Actions'],
+});

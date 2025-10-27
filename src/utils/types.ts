@@ -175,7 +175,10 @@ export type CoverageHandler = {
     | CloverCoverageObject
     | LcovCoverageObject
     | JaCoCoCoverageObject
-    | IstanbulCoverageObject;
+    | IstanbulCoverageObject
+    | JsonSummaryCoverageObject
+    | SimpleCovCoverageObject
+    | OpenCoverCoverageObject;
 };
 
 type LcovLine = {
@@ -268,3 +271,92 @@ export type BranchMapping = {
 };
 
 export type IstanbulCoverageObject = IstanbulCoverageMap; // alias for clarity
+
+// JSON Summary format types
+export type JsonSummaryFileCoverage = {
+  lines: {
+    total: number;
+    covered: number;
+    skipped: number;
+    pct: number;
+  };
+  statements: {
+    total: number;
+    covered: number;
+    skipped: number;
+    pct: number;
+  };
+};
+
+export type JsonSummaryCoverageObject = {
+  total: JsonSummaryFileCoverage;
+  files: {
+    [filePath: string]: JsonSummaryFileCoverage;
+  };
+};
+
+// SimpleCov JSON format types
+export type SimpleCovCoverageObject = {
+  coverage: {
+    [filePath: string]: Array<number | null>;
+  };
+  timestamp: number;
+};
+
+// OpenCover XML format types
+export type OpenCoverSequencePoint = {
+  '@vc': number; // visit count
+  '@sl': number; // start line
+  '@sc'?: number; // start column
+  '@el'?: number; // end line
+  '@ec'?: number; // end column
+};
+
+export type OpenCoverMethod = {
+  '@name': string;
+  '@isConstructor'?: boolean;
+  '@isStatic'?: boolean;
+  '@isGetter'?: boolean;
+  '@isSetter'?: boolean;
+  SequencePoints: {
+    SequencePoint: OpenCoverSequencePoint[];
+  };
+};
+
+export type OpenCoverClass = {
+  '@fullName': string;
+  Methods: {
+    Method: OpenCoverMethod[];
+  };
+};
+
+export type OpenCoverFile = {
+  '@uid': number;
+  '@fullPath': string;
+};
+
+export type OpenCoverModule = {
+  '@hash': string;
+  Files: {
+    File: OpenCoverFile[];
+  };
+  Classes: {
+    Class: OpenCoverClass[];
+  };
+};
+
+export type OpenCoverCoverageObject = {
+  CoverageSession: {
+    Summary: {
+      '@numSequencePoints': number;
+      '@visitedSequencePoints': number;
+      '@numBranchPoints': number;
+      '@visitedBranchPoints': number;
+      '@sequenceCoverage': number;
+      '@branchCoverage': number;
+    };
+    Modules: {
+      Module: OpenCoverModule[];
+    };
+  };
+};
