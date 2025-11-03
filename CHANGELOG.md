@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.14.1...v2.14.2) (2025-11-03)
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 4.7.2 to 4.8.0 ([#238](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/238)) ([099a33f](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/099a33fd5d3c0bbb86fe60ce0b3450606f4c4e45))
+* **deps:** bump @salesforce/core from 8.23.3 to 8.23.4 ([#237](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/237)) ([a338966](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/a338966cc6c6d60c1791f821a730cbf4ff548ade))
+
 ## [2.14.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.14.0...v2.14.1) (2025-10-27)
 
 
