@@ -212,7 +212,6 @@
     }
   },
   "exports": "./lib/index.js",
-  "type": "module",
   "author": "Matt Carvin",
   "repository": {
     "type": "git",
