@@ -1382,7 +1382,7 @@
     "@inquirer/type" "^3.0.9"
     yoctocolors-cjs "^2.1.2"
 
-"@inquirer/confirm@^3.1.22":
+"@inquirer/confirm@^3.1.22", "@inquirer/confirm@^3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@inquirer/confirm/-/confirm-3.2.0.tgz#6af1284670ea7c7d95e3f1253684cfbd7228ad6a"
   integrity sha512-oOIwPs0Dvq5220Z8lGL/6LHRTEr9TgLHmiI99Rj1PJ1p1czTys+olrgBqZk4E2qC0YTzeHprxSQmoHioVdJ7Lw==
@@ -2186,12 +2186,12 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.10.3.tgz#52c867fdd60679cf216110aa49542b7ad391f5d1"
   integrity sha512-FKfvtrYTcvTXE9advzS25/DEY9yJhEyLvStm++eQFtnAaX1pe4G3oGHgiQ0q55BM5+0AlCh0+0CVtQv1t4oJRA==
 
-"@salesforce/sf-plugins-core@^12.2.2":
-  version "12.2.5"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-12.2.5.tgz#c5fdd15e3ca90fc91faf485b3907892f3dc6c4ae"
-  integrity sha512-TJoZwPm0b5t2HzWZOqgWVjWQ+2bnw+Xxz7Icu7RtiD/9Fjp1X/eyr3LHMEd1SE79QLBjb3YKjZSskWDGv+rzlw==
+"@salesforce/sf-plugins-core@^12.2.6":
+  version "12.2.6"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-12.2.6.tgz#856303e786f5fac1c6aa6dcd42f282cb1ac703e8"
+  integrity sha512-EDKE72f/gGk9vL7KI9wsFO5wl/jFVvA2l5XBGR+6sJ1+FTMUbTGRMLObkkYJACk7bKvUFx00xdur2R6K8SWNvg==
   dependencies:
-    "@inquirer/confirm" "^3.1.22"
+    "@inquirer/confirm" "^3.2.0"
     "@inquirer/password" "^2.2.0"
     "@oclif/core" "^4.5.2"
     "@oclif/table" "^0.5.0"
