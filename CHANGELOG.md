@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.14.2...v2.15.0) (2025-12-23)
+
+
+### Features
+
+* upgrade xmlbuilder2 from 3.1.1 to 4.0.1 ([#245](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/245)) ([05bf58a](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/05bf58a1ed7401b24012f96cc11a7ab3b1679f8b))
+
 ## [2.14.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.14.1...v2.14.2) (2025-12-01)
 
 
