@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.15.0...v2.15.1) (2025-12-30)
+
+
+### Bug Fixes
+
+* upgrade node version for OIDC publishing ([05e605b](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/05e605b9fc75132c80414e4b4d2479681e0d0604))
+
 ## [2.15.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.14.2...v2.15.0) (2025-12-23)
 
 
