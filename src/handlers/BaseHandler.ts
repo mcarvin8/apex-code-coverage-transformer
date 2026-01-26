@@ -11,6 +11,7 @@ import {
   JsonSummaryCoverageObject,
   SimpleCovCoverageObject,
   OpenCoverCoverageObject,
+  HtmlCoverageObject,
 } from '../utils/types.js';
 
 /**
@@ -97,5 +98,6 @@ export abstract class BaseHandler implements CoverageHandler {
     | IstanbulCoverageObject
     | JsonSummaryCoverageObject
     | SimpleCovCoverageObject
-    | OpenCoverCoverageObject;
+    | OpenCoverCoverageObject
+    | HtmlCoverageObject;
 }

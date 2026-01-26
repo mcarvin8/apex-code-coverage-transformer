@@ -13,6 +13,7 @@ import './istanbulJson.js';
 import './jsonSummary.js';
 import './simplecov.js';
 import './opencover.js';
+import './html.js';
 
 /**
  * Get a coverage handler for the specified format.

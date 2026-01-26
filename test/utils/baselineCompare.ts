@@ -16,6 +16,7 @@ import {
   jsonSummaryBaselinePath,
   simplecovBaselinePath,
   opencoverBaselinePath,
+  htmlBaselinePath,
 } from './testConstants.js';
 import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 
@@ -30,27 +31,40 @@ export async function compareToBaselines(): Promise<void> {
     'json-summary': jsonSummaryBaselinePath,
     simplecov: simplecovBaselinePath,
     opencover: opencoverBaselinePath,
+    html: htmlBaselinePath,
   } as const;
 
-  const normalizationRequired = new Set(['cobertura', 'clover', 'json', 'json-summary', 'simplecov', 'opencover']);
+  const normalizationRequired = new Set([
+    'cobertura',
+    'clover',
+    'json',
+    'json-summary',
+    'simplecov',
+    'opencover',
+    'html',
+  ]);
   const jsonFormats = new Set(['json', 'json-summary', 'simplecov']);
 
-  for (const format of formatOptions as Array<keyof typeof baselineMap>) {
+  for (const format of formatOptions) {
+    if (!(format in baselineMap)) {
+      continue;
+    }
+    const formatKey = format as keyof typeof baselineMap;
     for (const { label } of inputJsons) {
       const reportExtension = getExtensionForFormat(format);
       const outputPath = resolve(`${label}-${format}${reportExtension}`);
       const outputContent = await readFile(outputPath, 'utf-8');
-      const baselineContent = await readFile(baselineMap[format], 'utf-8');
+      const baselineContent = await readFile(baselineMap[formatKey], 'utf-8');
 
       if (normalizationRequired.has(format)) {
         const isJson = jsonFormats.has(format);
         strictEqual(
           normalizeCoverageReport(outputContent, isJson),
           normalizeCoverageReport(baselineContent, isJson),
-          `Mismatch between ${outputPath} and ${baselineMap[format]}`
+          `Mismatch between ${outputPath} and ${baselineMap[formatKey]}`
         );
       } else {
-        strictEqual(outputContent, baselineContent, `Mismatch between ${outputPath} and ${baselineMap[format]}`);
+        strictEqual(outputContent, baselineContent, `Mismatch between ${outputPath} and ${baselineMap[formatKey]}`);
       }
     }
   }
