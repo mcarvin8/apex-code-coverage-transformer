@@ -14,6 +14,7 @@ export const jsonBaselinePath = resolve('baselines/json_baseline.json');
 export const jsonSummaryBaselinePath = resolve('baselines/json-summary_baseline.json');
 export const simplecovBaselinePath = resolve('baselines/simplecov_baseline.json');
 export const opencoverBaselinePath = resolve('baselines/opencover_baseline.xml');
+export const htmlBaselinePath = resolve('baselines/html_baseline.html');
 export const defaultPath = resolve('coverage.xml');
 export const sfdxConfigFile = resolve('sfdx-project.json');
 

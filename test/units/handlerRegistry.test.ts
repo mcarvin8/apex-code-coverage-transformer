@@ -13,6 +13,7 @@ import '../../src/handlers/istanbulJson.js';
 import '../../src/handlers/jsonSummary.js';
 import '../../src/handlers/simplecov.js';
 import '../../src/handlers/opencover.js';
+import '../../src/handlers/html.js';
 
 describe('HandlerRegistry unit tests', () => {
   it('should retrieve an existing handler', () => {
@@ -34,7 +35,8 @@ describe('HandlerRegistry unit tests', () => {
     expect(formats).toContain('json-summary');
     expect(formats).toContain('simplecov');
     expect(formats).toContain('opencover');
-    expect(formats.length).toBeGreaterThanOrEqual(9);
+    expect(formats).toContain('html');
+    expect(formats.length).toBeGreaterThanOrEqual(10);
   });
 
   it('should return correct file extension for format', () => {
@@ -44,6 +46,7 @@ describe('HandlerRegistry unit tests', () => {
     expect(HandlerRegistry.getExtension('json-summary')).toBe('.json');
     expect(HandlerRegistry.getExtension('simplecov')).toBe('.json');
     expect(HandlerRegistry.getExtension('opencover')).toBe('.xml');
+    expect(HandlerRegistry.getExtension('html')).toBe('.html');
   });
 
   it('should return default extension for unknown format', () => {
@@ -113,5 +116,6 @@ describe('HandlerRegistry unit tests', () => {
     import('../../src/handlers/jsonSummary.js');
     import('../../src/handlers/simplecov.js');
     import('../../src/handlers/opencover.js');
+    import('../../src/handlers/html.js');
   });
 });

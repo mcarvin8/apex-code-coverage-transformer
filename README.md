@@ -189,6 +189,10 @@ EXAMPLES
 
     $ sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "opencover"
 
+  Transform the JSON into HTML format:
+
+    $ sf acc-transformer transform -j "coverage.json" -r "coverage.html" -f "html"
+
   Transform the JSON into Sonar format, ignoring Apex in the "force-app" directory:
 
     $ sf acc-transformer transform -j "coverage.json" -i "force-app"
@@ -211,6 +215,7 @@ You can provide multiple `--format` flags in a single command to create multiple
 | [json-summary](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/json-summary_baseline.json) | Generates a concise JSON summary ideal for badges, PR comments, and quick analysis.        | GitHub Actions, GitLab CI, Custom Dashboards               |
 | [simplecov](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/simplecov_baseline.json)       | Generates SimpleCov JSON format compatible with Ruby coverage tools.                       | Codecov, SimpleCov, Ruby Tools                             |
 | [opencover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/baselines/opencover_baseline.xml)        | Generates OpenCover XML format for .NET and Azure DevOps integration.                      | Azure DevOps, Visual Studio, Codecov, JetBrains Tools      |
+| html                                                                                                                                | Generates a human-readable HTML report with interactive file-by-file coverage details.     | Web Browsers, CI/CD Artifacts, Local Development           |
 
 ## CI/CD Integration Examples
 

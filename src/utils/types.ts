@@ -179,7 +179,8 @@ export type CoverageHandler = {
     | IstanbulCoverageObject
     | JsonSummaryCoverageObject
     | SimpleCovCoverageObject
-    | OpenCoverCoverageObject;
+    | OpenCoverCoverageObject
+    | HtmlCoverageObject;
 };
 
 type LcovLine = {
@@ -360,4 +361,29 @@ export type OpenCoverCoverageObject = {
       Module: OpenCoverModule[];
     };
   };
+};
+
+// HTML coverage format types
+export type HtmlFileCoverage = {
+  filePath: string;
+  fileName: string;
+  totalLines: number;
+  coveredLines: number;
+  uncoveredLines: number;
+  lineRate: number;
+  lines: Array<{
+    lineNumber: number;
+    hitCount: number;
+    covered: boolean;
+  }>;
+};
+
+export type HtmlCoverageObject = {
+  summary: {
+    totalLines: number;
+    coveredLines: number;
+    uncoveredLines: number;
+    lineRate: number;
+  };
+  files: HtmlFileCoverage[];
 };
