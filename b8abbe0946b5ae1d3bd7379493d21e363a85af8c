@@ -1,0 +1,35 @@
+src/handlers/BaseHandler.ts
+  6aedf90174976a1b 14,102
+src/handlers/html.ts
+  6aedf90174976a1b 1-97
+test/utils/baselineCompare.ts
+  6aedf90174976a1b 19,34,37,40-44,49
+src/transformers/reportGenerator.ts
+  6aedf90174976a1b 15,31,59,66-67,122-387
+src/handlers/getHandler.ts
+  6aedf90174976a1b 16
+src/utils/types.ts
+  6aedf90174976a1b 183,365-389
+test/units/handlerRegistry.test.ts
+  6aedf90174976a1b 16,38-39,49,119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.37",
+  "base_commit_sha": "b8abbe0946b5ae1d3bd7379493d21e363a85af8c",
+  "prompts": {
+    "6aedf90174976a1b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "76a0c9ca-c824-464c-a091-706b90fc3791",
+        "model": "default"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>",
+      "messages": [],
+      "total_additions": 445,
+      "total_deletions": 34,
+      "accepted_lines": 417,
+      "overriden_lines": 0
+    }
+  }
+}
