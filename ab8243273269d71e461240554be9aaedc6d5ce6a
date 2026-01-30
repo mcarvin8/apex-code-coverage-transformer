@@ -1,0 +1,33 @@
+test/commands/acc-transformer/transform.nut.ts
+  eeae33f2039a16ea 7,29
+CONTRIBUTING.md
+  eeae33f2039a16ea 91
+README.md
+  eeae33f2039a16ea 162-170
+test/commands/acc-transformer/transform.test.ts
+  eeae33f2039a16ea 10-11,28,57
+test/utils/testConstants.ts
+  eeae33f2039a16ea 3-19,23-24
+test/fixtures/README.md
+  eeae33f2039a16ea 1-7,9-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.40",
+  "base_commit_sha": "ab8243273269d71e461240554be9aaedc6d5ce6a",
+  "prompts": {
+    "eeae33f2039a16ea": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4138352a-b148-4877-a7d4-c7b0f329397a",
+        "model": "default"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>",
+      "messages": [],
+      "total_additions": 70,
+      "total_deletions": 32,
+      "accepted_lines": 55,
+      "overriden_lines": 1
+    }
+  }
+}
