@@ -88,7 +88,7 @@ To add a new output format to the transformer:
 
 5. **Baselines and tests**
    - Run the unit test suite once; it will generate a report for the new format.
-   - Add the generated baseline to the `baselines/` folder as `{format}_baseline.{ext}`.
+   - Add the generated baseline to `test/fixtures/baselines/` as `{format}_baseline.{ext}`.
    - In `test/utils/testConstants.ts`, add a constant for the baseline path.
    - In `test/utils/baselineCompare.ts`, add the new constant to `baselineMap`.
    - If the format includes timestamps (e.g. Cobertura, Clover), update `test/commands/acc-transformer/normalizeCoverageReport.ts` to strip them for stable comparison.

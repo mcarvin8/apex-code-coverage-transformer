@@ -3,7 +3,13 @@ import { describe, it, expect } from '@jest/globals';
 
 import { transformCoverageReport } from '../../../src/transformers/coverageTransformer.js';
 import { formatOptions } from '../../../src/utils/constants.js';
-import { inputJsons, invalidJson, deployCoverage, testCoverage } from '../../utils/testConstants.js';
+import {
+  inputJsons,
+  invalidJson,
+  deployCoverage,
+  testCoverage,
+  samplesPackagePath,
+} from '../../utils/testConstants.js';
 import { compareToBaselines } from '../../utils/baselineCompare.js';
 import { postTestCleanup } from '../../utils/testCleanup.js';
 import { preTestSetup } from '../../utils/testSetup.js';
@@ -19,7 +25,7 @@ describe('acc-transformer transform unit tests', () => {
 
   inputJsons.forEach(({ label, path }) => {
     it(`transforms the ${label} command JSON file into all output formats`, async () => {
-      await transformCoverageReport(path, `${label}.xml`, formatOptions, ['samples']);
+      await transformCoverageReport(path, `${label}.xml`, formatOptions, [samplesPackagePath]);
     });
   });
   it('confirm the reports created are the same as the baselines.', async () => {
@@ -48,12 +54,17 @@ describe('acc-transformer transform unit tests', () => {
       deployCoverage,
       'coverage.xml',
       ['sonar'],
-      ['packaged', 'force-app', 'samples']
+      ['packaged', 'force-app', samplesPackagePath]
     );
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
   it('ignore a package directory and produce a warning on the test command report.', async () => {
-    const result = await transformCoverageReport(testCoverage, 'coverage.xml', ['sonar'], ['packaged', 'samples']);
+    const result = await transformCoverageReport(
+      testCoverage,
+      'coverage.xml',
+      ['sonar'],
+      ['packaged', samplesPackagePath]
+    );
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
   it('create a cobertura report using only 1 package directory', async () => {

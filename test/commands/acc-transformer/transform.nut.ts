@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { formatOptions } from '../../../src/utils/constants.js';
-import { inputJsons, invalidJson } from '../../utils/testConstants.js';
+import { inputJsons, invalidJson, samplesPackagePath } from '../../utils/testConstants.js';
 import { getExtensionForFormat } from '../../../src/transformers/reportGenerator.js';
 import { compareToBaselines } from '../../utils/baselineCompare.js';
 import { postTestCleanup } from '../../utils/testCleanup.js';
@@ -26,7 +26,7 @@ describe('acc-transformer transform NUTs', () => {
 
   inputJsons.forEach(({ label, path }) => {
     it(`transforms the ${label} command JSON file into all formats`, async () => {
-      const command = `acc-transformer transform --coverage-json "${path}" --output-report "${label}.xml" ${formatString} -i "samples"`;
+      const command = `acc-transformer transform --coverage-json "${path}" --output-report "${label}.xml" ${formatString} -i "${samplesPackagePath}"`;
       const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
 
       const expectedOutput =
