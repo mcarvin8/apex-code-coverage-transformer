@@ -1,69 +1,99 @@
 # Contributing
 
-Contributions are welcome! If you would like to contribute, please fork the repository, make your changes, and submit a pull request.
+Contributions are welcome. You can help by reporting bugs, suggesting features, improving docs, or submitting code changes.
+
+**Code changes:** You must **fork** this repository first, make your changes in your fork, and open pull requests from your fork back to the main repo. Do not push branches directly to the main repository.
 
 ## Requirements
 
-- Node >= 20.0.0
-- yarn
+- **Node.js** ≥ 20.0.0
+- **yarn** (package manager)
 
-## Installation
+## Development setup
 
-### 1) Fork the repository
+1. **Fork** the repository on GitHub (use the "Fork" button on the repo page).
+2. **Clone your fork** (not the main repo) to your machine.
+3. **Install dependencies:**
+   ```bash
+   yarn
+   ```
+4. **Build the plugin:**
+   ```bash
+   yarn build
+   ```
+   Re-run `yarn build` after source changes when testing locally.
 
-### 2) Install Dependencies
+## Code quality
 
-This will install all the tools needed to contribute
-
-```bash
-yarn
-```
-
-### 3) Build application
-
-```bash
-yarn build
-```
-
-Rebuild every time you made a change in the source and you need to test locally
+- **Lint:** `yarn lint` (ESLint). Fix any reported issues before submitting.
+- **Format:** `yarn format` (Prettier). Formatting is enforced in pre-commit.
+- **Commit messages:** Use [Conventional Commits](https://www.conventionalcommits.org/). The repo uses `@commitlint/config-conventional` (e.g. `feat:`, `fix:`, `docs:`, `test:`, `chore:`). Husky runs commitlint on commit.
 
 ## Testing
 
-When developing, run the provided unit tests for new additions. New additions must meet the jest code coverage requirements.
+- **Unit tests (with coverage):**
 
-```bash
-# run unit tests
-yarn test:only
-```
+  ```bash
+  yarn test:only
+  ```
 
-To run the non-unit test, ensure you re-build the application and then run:
+  New code must satisfy the existing Jest coverage requirements.
 
-```bash
-# run non-unit tests
-yarn test:nuts
-```
+- **Non-unit tests (NUT):** After rebuilding:
 
-## Adding Coverage Formats
+  ```bash
+  yarn test:nuts
+  ```
 
-To add new coverage formats to the transformer:
+- **Full test pipeline:** `yarn test` runs compile, unit tests, and lint.
 
-1. Add the format flag value to `formatOptions` in `src/utils/constants.ts`.
-2. Add new coverage types to `src/utils/types.ts` including a `{format}CoverageObject` type. Add the new `{format}CoverageObject` type to the `CoverageHandler` type under `finalize`.
+## Pull request process
 
-```typescript
-export type CoverageHandler = {
-  processFile(filePath: string, fileName: string, lines: Record<string, number>): void;
-  finalize(): SonarCoverageObject | CoberturaCoverageObject | CloverCoverageObject | LcovCoverageObject;
-};
-```
+1. Work in your **fork**. Create a branch from `main` (e.g. `fix/issue-description` or `feat/new-format`).
+2. Make your changes. Ensure `yarn build`, `yarn lint`, and `yarn test:only` pass.
+3. If you add or change behavior, add or update tests.
+4. Push your branch to your fork and **open a pull request from your fork to the main repository** (`main` branch). Describe what changed and why; reference any issues.
+5. Address review feedback. Once approved, maintainers will merge.
 
-3. Create a new coverage handler class in `src/handlers` with a `processFile` and `finalize` function.
-   1. The `finalize` function should sort items in the coverage object before returning.
-4. Add the new coverage handler class to `src/handlers/getHandler.ts`.
-5. Add the new `{format}CoverageObject` type to `src/transformers/reportGenerator.ts` and add anything needed to create the final report for that format, including updating the report extension in the `getExtensionForFormat` function.
-6. The unit and non-unit tests will automatically run the new coverage format after it's added to the `formatOptions` constant. You will need to run the unit test suite once to generate the baseline report for the new format.
-   1. Add the newly generated baseline to the `baselines` folder named `{format}_baseline.{ext}`
-   2. Create a new test constant with the baseline path in `test/utils/testConstants.ts`
-   3. Add the new baseline constant to the `baselineMap` in `test/utils/baselineCompare.ts`
-   3. If needed, update the `test/commands/acc-transformer/normalizeCoverageReport.ts` to remove timestamps if the new format report has timestamps, i.e. Cobertura and Clover.
-   4. Re-run the unit test and confirm all tests pass, including the baseline compare test.
+## Adding a new coverage format
+
+To add a new output format to the transformer:
+
+1. **Register the format**
+
+   - Add the format flag to `formatOptions` in `src/utils/constants.ts`.
+
+2. **Types**
+
+   - In `src/utils/types.ts`, add a `{format}CoverageObject` type.
+   - Add it to the `CoverageHandler` type under `finalize`:
+     ```typescript
+     export type CoverageHandler = {
+       processFile(filePath: string, fileName: string, lines: Record<string, number>): void;
+       finalize(): SonarCoverageObject | CoberturaCoverageObject | ... | YourFormatCoverageObject;
+     };
+     ```
+
+3. **Handler**
+
+   - Create a new handler in `src/handlers/` with `processFile` and `finalize`.
+   - In `finalize`, sort items in the coverage object before returning.
+   - Register the handler in `src/handlers/getHandler.ts`.
+
+4. **Report generation**
+
+   - In `src/transformers/reportGenerator.ts`:
+     - Add the new `{format}CoverageObject` type and any logic needed to produce the final report.
+     - Update `getExtensionForFormat` with the correct file extension for the format.
+
+5. **Baselines and tests**
+   - Run the unit test suite once; it will generate a report for the new format.
+   - Add the generated baseline to the `baselines/` folder as `{format}_baseline.{ext}`.
+   - In `test/utils/testConstants.ts`, add a constant for the baseline path.
+   - In `test/utils/baselineCompare.ts`, add the new constant to `baselineMap`.
+   - If the format includes timestamps (e.g. Cobertura, Clover), update `test/commands/acc-transformer/normalizeCoverageReport.ts` to strip them for stable comparison.
+   - Re-run unit tests and confirm all pass, including the baseline compare test.
+
+## Questions or issues?
+
+Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) for bugs, feature ideas, or questions.
