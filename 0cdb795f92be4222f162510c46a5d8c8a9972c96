@@ -1,0 +1,23 @@
+.prettierignore
+  eeae33f2039a16ea 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.40",
+  "base_commit_sha": "0cdb795f92be4222f162510c46a5d8c8a9972c96",
+  "prompts": {
+    "eeae33f2039a16ea": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4138352a-b148-4877-a7d4-c7b0f329397a",
+        "model": "default"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 4,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
