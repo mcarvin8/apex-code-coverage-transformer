@@ -1,2 +1,1 @@
-baselines/json_baseline.json
-baselines/html_baseline.html
+test/fixtures/baselines/
