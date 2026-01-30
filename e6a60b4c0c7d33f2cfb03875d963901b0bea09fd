@@ -1,0 +1,23 @@
+CONTRIBUTING.md
+  eeae33f2039a16ea 3,5,9-10,12,14-16,20,24,26,28-30,34,36-38,40,42,44-60,62,64,66,68-69,73-75,77,79-81,83,85-87,89-95,97,99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.40",
+  "base_commit_sha": "e6a60b4c0c7d33f2cfb03875d963901b0bea09fd",
+  "prompts": {
+    "eeae33f2039a16ea": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4138352a-b148-4877-a7d4-c7b0f329397a",
+        "model": "default"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>",
+      "messages": [],
+      "total_additions": 85,
+      "total_deletions": 62,
+      "accepted_lines": 69,
+      "overriden_lines": 0
+    }
+  }
+}
