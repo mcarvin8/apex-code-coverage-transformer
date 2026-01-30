@@ -139,36 +139,22 @@ GLOBAL FLAGS
   --json  Output as JSON.
 ```
 
-**Examples**
-
-| Goal           | Command                                                                                |
-| -------------- | -------------------------------------------------------------------------------------- |
-| Sonar          | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"`         |
-| Cobertura      | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`     |
-| Clover         | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"`        |
-| LCOV           | `sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"`     |
-| JSON Summary   | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json-summary"` |
-| SimpleCov      | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "simplecov"`    |
-| OpenCover      | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "opencover"`     |
-| HTML           | `sf acc-transformer transform -j "coverage.json" -r "coverage.html" -f "html"`         |
-| Ignore package | `sf acc-transformer transform -j "coverage.json" -i "force-app"`                       |
-
 ## Coverage Report Formats
 
 Use `-f` / `--format` to choose the output format. Multiple `-f` values produce multiple files with the format in the name (e.g. `coverage-sonar.xml`, `coverage-cobertura.xml`).
 
-| Format                                                                                                                                            | Description                | Typical use                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | --------------------------------------- |
-| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/sonar_baseline.xml)                | SonarQube generic coverage | SonarQube, SonarCloud                   |
-| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/cobertura_baseline.xml)        | Cobertura XML              | Codecov, Azure, Jenkins, GitLab, GitHub |
-| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/jacoco_baseline.xml)              | JaCoCo XML                 | Codecov, Jenkins, Maven, Gradle         |
-| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/lcov_baseline.info)             | LCOV                       | Codecov, Coveralls, GitHub              |
-| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/clover_baseline.xml)              | Clover XML                 | Bamboo, Bitbucket, Jenkins              |
-| [json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/json_baseline.json)                 | Istanbul JSON              | Istanbul/NYC, Codecov                   |
-| [json-summary](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/json-summary_baseline.json) | JSON summary               | Badges, PR comments                     |
-| [simplecov](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/simplecov_baseline.json)       | SimpleCov JSON             | Codecov, Ruby tools                     |
-| [opencover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/opencover_baseline.xml)        | OpenCover XML              | Azure DevOps, VS, Codecov               |
-| html                                                                                                                                              | HTML report                | Browsers, CI artifacts                  |
+| Format                                                                                                                                            | Description                | Typical use                             | Example                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------- |
+| [sonar](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/sonar_baseline.xml)                | SonarQube generic coverage | SonarQube, SonarCloud                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"`         |
+| [cobertura](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/cobertura_baseline.xml)        | Cobertura XML              | Codecov, Azure, Jenkins, GitLab, GitHub | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`     |
+| [jacoco](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/jacoco_baseline.xml)              | JaCoCo XML                 | Codecov, Jenkins, Maven, Gradle         | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "jacoco"`        |
+| [lcovonly](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/lcov_baseline.info)             | LCOV                       | Codecov, Coveralls, GitHub              | `sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"`     |
+| [clover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/clover_baseline.xml)              | Clover XML                 | Bamboo, Bitbucket, Jenkins              | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"`        |
+| [json](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/json_baseline.json)                 | Istanbul JSON              | Istanbul/NYC, Codecov                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json"`         |
+| [json-summary](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/json-summary_baseline.json) | JSON summary               | Badges, PR comments                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json-summary"` |
+| [simplecov](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/simplecov_baseline.json)       | SimpleCov JSON             | Codecov, Ruby tools                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "simplecov"`    |
+| [opencover](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/test/fixtures/baselines/opencover_baseline.xml)        | OpenCover XML              | Azure DevOps, VS, Codecov               | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "opencover"`     |
+| html                                                                                                                                              | HTML report                | Browsers, CI artifacts                  | `sf acc-transformer transform -j "coverage.json" -r "coverage.html" -f "html"`         |
 
 ## CI/CD Integration
 
