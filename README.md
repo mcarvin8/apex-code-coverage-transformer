@@ -39,6 +39,7 @@ A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or te
 ## Prerequisites
 
 - [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli) (`sf`) installed
+- Node.js 20.x or later
 - A Salesforce DX project with `sfdx-project.json` and package directories
 - Use only the **json** coverage formatter from the Salesforce CLI; other formatters are not supported
 
