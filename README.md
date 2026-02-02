@@ -199,7 +199,9 @@ jobs:
 
 ### SonarQube
 
-Use the **sonar** format. **Scanner:**
+Use the **sonar** format and upload using SonarQube's generic test coverage report formatter, `sonar.coverageReportPaths`. 
+
+**Scanner:**
 
 ```bash
 sf apex run test --code-coverage --output-dir "coverage"
