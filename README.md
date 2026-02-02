@@ -209,7 +209,7 @@ sonar-scanner \
   -Dsonar.sources=force-app \
   -Dsonar.tests=force-app \
   -Dsonar.test.inclusions=**/*Test.cls \
-  -Dsonar.apex.coverage.reportPath=coverage.xml \
+  -Dsonar.coverageReportPaths=coverage.xml \
   -Dsonar.host.url=https://sonarqube.example.com \
   -Dsonar.login=$SONAR_TOKEN
 ```
@@ -248,7 +248,7 @@ jobs:
             -Dsonar.sources=force-app
             -Dsonar.tests=force-app
             -Dsonar.test.inclusions=**/*Test.cls
-            -Dsonar.apex.coverage.reportPath=coverage.xml
+            -Dsonar.coverageReportPaths=coverage.xml
 ```
 
 ### GitHub Actions
