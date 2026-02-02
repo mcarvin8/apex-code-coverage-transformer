@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.16.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.16.0...v2.16.1) (2026-02-02)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/core from 8.24.0 to 8.25.0 ([#256](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/256)) ([06ab8ea](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/06ab8ead5d92dc1024fc6de5d6c2b78e78cfdcd7))
+
 ## [2.16.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.15.2...v2.16.0) (2026-01-26)
 
 
