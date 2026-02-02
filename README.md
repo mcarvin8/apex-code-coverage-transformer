@@ -335,7 +335,7 @@ Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex
 | -------------------------- | ---------- | -------------------------------------------------------- |
 | `deployCoverageJsonPath`   | For deploy | Path to deploy coverage JSON.                            |
 | `testCoverageJsonPath`     | For test   | Path to test coverage JSON.                              |
-| `outputReportPath`         | No         | Output path (default: `coverage.[xml\|info]` by format). |
+| `outputReportPath`         | No         | Output path (default: `coverage.[xml\|info|json]` by format). |
 | `format`                   | No         | Format(s), comma-separated (default: `sonar`).           |
 | `ignorePackageDirectories` | No         | Comma-separated package directories to ignore.           |
 
