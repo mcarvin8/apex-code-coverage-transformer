@@ -73,7 +73,7 @@ export class HtmlCoverageHandler extends BaseHandler {
     this.coveredLinesAccumulator += coveredLines;
 
     // Accumulate per-package-directory (e.g. force-app)
-    const directory = filePath.split('/')[0] || 'root';
+    const directory = filePath.split('/')[0];
     const existing = this.packageMap.get(directory);
     if (existing) {
       existing.totalLines += totalLines;
@@ -98,8 +98,8 @@ export class HtmlCoverageHandler extends BaseHandler {
 
     // Sort files by package directory first, then by path (mimics folder structure)
     this.coverageObj.files.sort((a, b) => {
-      const dirA = a.filePath.split('/')[0] || '';
-      const dirB = b.filePath.split('/')[0] || '';
+      const dirA = a.filePath.split('/')[0];
+      const dirB = b.filePath.split('/')[0];
       if (dirA !== dirB) return dirA.localeCompare(dirB);
       return a.filePath.localeCompare(b.filePath);
     });

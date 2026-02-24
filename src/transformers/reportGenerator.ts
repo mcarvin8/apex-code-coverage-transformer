@@ -151,7 +151,7 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
   // Group files by package directory (e.g. force-app) to mimic folder structure
   const filesByDir = new Map<string, typeof files>();
   for (const file of files) {
-    const dir = file.filePath.split('/')[0] || 'root';
+    const dir = file.filePath.split('/')[0];
     const list = filesByDir.get(dir) ?? [];
     list.push(file);
     filesByDir.set(dir, list);
