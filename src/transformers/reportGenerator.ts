@@ -124,18 +124,23 @@ function isHtmlCoverageObject(obj: unknown): obj is HtmlCoverageObject {
   return typeof obj === 'object' && obj !== null && 'summary' in obj && 'files' in obj;
 }
 
-function generateHtml(coverageObj: HtmlCoverageObject): string {
-  const { summary, packageSummaries, files } = coverageObj;
-  const coveragePercent = (summary.lineRate * 100).toFixed(2);
-  const coverageColor = summary.lineRate >= 0.8 ? '#4caf50' : summary.lineRate >= 0.6 ? '#ff9800' : '#f44336';
+function getCoverageColor(lineRate: number): string {
+  if (lineRate >= 0.8) return '#4caf50';
+  if (lineRate >= 0.6) return '#ff9800';
+  return '#f44336';
+}
 
-  const packageSummaryRows =
-    packageSummaries.length > 0
-      ? packageSummaries
-          .map((pkg) => {
-            const pkgPercent = (pkg.lineRate * 100).toFixed(2);
-            const pkgColor = pkg.lineRate >= 0.8 ? '#4caf50' : pkg.lineRate >= 0.6 ? '#ff9800' : '#f44336';
-            return `<tr>
+function formatPercent(lineRate: number): string {
+  return (lineRate * 100).toFixed(2);
+}
+
+function buildPackageSummaryRows(packageSummaries: HtmlCoverageObject['packageSummaries']): string {
+  if (packageSummaries.length === 0) return '';
+  return packageSummaries
+    .map((pkg) => {
+      const pkgPercent = formatPercent(pkg.lineRate);
+      const pkgColor = getCoverageColor(pkg.lineRate);
+      return `<tr>
               <td class="package-dir">${escapeHtml(pkg.directory)}</td>
               <td class="package-stat">${pkg.fileCount}</td>
               <td class="package-stat">${pkg.totalLines}</td>
@@ -144,50 +149,48 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
               <td class="package-pct" style="color: ${pkgColor}">${pkgPercent}%</td>
               <td><span class="coverage-bar" style="background-color: ${pkgColor}; width: ${pkgPercent}%"></span></td>
             </tr>`;
-          })
-          .join('\n')
-      : '';
+    })
+    .join('\n');
+}
 
-  // Group files by package directory (e.g. force-app) to mimic folder structure
-  const filesByDir = new Map<string, typeof files>();
+function groupFilesByDir(files: HtmlCoverageObject['files']): Map<string, HtmlCoverageObject['files']> {
+  const filesByDir = new Map<string, HtmlCoverageObject['files']>();
   for (const file of files) {
     const dir = file.filePath.split('/')[0];
     const list = filesByDir.get(dir) ?? [];
     list.push(file);
     filesByDir.set(dir, list);
   }
-  const sortedDirs = [...filesByDir.keys()].sort((a, b) => a.localeCompare(b));
+  return filesByDir;
+}
 
-  const fileRows = sortedDirs
-    .map((dir) => {
-      const dirFiles = filesByDir.get(dir)!;
-      const dirFileSections = dirFiles
-        .map((file) => {
-          const filePercent = (file.lineRate * 100).toFixed(2);
-          const fileColor = file.lineRate >= 0.8 ? '#4caf50' : file.lineRate >= 0.6 ? '#ff9800' : '#f44336';
-
-          const lineDetails = file.lines
-            .map((line) => {
-              const lineClass = line.covered ? 'covered' : 'uncovered';
-              const lineColor = line.covered ? '#c8e6c9' : '#ffcdd2';
-              return `<tr class="${lineClass}" style="background-color: ${lineColor}">
+function buildLineRow(line: { lineNumber: number; hitCount: number; covered: boolean }): string {
+  const lineClass = line.covered ? 'covered' : 'uncovered';
+  const lineColor = line.covered ? '#c8e6c9' : '#ffcdd2';
+  return `<tr class="${lineClass}" style="background-color: ${lineColor}">
             <td class="line-number">${line.lineNumber}</td>
             <td class="hit-count">${line.hitCount}</td>
             <td class="line-content"></td>
           </tr>`;
-            })
-            .join('\n');
+}
 
-          return `
+function buildFileSection(file: HtmlCoverageObject['files'][number]): string {
+  const filePercent = formatPercent(file.lineRate);
+  const fileColor = getCoverageColor(file.lineRate);
+  const lineDetails = file.lines.map(buildLineRow).join('\n');
+  const fileId = file.filePath.replace(/[^a-zA-Z0-9]/g, '-');
+  const escapedPath = file.filePath.replace(/'/g, "\\'");
+
+  return `
         <div class="file-section">
-          <h3 class="file-header" onclick="toggleFile('${file.filePath.replace(/'/g, "\\'")}')">
+          <h3 class="file-header" onclick="toggleFile('${escapedPath}')">
             <span class="file-name">${escapeHtml(file.filePath)}</span>
             <span class="file-stats">
               ${file.coveredLines}/${file.totalLines} lines (${filePercent}%)
               <span class="coverage-bar" style="background-color: ${fileColor}; width: ${filePercent}%"></span>
             </span>
           </h3>
-          <div id="file-${file.filePath.replace(/[^a-zA-Z0-9]/g, '-')}" class="file-details" style="display: none;">
+          <div id="file-${fileId}" class="file-details" style="display: none;">
             <table class="line-coverage">
               <thead>
                 <tr>
@@ -203,9 +206,16 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
           </div>
         </div>
       `;
-        })
-        .join('\n');
+}
 
+function buildFileRows(files: HtmlCoverageObject['files']): string {
+  const filesByDir = groupFilesByDir(files);
+  const sortedDirs = [...filesByDir.keys()].sort((a, b) => a.localeCompare(b));
+
+  return sortedDirs
+    .map((dir) => {
+      const dirFiles = filesByDir.get(dir)!;
+      const dirFileSections = dirFiles.map(buildFileSection).join('\n');
       return `
     <div class="package-files-group">
       <h3 class="package-dir-header">${escapeHtml(dir)}/</h3>
@@ -214,6 +224,14 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
       `;
     })
     .join('\n');
+}
+
+function generateHtml(coverageObj: HtmlCoverageObject): string {
+  const { summary, packageSummaries, files } = coverageObj;
+  const coveragePercent = formatPercent(summary.lineRate);
+  const coverageColor = getCoverageColor(summary.lineRate);
+  const packageSummaryRows = buildPackageSummaryRows(packageSummaries);
+  const fileRows = buildFileRows(files);
 
   return `<!DOCTYPE html>
 <html lang="en">
