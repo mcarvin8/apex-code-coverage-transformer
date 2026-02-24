@@ -71,6 +71,22 @@ describe('HTML coverage handler unit tests', () => {
     }
   });
 
+  it('generates HTML with paths requiring escapeHtml (covers escapeHtml function)', async () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/main/default/classes/A&B.cls', 'A&B', { '1': 1 });
+    handler.processFile('other-app/main/default/classes/C<D>.cls', 'C<D>', { '1': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    const tmpDir = await mkdtemp(join(tmpdir(), 'html-escape-'));
+    try {
+      const outPath = await generateAndWriteReport(join(tmpDir, 'coverage.html'), result, 'html', 1);
+      const content = await readFile(outPath, 'utf-8');
+      expect(content).toContain('&amp;');
+      expect(content).toContain('&lt;');
+    } finally {
+      await rm(tmpDir, { recursive: true });
+    }
+  });
+
   it('generates HTML with empty coverage (no package summary section)', async () => {
     const handler = getCoverageHandler('html');
     const result = handler.finalize();
