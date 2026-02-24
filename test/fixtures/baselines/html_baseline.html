@@ -67,6 +67,17 @@
       font-weight: bold;
       margin: 10px 0;
     }
+    .package-files-group {
+      margin-bottom: 28px;
+    }
+    .package-dir-header {
+      font-size: 1.1em;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #3498db;
+      font-weight: 600;
+    }
     .file-section {
       margin-bottom: 20px;
       border: 1px solid #ddd;
@@ -142,6 +153,55 @@
     .uncovered {
       background-color: #ffcdd2 !important;
     }
+    .package-summary {
+      margin-bottom: 30px;
+    }
+    .package-summary h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+      font-size: 1.25em;
+    }
+    .package-summary table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .package-summary th {
+      background: #34495e;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .package-summary td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .package-summary tr:last-child td {
+      border-bottom: none;
+    }
+    .package-summary tr:hover {
+      background: #f8f9fa;
+    }
+    .package-dir {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .package-stat {
+      text-align: right;
+    }
+    .package-pct {
+      font-weight: 600;
+      text-align: right;
+    }
+    .package-summary .coverage-bar {
+      display: block;
+      min-width: 60px;
+      height: 14px;
+      border-radius: 4px;
+    }
     @media (max-width: 768px) {
       .file-header {
         flex-direction: column;
@@ -181,9 +241,51 @@
       </div>
     </div>
 
+    
+    <div class="package-summary">
+      <h2>Package directory coverage</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Directory</th>
+            <th>Files</th>
+            <th>Total lines</th>
+            <th>Covered</th>
+            <th>Uncovered</th>
+            <th>Coverage</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td class="package-dir">force-app</td>
+              <td class="package-stat">1</td>
+              <td class="package-stat">31</td>
+              <td class="package-stat">27</td>
+              <td class="package-stat">4</td>
+              <td class="package-pct" style="color: #4caf50">87.10%</td>
+              <td><span class="coverage-bar" style="background-color: #4caf50; width: 87.10%"></span></td>
+            </tr>
+<tr>
+              <td class="package-dir">packaged</td>
+              <td class="package-stat">1</td>
+              <td class="package-stat">31</td>
+              <td class="package-stat">27</td>
+              <td class="package-stat">4</td>
+              <td class="package-pct" style="color: #4caf50">87.10%</td>
+              <td><span class="coverage-bar" style="background-color: #4caf50; width: 87.10%"></span></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    
+
     <h2 style="margin: 30px 0 20px 0; color: #2c3e50;">File Coverage Details</h2>
     
     
+    <div class="package-files-group">
+      <h3 class="package-dir-header">force-app/</h3>
+      
         <div class="file-section">
           <h3 class="file-header" onclick="toggleFile('force-app/main/default/classes/AccountProfile.cls')">
             <span class="file-name">force-app/main/default/classes/AccountProfile.cls</span>
@@ -362,7 +464,12 @@
           </div>
         </div>
       
+    </div>
+      
 
+    <div class="package-files-group">
+      <h3 class="package-dir-header">packaged/</h3>
+      
         <div class="file-section">
           <h3 class="file-header" onclick="toggleFile('packaged/triggers/AccountTrigger.trigger')">
             <span class="file-name">packaged/triggers/AccountTrigger.trigger</span>
@@ -540,6 +647,8 @@
             </table>
           </div>
         </div>
+      
+    </div>
       
   </div>
 

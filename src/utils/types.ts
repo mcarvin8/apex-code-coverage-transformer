@@ -378,6 +378,16 @@ export type HtmlFileCoverage = {
   }>;
 };
 
+/** Summary for a package directory (e.g. force-app) in the HTML report */
+export type HtmlPackageSummary = {
+  directory: string;
+  totalLines: number;
+  coveredLines: number;
+  uncoveredLines: number;
+  lineRate: number;
+  fileCount: number;
+};
+
 export type HtmlCoverageObject = {
   summary: {
     totalLines: number;
@@ -385,5 +395,7 @@ export type HtmlCoverageObject = {
     uncoveredLines: number;
     lineRate: number;
   };
+  /** Per-package-directory coverage (e.g. force-app) */
+  packageSummaries: HtmlPackageSummary[];
   files: HtmlFileCoverage[];
 };

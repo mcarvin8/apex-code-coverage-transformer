@@ -125,28 +125,60 @@ function isHtmlCoverageObject(obj: unknown): obj is HtmlCoverageObject {
 }
 
 function generateHtml(coverageObj: HtmlCoverageObject): string {
-  const { summary, files } = coverageObj;
+  const { summary, packageSummaries, files } = coverageObj;
   const coveragePercent = (summary.lineRate * 100).toFixed(2);
   const coverageColor = summary.lineRate >= 0.8 ? '#4caf50' : summary.lineRate >= 0.6 ? '#ff9800' : '#f44336';
 
-  const fileRows = files
-    .map((file) => {
-      const filePercent = (file.lineRate * 100).toFixed(2);
-      const fileColor = file.lineRate >= 0.8 ? '#4caf50' : file.lineRate >= 0.6 ? '#ff9800' : '#f44336';
+  const packageSummaryRows =
+    packageSummaries.length > 0
+      ? packageSummaries
+          .map((pkg) => {
+            const pkgPercent = (pkg.lineRate * 100).toFixed(2);
+            const pkgColor = pkg.lineRate >= 0.8 ? '#4caf50' : pkg.lineRate >= 0.6 ? '#ff9800' : '#f44336';
+            return `<tr>
+              <td class="package-dir">${escapeHtml(pkg.directory)}</td>
+              <td class="package-stat">${pkg.fileCount}</td>
+              <td class="package-stat">${pkg.totalLines}</td>
+              <td class="package-stat">${pkg.coveredLines}</td>
+              <td class="package-stat">${pkg.uncoveredLines}</td>
+              <td class="package-pct" style="color: ${pkgColor}">${pkgPercent}%</td>
+              <td><span class="coverage-bar" style="background-color: ${pkgColor}; width: ${pkgPercent}%"></span></td>
+            </tr>`;
+          })
+          .join('\n')
+      : '';
 
-      const lineDetails = file.lines
-        .map((line) => {
-          const lineClass = line.covered ? 'covered' : 'uncovered';
-          const lineColor = line.covered ? '#c8e6c9' : '#ffcdd2';
-          return `<tr class="${lineClass}" style="background-color: ${lineColor}">
+  // Group files by package directory (e.g. force-app) to mimic folder structure
+  const filesByDir = new Map<string, typeof files>();
+  for (const file of files) {
+    const dir = file.filePath.split('/')[0] || 'root';
+    const list = filesByDir.get(dir) ?? [];
+    list.push(file);
+    filesByDir.set(dir, list);
+  }
+  const sortedDirs = [...filesByDir.keys()].sort((a, b) => a.localeCompare(b));
+
+  const fileRows = sortedDirs
+    .map((dir) => {
+      const dirFiles = filesByDir.get(dir)!;
+      const dirFileSections = dirFiles
+        .map((file) => {
+          const filePercent = (file.lineRate * 100).toFixed(2);
+          const fileColor = file.lineRate >= 0.8 ? '#4caf50' : file.lineRate >= 0.6 ? '#ff9800' : '#f44336';
+
+          const lineDetails = file.lines
+            .map((line) => {
+              const lineClass = line.covered ? 'covered' : 'uncovered';
+              const lineColor = line.covered ? '#c8e6c9' : '#ffcdd2';
+              return `<tr class="${lineClass}" style="background-color: ${lineColor}">
             <td class="line-number">${line.lineNumber}</td>
             <td class="hit-count">${line.hitCount}</td>
             <td class="line-content"></td>
           </tr>`;
-        })
-        .join('\n');
+            })
+            .join('\n');
 
-      return `
+          return `
         <div class="file-section">
           <h3 class="file-header" onclick="toggleFile('${file.filePath.replace(/'/g, "\\'")}')">
             <span class="file-name">${escapeHtml(file.filePath)}</span>
@@ -170,6 +202,15 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
             </table>
           </div>
         </div>
+      `;
+        })
+        .join('\n');
+
+      return `
+    <div class="package-files-group">
+      <h3 class="package-dir-header">${escapeHtml(dir)}/</h3>
+      ${dirFileSections}
+    </div>
       `;
     })
     .join('\n');
@@ -242,6 +283,17 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
       font-size: 3em;
       font-weight: bold;
       margin: 10px 0;
+    }
+    .package-files-group {
+      margin-bottom: 28px;
+    }
+    .package-dir-header {
+      font-size: 1.1em;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #3498db;
+      font-weight: 600;
     }
     .file-section {
       margin-bottom: 20px;
@@ -318,6 +370,55 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
     .uncovered {
       background-color: #ffcdd2 !important;
     }
+    .package-summary {
+      margin-bottom: 30px;
+    }
+    .package-summary h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+      font-size: 1.25em;
+    }
+    .package-summary table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .package-summary th {
+      background: #34495e;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .package-summary td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .package-summary tr:last-child td {
+      border-bottom: none;
+    }
+    .package-summary tr:hover {
+      background: #f8f9fa;
+    }
+    .package-dir {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .package-stat {
+      text-align: right;
+    }
+    .package-pct {
+      font-weight: 600;
+      text-align: right;
+    }
+    .package-summary .coverage-bar {
+      display: block;
+      min-width: 60px;
+      height: 14px;
+      border-radius: 4px;
+    }
     @media (max-width: 768px) {
       .file-header {
         flex-direction: column;
@@ -356,6 +457,32 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
         </div>
       </div>
     </div>
+
+    ${
+      packageSummaryRows
+        ? `
+    <div class="package-summary">
+      <h2>Package directory coverage</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Directory</th>
+            <th>Files</th>
+            <th>Total lines</th>
+            <th>Covered</th>
+            <th>Uncovered</th>
+            <th>Coverage</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${packageSummaryRows}
+        </tbody>
+      </table>
+    </div>
+    `
+        : ''
+    }
 
     <h2 style="margin: 30px 0 20px 0; color: #2c3e50;">File Coverage Details</h2>
     
