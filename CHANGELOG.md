@@ -5,6 +5,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.17.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.16.1...v2.17.0) (2026-02-24)
+
+
+### Features
+
+* **html:** add package directory coverage and group files by directory ([#266](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/266)) ([1e55894](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/1e558945553f171bf731c8ce32d89c495af40491))
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 4.8.0 to 4.8.1 ([#261](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/261)) ([14448d3](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/14448d316b544009546bfcb4e4141189f31b8a7b))
+* **deps:** bump @salesforce/core from 8.25.0 to 8.26.2 ([#264](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/264)) ([0fdb0ad](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/0fdb0adf78d1dd694c822d5c10fc893eba4e142a))
+
 ## [2.16.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.16.0...v2.16.1) (2026-02-02)
 
 
