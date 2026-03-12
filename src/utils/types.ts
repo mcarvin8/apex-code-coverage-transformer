@@ -169,7 +169,7 @@ export type CloverCoverageObject = {
 };
 
 export type CoverageHandler = {
-  processFile(filePath: string, fileName: string, lines: Record<string, number>): void;
+  processFile(filePath: string, fileName: string, lines: Record<string, number>, sourceContent?: string): void;
   finalize():
     | SonarCoverageObject
     | CoberturaCoverageObject
@@ -375,6 +375,7 @@ export type HtmlFileCoverage = {
     lineNumber: number;
     hitCount: number;
     covered: boolean;
+    content?: string;
   }>;
 };
 

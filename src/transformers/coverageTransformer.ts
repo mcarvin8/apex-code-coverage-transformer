@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { mapLimit } from 'async';
 
 import { getCoverageHandler } from '../handlers/getHandler.js';
@@ -7,7 +8,7 @@ import { DeployCoverageData, TestCoverageData, CoverageProcessingContext } from 
 import { getPackageDirectories } from '../utils/getPackageDirectories.js';
 import { findFilePath } from '../utils/findFilePath.js';
 import { buildFilePathCache } from '../utils/buildFilePathCache.js';
-import { setCoveredLines } from '../utils/setCoveredLines.js';
+import { setCoveredLines, type SetCoveredLinesResult } from '../utils/setCoveredLines.js';
 import { getConcurrencyThreshold } from '../utils/getConcurrencyThreshold.js';
 import { checkCoverageDataType } from '../utils/setCoverageDataType.js';
 import { generateAndWriteReport } from './reportGenerator.js';
@@ -69,6 +70,20 @@ export async function transformCoverageReport(
   return { finalPaths, warnings };
 }
 
+function hasSourceContent(
+  result: SetCoveredLinesResult
+): result is { updatedLines: Record<string, number>; sourceContent: string } {
+  return typeof result === 'object' && result !== null && 'sourceContent' in result;
+}
+
+async function readSourceFile(absolutePath: string): Promise<string | undefined> {
+  try {
+    return await readFile(absolutePath, 'utf-8');
+  } catch {
+    return undefined;
+  }
+}
+
 async function tryReadJson(path: string, warnings: string[]): Promise<string | null> {
   try {
     return await readFile(path, 'utf-8');
@@ -98,9 +113,12 @@ async function processDeployCoverage(data: DeployCoverageData, context: Coverage
       return;
     }
 
-    fileInfo.s = await setCoveredLines(path, context.repoRoot, fileInfo.s);
+    const setCoveredResult = await setCoveredLines(path, context.repoRoot, fileInfo.s, context.handlers.has('html'));
+    const updatedLines = hasSourceContent(setCoveredResult) ? setCoveredResult.updatedLines : setCoveredResult;
+    const sourceContent = hasSourceContent(setCoveredResult) ? setCoveredResult.sourceContent : undefined;
+    fileInfo.s = updatedLines;
     for (const handler of context.handlers.values()) {
-      handler.processFile(path, formattedName, fileInfo.s);
+      handler.processFile(path, formattedName, updatedLines, sourceContent);
     }
     processed++;
   });
@@ -119,8 +137,9 @@ async function processTestCoverage(data: TestCoverageData[], context: CoveragePr
       return;
     }
 
+    const sourceContent = context.handlers.has('html') ? await readSourceFile(join(context.repoRoot, path)) : undefined;
     for (const handler of context.handlers.values()) {
-      handler.processFile(path, formattedName, entry.lines);
+      handler.processFile(path, formattedName, entry.lines, sourceContent);
     }
     processed++;
   });

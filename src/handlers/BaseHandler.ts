@@ -87,7 +87,12 @@ export abstract class BaseHandler implements CoverageHandler {
     });
   }
 
-  public abstract processFile(filePath: string, fileName: string, lines: Record<string, number>): void;
+  public abstract processFile(
+    filePath: string,
+    fileName: string,
+    lines: Record<string, number>,
+    sourceContent?: string
+  ): void;
 
   public abstract finalize():
     | SonarCoverageObject

@@ -45,15 +45,22 @@ export class HtmlCoverageHandler extends BaseHandler {
     };
   }
 
-  public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
+  public processFile(filePath: string, fileName: string, lines: Record<string, number>, sourceContent?: string): void {
     const { totalLines, coveredLines, uncoveredLines, lineRate } = this.calculateCoverage(lines);
 
+    const sourceLines = sourceContent ? sourceContent.split(/\r?\n/) : [];
+
     const fileLines: HtmlFileCoverage['lines'] = Object.entries(lines)
-      .map(([lineNumber, hitCount]) => ({
-        lineNumber: Number(lineNumber),
-        hitCount,
-        covered: hitCount > 0,
-      }))
+      .map(([lineNumber, hitCount]) => {
+        const num = Number(lineNumber);
+        const content = sourceLines[num - 1] ?? '';
+        return {
+          lineNumber: num,
+          hitCount,
+          covered: hitCount > 0,
+          content,
+        };
+      })
       .sort((a, b) => a.lineNumber - b.lineNumber);
 
     const fileCoverage: HtmlFileCoverage = {

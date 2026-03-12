@@ -164,13 +164,14 @@ function groupFilesByDir(files: HtmlCoverageObject['files']): Map<string, HtmlCo
   return filesByDir;
 }
 
-function buildLineRow(line: { lineNumber: number; hitCount: number; covered: boolean }): string {
+function buildLineRow(line: { lineNumber: number; hitCount: number; covered: boolean; content?: string }): string {
   const lineClass = line.covered ? 'covered' : 'uncovered';
   const lineColor = line.covered ? '#c8e6c9' : '#ffcdd2';
+  const codeContent = line.content !== undefined ? escapeHtml(line.content) : '';
   return `<tr class="${lineClass}" style="background-color: ${lineColor}">
             <td class="line-number">${line.lineNumber}</td>
             <td class="hit-count">${line.hitCount}</td>
-            <td class="line-content"></td>
+            <td class="line-content">${codeContent}</td>
           </tr>`;
 }
 
@@ -381,6 +382,7 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
     }
     .line-content {
       width: auto;
+      white-space: pre;
     }
     .covered {
       background-color: #c8e6c9 !important;
