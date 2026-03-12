@@ -87,6 +87,27 @@ describe('HTML coverage handler unit tests', () => {
     }
   });
 
+  it('generates HTML with line lacking content property (buildLineRow content undefined branch)', async () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/main/default/classes/NoContent.cls', 'NoContent', { '1': 1 }, undefined);
+    const result = handler.finalize() as HtmlCoverageObject;
+    // Manually remove content from lines to hit the content === undefined branch in buildLineRow
+    result.files[0].lines = result.files[0].lines.map(({ lineNumber, hitCount, covered }) => ({
+      lineNumber,
+      hitCount,
+      covered,
+    }));
+    const tmpDir = await mkdtemp(join(tmpdir(), 'html-nocontent-'));
+    try {
+      const outPath = await generateAndWriteReport(join(tmpDir, 'coverage.html'), result, 'html', 1);
+      const content = await readFile(outPath, 'utf-8');
+      expect(content).toContain('Code Coverage Report');
+      expect(content).toContain('<td class="line-content"></td>');
+    } finally {
+      await rm(tmpDir, { recursive: true });
+    }
+  });
+
   it('generates HTML with empty coverage (no package summary section)', async () => {
     const handler = getCoverageHandler('html');
     const result = handler.finalize();

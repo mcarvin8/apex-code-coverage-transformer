@@ -3,12 +3,18 @@
 import { join } from 'node:path';
 import { getTotalLines } from './getTotalLines.js';
 
+export type SetCoveredLinesResult =
+  | Record<string, number>
+  | { updatedLines: Record<string, number>; sourceContent: string };
+
 export async function setCoveredLines(
   filePath: string,
   repoRoot: string,
-  lines: Record<string, number>
-): Promise<Record<string, number>> {
-  const totalLines = await getTotalLines(join(repoRoot, filePath));
+  lines: Record<string, number>,
+  returnSourceContent = false
+): Promise<SetCoveredLinesResult> {
+  const result = await getTotalLines(join(repoRoot, filePath), returnSourceContent);
+  const totalLines = typeof result === 'number' ? result : result.totalLines;
   const updatedLines: Record<string, number> = {};
   const usedLines = new Set<number>();
 
@@ -31,5 +37,8 @@ export async function setCoveredLines(
     }
   }
 
+  if (returnSourceContent && typeof result !== 'number') {
+    return { updatedLines, sourceContent: result.content };
+  }
   return updatedLines;
 }

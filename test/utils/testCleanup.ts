@@ -20,7 +20,7 @@ export async function postTestCleanup(): Promise<void> {
         return resolve(`${label}-${format}${reportExtension}`);
       })
     )
-    .concat(defaultPath);
+    .concat(defaultPath, resolve('read-fail-test.html'));
 
   for (const path of pathsToRemove) {
     await rm(path).catch(() => {});

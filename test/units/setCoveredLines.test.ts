@@ -1,12 +1,19 @@
 import { setCoveredLines } from '../../src/utils/setCoveredLines.js';
 
-// Mock getTotalLines to simulate a short file
+const mockGetTotalLines = jest.fn();
+
 jest.mock('../../src/utils/getTotalLines.js', () => ({
-  getTotalLines: jest.fn(() => Promise.resolve(3)), // Pretend file has only 3 lines
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  getTotalLines: (...args: unknown[]) => mockGetTotalLines(...args),
 }));
 
 describe('setCoveredLines unit test', () => {
+  beforeEach(() => {
+    mockGetTotalLines.mockReset();
+  });
+
   it('renumbers out-of-range covered lines into available unused lines', async () => {
+    mockGetTotalLines.mockResolvedValue(3);
     const filePath = 'some/file.cls';
     const repoRoot = '/repo';
 
@@ -19,6 +26,18 @@ describe('setCoveredLines unit test', () => {
 
     expect(result).toEqual({
       '1': 1, // Line 5 is remapped to first available line (1)
+    });
+  });
+
+  it('returns { updatedLines, sourceContent } when returnSourceContent is true', async () => {
+    const fileContent = 'line1\nline2\nline3\n';
+    mockGetTotalLines.mockResolvedValue({ totalLines: 3, content: fileContent });
+
+    const result = await setCoveredLines('some/file.cls', '/repo', { '1': 1, '2': 0 }, true);
+
+    expect(result).toEqual({
+      updatedLines: { '1': 1, '2': 0 },
+      sourceContent: fileContent,
     });
   });
 });

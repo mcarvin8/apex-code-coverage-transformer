@@ -1,6 +1,21 @@
 'use strict';
 import { describe, it, expect } from '@jest/globals';
 
+let shouldSimulateReadFailureForAccountTrigger = false;
+
+jest.mock('node:fs/promises', () => {
+  const actual = jest.requireActual<typeof import('node:fs/promises')>('node:fs/promises');
+  return {
+    ...actual,
+    readFile: (path: string, ...args: unknown[]) => {
+      if (shouldSimulateReadFailureForAccountTrigger && path.includes('AccountTrigger.trigger')) {
+        return Promise.reject(new Error('Simulated read failure'));
+      }
+      return actual.readFile(path as never, ...(args as never[]));
+    },
+  };
+});
+
 import { transformCoverageReport } from '../../../src/transformers/coverageTransformer.js';
 import { formatOptions } from '../../../src/utils/constants.js';
 import {
@@ -72,5 +87,14 @@ describe('acc-transformer transform unit tests', () => {
   });
   it('create a jacoco report using only 1 package directory', async () => {
     await transformCoverageReport(deployCoverage, 'coverage.xml', ['jacoco'], ['packaged', 'force-app']);
+  });
+  it('handles source file read failure gracefully when generating HTML from test coverage', async () => {
+    shouldSimulateReadFailureForAccountTrigger = true;
+    try {
+      const result = await transformCoverageReport(testCoverage, 'read-fail-test.xml', ['html'], [samplesPackagePath]);
+      expect(result.finalPaths.length).toBeGreaterThan(0);
+    } finally {
+      shouldSimulateReadFailureForAccountTrigger = false;
+    }
   });
 });
