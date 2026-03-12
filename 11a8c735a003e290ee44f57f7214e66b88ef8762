@@ -1,0 +1,55 @@
+src/utils/types.ts
+  3de6ffb470730446 172,378
+src/utils/setCoveredLines.ts
+  3de6ffb470730446 6-9,13-17,40-42
+test/units/buildFilePathCache.statFailure.test.ts
+  3de6ffb470730446 1-51
+test/fixtures/samples/classes/AccountHandler.cls
+  3de6ffb470730446 1-118
+src/transformers/reportGenerator.ts
+  3de6ffb470730446 167,170,174,385
+src/transformers/coverageTransformer.ts
+  3de6ffb470730446 3,11,73-86,116-119,121,140,142
+src/handlers/BaseHandler.ts
+  3de6ffb470730446 93-94
+test/units/getTotalLines.test.ts
+  3de6ffb470730446 1-36
+test/units/htmlHandler.test.ts
+  3de6ffb470730446 90-110
+test/fixtures/samples/classes/AccountProfile.cls
+  3de6ffb470730446 1-93
+test/commands/acc-transformer/transform.test.ts
+  3de6ffb470730446 4-17,91-99
+test/utils/testCleanup.ts
+  3de6ffb470730446 23
+src/handlers/html.ts
+  3de6ffb470730446 48,51-52,54-58,61-63
+src/utils/getTotalLines.ts
+  3de6ffb470730446 6-10
+test/units/setCoveredLines.test.ts
+  3de6ffb470730446 3-4,6-7,11-14,16,31-42
+test/fixtures/samples/triggers/AccountTrigger.trigger
+  3de6ffb470730446 1-39,41-104
+test/fixtures/baselines/html_baseline.html
+  3de6ffb470730446 316,326,336,421
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "11a8c735a003e290ee44f57f7214e66b88ef8762",
+  "prompts": {
+    "3de6ffb470730446": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7e3c6dc9-f30a-4afb-a86d-3c43a56376eb",
+        "model": "composer-1.5"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>",
+      "messages": [],
+      "total_additions": 845,
+      "total_deletions": 511,
+      "accepted_lines": 631,
+      "overriden_lines": 1
+    }
+  }
+}
