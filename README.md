@@ -182,7 +182,7 @@ jobs:
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
       - name: Install Coverage Transformer Plugin
-        run: sf plugins install apex-code-coverage-transformer
+        run: echo y | sf plugins install apex-code-coverage-transformer
       - name: Authenticate to Salesforce
         run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
       - name: Run Apex Tests
@@ -231,7 +231,7 @@ jobs:
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
       - name: Install Coverage Transformer Plugin
-        run: sf plugins install apex-code-coverage-transformer
+        run: echo y | sf plugins install apex-code-coverage-transformer
       - name: Authenticate to Salesforce
         run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
       - name: Run Apex Tests
@@ -268,7 +268,7 @@ jobs:
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
       - name: Install Coverage Transformer Plugin
-        run: sf plugins install apex-code-coverage-transformer
+        run: echo y | sf plugins install apex-code-coverage-transformer
       - name: Authenticate to Salesforce
         run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
       - name: Run Apex Tests
@@ -303,7 +303,7 @@ apex-tests:
   image: node:20
   before_script:
     - npm install -g @salesforce/cli
-    - sf plugins install apex-code-coverage-transformer
+    - echo y | sf plugins install apex-code-coverage-transformer
     - echo $SFDX_AUTH_URL | sf org login sfdx-url --sfdx-url-stdin --alias ci-org
   script:
     - sf apex run test --code-coverage --output-dir coverage --target-org ci-org
