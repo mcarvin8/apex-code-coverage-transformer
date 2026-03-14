@@ -308,15 +308,25 @@ apex-tests:
   script:
     - sf apex run test --code-coverage --output-dir coverage --target-org ci-org
     - sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
-  coverage: '/TOTAL.*\s+(\d+%)$/'
+    - |
+      COVERAGE_FILE="coverage.xml"
+      if [ -s "$COVERAGE_FILE" ]; then
+        LINE_RATE="$(grep -oE '<coverage[^>]*\bline-rate="[^"]+"' "$COVERAGE_FILE" | head -1 | sed -E 's/.*line-rate="([^"]+)".*/\1/')"
+        if [ -n "$LINE_RATE" ]; then
+          PCT="$(awk -v r="$LINE_RATE" 'BEGIN { printf("%.2f%%", r*100) }')"
+          echo "TOTAL coverage: $PCT"
+        fi
+      fi
+  coverage: '/TOTAL.+ ([0-9]{1,3}(?:\.[0-9]+)?%)/'
   artifacts:
+    when: always
+    paths:
+      - coverage.xml
+    expire_in: 2 weeks
     reports:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
-    paths:
-      - coverage/
-    expire_in: 30 days
 ```
 
 ## Automatic Transformation (Hook)
