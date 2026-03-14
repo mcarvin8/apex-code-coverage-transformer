@@ -308,6 +308,8 @@ apex-tests:
   script:
     - sf apex run test --code-coverage --output-dir coverage --target-org ci-org
     - sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+    # Parse the coverage report and output the TOTAL coverage percentage (2 decimal places)
+    # to the job log. GitLab reads this line using the `coverage` keyword regex to track pipeline coverage.
     - |
       COVERAGE_FILE="coverage.xml"
       if [ -s "$COVERAGE_FILE" ]; then
