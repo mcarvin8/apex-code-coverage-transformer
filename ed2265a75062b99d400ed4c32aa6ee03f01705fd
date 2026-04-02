@@ -1,0 +1,25 @@
+scripts/verify-published-plugin.mjs
+  1a7473cee1977154 1-10,12-33,35-36,38-50,52-63,65-76,78-81,83,85-94,96-105,107-126,128-134,136-168,170-193,195-214,216-221,227-234
+.github/workflows/smoke-test.yml
+  1a7473cee1977154 1-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "ed2265a75062b99d400ed4c32aa6ee03f01705fd",
+  "prompts": {
+    "1a7473cee1977154": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f624f08c-1c82-462a-8d8f-e6b08d8f7da7",
+        "model": "default"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>",
+      "messages": [],
+      "total_additions": 306,
+      "total_deletions": 34,
+      "accepted_lines": 252,
+      "overriden_lines": 5
+    }
+  }
+}
