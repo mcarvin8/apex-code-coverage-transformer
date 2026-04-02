@@ -15,6 +15,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
     steps:
       - name: Release Please
         id: release
@@ -45,3 +47,8 @@ jobs:
       - name: Publish to NPM
         run: NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
         if: ${{ steps.release.outputs.release_created == 'true' }}
+  smoke-test:
+    needs: release
+    if: ${{ needs.release.outputs.release_created == 'true' }}
+    uses: ./.github/workflows/smoke-test.yml
+    secrets: inherit

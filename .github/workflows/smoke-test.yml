@@ -1,0 +1,38 @@
+# Manual smoke test: latest apex-code-coverage-transformer from npm + CLI vs fixture baselines.
+# Uses scripts/verify-published-plugin.mjs (real `sf acc-transformer` commands), not Jest/testkit.
+name: Smoke test (published plugin)
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-published-plugin:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 24
+
+      - name: Install Salesforce CLI and plugin
+        shell: bash
+        run: |
+          npm install --global @salesforce/cli
+          echo 'y' | sf plugins install --force apex-code-coverage-transformer@latest
+          sf version --verbose --json
+
+      - name: Transform coverage and compare to baselines
+        shell: bash
+        run: node scripts/verify-published-plugin.mjs
