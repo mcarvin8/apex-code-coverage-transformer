@@ -7,7 +7,7 @@
     "@salesforce/core": "^8.26.3",
     "@salesforce/sf-plugins-core": "^12.2.6",
     "async": "^3.2.6",
-    "fast-xml-parser": "^5.5.11"
+    "fast-xml-builder": "^1.1.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",

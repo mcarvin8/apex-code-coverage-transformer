@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import { extname, basename, dirname, join } from 'node:path';
-import { XMLBuilder } from 'fast-xml-parser';
+import XMLBuilder from 'fast-xml-builder';
 
 import {
   SonarCoverageObject,
@@ -29,7 +29,7 @@ const JSON_PARSER_OPTION = {
   indentBy: '  ',
   suppressBooleanAttributes: false,
   suppressEmptyNode: true,
-}
+};
 
 type XmlReportFormat = 'cobertura' | 'clover' | 'jacoco' | 'opencover';
 
@@ -115,7 +115,6 @@ function generateReportContent(
   }
 
   const isHeadless = isXmlReportFormat(format);
-
   const builder = new XMLBuilder({
     ...JSON_PARSER_OPTION,
     attributeNamePrefix: '@',
@@ -155,9 +154,7 @@ function prependXmlHeader(xml: string, format: string): string {
   const stripped = xml.replace(/^<\?xml[^>]*>\s*/i, '');
   const config = isXmlReportFormat(format) ? XML_HEADER_CONFIG[format] : undefined;
 
-  return [config?.xmlDecl ?? '<?xml version="1.0"?>', config?.doctype, stripped]
-    .filter(Boolean)
-    .join('\n');
+  return [config?.xmlDecl ?? '<?xml version="1.0"?>', config?.doctype, stripped].filter(Boolean).join('\n');
 }
 
 export function getExtensionForFormat(format: string): string {
@@ -526,8 +523,9 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
       </div>
     </div>
 
-    ${packageSummaryRows
-      ? `
+    ${
+      packageSummaryRows
+        ? `
     <div class="package-summary">
       <h2>Package directory coverage</h2>
       <table>
@@ -548,7 +546,7 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
       </table>
     </div>
     `
-      : ''
+        : ''
     }
 
     <h2 style="margin: 30px 0 20px 0; color: #2c3e50;">File Coverage Details</h2>
