@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.18.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.18.0...v2.18.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* **perf:** replace xmlbuilder2 with fast-xml-parser for xml formats ([#274](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/274)) ([2952623](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/2952623405d357b07504a368a20acfae562bf068))
+
 ## [2.18.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.17.0...v2.18.0) (2026-03-12)
 
 
