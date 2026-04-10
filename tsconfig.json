@@ -4,7 +4,8 @@
     "outDir": "lib",
     "rootDir": "src",
     "sourceMap": true,
-    "types": ["jest", "chai"]
+    "types": ["jest", "chai"],
+    "esModuleInterop": true
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["node_modules"]
