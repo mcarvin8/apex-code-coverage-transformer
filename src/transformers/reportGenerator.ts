@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import { extname, basename, dirname, join } from 'node:path';
-import { create } from 'xmlbuilder2';
+import { XMLBuilder } from 'fast-xml-parser';
 
 import {
   SonarCoverageObject,
@@ -15,6 +15,49 @@ import {
   HtmlCoverageObject,
 } from '../utils/types.js';
 import { HandlerRegistry } from '../handlers/HandlerRegistry.js';
+
+const JSON_PARSER_OPTION = {
+  commentPropName: '#comment',
+  ignoreAttributes: false,
+  ignoreNameSpace: false,
+  parseTagValue: false,
+  parseNodeValue: false,
+  parseAttributeValue: false,
+  trimValues: true,
+  processEntities: false,
+  format: true,
+  indentBy: '  ',
+  suppressBooleanAttributes: false,
+  suppressEmptyNode: true,
+}
+
+type XmlReportFormat = 'cobertura' | 'clover' | 'jacoco' | 'opencover';
+
+type XmlHeaderConfig = {
+  xmlDecl: string;
+  doctype?: string;
+};
+
+const XML_HEADER_CONFIG: Record<XmlReportFormat, XmlHeaderConfig> = {
+  cobertura: {
+    xmlDecl: '<?xml version="1.0" ?>',
+    doctype: '<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">',
+  },
+  clover: {
+    xmlDecl: '<?xml version="1.0" encoding="UTF-8"?>',
+  },
+  jacoco: {
+    xmlDecl: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
+    doctype: '<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">',
+  },
+  opencover: {
+    xmlDecl: '<?xml version="1.0" encoding="utf-8"?>',
+  },
+};
+
+function isXmlReportFormat(format: string): format is XmlReportFormat {
+  return format in XML_HEADER_CONFIG;
+}
 
 export async function generateAndWriteReport(
   outputPath: string,
@@ -71,10 +114,20 @@ function generateReportContent(
     return JSON.stringify(coverageObj, null, 2);
   }
 
-  const isHeadless = ['cobertura', 'clover', 'jacoco', 'opencover'].includes(format);
-  const xml = create(coverageObj).end({ prettyPrint: true, indent: '  ', headless: isHeadless });
+  const isHeadless = isXmlReportFormat(format);
 
-  return prependXmlHeader(xml, format);
+  const builder = new XMLBuilder({
+    ...JSON_PARSER_OPTION,
+    attributeNamePrefix: '@',
+  });
+  let xml = builder.build(coverageObj);
+
+  if (isHeadless) {
+    xml = xml.replace(/^<\?xml[^>]*>\s*/i, '');
+  }
+
+  const finalXml = prependXmlHeader(xml, format).trimEnd();
+  return finalXml;
 }
 
 function generateLcov(coverageObj: LcovCoverageObject): string {
@@ -98,18 +151,13 @@ function generateLcov(coverageObj: LcovCoverageObject): string {
 }
 
 function prependXmlHeader(xml: string, format: string): string {
-  switch (format) {
-    case 'cobertura':
-      return `<?xml version="1.0" ?>\n<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">\n${xml}`;
-    case 'clover':
-      return `<?xml version="1.0" encoding="UTF-8"?>\n${xml}`;
-    case 'jacoco':
-      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">\n${xml}`;
-    case 'opencover':
-      return `<?xml version="1.0" encoding="utf-8"?>\n${xml}`;
-    default:
-      return xml;
-  }
+  // Remove any existing XML declaration to avoid duplicates
+  const stripped = xml.replace(/^<\?xml[^>]*>\s*/i, '');
+  const config = isXmlReportFormat(format) ? XML_HEADER_CONFIG[format] : undefined;
+
+  return [config?.xmlDecl ?? '<?xml version="1.0"?>', config?.doctype, stripped]
+    .filter(Boolean)
+    .join('\n');
 }
 
 export function getExtensionForFormat(format: string): string {
@@ -478,9 +526,8 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
       </div>
     </div>
 
-    ${
-      packageSummaryRows
-        ? `
+    ${packageSummaryRows
+      ? `
     <div class="package-summary">
       <h2>Package directory coverage</h2>
       <table>
@@ -501,7 +548,7 @@ function generateHtml(coverageObj: HtmlCoverageObject): string {
       </table>
     </div>
     `
-        : ''
+      : ''
     }
 
     <h2 style="margin: 30px 0 20px 0; color: #2c3e50;">File Coverage Details</h2>
