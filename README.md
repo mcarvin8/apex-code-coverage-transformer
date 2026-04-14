@@ -4,7 +4,7 @@
 [![Downloads/week](https://img.shields.io/npm/dw/apex-code-coverage-transformer.svg)](https://npmjs.org/package/apex-code-coverage-transformer)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md)
 [![Maintainability](https://qlty.sh/badges/11057a07-84da-41af-91fb-b3476e404242/maintainability.svg)](https://qlty.sh/gh/mcarvin8/projects/apex-code-coverage-transformer)
-[![Code Coverage](https://qlty.sh/badges/11057a07-84da-41af-91fb-b3476e404242/test_coverage.svg)](https://qlty.sh/gh/mcarvin8/projects/apex-code-coverage-transformer)
+[![codecov](https://codecov.io/gh/mcarvin8/apex-code-coverage-transformer/graph/badge.svg?token=4IQ4NWTPQZ)](https://codecov.io/gh/mcarvin8/apex-code-coverage-transformer)
 [![Known Vulnerabilities](https://snyk.io//test/github/mcarvin8/apex-code-coverage-transformer/badge.svg?targetFile=package.json)](https://snyk.io//test/github/mcarvin8/apex-code-coverage-transformer?targetFile=package.json)
 
 A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or test runs) into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools. Use it to keep coverage in sync with your CI/CD and code quality pipelines.
