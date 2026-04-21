@@ -170,17 +170,7 @@ export type CloverCoverageObject = {
 
 export type CoverageHandler = {
   processFile(filePath: string, fileName: string, lines: Record<string, number>, sourceContent?: string): void;
-  finalize():
-    | SonarCoverageObject
-    | CoberturaCoverageObject
-    | CloverCoverageObject
-    | LcovCoverageObject
-    | JaCoCoCoverageObject
-    | IstanbulCoverageObject
-    | JsonSummaryCoverageObject
-    | SimpleCovCoverageObject
-    | OpenCoverCoverageObject
-    | HtmlCoverageObject;
+  finalize(): AnyCoverageObject;
 };
 
 type LcovLine = {

@@ -31,13 +31,15 @@ Contributions are welcome. You can help by reporting bugs, suggesting features, 
 
 ## Testing
 
+The test suite uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in true ESM mode.
+
 - **Unit tests (with coverage):**
 
   ```bash
   yarn test:only
   ```
 
-  New code must satisfy the existing Jest coverage requirements.
+  New code must satisfy the existing Vitest coverage thresholds (see `vitest.config.ts`).
 
 - **Non-unit tests (NUT):** After rebuilding:
 
@@ -45,7 +47,11 @@ Contributions are welcome. You can help by reporting bugs, suggesting features, 
   yarn test:nuts
   ```
 
+  NUTs use a separate config (`vitest.nut.config.ts`) that runs serially and matches `**/*.nut.ts`.
+
 - **Full test pipeline:** `yarn test` runs compile, unit tests, and lint.
+
+Use Vitest-native APIs: import helpers from `vitest` (e.g. `import { describe, it, expect, vi } from 'vitest'`). Do not reintroduce `@jest/globals` or `jest.*` calls — use `vi.fn`, `vi.mock`, `await vi.importActual`, and the `Mock` type from `vitest`.
 
 ## Pull request process
 
@@ -59,40 +65,44 @@ Contributions are welcome. You can help by reporting bugs, suggesting features, 
 
 To add a new output format to the transformer:
 
-1. **Register the format**
+1. **Register the format flag**
 
-   - Add the format flag to `formatOptions` in `src/utils/constants.ts`.
+   - Add the format identifier to `formatOptions` in `src/utils/constants.ts`.
 
 2. **Types**
 
-   - In `src/utils/types.ts`, add a `{format}CoverageObject` type.
-   - Add it to the `CoverageHandler` type under `finalize`:
-     ```typescript
-     export type CoverageHandler = {
-       processFile(filePath: string, fileName: string, lines: Record<string, number>): void;
-       finalize(): SonarCoverageObject | CoberturaCoverageObject | ... | YourFormatCoverageObject;
-     };
-     ```
+   - In `src/utils/types.ts`, add a `{Format}CoverageObject` type.
+   - Add it to the `AnyCoverageObject` union at the bottom of that file. `CoverageHandler.finalize()` returns `AnyCoverageObject`, so no further type edits are required.
 
 3. **Handler**
 
-   - Create a new handler in `src/handlers/` with `processFile` and `finalize`.
-   - In `finalize`, sort items in the coverage object before returning.
-   - Register the handler in `src/handlers/getHandler.ts`.
+   - Create a new handler class in `src/handlers/` extending `BaseHandler`, with `processFile` and `finalize` methods.
+   - In `finalize`, sort items in the coverage object before returning it.
+   - At the bottom of the handler file, self-register it with the registry:
+     ```typescript
+     HandlerRegistry.register({
+       name: 'myformat',
+       description: 'My format description',
+       fileExtension: '.xml', // or '.json', '.info', '.html', etc.
+       handler: () => new MyFormatHandler(),
+       compatibleWith: ['ToolA', 'ToolB'], // optional
+     });
+     ```
+   - Add a side-effect import for your handler in `src/handlers/getHandler.ts` (e.g. `import './myformat.js';`) so the registration runs when handlers are loaded. `getExtensionForFormat` is driven by the registry, so registering the extension here is all that's needed.
 
 4. **Report generation**
 
-   - In `src/transformers/reportGenerator.ts`:
-     - Add the new `{format}CoverageObject` type and any logic needed to produce the final report.
-     - Update `getExtensionForFormat` with the correct file extension for the format.
+   - Most formats flow through the XML pipeline in `src/transformers/reportGenerator.ts` automatically; no edits are needed there for standard XML output.
+   - For **plain-text / JSON / custom text formats**, add a branch to the `generateReportContent` dispatcher in `reportGenerator.ts` and a small helper function (see `generateLcov` for a minimal example).
+   - For **large, self-contained renderers** (e.g. HTML), put the renderer in `src/transformers/generators/` as its own module (see `generators/generateHtml.ts`) and add a type guard + dispatch branch in `reportGenerator.ts`. Keep `reportGenerator.ts` focused on routing.
 
 5. **Baselines and tests**
    - Run the unit test suite once; it will generate a report for the new format.
    - Add the generated baseline to `test/fixtures/baselines/` as `{format}_baseline.{ext}`.
    - In `test/utils/testConstants.ts`, add a constant for the baseline path.
    - In `test/utils/baselineCompare.ts`, add the new constant to `baselineMap`.
-   - If the format includes timestamps (e.g. Cobertura, Clover), update `test/commands/acc-transformer/normalizeCoverageReport.ts` to strip them for stable comparison.
-   - Re-run unit tests and confirm all pass, including the baseline compare test.
+   - If the format includes timestamps (e.g. Cobertura, Clover), update `test/utils/normalizeCoverageReport.ts` to strip them for stable comparison.
+   - Re-run `yarn test:only` and confirm all pass, including the baseline compare test.
 
 ## Questions or issues?
 
