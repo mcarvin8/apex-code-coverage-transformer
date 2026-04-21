@@ -1,10 +1,10 @@
 'use strict';
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 
 let shouldSimulateReadFailureForAccountTrigger = false;
 
-jest.mock('node:fs/promises', () => {
-  const actual = jest.requireActual<typeof import('node:fs/promises')>('node:fs/promises');
+vi.mock('node:fs/promises', async () => {
+  const actual = await vi.importActual<typeof import('node:fs/promises')>('node:fs/promises');
   return {
     ...actual,
     readFile: (path: string, ...args: unknown[]) => {

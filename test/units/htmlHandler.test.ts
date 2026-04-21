@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 import { getCoverageHandler } from '../../src/handlers/getHandler.js';
 import { generateAndWriteReport } from '../../src/transformers/reportGenerator.js';

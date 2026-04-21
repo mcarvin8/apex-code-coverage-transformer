@@ -3,12 +3,12 @@
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-const mockStat = jest.fn();
+const mockStat = vi.fn();
 
-jest.mock('node:fs/promises', () => {
-  const actual = jest.requireActual<typeof import('node:fs/promises')>('node:fs/promises');
+vi.mock('node:fs/promises', async () => {
+  const actual = await vi.importActual<typeof import('node:fs/promises')>('node:fs/promises');
   return {
     ...actual,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -35,7 +35,7 @@ describe('buildFilePathCache stat failure', () => {
   });
 
   it('should skip entry when stat throws', async () => {
-    const actualFs = jest.requireActual<typeof import('node:fs/promises')>('node:fs/promises');
+    const actualFs = await vi.importActual<typeof import('node:fs/promises')>('node:fs/promises');
     mockStat.mockImplementation((path: string) => {
       if (path.endsWith('Bad.cls')) {
         return Promise.reject(new Error('Permission denied'));

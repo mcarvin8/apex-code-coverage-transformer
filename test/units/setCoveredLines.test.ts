@@ -1,8 +1,9 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { setCoveredLines } from '../../src/utils/setCoveredLines.js';
 
-const mockGetTotalLines = jest.fn();
+const mockGetTotalLines = vi.fn();
 
-jest.mock('../../src/utils/getTotalLines.js', () => ({
+vi.mock('../../src/utils/getTotalLines.js', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   getTotalLines: (...args: unknown[]) => mockGetTotalLines(...args),
 }));
