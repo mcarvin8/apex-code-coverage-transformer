@@ -35,7 +35,7 @@ export class JaCoCoCoverageHandler extends BaseHandler {
     this.packageMap = {}; // Stores packages by directory
   }
 
-  public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
+  public processFile(filePath: string, _fileName: string, lines: Record<string, number>): void {
     const pathParts = filePath.split('/');
     const fileNamewithExt = pathParts.pop()!;
     const packageName = pathParts.join('/');

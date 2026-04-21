@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 'use strict';
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 import { HandlerRegistry } from '../../src/handlers/HandlerRegistry.js';
 import { SonarCoverageHandler } from '../../src/handlers/sonar.js';

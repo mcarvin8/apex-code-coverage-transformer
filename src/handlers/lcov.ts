@@ -26,7 +26,7 @@ export class LcovCoverageHandler extends BaseHandler {
     this.coverageObj = { files: [] };
   }
 
-  public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
+  public processFile(filePath: string, _fileName: string, lines: Record<string, number>): void {
     const { totalLines, coveredLines } = this.calculateCoverage(lines);
 
     const lcovFile: LcovFile = {

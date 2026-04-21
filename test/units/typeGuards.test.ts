@@ -1,4 +1,4 @@
-import { expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import { checkCoverageDataType } from '../../src/utils/setCoverageDataType.js';
 import { DeployCoverageData } from '../../src/utils/types.js';
 

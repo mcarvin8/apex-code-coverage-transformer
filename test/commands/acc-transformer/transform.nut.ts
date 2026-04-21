@@ -1,6 +1,6 @@
 'use strict';
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { formatOptions } from '../../../src/utils/constants.js';

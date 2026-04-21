@@ -2,7 +2,7 @@
 
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { buildFilePathCache } from '../../src/utils/buildFilePathCache.js';
 
 describe('buildFilePathCache', () => {
