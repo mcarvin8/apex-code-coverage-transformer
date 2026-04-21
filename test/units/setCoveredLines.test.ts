@@ -30,6 +30,28 @@ describe('setCoveredLines unit test', () => {
     });
   });
 
+  it('skips already-used line numbers when remapping multiple out-of-range covered lines', async () => {
+    mockGetTotalLines.mockResolvedValue(3);
+
+    // Line 1 is in-range and consumes slot 1. Lines 8 and 9 are out-of-range
+    // and must be remapped. When remapping line 8 the inner loop hits
+    // `usedLines.has(1)` (true) before settling on slot 2 — this exercises
+    // the truthy branch of `!usedLines.has(randomLine)`.
+    const inputLines = {
+      '1': 1,
+      '8': 1,
+      '9': 1,
+    };
+
+    const result = await setCoveredLines('some/file.cls', '/repo', inputLines);
+
+    expect(result).toEqual({
+      '1': 1,
+      '2': 1,
+      '3': 1,
+    });
+  });
+
   it('returns { updatedLines, sourceContent } when returnSourceContent is true', async () => {
     const fileContent = 'line1\nline2\nline3\n';
     mockGetTotalLines.mockResolvedValue({ totalLines: 3, content: fileContent });

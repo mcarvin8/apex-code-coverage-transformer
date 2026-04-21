@@ -36,9 +36,7 @@ export class SonarCoverageHandler extends BaseHandler {
   }
 
   public finalize(): SonarCoverageObject {
-    if (this.coverageObj.coverage?.file) {
-      this.coverageObj.coverage.file = this.sortByPath(this.coverageObj.coverage.file);
-    }
+    this.coverageObj.coverage.file = this.sortByPath(this.coverageObj.coverage.file);
     return this.coverageObj;
   }
 }

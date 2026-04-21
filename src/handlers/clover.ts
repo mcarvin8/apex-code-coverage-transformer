@@ -88,9 +88,7 @@ export class CloverCoverageHandler extends BaseHandler {
   }
 
   public finalize(): CloverCoverageObject {
-    if (this.coverageObj.coverage?.project?.file) {
-      this.coverageObj.coverage.project.file = this.sortByPath(this.coverageObj.coverage.project.file);
-    }
+    this.coverageObj.coverage.project.file = this.sortByPath(this.coverageObj.coverage.project.file);
     return this.coverageObj;
   }
 }

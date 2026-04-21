@@ -95,9 +95,7 @@ export class CoberturaCoverageHandler extends BaseHandler {
 
     this.coverageObj.coverage.packages.package.sort((a, b) => a['@name'].localeCompare(b['@name']));
     for (const pkg of this.coverageObj.coverage.packages.package) {
-      if (pkg.classes?.class) {
-        pkg.classes.class.sort((a, b) => a['@filename'].localeCompare(b['@filename']));
-      }
+      pkg.classes.class.sort((a, b) => a['@filename'].localeCompare(b['@filename']));
     }
 
     return this.coverageObj;

@@ -47,9 +47,7 @@ export class LcovCoverageHandler extends BaseHandler {
   }
 
   public finalize(): LcovCoverageObject {
-    if ('files' in this.coverageObj && Array.isArray(this.coverageObj.files)) {
-      this.coverageObj.files.sort((a, b) => a.sourceFile.localeCompare(b.sourceFile));
-    }
+    this.coverageObj.files.sort((a, b) => a.sourceFile.localeCompare(b.sourceFile));
     return this.coverageObj;
   }
 }
