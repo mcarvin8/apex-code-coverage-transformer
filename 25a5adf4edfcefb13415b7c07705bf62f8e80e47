@@ -1,0 +1,25 @@
+src/utils/types.ts
+  19bddadc01b3137b 173
+CONTRIBUTING.md
+  19bddadc01b3137b 34-35,42,50-51,54-55,68,70,74-75,79-91,95-97,104-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "25a5adf4edfcefb13415b7c07705bf62f8e80e47",
+  "prompts": {
+    "19bddadc01b3137b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e54158a3-8a57-4cc3-8afe-ebb81bf1c045",
+        "model": "auto-high"
+      },
+      "human_author": "Matt Carvin",
+      "messages": [],
+      "total_additions": 30,
+      "total_deletions": 30,
+      "accepted_lines": 30,
+      "overriden_lines": 0
+    }
+  }
+}
