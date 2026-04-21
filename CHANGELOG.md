@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.18.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.18.2...v2.18.3) (2026-04-21)
+
+
+### Bug Fixes
+
+* **quality:** remove dead code in clover, cobertura, lcov, sonar handlers ([8c28d45](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/8c28d4528da8058264f1bf5fbfabea3e6fd37c4c))
+
 ## [2.18.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.18.1...v2.18.2) (2026-04-10)
 
 
