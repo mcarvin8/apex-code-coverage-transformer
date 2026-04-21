@@ -400,3 +400,22 @@ export type HtmlCoverageObject = {
   packageSummaries: HtmlPackageSummary[];
   files: HtmlFileCoverage[];
 };
+
+/** Union of every format-specific coverage object the report generator can emit. */
+export type AnyCoverageObject =
+  | SonarCoverageObject
+  | CoberturaCoverageObject
+  | CloverCoverageObject
+  | LcovCoverageObject
+  | JaCoCoCoverageObject
+  | IstanbulCoverageObject
+  | JsonSummaryCoverageObject
+  | SimpleCovCoverageObject
+  | OpenCoverCoverageObject
+  | HtmlCoverageObject;
+
+export type XmlReportFormat = 'cobertura' | 'clover' | 'jacoco' | 'opencover';
+export type XmlHeaderConfig = {
+  xmlDecl: string;
+  doctype?: string;
+};
