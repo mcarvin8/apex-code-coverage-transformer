@@ -25,7 +25,7 @@ export class IstanbulCoverageHandler extends BaseHandler {
     super();
   }
 
-  public processFile(filePath: string, fileName: string, lines: Record<string, number>): void {
+  public processFile(filePath: string, _fileName: string, lines: Record<string, number>): void {
     const statementMap: Record<string, SourceRange> = {};
     const s: Record<string, number> = {};
     const lineCoverage: Record<string, number> = {};
