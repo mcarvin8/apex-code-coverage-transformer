@@ -48,6 +48,7 @@
     "xml",
     "json",
     "sonarqube",
+    "sonarcloud",
     "apex",
     "coverage",
     "git",
