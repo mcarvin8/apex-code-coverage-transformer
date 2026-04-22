@@ -1,0 +1,14 @@
+package.json
+  h_b104b674256482 92,101,153-167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "1af65f6b25f4dfec6790d39abe9690b90df569b3",
+  "prompts": {},
+  "humans": {
+    "h_b104b674256482": {
+      "author": "Matt Carvin"
+    }
+  }
+}
