@@ -7,7 +7,7 @@ Contributions are welcome. You can help by reporting bugs, suggesting features, 
 ## Requirements
 
 - **Node.js** ≥ 20.0.0
-- **yarn** (package manager)
+- **npm** (package manager)
 
 ## Development setup
 
@@ -15,18 +15,18 @@ Contributions are welcome. You can help by reporting bugs, suggesting features, 
 2. **Clone your fork** (not the main repo) to your machine.
 3. **Install dependencies:**
    ```bash
-   yarn
+   npm install
    ```
 4. **Build the plugin:**
    ```bash
-   yarn build
+   npm run build
    ```
-   Re-run `yarn build` after source changes when testing locally.
+   Re-run `npm run build` after source changes when testing locally.
 
 ## Code quality
 
-- **Lint:** `yarn lint` (ESLint). Fix any reported issues before submitting.
-- **Format:** `yarn format` (Prettier). Formatting is enforced in pre-commit.
+- **Lint:** `npm run lint` (ESLint). Fix any reported issues before submitting.
+- **Format:** `npm run format` (Prettier). Formatting is enforced in pre-commit.
 - **Commit messages:** Use [Conventional Commits](https://www.conventionalcommits.org/). The repo uses `@commitlint/config-conventional` (e.g. `feat:`, `fix:`, `docs:`, `test:`, `chore:`). Husky runs commitlint on commit.
 
 ## Testing
@@ -36,7 +36,7 @@ The test suite uses [Vitest](https://vitest.dev/). Test files live in `test/` an
 - **Unit tests (with coverage):**
 
   ```bash
-  yarn test:only
+  npm run test:only
   ```
 
   New code must satisfy the existing Vitest coverage thresholds (see `vitest.config.ts`).
@@ -44,19 +44,19 @@ The test suite uses [Vitest](https://vitest.dev/). Test files live in `test/` an
 - **Non-unit tests (NUT):** After rebuilding:
 
   ```bash
-  yarn test:nuts
+  npm run test:nuts
   ```
 
   NUTs use a separate config (`vitest.nut.config.ts`) that runs serially and matches `**/*.nut.ts`.
 
-- **Full test pipeline:** `yarn test` runs compile, unit tests, and lint.
+- **Full test pipeline:** `npm test` runs compile, unit tests, and lint.
 
 Use Vitest-native APIs: import helpers from `vitest` (e.g. `import { describe, it, expect, vi } from 'vitest'`). Do not reintroduce `@jest/globals` or `jest.*` calls — use `vi.fn`, `vi.mock`, `await vi.importActual`, and the `Mock` type from `vitest`.
 
 ## Pull request process
 
 1. Work in your **fork**. Create a branch from `main` (e.g. `fix/issue-description` or `feat/new-format`).
-2. Make your changes. Ensure `yarn build`, `yarn lint`, and `yarn test:only` pass.
+2. Make your changes. Ensure `npm run build`, `npm run lint`, and `npm run test:only` pass.
 3. If you add or change behavior, add or update tests.
 4. Push your branch to your fork and **open a pull request from your fork to the main repository** (`main` branch). Describe what changed and why; reference any issues.
 5. Address review feedback. Once approved, maintainers will merge.
@@ -102,7 +102,7 @@ To add a new output format to the transformer:
    - In `test/utils/testConstants.ts`, add a constant for the baseline path.
    - In `test/utils/baselineCompare.ts`, add the new constant to `baselineMap`.
    - If the format includes timestamps (e.g. Cobertura, Clover), update `test/utils/normalizeCoverageReport.ts` to strip them for stable comparison.
-   - Re-run `yarn test:only` and confirm all pass, including the baseline compare test.
+   - Re-run `npm run test:only` and confirm all pass, including the baseline compare test.
 
 ## Questions or issues?
 
