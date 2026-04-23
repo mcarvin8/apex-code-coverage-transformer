@@ -10,7 +10,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       reportsDirectory: 'coverage',
-      exclude: ['node_modules/**', 'test/utils/**', 'coverage/**', 'lib/**', '**/*.nut.ts', 'test/fixtures/**'],
+      exclude: ['node_modules/**', 'test/utils/**', 'coverage/**', 'lib/**', '**/*.nut.ts', 'test/fixtures/**/*'],
       thresholds: {
         branches: 90,
         functions: 90,
