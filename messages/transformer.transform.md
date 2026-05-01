@@ -12,6 +12,8 @@ Transform Salesforce Apex code coverage JSONs created during deployments and tes
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"`
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"`
+- `sf acc-transformer transform -j "coverage.json" -r "coverage.md" -f "markdown"`
+- `sf acc-transformer transform -j "coverage.json" -r "coverage.txt" -f "github-actions"`
 - `sf acc-transformer transform -j "coverage.json" -i "force-app"`
 
 # flags.coverage-json.summary

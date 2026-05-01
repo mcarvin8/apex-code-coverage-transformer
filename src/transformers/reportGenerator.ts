@@ -7,6 +7,8 @@ import { HandlerRegistry } from '../handlers/HandlerRegistry.js';
 import { builderOptions, XML_HEADER_CONFIG } from '../utils/constants.js';
 import { XmlReportFormat } from '../utils/types.js';
 import { generateHtml, isHtmlCoverageObject } from './generators/generateHtml.js';
+import { generateMarkdown, isMarkdownCoverageObject } from './generators/generateMarkdown.js';
+import { generateGitHubActions, isGitHubActionsCoverageObject } from './generators/generateGitHubActions.js';
 
 function isXmlReportFormat(format: string): format is XmlReportFormat {
   return format in XML_HEADER_CONFIG;
@@ -16,7 +18,7 @@ export async function generateAndWriteReport(
   outputPath: string,
   coverageObj: AnyCoverageObject,
   format: string,
-  formatAmount: number
+  formatAmount: number,
 ): Promise<string> {
   const content = generateReportContent(coverageObj, format);
   const extension = HandlerRegistry.getExtension(format);
@@ -38,6 +40,14 @@ function generateReportContent(coverageObj: AnyCoverageObject, format: string): 
 
   if (format === 'html' && isHtmlCoverageObject(coverageObj)) {
     return generateHtml(coverageObj);
+  }
+
+  if (format === 'markdown' && isMarkdownCoverageObject(coverageObj)) {
+    return generateMarkdown(coverageObj);
+  }
+
+  if (format === 'github-actions' && isGitHubActionsCoverageObject(coverageObj)) {
+    return generateGitHubActions(coverageObj);
   }
 
   if (format === 'json' || format === 'json-summary' || format === 'simplecov') {

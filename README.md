@@ -8,6 +8,8 @@
 
 A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or test runs) into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools. Use it to keep coverage in sync with your CI/CD and code quality pipelines.
 
+It also produces presentation-ready output for pull-request reviews: a Markdown summary for PR/MR comments and CI job summaries, and GitHub Actions workflow command annotations that surface uncovered lines inline on the PR diff. The GitHub Actions output is designed to pair with the Apex code quality annotations from [sf-cat](https://www.npmjs.com/package/sf-cat), so a single PR can show coverage gaps and quality findings side-by-side.
+
 > Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) or submit a [pull request](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
 
 <!-- TABLE OF CONTENTS -->
@@ -45,7 +47,7 @@ A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or te
 ## Install
 
 ```bash
-sf plugins install apex-code-coverage-transformer@x.y.z
+sf plugins install apex-code-coverage-transformer@latest
 ```
 
 ## Quick Start
@@ -86,6 +88,8 @@ sf plugins install apex-code-coverage-transformer@x.y.z
 This plugin is for Salesforce DX projects (`sfdx-project.json`). It maps Apex names in the CLI coverage JSON to file paths in your package directories and only includes files that exist in those directories. Apex from managed or unlocked packages (not in your repo) is excluded and reported with a [warning](#troubleshooting).
 
 To run transformation automatically after deploy or test commands, use the [Hook](#automatic-transformation-hook).
+
+> **Tip — diff-scoped coverage on PRs.** The Salesforce CLI already scopes `sf project deploy validate`/`start` coverage to whatever is in the deployed manifest. If your PR pipeline builds a manifest from the git diff (for example with [sfdx-git-delta](https://github.com/scolladon/sfdx-git-delta)) and then runs `sf project deploy validate --coverage-formatters json --manifest <delta>`, the resulting coverage JSON only contains the changed Apex. Running this plugin against that JSON gives you per-PR coverage with no extra flags — the diff scoping happens upstream in the deployment, not here.
 
 ### Salesforce CLI
 
@@ -143,18 +147,20 @@ GLOBAL FLAGS
 
 Use `-f` / `--format` to choose the output format. Multiple `-f` values produce multiple files with the format in the name (e.g. `coverage-sonar.xml`, `coverage-cobertura.xml`).
 
-| Format       | Description                | Typical use                             | Example                                                                                |
-| ------------ | -------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------- |
-| sonar        | SonarQube generic coverage | SonarQube, SonarCloud                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"`         |
-| cobertura    | Cobertura XML              | Codecov, Azure, Jenkins, GitLab, GitHub | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`     |
-| jacoco       | JaCoCo XML                 | Codecov, Jenkins, Maven, Gradle         | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "jacoco"`        |
-| lcovonly     | LCOV                       | Codecov, Coveralls, GitHub              | `sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"`     |
-| clover       | Clover XML                 | Bamboo, Bitbucket, Jenkins              | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"`        |
-| json         | Istanbul JSON              | Istanbul/NYC, Codecov                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json"`         |
-| json-summary | JSON summary               | Badges, PR comments                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json-summary"` |
-| simplecov    | SimpleCov JSON             | Codecov, Ruby tools                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "simplecov"`    |
-| opencover    | OpenCover XML              | Azure DevOps, VS, Codecov               | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "opencover"`     |
-| html         | HTML report                | Browsers, CI artifacts                  | `sf acc-transformer transform -j "coverage.json" -r "coverage.html" -f "html"`         |
+| Format         | Description                | Typical use                             | Example                                                                                 |
+| -------------- | -------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------- |
+| sonar          | SonarQube generic coverage | SonarQube, SonarCloud                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"`          |
+| cobertura      | Cobertura XML              | Codecov, Azure, Jenkins, GitLab, GitHub | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`      |
+| jacoco         | JaCoCo XML                 | Codecov, Jenkins, Maven, Gradle         | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "jacoco"`         |
+| lcovonly       | LCOV                       | Codecov, Coveralls, GitHub              | `sf acc-transformer transform -j "coverage.json" -r "coverage.info" -f "lcovonly"`      |
+| clover         | Clover XML                 | Bamboo, Bitbucket, Jenkins              | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "clover"`         |
+| json           | Istanbul JSON              | Istanbul/NYC, Codecov                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json"`          |
+| json-summary   | JSON summary               | Badges, PR comments                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json-summary"`  |
+| simplecov      | SimpleCov JSON             | Codecov, Ruby tools                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "simplecov"`     |
+| opencover      | OpenCover XML              | Azure DevOps, VS, Codecov               | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "opencover"`      |
+| html           | HTML report                | Browsers, CI artifacts                  | `sf acc-transformer transform -j "coverage.json" -r "coverage.html" -f "html"`          |
+| markdown       | Markdown summary           | PR/MR comments, CI job summaries        | `sf acc-transformer transform -j "coverage.json" -r "coverage.md" -f "markdown"`        |
+| github-actions | GitHub Actions annotations | GitHub Actions PR diff annotations      | `sf acc-transformer transform -j "coverage.json" -r "coverage.txt" -f "github-actions"` |
 
 ## CI/CD Integration
 
@@ -198,7 +204,7 @@ jobs:
 
 ### SonarQube
 
-Use the **sonar** format and upload using SonarQube's generic test coverage report formatter, `sonar.coverageReportPaths`. 
+Use the **sonar** format and upload using SonarQube's generic test coverage report formatter, `sonar.coverageReportPaths`.
 
 **Scanner:**
 
@@ -289,6 +295,48 @@ jobs:
           path: code-coverage-results.md
 ```
 
+#### Markdown PR comments (built-in)
+
+Skip the third-party summary action by using the built-in `markdown` format. The output is ready to drop straight into a PR comment or the GitHub Actions [job summary](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary):
+
+```yaml
+- name: Run Apex Tests
+  run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+- name: Transform Coverage to Markdown
+  run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.md" -f "markdown"
+- name: Add coverage to job summary
+  run: cat coverage.md >> $GITHUB_STEP_SUMMARY
+- name: Add Coverage PR Comment
+  uses: marocchino/sticky-pull-request-comment@v2
+  if: github.event_name == 'pull_request'
+  with:
+    recreate: true
+    path: coverage.md
+```
+
+The Markdown report includes an overall summary block, a per-package-directory table, and a file-level table sorted with the lowest coverage first so reviewers see the most actionable rows at the top.
+
+#### GitHub Actions inline annotations
+
+The `github-actions` format emits one [`::warning`](https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions) workflow command per uncovered Apex line, plus a `::notice` summary. When a step prints the file to stdout, the runner renders annotations inline on the PR diff and on the workflow run page.
+
+```yaml
+- name: Run Apex Tests
+  run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+- name: Transform Coverage to GitHub Actions Annotations
+  run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.txt" -f "github-actions"
+- name: Emit coverage annotations
+  run: cat coverage.txt
+```
+
+This pairs with the [`sf-cat`](https://www.npmjs.com/package/sf-cat) plugin's GitHub Actions output for code quality findings, so a single PR shows coverage gaps and quality issues as inline annotations on the same diff.
+
+You can produce both at once with multiple `-f` flags:
+
+```bash
+sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -f "markdown" -f "github-actions" -f "sonar"
+```
+
 ### GitLab CI
 
 Cobertura for coverage in the UI:
@@ -342,13 +390,13 @@ Create `.apexcodecovtransformer.config.json` in the project root to transform co
 
 Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), [SFDX Hardis](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json).
 
-| Key                        | Required   | Description                                              |
-| -------------------------- | ---------- | -------------------------------------------------------- |
-| `deployCoverageJsonPath`   | For deploy | Path to deploy coverage JSON.                            |
-| `testCoverageJsonPath`     | For test   | Path to test coverage JSON.                              |
+| Key                        | Required   | Description                                                  |
+| -------------------------- | ---------- | ------------------------------------------------------------ |
+| `deployCoverageJsonPath`   | For deploy | Path to deploy coverage JSON.                                |
+| `testCoverageJsonPath`     | For test   | Path to test coverage JSON.                                  |
 | `outputReportPath`         | No         | Output path (default: `coverage.[xml/info/json]` by format). |
-| `format`                   | No         | Format(s), comma-separated (default: `sonar`).           |
-| `ignorePackageDirectories` | No         | Comma-separated package directories to ignore.           |
+| `format`                   | No         | Format(s), comma-separated (default: `sonar`).               |
+| `ignorePackageDirectories` | No         | Comma-separated package directories to ignore.               |
 
 ## Troubleshooting
 
@@ -384,8 +432,8 @@ Error (1): ENOENT: no such file or directory: {packageDir}
 
 ## Contributing
 
-Contributions are welcome. See [CONTRIBUTING.md](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md) for setup, testing, and how to add new coverage formats.
+Contributions are welcome. See [CONTRIBUTING.md](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
 
 ## License
 
-MIT. See [LICENSE](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md).
+[MIT](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md)

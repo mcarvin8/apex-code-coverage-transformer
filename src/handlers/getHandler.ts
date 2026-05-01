@@ -14,6 +14,8 @@ import './jsonSummary.js';
 import './simplecov.js';
 import './opencover.js';
 import './html.js';
+import './markdown.js';
+import './githubActions.js';
 
 /**
  * Get a coverage handler for the specified format.
