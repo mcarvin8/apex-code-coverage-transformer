@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.19.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.18.3...v2.19.0) (2026-05-01)
+
+
+### Features
+
+* add markdown and github-actions output formats ([#283](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/283)) ([4fa1c27](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/4fa1c27780cfe08268a282d3c0ce2499f54d2ed1))
+
 ## [2.18.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.18.2...v2.18.3) (2026-04-21)
 
 
