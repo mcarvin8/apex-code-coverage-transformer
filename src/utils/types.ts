@@ -391,6 +391,53 @@ export type HtmlCoverageObject = {
   files: HtmlFileCoverage[];
 };
 
+// Markdown coverage format types
+export type MarkdownPackageRow = {
+  directory: string;
+  fileCount: number;
+  totalLines: number;
+  coveredLines: number;
+  uncoveredLines: number;
+  lineRate: number;
+};
+
+export type MarkdownFileRow = {
+  filePath: string;
+  totalLines: number;
+  coveredLines: number;
+  uncoveredLines: number;
+  lineRate: number;
+};
+
+export type MarkdownCoverageObject = {
+  summary: {
+    totalLines: number;
+    coveredLines: number;
+    uncoveredLines: number;
+    lineRate: number;
+    fileCount: number;
+  };
+  packages: MarkdownPackageRow[];
+  files: MarkdownFileRow[];
+};
+
+// GitHub Actions workflow command output types
+export type GitHubActionsUncoveredLine = {
+  filePath: string;
+  lineNumber: number;
+};
+
+export type GitHubActionsCoverageObject = {
+  summary: {
+    totalLines: number;
+    coveredLines: number;
+    uncoveredLines: number;
+    lineRate: number;
+    fileCount: number;
+  };
+  uncoveredLines: GitHubActionsUncoveredLine[];
+};
+
 /** Union of every format-specific coverage object the report generator can emit. */
 export type AnyCoverageObject =
   | SonarCoverageObject
@@ -402,7 +449,9 @@ export type AnyCoverageObject =
   | JsonSummaryCoverageObject
   | SimpleCovCoverageObject
   | OpenCoverCoverageObject
-  | HtmlCoverageObject;
+  | HtmlCoverageObject
+  | MarkdownCoverageObject
+  | GitHubActionsCoverageObject;
 
 export type XmlReportFormat = 'cobertura' | 'clover' | 'jacoco' | 'opencover';
 export type XmlHeaderConfig = {

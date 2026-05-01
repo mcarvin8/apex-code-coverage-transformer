@@ -12,6 +12,8 @@ import {
   SimpleCovCoverageObject,
   OpenCoverCoverageObject,
   HtmlCoverageObject,
+  MarkdownCoverageObject,
+  GitHubActionsCoverageObject,
 } from '../utils/types.js';
 
 /**
@@ -91,7 +93,7 @@ export abstract class BaseHandler implements CoverageHandler {
     filePath: string,
     fileName: string,
     lines: Record<string, number>,
-    sourceContent?: string
+    sourceContent?: string,
   ): void;
 
   public abstract finalize():
@@ -104,5 +106,7 @@ export abstract class BaseHandler implements CoverageHandler {
     | JsonSummaryCoverageObject
     | SimpleCovCoverageObject
     | OpenCoverCoverageObject
-    | HtmlCoverageObject;
+    | HtmlCoverageObject
+    | MarkdownCoverageObject
+    | GitHubActionsCoverageObject;
 }

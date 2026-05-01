@@ -14,6 +14,8 @@ import '../../src/handlers/jsonSummary.js';
 import '../../src/handlers/simplecov.js';
 import '../../src/handlers/opencover.js';
 import '../../src/handlers/html.js';
+import '../../src/handlers/markdown.js';
+import '../../src/handlers/githubActions.js';
 
 describe('HandlerRegistry unit tests', () => {
   it('should retrieve an existing handler', () => {
@@ -36,7 +38,9 @@ describe('HandlerRegistry unit tests', () => {
     expect(formats).toContain('simplecov');
     expect(formats).toContain('opencover');
     expect(formats).toContain('html');
-    expect(formats.length).toBeGreaterThanOrEqual(10);
+    expect(formats).toContain('markdown');
+    expect(formats).toContain('github-actions');
+    expect(formats.length).toBeGreaterThanOrEqual(12);
   });
 
   it('should return correct file extension for format', () => {
@@ -47,6 +51,8 @@ describe('HandlerRegistry unit tests', () => {
     expect(HandlerRegistry.getExtension('simplecov')).toBe('.json');
     expect(HandlerRegistry.getExtension('opencover')).toBe('.xml');
     expect(HandlerRegistry.getExtension('html')).toBe('.html');
+    expect(HandlerRegistry.getExtension('markdown')).toBe('.md');
+    expect(HandlerRegistry.getExtension('github-actions')).toBe('.txt');
   });
 
   it('should return default extension for unknown format', () => {
@@ -117,5 +123,7 @@ describe('HandlerRegistry unit tests', () => {
     import('../../src/handlers/simplecov.js');
     import('../../src/handlers/opencover.js');
     import('../../src/handlers/html.js');
+    import('../../src/handlers/markdown.js');
+    import('../../src/handlers/githubActions.js');
   });
 });

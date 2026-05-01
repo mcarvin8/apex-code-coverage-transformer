@@ -1,0 +1,9 @@
+::notice title=Apex Code Coverage::Overall coverage 87.10%25 (54/62 lines, 8 uncovered across 2 files)
+::warning file=force-app/main/default/classes/AccountProfile.cls,line=52,title=Uncovered Apex line::Line 52 is not covered by any Apex test
+::warning file=force-app/main/default/classes/AccountProfile.cls,line=53,title=Uncovered Apex line::Line 53 is not covered by any Apex test
+::warning file=force-app/main/default/classes/AccountProfile.cls,line=59,title=Uncovered Apex line::Line 59 is not covered by any Apex test
+::warning file=force-app/main/default/classes/AccountProfile.cls,line=60,title=Uncovered Apex line::Line 60 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=52,title=Uncovered Apex line::Line 52 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=53,title=Uncovered Apex line::Line 53 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=59,title=Uncovered Apex line::Line 59 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=60,title=Uncovered Apex line::Line 60 is not covered by any Apex test

@@ -17,6 +17,8 @@ import {
   simplecovBaselinePath,
   opencoverBaselinePath,
   htmlBaselinePath,
+  markdownBaselinePath,
+  githubActionsBaselinePath,
 } from './testConstants.js';
 import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 
@@ -32,6 +34,8 @@ export async function compareToBaselines(): Promise<void> {
     simplecov: simplecovBaselinePath,
     opencover: opencoverBaselinePath,
     html: htmlBaselinePath,
+    markdown: markdownBaselinePath,
+    'github-actions': githubActionsBaselinePath,
   } as const;
 
   const normalizationRequired = new Set([
@@ -61,7 +65,7 @@ export async function compareToBaselines(): Promise<void> {
         strictEqual(
           normalizeCoverageReport(outputContent, isJson),
           normalizeCoverageReport(baselineContent, isJson),
-          `Mismatch between ${outputPath} and ${baselineMap[formatKey]}`
+          `Mismatch between ${outputPath} and ${baselineMap[formatKey]}`,
         );
       } else {
         strictEqual(outputContent, baselineContent, `Mismatch between ${outputPath} and ${baselineMap[formatKey]}`);

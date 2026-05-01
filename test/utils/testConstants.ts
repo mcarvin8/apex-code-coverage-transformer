@@ -17,6 +17,8 @@ export const jsonSummaryBaselinePath = resolve(fixturesDir, 'baselines/json-summ
 export const simplecovBaselinePath = resolve(fixturesDir, 'baselines/simplecov_baseline.json');
 export const opencoverBaselinePath = resolve(fixturesDir, 'baselines/opencover_baseline.xml');
 export const htmlBaselinePath = resolve(fixturesDir, 'baselines/html_baseline.html');
+export const markdownBaselinePath = resolve(fixturesDir, 'baselines/markdown_baseline.md');
+export const githubActionsBaselinePath = resolve(fixturesDir, 'baselines/github-actions_baseline.txt');
 export const defaultPath = resolve('coverage.xml');
 export const sfdxConfigFile = resolve('sfdx-project.json');
 
