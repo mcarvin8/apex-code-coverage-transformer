@@ -1,0 +1,61 @@
+messages/transformer.transform.md
+  98c9f9775243d82d 15-16
+src/transformers/generators/generateMarkdown.ts
+  98c9f9775243d82d 1-32,34-40,43-48,50-68
+test/units/githubActions.test.ts
+  98c9f9775243d82d 1-75,77-100
+src/handlers/getHandler.ts
+  98c9f9775243d82d 17-18
+test/fixtures/baselines/markdown_baseline.md
+  98c9f9775243d82d 1-19
+src/handlers/BaseHandler.ts
+  98c9f9775243d82d 15-16,96,109-111
+src/transformers/reportGenerator.ts
+  98c9f9775243d82d 10-11,21,45-52
+src/handlers/markdown.ts
+  98c9f9775243d82d 1-119
+src/handlers/githubActions.ts
+  98c9f9775243d82d 1-92
+test/units/handlerRegistry.test.ts
+  98c9f9775243d82d 17-18,41-43,54-55,126-127
+test/units/markdown.test.ts
+  98c9f9775243d82d 1-116
+test/utils/baselineCompare.ts
+  98c9f9775243d82d 20-21,37-38
+test/fixtures/baselines/github-actions_baseline.txt
+  98c9f9775243d82d 1-9
+README.md
+  98c9f9775243d82d 11-12,92-93,150-163,207,298-339
+  h_b104b674256482 50,439
+src/utils/types.ts
+  98c9f9775243d82d 394-440,452-454
+test/utils/testConstants.ts
+  98c9f9775243d82d 20-21
+src/transformers/generators/generateGitHubActions.ts
+  98c9f9775243d82d 1-39,41-46,48-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "d80fcc7960a1a0afa6574fc293e3c692d3c481b7",
+  "prompts": {
+    "98c9f9775243d82d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "58ee32bf-e17d-41c0-966c-85d22848ca9a",
+        "model": "auto-high"
+      },
+      "human_author": "Matt Carvin",
+      "messages": [],
+      "total_additions": 703,
+      "total_deletions": 4,
+      "accepted_lines": 699,
+      "overriden_lines": 7
+    }
+  },
+  "humans": {
+    "h_b104b674256482": {
+      "author": "Matt Carvin"
+    }
+  }
+}
