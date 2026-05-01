@@ -1,15 +1,5 @@
 import { GitHubActionsCoverageObject } from '../../utils/types.js';
 
-export function isGitHubActionsCoverageObject(obj: unknown): obj is GitHubActionsCoverageObject {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'summary' in obj &&
-    'uncoveredLines' in obj &&
-    Array.isArray((obj as GitHubActionsCoverageObject).uncoveredLines)
-  );
-}
-
 function formatPercent(lineRate: number): string {
   return `${(lineRate * 100).toFixed(2)}%`;
 }

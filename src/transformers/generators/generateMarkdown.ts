@@ -1,16 +1,5 @@
 import { MarkdownCoverageObject } from '../../utils/types.js';
 
-export function isMarkdownCoverageObject(obj: unknown): obj is MarkdownCoverageObject {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'summary' in obj &&
-    'packages' in obj &&
-    'files' in obj &&
-    Array.isArray((obj as MarkdownCoverageObject).packages)
-  );
-}
-
 function formatPercent(lineRate: number): string {
   return `${(lineRate * 100).toFixed(2)}%`;
 }

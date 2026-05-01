@@ -1,9 +1,5 @@
 import { HtmlCoverageObject } from '../../utils/types.js';
 
-export function isHtmlCoverageObject(obj: unknown): obj is HtmlCoverageObject {
-  return typeof obj === 'object' && obj !== null && 'summary' in obj && 'files' in obj;
-}
-
 function getCoverageColor(lineRate: number): string {
   if (lineRate >= 0.8) return '#4caf50';
   if (lineRate >= 0.6) return '#ff9800';
