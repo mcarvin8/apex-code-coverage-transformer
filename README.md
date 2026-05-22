@@ -91,6 +91,8 @@ To run transformation automatically after deploy or test commands, use the [Hook
 
 > **Tip — diff-scoped coverage on PRs.** The Salesforce CLI already scopes `sf project deploy validate`/`start` coverage to whatever is in the deployed manifest. If your PR pipeline builds a manifest from the git diff (for example with [sfdx-git-delta](https://github.com/scolladon/sfdx-git-delta)) and then runs `sf project deploy validate --coverage-formatters json --manifest <delta>`, the resulting coverage JSON only contains the changed Apex. Running this plugin against that JSON gives you per-PR coverage with no extra flags — the diff scoping happens upstream in the deployment, not here.
 
+> **Important:** If the generated `package.xml` only contains Apex test classes, the Salesforce CLI deploy coverage report will be empty. The deploy manifest must include actual Apex classes or triggers under test for the CLI to return coverage data in the JSON output.
+
 ### Salesforce CLI
 
 **Deploy/validate** — coverage path: `coverage/coverage/coverage.json`
