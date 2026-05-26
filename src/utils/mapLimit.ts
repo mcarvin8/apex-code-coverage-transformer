@@ -9,29 +9,15 @@
  * @param iteratee  - Async function to run for each item
  */
 export async function mapLimit<T>(items: T[], limit: number, iteratee: (item: T) => Promise<void>): Promise<void> {
-  const iterator = items[Symbol.iterator]();
-  let active = 0;
-  let done = false;
-
-  return new Promise((resolve, reject) => {
-    function next(): void {
-      while (active < limit && !done) {
-        const { value, done: iterDone } = iterator.next();
-        if (iterDone) {
-          done = true;
-          if (active === 0) resolve();
-          return;
-        }
-        active++;
-        iteratee(value)
-          .then(() => {
-            active--;
-            next();
-            if (done && active === 0) resolve();
-          })
-          .catch(reject);
-      }
+  const concurrency = Math.max(1, limit);
+  const queue = items.slice();
+  const workers = Array.from({ length: Math.min(concurrency, queue.length) }, async () => {
+    while (queue.length > 0) {
+      const item = queue.shift()!;
+      // eslint-disable-next-line no-await-in-loop
+      await iteratee(item);
     }
-    next();
   });
+
+  await Promise.all(workers);
 }
