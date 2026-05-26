@@ -1,7 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { mapLimit } from 'async';
 
 import { getCoverageHandler } from '../handlers/getHandler.js';
 import { DeployCoverageData, TestCoverageData, CoverageProcessingContext } from '../utils/types.js';
@@ -11,6 +10,7 @@ import { buildFilePathCache } from '../utils/buildFilePathCache.js';
 import { setCoveredLines, type SetCoveredLinesResult } from '../utils/setCoveredLines.js';
 import { getConcurrencyThreshold } from '../utils/getConcurrencyThreshold.js';
 import { checkCoverageDataType } from '../utils/setCoverageDataType.js';
+import { mapLimit } from '../utils/mapLimit.js';
 import { generateAndWriteReport } from './reportGenerator.js';
 
 type CoverageInput = DeployCoverageData | TestCoverageData[];
@@ -19,7 +19,7 @@ export async function transformCoverageReport(
   jsonFilePath: string,
   outputReportPath: string,
   formats: string[],
-  ignoreDirs: string[]
+  ignoreDirs: string[],
 ): Promise<{ finalPaths: string[]; warnings: string[] }> {
   const warnings: string[] = [];
   const finalPaths: string[] = [];
@@ -53,7 +53,7 @@ export async function transformCoverageReport(
     filesProcessed = await processTestCoverage(parsedData as TestCoverageData[], context);
   } else {
     throw new Error(
-      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
     );
   }
 
@@ -71,7 +71,7 @@ export async function transformCoverageReport(
 }
 
 function hasSourceContent(
-  result: SetCoveredLinesResult
+  result: SetCoveredLinesResult,
 ): result is { updatedLines: Record<string, number>; sourceContent: string } {
   return typeof result === 'object' && result !== null && 'sourceContent' in result;
 }
@@ -127,7 +127,6 @@ async function processDeployCoverage(data: DeployCoverageData, context: Coverage
 
 async function processTestCoverage(data: TestCoverageData[], context: CoverageProcessingContext): Promise<number> {
   let processed = 0;
-  // eslint-disable-next-line @typescript-eslint/require-await
   await mapLimit(data, context.concurrencyLimit, async (entry: TestCoverageData) => {
     const formattedName = entry.name.replace(/no-map[\\/]+/, '');
     const path = findFilePath(formattedName, context.filePathCache);
