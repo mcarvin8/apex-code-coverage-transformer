@@ -9,27 +9,27 @@ export type FilePathCacheResult = {
   warnings: string[];
 };
 
+type ScanContext = {
+  repoRoot: string;
+  extensions: string[];
+  cache: Map<string, string>;
+  warnings: string[];
+};
+
 export async function buildFilePathCache(packageDirectories: string[], repoRoot: string): Promise<FilePathCacheResult> {
-  const cache = new Map<string, string>();
-  const warnings: string[] = [];
-  const extensions = ['cls', 'trigger'];
+  const ctx: ScanContext = {
+    repoRoot,
+    extensions: ['cls', 'trigger'],
+    cache: new Map<string, string>(),
+    warnings: [],
+  };
 
-  await Promise.all(
-    packageDirectories.map(async (directory) => {
-      await scanDirectory(directory, repoRoot, extensions, cache, warnings);
-    }),
-  );
+  await Promise.all(packageDirectories.map(async (directory) => scanDirectory(directory, ctx)));
 
-  return { cache, warnings };
+  return { cache: ctx.cache, warnings: ctx.warnings };
 }
 
-async function scanDirectory(
-  directory: string,
-  repoRoot: string,
-  extensions: string[],
-  cache: Map<string, string>,
-  warnings: string[],
-): Promise<void> {
+async function scanDirectory(directory: string, ctx: ScanContext): Promise<void> {
   let entries: string[];
 
   try {
@@ -54,38 +54,31 @@ async function scanDirectory(
     }
 
     if (stats.isDirectory()) {
-      subdirPromises.push(scanDirectory(fullPath, repoRoot, extensions, cache, warnings));
+      subdirPromises.push(scanDirectory(fullPath, ctx));
     } else {
-      processApexFile(entry, fullPath, repoRoot, extensions, cache, warnings);
+      processApexFile(entry, fullPath, ctx);
     }
   }
 
   await Promise.all(subdirPromises);
 }
 
-function processApexFile(
-  entry: string,
-  fullPath: string,
-  repoRoot: string,
-  extensions: string[],
-  cache: Map<string, string>,
-  warnings: string[],
-): void {
+function processApexFile(entry: string, fullPath: string, ctx: ScanContext): void {
   const ext = entry.split('.').pop();
-  if (!ext || !extensions.includes(ext)) return;
+  if (!ext || !ctx.extensions.includes(ext)) return;
 
-  const relativePath = normalizePathToUnix(relative(repoRoot, fullPath));
+  const relativePath = normalizePathToUnix(relative(ctx.repoRoot, fullPath));
   const nameWithoutExt = entry.substring(0, entry.lastIndexOf('.'));
 
-  if (cache.has(entry)) {
-    warnings.push(
-      `Duplicate Apex file "${entry}" found in multiple package directories. Using "${cache.get(entry)!}"; ignoring "${relativePath}".`,
+  if (ctx.cache.has(entry)) {
+    ctx.warnings.push(
+      `Duplicate Apex file "${entry}" found in multiple package directories. Using "${ctx.cache.get(entry)!}"; ignoring "${relativePath}".`,
     );
     return;
   }
 
-  cache.set(entry, relativePath);
-  if (!cache.has(nameWithoutExt)) {
-    cache.set(nameWithoutExt, relativePath);
+  ctx.cache.set(entry, relativePath);
+  if (!ctx.cache.has(nameWithoutExt)) {
+    ctx.cache.set(nameWithoutExt, relativePath);
   }
 }
