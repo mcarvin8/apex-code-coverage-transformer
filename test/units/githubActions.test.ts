@@ -82,6 +82,65 @@ describe('GitHubActionsCoverageHandler unit tests', () => {
     }
   });
 
+  it('caps annotations at 50 and emits a truncation notice for the remainder', async () => {
+    const handler = new GitHubActionsCoverageHandler();
+    // 60 uncovered lines across one file
+    const lines: Record<string, number> = {};
+    for (let i = 1; i <= 60; i++) lines[String(i)] = 0;
+    handler.processFile('force-app/main/default/classes/Big.cls', 'Big', lines);
+    const result = handler.finalize();
+
+    const tmpDir = await mkdtemp(join(tmpdir(), 'gha-cap-'));
+    try {
+      const outPath = await generateAndWriteReport(join(tmpDir, 'coverage.txt'), result, 'github-actions', 1);
+      const content = await readFile(outPath, 'utf-8');
+      const warningLines = content.split('\n').filter((l) => l.startsWith('::warning'));
+      const noticeLines = content.split('\n').filter((l) => l.startsWith('::notice'));
+      expect(warningLines).toHaveLength(50);
+      expect(noticeLines).toHaveLength(2); // summary + truncation
+      expect(noticeLines[1]).toContain('10 additional uncovered line');
+      expect(noticeLines[1]).toContain('not shown');
+    } finally {
+      await rm(tmpDir, { recursive: true });
+    }
+  });
+
+  it('uses singular "line" in truncation notice when exactly 1 line is truncated', async () => {
+    const handler = new GitHubActionsCoverageHandler();
+    // 51 uncovered lines → 1 truncated
+    const lines: Record<string, number> = {};
+    for (let i = 1; i <= 51; i++) lines[String(i)] = 0;
+    handler.processFile('force-app/main/default/classes/Big.cls', 'Big', lines);
+    const result = handler.finalize();
+
+    const tmpDir = await mkdtemp(join(tmpdir(), 'gha-singular-'));
+    try {
+      const outPath = await generateAndWriteReport(join(tmpDir, 'coverage.txt'), result, 'github-actions', 1);
+      const content = await readFile(outPath, 'utf-8');
+      const noticeLines = content.split('\n').filter((l) => l.startsWith('::notice'));
+      expect(noticeLines[1]).toContain('1 additional uncovered line ');
+      expect(noticeLines[1]).not.toContain('lines');
+    } finally {
+      await rm(tmpDir, { recursive: true });
+    }
+  });
+
+  it('emits no truncation notice when uncovered lines are within the cap', async () => {
+    const handler = new GitHubActionsCoverageHandler();
+    handler.processFile('force-app/main/default/classes/A.cls', 'A', { '1': 0, '2': 1 });
+    const result = handler.finalize();
+
+    const tmpDir = await mkdtemp(join(tmpdir(), 'gha-nocap-'));
+    try {
+      const outPath = await generateAndWriteReport(join(tmpDir, 'coverage.txt'), result, 'github-actions', 1);
+      const content = await readFile(outPath, 'utf-8');
+      const noticeLines = content.split('\n').filter((l) => l.startsWith('::notice'));
+      expect(noticeLines).toHaveLength(1); // summary only, no truncation
+    } finally {
+      await rm(tmpDir, { recursive: true });
+    }
+  });
+
   it('escapes commas and colons in file paths for workflow command properties', async () => {
     const handler = new GitHubActionsCoverageHandler();
     // Salesforce paths shouldn't contain these, but protect against odd inputs
