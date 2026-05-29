@@ -86,12 +86,15 @@ export class CoberturaCoverageHandler extends BaseHandler {
       const totalLines = pkg.classes.class.reduce((sum, cls) => sum + cls['@line-rate'] * cls.lines.line.length, 0);
       const totalClasses = pkg.classes.class.reduce((sum, cls) => sum + cls.lines.line.length, 0);
 
-      pkg['@line-rate'] = parseFloat((totalLines / totalClasses).toFixed(4));
+      pkg['@line-rate'] = totalClasses > 0 ? parseFloat((totalLines / totalClasses).toFixed(4)) : 0;
     }
 
-    this.coverageObj.coverage['@line-rate'] = parseFloat(
-      (this.coverageObj.coverage['@lines-covered'] / this.coverageObj.coverage['@lines-valid']).toFixed(4)
-    );
+    this.coverageObj.coverage['@line-rate'] =
+      this.coverageObj.coverage['@lines-valid'] > 0
+        ? parseFloat(
+            (this.coverageObj.coverage['@lines-covered'] / this.coverageObj.coverage['@lines-valid']).toFixed(4),
+          )
+        : 0;
 
     this.coverageObj.coverage.packages.package.sort((a, b) => a['@name'].localeCompare(b['@name']));
     for (const pkg of this.coverageObj.coverage.packages.package) {
