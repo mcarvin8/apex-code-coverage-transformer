@@ -54,29 +54,38 @@ async function scanDirectory(
     }
 
     if (stats.isDirectory()) {
-      // Queue subdirectory scanning
       subdirPromises.push(scanDirectory(fullPath, repoRoot, extensions, cache, warnings));
     } else {
-      // Check if this is an Apex file
-      const ext = entry.split('.').pop();
-      if (ext && extensions.includes(ext)) {
-        const relativePath = normalizePathToUnix(relative(repoRoot, fullPath));
-        const nameWithoutExt = entry.substring(0, entry.lastIndexOf('.'));
-
-        if (cache.has(entry)) {
-          warnings.push(
-            `Duplicate Apex file "${entry}" found in multiple package directories. Using "${cache.get(entry)!}"; ignoring "${relativePath}".`,
-          );
-        } else {
-          cache.set(entry, relativePath);
-          if (!cache.has(nameWithoutExt)) {
-            cache.set(nameWithoutExt, relativePath);
-          }
-        }
-      }
+      processApexFile(entry, fullPath, repoRoot, extensions, cache, warnings);
     }
   }
 
-  // Process all subdirectories in parallel
   await Promise.all(subdirPromises);
+}
+
+function processApexFile(
+  entry: string,
+  fullPath: string,
+  repoRoot: string,
+  extensions: string[],
+  cache: Map<string, string>,
+  warnings: string[],
+): void {
+  const ext = entry.split('.').pop();
+  if (!ext || !extensions.includes(ext)) return;
+
+  const relativePath = normalizePathToUnix(relative(repoRoot, fullPath));
+  const nameWithoutExt = entry.substring(0, entry.lastIndexOf('.'));
+
+  if (cache.has(entry)) {
+    warnings.push(
+      `Duplicate Apex file "${entry}" found in multiple package directories. Using "${cache.get(entry)!}"; ignoring "${relativePath}".`,
+    );
+    return;
+  }
+
+  cache.set(entry, relativePath);
+  if (!cache.has(nameWithoutExt)) {
+    cache.set(nameWithoutExt, relativePath);
+  }
 }
