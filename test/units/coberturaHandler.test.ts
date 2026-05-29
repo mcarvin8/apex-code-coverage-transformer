@@ -5,10 +5,11 @@ import { describe, it, expect } from 'vitest';
 import { CoberturaCoverageHandler } from '../../src/handlers/cobertura.js';
 
 describe('CoberturaCoverageHandler branch coverage', () => {
-  it('processes a file with zero total lines without updating the class line-rate', () => {
+  it('processes a file with zero total lines without producing NaN line-rates', () => {
     const handler = new CoberturaCoverageHandler();
 
     // Empty lines triggers the `totalLines > 0` false branch in processFile
+    // and the zero-guard branches in finalize (package and global line-rate)
     handler.processFile('pkg/empty.cls', 'EmptyFile', {});
     const result = handler.finalize();
 
@@ -16,9 +17,11 @@ describe('CoberturaCoverageHandler branch coverage', () => {
     expect(pkg['@name']).toBe('pkg');
     const cls = pkg.classes.class[0];
     expect(cls['@filename']).toBe('pkg/empty.cls');
-    // When totalLines is 0 the class '@line-rate' stays at its default (0)
     expect(cls['@line-rate']).toBe(0);
     expect(cls.lines.line).toEqual([]);
+    // Package and global rates must be 0, not NaN, when no lines are tracked
+    expect(pkg['@line-rate']).toBe(0);
+    expect(result.coverage['@line-rate']).toBe(0);
   });
 
   it('sorts packages and classes within each package by name', () => {
