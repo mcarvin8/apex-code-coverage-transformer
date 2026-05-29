@@ -5,6 +5,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.20.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.19.2...v2.20.0) (2026-05-29)
+
+
+### Features
+
+* add --min-coverage and --max-annotations flags ([#294](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/294)) ([0eb4de9](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/0eb4de91165471160062e673eac368fac3351a35))
+
+
+### Bug Fixes
+
+* cap GitHub Actions annotations at 50 with overflow notice ([#293](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/293)) ([ad3bdff](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/ad3bdffb79c5271dfa32d24814dcb0c1005b9930))
+* guard against NaN line-rate in Cobertura when no lines tracked ([#292](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/292)) ([f44d69d](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/f44d69d106835ce3c438fd12a5101715247a9974))
+* warn and deduplicate on same-named Apex files across packages ([#290](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/290)) ([be00604](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/be00604859e1dfffae6e4bda2ad0b82f89ff5dfb))
+
 ## [2.19.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.19.1...v2.19.2) (2026-05-26)
 
 
