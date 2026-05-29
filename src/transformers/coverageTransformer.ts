@@ -36,7 +36,8 @@ export async function transformCoverageReport(
   const concurrencyLimit = getConcurrencyThreshold();
 
   // Build file path cache upfront to avoid O(n*m) directory traversals
-  const filePathCache = await buildFilePathCache(packageDirectories, repoRoot);
+  const { cache: filePathCache, warnings: cacheWarnings } = await buildFilePathCache(packageDirectories, repoRoot);
+  warnings.push(...cacheWarnings);
 
   const context: CoverageProcessingContext = {
     handlers,

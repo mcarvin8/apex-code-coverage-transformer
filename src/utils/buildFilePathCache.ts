@@ -4,33 +4,32 @@ import { readdir, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
 
-/**
- * Build a cache mapping filenames to their full paths.
- * This prevents recursive directory searches for every file in the coverage report.
- *
- * @param packageDirectories - Array of package directory paths to scan
- * @param repoRoot - Repository root path
- * @returns Map of filename (without path) to full relative path
- */
-export async function buildFilePathCache(packageDirectories: string[], repoRoot: string): Promise<Map<string, string>> {
-  const cache = new Map<string, string>();
-  const extensions = ['cls', 'trigger'];
+export type FilePathCacheResult = {
+  cache: Map<string, string>;
+  warnings: string[];
+};
 
-  await Promise.all(
-    packageDirectories.map(async (directory) => {
-      await scanDirectory(directory, repoRoot, extensions, cache);
-    })
-  );
+type ScanContext = {
+  repoRoot: string;
+  extensions: string[];
+  cache: Map<string, string>;
+  warnings: string[];
+};
 
-  return cache;
+export async function buildFilePathCache(packageDirectories: string[], repoRoot: string): Promise<FilePathCacheResult> {
+  const ctx: ScanContext = {
+    repoRoot,
+    extensions: ['cls', 'trigger'],
+    cache: new Map<string, string>(),
+    warnings: [],
+  };
+
+  await Promise.all(packageDirectories.map(async (directory) => scanDirectory(directory, ctx)));
+
+  return { cache: ctx.cache, warnings: ctx.warnings };
 }
 
-async function scanDirectory(
-  directory: string,
-  repoRoot: string,
-  extensions: string[],
-  cache: Map<string, string>
-): Promise<void> {
+async function scanDirectory(directory: string, ctx: ScanContext): Promise<void> {
   let entries: string[];
 
   try {
@@ -55,24 +54,31 @@ async function scanDirectory(
     }
 
     if (stats.isDirectory()) {
-      // Queue subdirectory scanning
-      subdirPromises.push(scanDirectory(fullPath, repoRoot, extensions, cache));
+      subdirPromises.push(scanDirectory(fullPath, ctx));
     } else {
-      // Check if this is an Apex file
-      const ext = entry.split('.').pop();
-      if (ext && extensions.includes(ext)) {
-        const relativePath = normalizePathToUnix(relative(repoRoot, fullPath));
-        // Store with the full filename as key (e.g., "AccountHandler.cls")
-        cache.set(entry, relativePath);
-        // Also store without extension for lookups (e.g., "AccountHandler")
-        const nameWithoutExt = entry.substring(0, entry.lastIndexOf('.'));
-        if (!cache.has(nameWithoutExt)) {
-          cache.set(nameWithoutExt, relativePath);
-        }
-      }
+      processApexFile(entry, fullPath, ctx);
     }
   }
 
-  // Process all subdirectories in parallel
   await Promise.all(subdirPromises);
+}
+
+function processApexFile(entry: string, fullPath: string, ctx: ScanContext): void {
+  const ext = entry.split('.').pop();
+  if (!ext || !ctx.extensions.includes(ext)) return;
+
+  const relativePath = normalizePathToUnix(relative(ctx.repoRoot, fullPath));
+  const nameWithoutExt = entry.substring(0, entry.lastIndexOf('.'));
+
+  if (ctx.cache.has(entry)) {
+    ctx.warnings.push(
+      `Duplicate Apex file "${entry}" found in multiple package directories. Using "${ctx.cache.get(entry)!}"; ignoring "${relativePath}".`,
+    );
+    return;
+  }
+
+  ctx.cache.set(entry, relativePath);
+  if (!ctx.cache.has(nameWithoutExt)) {
+    ctx.cache.set(nameWithoutExt, relativePath);
+  }
 }
