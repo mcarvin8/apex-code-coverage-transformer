@@ -112,7 +112,8 @@ Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis):
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> [-r <value>] [-f <value>] [-i <value>] [--json]
+  $ sf acc-transformer transform -j <value> [-r <value>] [-f <value>] [-i <value>]
+                                            [--min-coverage <value>] [--max-annotations <value>] [--json]
 
 FLAGS
   -j, --coverage-json=<value>             Path to the code coverage JSON from deploy or test.
@@ -120,6 +121,10 @@ FLAGS
   -f, --format=<value>                    Output format (repeat for multiple). Default: sonar.
                                           Multiple formats append to filename, e.g. coverage-sonar.xml.
   -i, --ignore-package-directory=<value>  Package directory to ignore (as in sfdx-project.json). Repeatable.
+      --min-coverage=<value>              Minimum required line coverage percentage (0–100). Exits with an error
+                                          if overall coverage is below this value. Reports are written first.
+      --max-annotations=<value>           Maximum ::warning annotations emitted by --format github-actions.
+                                          Default: 50. Overflow is summarised in a ::notice line.
 
 GLOBAL FLAGS
   --json  Output as JSON.
