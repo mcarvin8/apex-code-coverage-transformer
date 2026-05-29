@@ -27,7 +27,7 @@ describe('buildFilePathCache', () => {
     await writeFile(join(packageDir1, 'AccountHandler.cls'), 'public class AccountHandler {}');
     await writeFile(join(packageDir1, 'ContactHandler.cls'), 'public class ContactHandler {}');
 
-    const cache = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
 
     expect(cache.has('AccountHandler.cls')).toBe(true);
     expect(cache.has('AccountHandler')).toBe(true);
@@ -40,7 +40,7 @@ describe('buildFilePathCache', () => {
     // Create test files
     await writeFile(join(packageDir2, 'AccountTrigger.trigger'), 'trigger AccountTrigger on Account {}');
 
-    const cache = await buildFilePathCache([join(testDir, 'packaged')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'packaged')], repoRoot);
 
     expect(cache.has('AccountTrigger.trigger')).toBe(true);
     expect(cache.has('AccountTrigger')).toBe(true);
@@ -51,7 +51,7 @@ describe('buildFilePathCache', () => {
     await writeFile(join(packageDir1, 'Class1.cls'), 'public class Class1 {}');
     await writeFile(join(packageDir2, 'Trigger1.trigger'), 'trigger Trigger1 on Account {}');
 
-    const cache = await buildFilePathCache([join(testDir, 'force-app'), join(testDir, 'packaged')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app'), join(testDir, 'packaged')], repoRoot);
 
     expect(cache.has('Class1.cls')).toBe(true);
     expect(cache.has('Trigger1.trigger')).toBe(true);
@@ -61,7 +61,7 @@ describe('buildFilePathCache', () => {
     const nonExistentDir = join(testDir, 'non-existent');
 
     // Should not throw error
-    const cache = await buildFilePathCache([nonExistentDir], repoRoot);
+    const { cache } = await buildFilePathCache([nonExistentDir], repoRoot);
 
     expect(cache.size).toBe(0);
   });
@@ -71,7 +71,7 @@ describe('buildFilePathCache', () => {
     await mkdir(nestedDir, { recursive: true });
     await writeFile(join(nestedDir, 'DeepClass.cls'), 'public class DeepClass {}');
 
-    const cache = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
 
     expect(cache.has('DeepClass.cls')).toBe(true);
     expect(cache.has('DeepClass')).toBe(true);
@@ -82,7 +82,7 @@ describe('buildFilePathCache', () => {
     await writeFile(join(packageDir1, 'README.md'), '# Readme');
     await writeFile(join(packageDir1, 'config.xml'), '<xml/>');
 
-    const cache = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
 
     expect(cache.has('AccountHandler.cls')).toBe(true);
     expect(cache.has('README.md')).toBe(false);
@@ -94,7 +94,7 @@ describe('buildFilePathCache', () => {
     // 'AccountHandler.cls' and 'AccountHandler', and won't be overwritten
     await writeFile(join(packageDir1, 'AccountHandler.cls'), 'public class AccountHandler {}');
 
-    const cache = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
 
     expect(cache.has('AccountHandler')).toBe(true);
     expect(cache.has('AccountHandler.cls')).toBe(true);
@@ -123,7 +123,7 @@ describe('buildFilePathCache', () => {
     }
 
     // Build cache - should not crash even if a file becomes inaccessible
-    const cache = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
 
     expect(cache.has('ValidClass.cls')).toBe(true);
     // BrokenLink should not be in cache since stat failed
@@ -133,12 +133,32 @@ describe('buildFilePathCache', () => {
   it('should normalize paths to Unix format', async () => {
     await writeFile(join(packageDir1, 'TestClass.cls'), 'public class TestClass {}');
 
-    const cache = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
 
     const path = cache.get('TestClass.cls');
     expect(path).toBeDefined();
     // Unix paths use forward slashes
     expect(path).not.toContain('\\');
     expect(path).toContain('/');
+  });
+
+  it('should warn and keep first entry when two packages have the same filename', async () => {
+    const pkg2Dir = join(testDir, 'package2', 'main', 'default', 'classes');
+    await mkdir(pkg2Dir, { recursive: true });
+    await writeFile(join(packageDir1, 'SharedClass.cls'), 'public class SharedClass {}');
+    await writeFile(join(pkg2Dir, 'SharedClass.cls'), 'public class SharedClass {}');
+
+    const { cache, warnings } = await buildFilePathCache(
+      [join(testDir, 'force-app'), join(testDir, 'package2')],
+      repoRoot,
+    );
+
+    expect(cache.has('SharedClass.cls')).toBe(true);
+    expect(cache.has('SharedClass')).toBe(true);
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain('SharedClass.cls');
+    expect(warnings[0]).toContain('ignoring');
+    // Both cache keys point to the first-found file
+    expect(cache.get('SharedClass.cls')).toBe(cache.get('SharedClass'));
   });
 });

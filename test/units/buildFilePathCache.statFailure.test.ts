@@ -43,7 +43,7 @@ describe('buildFilePathCache stat failure', () => {
       return actualFs.stat(path);
     });
 
-    const cache = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
+    const { cache } = await buildFilePathCache([join(testDir, 'force-app')], repoRoot);
 
     expect(cache.has('Good.cls')).toBe(true);
     expect(cache.has('Bad.cls')).toBe(false);

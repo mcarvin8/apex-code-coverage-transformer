@@ -4,32 +4,31 @@ import { readdir, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 import { normalizePathToUnix } from './normalizePathToUnix.js';
 
-/**
- * Build a cache mapping filenames to their full paths.
- * This prevents recursive directory searches for every file in the coverage report.
- *
- * @param packageDirectories - Array of package directory paths to scan
- * @param repoRoot - Repository root path
- * @returns Map of filename (without path) to full relative path
- */
-export async function buildFilePathCache(packageDirectories: string[], repoRoot: string): Promise<Map<string, string>> {
+export type FilePathCacheResult = {
+  cache: Map<string, string>;
+  warnings: string[];
+};
+
+export async function buildFilePathCache(packageDirectories: string[], repoRoot: string): Promise<FilePathCacheResult> {
   const cache = new Map<string, string>();
+  const warnings: string[] = [];
   const extensions = ['cls', 'trigger'];
 
   await Promise.all(
     packageDirectories.map(async (directory) => {
-      await scanDirectory(directory, repoRoot, extensions, cache);
-    })
+      await scanDirectory(directory, repoRoot, extensions, cache, warnings);
+    }),
   );
 
-  return cache;
+  return { cache, warnings };
 }
 
 async function scanDirectory(
   directory: string,
   repoRoot: string,
   extensions: string[],
-  cache: Map<string, string>
+  cache: Map<string, string>,
+  warnings: string[],
 ): Promise<void> {
   let entries: string[];
 
@@ -56,18 +55,23 @@ async function scanDirectory(
 
     if (stats.isDirectory()) {
       // Queue subdirectory scanning
-      subdirPromises.push(scanDirectory(fullPath, repoRoot, extensions, cache));
+      subdirPromises.push(scanDirectory(fullPath, repoRoot, extensions, cache, warnings));
     } else {
       // Check if this is an Apex file
       const ext = entry.split('.').pop();
       if (ext && extensions.includes(ext)) {
         const relativePath = normalizePathToUnix(relative(repoRoot, fullPath));
-        // Store with the full filename as key (e.g., "AccountHandler.cls")
-        cache.set(entry, relativePath);
-        // Also store without extension for lookups (e.g., "AccountHandler")
         const nameWithoutExt = entry.substring(0, entry.lastIndexOf('.'));
-        if (!cache.has(nameWithoutExt)) {
-          cache.set(nameWithoutExt, relativePath);
+
+        if (cache.has(entry)) {
+          warnings.push(
+            `Duplicate Apex file "${entry}" found in multiple package directories. Using "${cache.get(entry)!}"; ignoring "${relativePath}".`,
+          );
+        } else {
+          cache.set(entry, relativePath);
+          if (!cache.has(nameWithoutExt)) {
+            cache.set(nameWithoutExt, relativePath);
+          }
         }
       }
     }
