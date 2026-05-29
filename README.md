@@ -316,6 +316,14 @@ Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex
 Warning: The file name AccountTrigger was not found in any package directory.
 ```
 
+**Duplicate Apex file across package directories** — Two packages contain a file with the same name (e.g. `AccountHelper.cls` in both `force-app` and `package2`). The first one found is used; the second is ignored:
+
+```
+Warning: Duplicate Apex file "AccountHelper.cls" found in multiple package directories. Using "force-app/main/default/classes/AccountHelper.cls"; ignoring "package2/main/default/classes/AccountHelper.cls".
+```
+
+Resolve by renaming one of the files or using `--ignore-package-directory` to exclude the package whose version should not be included.
+
 **No files matched** — Report will be empty:
 
 ```
