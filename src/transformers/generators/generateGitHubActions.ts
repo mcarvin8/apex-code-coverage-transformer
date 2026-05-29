@@ -1,5 +1,7 @@
 import { GitHubActionsCoverageObject } from '../../utils/types.js';
 
+const MAX_ANNOTATIONS = 50;
+
 function formatPercent(lineRate: number): string {
   return `${(lineRate * 100).toFixed(2)}%`;
 }
@@ -32,10 +34,21 @@ export function generateGitHubActions(coverageObj: GitHubActionsCoverageObject):
     summary.fileCount
   } file${summary.fileCount === 1 ? '' : 's'})`;
 
-  const annotations = uncoveredLines.map(
+  const visible = uncoveredLines.slice(0, MAX_ANNOTATIONS);
+  const truncated = uncoveredLines.length - visible.length;
+
+  const annotations = visible.map(
     ({ filePath, lineNumber }) =>
       `::warning file=${escapeProperty(filePath)},line=${lineNumber},title=Uncovered Apex line::Line ${lineNumber} is not covered by any Apex test`,
   );
 
-  return [summaryLine, ...annotations].join('\n');
+  const lines = [summaryLine, ...annotations];
+
+  if (truncated > 0) {
+    lines.push(
+      `::notice title=Apex Code Coverage::${truncated} additional uncovered line${truncated === 1 ? '' : 's'} not shown. GitHub Actions limits annotations per step.`,
+    );
+  }
+
+  return lines.join('\n');
 }
