@@ -1,37 +1,36 @@
 # Contributing
 
-Contributions are welcome. You can help by reporting bugs, suggesting features, improving docs, or submitting code changes.
+Contributions welcome: bug reports, feature requests, doc improvements, and code changes.
 
-**Code changes:** You must **fork** this repository first, make your changes in your fork, and open pull requests from your fork back to the main repo. Do not push branches directly to the main repository.
+**Code changes require a fork.** Do not push branches directly to the main repository.
 
 ## Requirements
 
-- **Node.js** ≥ 20.0.0
-- **npm** (package manager)
+- Node.js ≥ 20.0.0
+- npm
 
 ## Development setup
 
-1. **Fork** the repository on GitHub (use the "Fork" button on the repo page).
-2. **Clone your fork** (not the main repo) to your machine.
-3. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-4. **Build the plugin:**
-   ```bash
-   npm run build
-   ```
-   Re-run `npm run build` after source changes when testing locally.
+```bash
+# 1. Fork on GitHub, then clone your fork
+git clone https://github.com/<your-username>/apex-code-coverage-transformer.git
+
+# 2. Install dependencies
+npm install
+
+# 3. Build (re-run after source changes)
+npm run build
+```
 
 ## Code quality
 
-- **Lint:** `npm run lint` (ESLint). Fix any reported issues before submitting.
-- **Format:** `npm run format` (Prettier). Formatting is enforced in pre-commit.
-- **Commit messages:** Use [Conventional Commits](https://www.conventionalcommits.org/). The repo uses `@commitlint/config-conventional` (e.g. `feat:`, `fix:`, `docs:`, `test:`, `chore:`). Husky runs commitlint on commit.
+- **Lint:** `npm run lint` — fix all issues before submitting
+- **Format:** `npm run format` — Prettier; enforced in pre-commit via Husky
+- **Commit messages:** [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `test:`, `chore:`); enforced by commitlint on commit
 
 ## Testing
 
-The test suite uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in true ESM mode.
+Uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in ESM mode.
 
 - **Unit tests (with coverage):**
 
@@ -39,70 +38,55 @@ The test suite uses [Vitest](https://vitest.dev/). Test files live in `test/` an
   npm run test:only
   ```
 
-  New code must satisfy the existing Vitest coverage thresholds (see `vitest.config.ts`).
+  New code must satisfy the existing coverage thresholds in `vitest.config.ts`.
 
-- **Non-unit tests (NUT):** After rebuilding:
+- **NUTs** — rebuild first, then:
 
   ```bash
   npm run test:nuts
   ```
 
-  NUTs use a separate config (`vitest.nut.config.ts`) that runs serially and matches `**/*.nut.ts`.
+  Runs serially against `**/*.nut.ts` using `vitest.nut.config.ts`.
 
-- **Full test pipeline:** `npm test` runs compile, unit tests, and lint.
-
-Use Vitest-native APIs: import helpers from `vitest` (e.g. `import { describe, it, expect, vi } from 'vitest'`). Do not reintroduce `@jest/globals` or `jest.*` calls — use `vi.fn`, `vi.mock`, `await vi.importActual`, and the `Mock` type from `vitest`.
+- **Full pipeline:** `npm test` — compile + unit tests + lint.
 
 ## Pull request process
 
-1. Work in your **fork**. Create a branch from `main` (e.g. `fix/issue-description` or `feat/new-format`).
-2. Make your changes. Ensure `npm run build`, `npm run lint`, and `npm run test:only` pass.
-3. If you add or change behavior, add or update tests.
-4. Push your branch to your fork and **open a pull request from your fork to the main repository** (`main` branch). Describe what changed and why; reference any issues.
-5. Address review feedback. Once approved, maintainers will merge.
+1. Branch from `main` in your fork (e.g. `fix/issue-description`, `feat/new-format`).
+2. Make changes. Confirm `npm run build`, `npm run lint`, and `npm run test:only` pass.
+3. Add or update tests for any behavior change.
+4. Open a PR from your fork to `main`. Describe what changed and why; reference any issues.
+5. Address review feedback. Maintainers merge on approval.
 
 ## Adding a new coverage format
 
-To add a new output format to the transformer:
+1. **Register the format** — add the identifier to `formatOptions` in `src/utils/constants.ts`.
 
-1. **Register the format flag**
+2. **Types** — in `src/utils/types.ts`, add a `{Format}CoverageObject` type and add it to the `AnyCoverageObject` union. `CoverageHandler.finalize()` returns `AnyCoverageObject`, so no further type edits are required.
 
-   - Add the format identifier to `formatOptions` in `src/utils/constants.ts`.
+3. **Handler** — create a class in `src/handlers/` extending `BaseHandler`, with `processFile` and `finalize` methods. Sort items in `finalize` before returning. Self-register at the bottom of the handler file:
 
-2. **Types**
+   ```typescript
+   HandlerRegistry.register({
+     name: 'myformat',
+     description: 'My format description',
+     fileExtension: '.xml', // or '.json', '.info', '.html', etc.
+     handler: () => new MyFormatHandler(),
+     compatibleWith: ['ToolA', 'ToolB'], // optional
+   });
+   ```
 
-   - In `src/utils/types.ts`, add a `{Format}CoverageObject` type.
-   - Add it to the `AnyCoverageObject` union at the bottom of that file. `CoverageHandler.finalize()` returns `AnyCoverageObject`, so no further type edits are required.
+   Add a side-effect import in `src/handlers/getHandler.ts` (e.g. `import './myformat.js';`) so registration runs when handlers are loaded.
 
-3. **Handler**
-
-   - Create a new handler class in `src/handlers/` extending `BaseHandler`, with `processFile` and `finalize` methods.
-   - In `finalize`, sort items in the coverage object before returning it.
-   - At the bottom of the handler file, self-register it with the registry:
-     ```typescript
-     HandlerRegistry.register({
-       name: 'myformat',
-       description: 'My format description',
-       fileExtension: '.xml', // or '.json', '.info', '.html', etc.
-       handler: () => new MyFormatHandler(),
-       compatibleWith: ['ToolA', 'ToolB'], // optional
-     });
-     ```
-   - Add a side-effect import for your handler in `src/handlers/getHandler.ts` (e.g. `import './myformat.js';`) so the registration runs when handlers are loaded. `getExtensionForFormat` is driven by the registry, so registering the extension here is all that's needed.
-
-4. **Report generation**
-
-   - Most formats flow through the XML pipeline in `src/transformers/reportGenerator.ts` automatically; no edits are needed there for standard XML output.
-   - For **plain-text / JSON / custom text formats**, add a branch to the `generateReportContent` dispatcher in `reportGenerator.ts` and a small helper function (see `generateLcov` for a minimal example).
-   - For **large, self-contained renderers** (e.g. HTML), put the renderer in `src/transformers/generators/` as its own module (see `generators/generateHtml.ts`) and add a type guard + dispatch branch in `reportGenerator.ts`. Keep `reportGenerator.ts` focused on routing.
+4. **Report generation** — standard XML formats flow through `src/transformers/reportGenerator.ts` with no changes needed. For plain-text/JSON/custom formats, add a branch to `generateReportContent` (see `generateLcov` for a minimal example). For large self-contained renderers, add a module to `src/transformers/generators/` and dispatch from `reportGenerator.ts` (see `generators/generateHtml.ts`).
 
 5. **Baselines and tests**
-   - Run the unit test suite once; it will generate a report for the new format.
-   - Add the generated baseline to `test/fixtures/baselines/` as `{format}_baseline.{ext}`.
+   - Run `npm run test:only` — it generates a report for the new format.
+   - Add the generated file to `test/fixtures/baselines/` as `{format}_baseline.{ext}`.
    - In `test/utils/testConstants.ts`, add a constant for the baseline path.
-   - In `test/utils/baselineCompare.ts`, add the new constant to `baselineMap`.
+   - In `test/utils/baselineCompare.ts`, add the constant to `baselineMap`.
    - If the format includes timestamps (e.g. Cobertura, Clover), update `test/utils/normalizeCoverageReport.ts` to strip them for stable comparison.
-   - Re-run `npm run test:only` and confirm all pass, including the baseline compare test.
+   - Re-run `npm run test:only` and confirm all tests pass.
 
 ## Questions or issues?
 

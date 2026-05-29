@@ -8,11 +8,10 @@
 
 A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or test runs) into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools. Use it to keep coverage in sync with your CI/CD and code quality pipelines.
 
-It also produces presentation-ready output for pull-request reviews: a Markdown summary for PR/MR comments and CI job summaries, and GitHub Actions workflow command annotations that surface uncovered lines inline on the PR diff. The GitHub Actions output is designed to pair with the Apex code quality annotations from [sf-cat](https://www.npmjs.com/package/sf-cat), so a single PR can show coverage gaps and quality findings side-by-side.
+It also produces presentation-ready output for pull-request reviews: a Markdown summary for PR/MR comments and CI job summaries, and GitHub Actions workflow command annotations that surface uncovered lines inline on the PR diff. The GitHub Actions output pairs with the Apex code quality annotations from [sf-cat](https://www.npmjs.com/package/sf-cat), so a single PR can show coverage gaps and quality findings side-by-side.
 
 > Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) or submit a [pull request](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
 
-<!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
 
@@ -20,21 +19,12 @@ It also produces presentation-ready output for pull-request reviews: a Markdown 
 - [Install](#install)
 - [Quick Start](#quick-start)
 - [Usage](#usage)
-  - [Salesforce CLI](#salesforce-cli)
-  - [SFDX Hardis](#sfdx-hardis)
-- [What This Plugin Fixes and Adds](#what-this-plugin-fixes-and-adds)
 - [Command Reference](#command-reference)
-  - [sf acc-transformer transform](#sf-acc-transformer-transform)
 - [Coverage Report Formats](#coverage-report-formats)
 - [CI/CD Integration](#cicd-integration)
-  - [Codecov](#codecov)
-  - [SonarQube](#sonarqube)
-  - [GitHub Actions](#github-actions)
-  - [GitLab CI](#gitlab-ci)
 - [Automatic Transformation (Hook)](#automatic-transformation-hook)
 - [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+
 </details>
 
 ## Prerequisites
@@ -52,21 +42,23 @@ sf plugins install apex-code-coverage-transformer@latest
 
 ## Quick Start
 
-1. **Generate Apex code coverage (JSON)**  
+1. **Generate Apex code coverage (JSON)**
+
    From tests:
 
    ```bash
    sf apex run test --code-coverage --output-dir "coverage"
    ```
 
-   Or from deploy/validate:
+   From deploy/validate:
 
    ```bash
    sf project deploy start --coverage-formatters json --results-dir "coverage"
    # or: sf project deploy validate --coverage-formatters json --results-dir "coverage"
    ```
 
-2. **Transform to your target format**  
+2. **Transform to your target format**
+
    Test output → `coverage/test-result-codecoverage.json`. Deploy output → `coverage/coverage/coverage.json`.
 
    ```bash
@@ -76,16 +68,15 @@ sf plugins install apex-code-coverage-transformer@latest
    # Codecov (Cobertura)
    sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
 
-   # Multiple formats
+   # Multiple formats at once
    sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -f "sonar" -f "cobertura" -f "jacoco"
    ```
 
-3. **Upload to your tool**  
-   See [CI/CD Integration](#cicd-integration) for Codecov, SonarQube, GitHub Actions, and GitLab.
+3. **Upload to your tool** — see [CI/CD Integration](#cicd-integration).
 
 ## Usage
 
-This plugin is for Salesforce DX projects (`sfdx-project.json`). It maps Apex names in the CLI coverage JSON to file paths in your package directories and only includes files that exist in those directories. Apex from managed or unlocked packages (not in your repo) is excluded and reported with a [warning](#troubleshooting).
+This plugin is for Salesforce DX projects (`sfdx-project.json`). The Salesforce CLI coverage JSON uses Apex class names (e.g. `no-map/AccountTriggerHandler`) rather than file paths — this plugin maps those names to actual paths in your package directories and only includes files that exist there. Deploy and test coverage use different JSON structures; this plugin normalizes both. Apex from managed or unlocked packages (not in your repo) is excluded and reported with a [warning](#troubleshooting).
 
 To run transformation automatically after deploy or test commands, use the [Hook](#automatic-transformation-hook).
 
@@ -93,7 +84,7 @@ To run transformation automatically after deploy or test commands, use the [Hook
 
 > **Important:** If the generated `package.xml` only contains Apex test classes, the Salesforce CLI deploy coverage report will be empty. The deploy manifest must include actual Apex classes or triggers under test for the CLI to return coverage data in the JSON output.
 
-### Salesforce CLI
+### Generating coverage
 
 **Deploy/validate** — coverage path: `coverage/coverage/coverage.json`
 
@@ -108,25 +99,14 @@ sf apex run test --code-coverage --output-dir "coverage"
 sf apex get test --test-run-id <id> --code-coverage --output-dir "coverage"
 ```
 
-### SFDX Hardis
+**SFDX Hardis** — coverage path: `hardis-report/apex-coverage-results.json`
 
 Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis):
 
-- `sf hardis project deploy smart` (when `COVERAGE_FORMATTER_JSON=true`)
+- `sf hardis project deploy smart` (requires `COVERAGE_FORMATTER_JSON=true`)
 - `sf hardis org test apex`
 
-Coverage file: `hardis-report/apex-coverage-results.json`.
-
-## What This Plugin Fixes and Adds
-
-- **File mapping** — Maps names like `no-map/AccountTriggerHandler` to paths like `force-app/main/default/classes/AccountTriggerHandler.cls`.
-- **Normalization** — Aligns deploy and test coverage structures so external tools can consume them.
-- **Extra formats** — Outputs Sonar, Cobertura, JaCoCo, LCOV, Clover, and more (see [Coverage Report Formats](#coverage-report-formats)).
-- **Deploy-coverage fixes** — Corrects known CLI issues (e.g. out-of-range covered lines, wrong line counts) by re-numbering covered lines in deploy reports. Uncovered lines are already correct. This workaround will be removed in a future **breaking** release once Salesforce fixes the API; see [forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568). Test-command coverage is unaffected.
-
 ## Command Reference
-
-Single command: `sf acc-transformer transform`.
 
 ### sf acc-transformer transform
 
@@ -166,53 +146,58 @@ Use `-f` / `--format` to choose the output format. Multiple `-f` values produce 
 
 ## CI/CD Integration
 
-### Codecov
+### Shared setup (GitHub Actions)
 
-Cobertura is a good default. **CLI upload:**
-
-```bash
-sf apex run test --code-coverage --output-dir "coverage"
-sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
-codecovcli upload-process --file coverage.xml
-```
-
-**GitHub Action:**
+All GitHub Actions examples below assume these steps run first:
 
 ```yaml
-name: Salesforce CI with Codecov
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Salesforce CLI
-        run: npm install -g @salesforce/cli
-      - name: Install Coverage Transformer Plugin
-        run: echo y | sf plugins install apex-code-coverage-transformer
-      - name: Authenticate to Salesforce
-        run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
-      - name: Run Apex Tests
-        run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
-      - name: Transform Coverage to Cobertura
-        run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
-      - name: Upload to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./coverage.xml
-          flags: apex
-          token: ${{ secrets.CODECOV_TOKEN }}
+- uses: actions/checkout@v4
+- name: Install Salesforce CLI
+  run: npm install -g @salesforce/cli
+- name: Install Coverage Transformer Plugin
+  run: echo y | sf plugins install apex-code-coverage-transformer
+- name: Authenticate to Salesforce
+  run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
+- name: Run Apex Tests
+  run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
 ```
 
-### SonarQube
+### Codecov
 
-Use the **sonar** format and upload using SonarQube's generic test coverage report formatter, `sonar.coverageReportPaths`.
+```yaml
+- name: Transform Coverage to Cobertura
+  run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+- name: Upload to Codecov
+  uses: codecov/codecov-action@v4
+  with:
+    files: ./coverage.xml
+    flags: apex
+    token: ${{ secrets.CODECOV_TOKEN }}
+```
 
-**Scanner:**
+### SonarQube / SonarCloud
+
+```yaml
+- name: Transform Coverage to Sonar Format
+  run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "sonar"
+- name: SonarCloud Scan
+  uses: SonarSource/sonarcloud-github-action@master
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  with:
+    args: >
+      -Dsonar.projectKey=your-project-key
+      -Dsonar.organization=your-org
+      -Dsonar.sources=force-app
+      -Dsonar.tests=force-app
+      -Dsonar.test.inclusions=**/*Test.cls
+      -Dsonar.coverageReportPaths=coverage.xml
+```
+
+For a self-hosted scanner:
 
 ```bash
-sf apex run test --code-coverage --output-dir "coverage"
-sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "sonar"
 sonar-scanner \
   -Dsonar.projectKey=your-project-key \
   -Dsonar.sources=force-app \
@@ -223,87 +208,13 @@ sonar-scanner \
   -Dsonar.login=$SONAR_TOKEN
 ```
 
-**SonarCloud GitHub Action:**
-
-```yaml
-name: SonarCloud Analysis
-on: [push, pull_request]
-jobs:
-  sonarcloud:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Install Salesforce CLI
-        run: npm install -g @salesforce/cli
-      - name: Install Coverage Transformer Plugin
-        run: echo y | sf plugins install apex-code-coverage-transformer
-      - name: Authenticate to Salesforce
-        run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
-      - name: Run Apex Tests
-        run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
-      - name: Transform Coverage to Sonar Format
-        run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "sonar"
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=your-project-key
-            -Dsonar.organization=your-org
-            -Dsonar.sources=force-app
-            -Dsonar.tests=force-app
-            -Dsonar.test.inclusions=**/*Test.cls
-            -Dsonar.coverageReportPaths=coverage.xml
-```
-
 ### GitHub Actions
-
-Use Cobertura (or LCOV) with a coverage summary action:
-
-```yaml
-name: Salesforce CI with Coverage Report
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Salesforce CLI
-        run: npm install -g @salesforce/cli
-      - name: Install Coverage Transformer Plugin
-        run: echo y | sf plugins install apex-code-coverage-transformer
-      - name: Authenticate to Salesforce
-        run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
-      - name: Run Apex Tests
-        run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
-      - name: Transform Coverage to Cobertura
-        run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: coverage.xml
-          badge: true
-          format: markdown
-          output: both
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
-```
 
 #### Markdown PR comments (built-in)
 
-Skip the third-party summary action by using the built-in `markdown` format. The output is ready to drop straight into a PR comment or the GitHub Actions [job summary](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary):
+Skip third-party summary actions by using the built-in `markdown` format:
 
 ```yaml
-- name: Run Apex Tests
-  run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
 - name: Transform Coverage to Markdown
   run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.md" -f "markdown"
 - name: Add coverage to job summary
@@ -316,32 +227,26 @@ Skip the third-party summary action by using the built-in `markdown` format. The
     path: coverage.md
 ```
 
-The Markdown report includes an overall summary block, a per-package-directory table, and a file-level table sorted with the lowest coverage first so reviewers see the most actionable rows at the top.
+The Markdown report includes an overall summary block, a per-package-directory table, and a file-level table sorted with lowest coverage first so reviewers see the most actionable rows at the top.
 
-#### GitHub Actions inline annotations
+#### Inline annotations
 
-The `github-actions` format emits one [`::warning`](https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions) workflow command per uncovered Apex line, plus a `::notice` summary. When a step prints the file to stdout, the runner renders annotations inline on the PR diff and on the workflow run page.
+The `github-actions` format emits one [`::warning`](https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions) per uncovered Apex line, plus a `::notice` summary. When a step prints the file to stdout, the runner renders annotations inline on the PR diff and on the workflow run page.
 
 ```yaml
-- name: Run Apex Tests
-  run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
 - name: Transform Coverage to GitHub Actions Annotations
   run: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.txt" -f "github-actions"
 - name: Emit coverage annotations
   run: cat coverage.txt
 ```
 
-This pairs with the [`sf-cat`](https://www.npmjs.com/package/sf-cat) plugin's GitHub Actions output for code quality findings, so a single PR shows coverage gaps and quality issues as inline annotations on the same diff.
-
-You can produce both at once with multiple `-f` flags:
+Pairs with [`sf-cat`](https://www.npmjs.com/package/sf-cat) for code quality annotations on the same diff. Produce both at once:
 
 ```bash
 sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -f "markdown" -f "github-actions" -f "sonar"
 ```
 
 ### GitLab CI
-
-Cobertura for coverage in the UI:
 
 ```yaml
 stages:
@@ -357,8 +262,6 @@ apex-tests:
   script:
     - sf apex run test --code-coverage --output-dir coverage --target-org ci-org
     - sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
-    # Parse the coverage report and output the TOTAL coverage percentage (2 decimal places)
-    # to the job log. GitLab reads this line using the `coverage` keyword regex to track pipeline coverage.
     - |
       COVERAGE_FILE="coverage.xml"
       if [ -s "$COVERAGE_FILE" ]; then
@@ -402,7 +305,7 @@ Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex
 
 ## Troubleshooting
 
-**File not in package directory** — File is omitted from the report and a warning is shown:
+**File not in package directory** — File is omitted from the report:
 
 ```
 Warning: The file name AccountTrigger was not found in any package directory.
@@ -432,9 +335,7 @@ Error (1): sfdx-project.json not found in any parent directory.
 Error (1): ENOENT: no such file or directory: {packageDir}
 ```
 
-## Contributing
-
-Contributions are welcome. See [CONTRIBUTING.md](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
+**Deploy coverage line numbers** — The Salesforce CLI deploy coverage JSON contains known out-of-range line numbers. This plugin corrects them automatically by re-numbering covered lines; uncovered lines are unaffected. Test-command coverage is unaffected. See [forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568).
 
 ## License
 
