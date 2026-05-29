@@ -40,6 +40,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       required: false,
       multiple: true,
     }),
+    // eslint-disable-next-line sf-plugin/flag-min-max-default
     'min-coverage': Flags.integer({
       summary: messages.getMessage('flags.min-coverage.summary'),
       required: false,
