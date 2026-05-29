@@ -16,6 +16,10 @@ import { generateHtml } from './generators/generateHtml.js';
 import { generateMarkdown } from './generators/generateMarkdown.js';
 import { generateGitHubActions } from './generators/generateGitHubActions.js';
 
+export type ReportRenderOptions = {
+  maxAnnotations?: number;
+};
+
 function isXmlReportFormat(format: string): format is XmlReportFormat {
   return format in XML_HEADER_CONFIG;
 }
@@ -29,11 +33,11 @@ function isXmlReportFormat(format: string): format is XmlReportFormat {
  * `generateReportContent` to a single decision point and avoids a long
  * chain of `format === ... && isXObject(...)` guards.
  */
-const STRING_FORMAT_RENDERERS: Record<string, (obj: AnyCoverageObject) => string> = {
+const STRING_FORMAT_RENDERERS: Record<string, (obj: AnyCoverageObject, opts?: ReportRenderOptions) => string> = {
   lcovonly: (obj) => generateLcov(obj as LcovCoverageObject),
   html: (obj) => generateHtml(obj as HtmlCoverageObject),
   markdown: (obj) => generateMarkdown(obj as MarkdownCoverageObject),
-  'github-actions': (obj) => generateGitHubActions(obj as GitHubActionsCoverageObject),
+  'github-actions': (obj, opts) => generateGitHubActions(obj as GitHubActionsCoverageObject, opts?.maxAnnotations),
   json: (obj) => JSON.stringify(obj, null, 2),
   'json-summary': (obj) => JSON.stringify(obj, null, 2),
   simplecov: (obj) => JSON.stringify(obj, null, 2),
@@ -44,8 +48,9 @@ export async function generateAndWriteReport(
   coverageObj: AnyCoverageObject,
   format: string,
   formatAmount: number,
+  options?: ReportRenderOptions,
 ): Promise<string> {
-  const content = generateReportContent(coverageObj, format);
+  const content = generateReportContent(coverageObj, format, options);
   const extension = HandlerRegistry.getExtension(format);
 
   const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
@@ -58,9 +63,9 @@ export async function generateAndWriteReport(
   return filePath;
 }
 
-function generateReportContent(coverageObj: AnyCoverageObject, format: string): string {
+function generateReportContent(coverageObj: AnyCoverageObject, format: string, options?: ReportRenderOptions): string {
   const renderer = STRING_FORMAT_RENDERERS[format];
-  return renderer ? renderer(coverageObj) : generateXmlContent(coverageObj, format);
+  return renderer ? renderer(coverageObj, options) : generateXmlContent(coverageObj, format);
 }
 
 function generateXmlContent(coverageObj: AnyCoverageObject, format: string): string {
