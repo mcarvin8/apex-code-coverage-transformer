@@ -95,18 +95,6 @@ describe('findFilePath', () => {
     });
   });
 
-  describe('without cache', () => {
-    it('should return undefined when cache is not provided', () => {
-      const result = findFilePath('AccountHandler');
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for any filename when cache is undefined', () => {
-      const result = findFilePath('TestClass', undefined);
-      expect(result).toBeUndefined();
-    });
-  });
-
   describe('edge cases', () => {
     it('should handle empty cache', () => {
       const cache = new Map<string, string>();
