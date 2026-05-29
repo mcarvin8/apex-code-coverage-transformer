@@ -82,6 +82,27 @@ describe('GitHubActionsCoverageHandler unit tests', () => {
     }
   });
 
+  it('respects a custom maxAnnotations override passed via generateAndWriteReport options', async () => {
+    const handler = new GitHubActionsCoverageHandler();
+    handler.processFile('force-app/main/default/classes/A.cls', 'A', { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 });
+    const result = handler.finalize();
+
+    const tmpDir = await mkdtemp(join(tmpdir(), 'gha-override-'));
+    try {
+      const outPath = await generateAndWriteReport(join(tmpDir, 'coverage.txt'), result, 'github-actions', 1, {
+        maxAnnotations: 2,
+      });
+      const content = await readFile(outPath, 'utf-8');
+      const warningLines = content.split('\n').filter((l) => l.startsWith('::warning'));
+      const noticeLines = content.split('\n').filter((l) => l.startsWith('::notice'));
+      expect(warningLines).toHaveLength(2);
+      expect(noticeLines).toHaveLength(2); // summary + truncation
+      expect(noticeLines[1]).toContain('3 additional uncovered line');
+    } finally {
+      await rm(tmpDir, { recursive: true });
+    }
+  });
+
   it('caps annotations at 50 and emits a truncation notice for the remainder', async () => {
     const handler = new GitHubActionsCoverageHandler();
     // 60 uncovered lines across one file

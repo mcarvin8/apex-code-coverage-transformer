@@ -15,19 +15,27 @@ import { generateAndWriteReport } from './reportGenerator.js';
 
 type CoverageInput = DeployCoverageData | TestCoverageData[];
 
+type LineTotals = { totalLines: number; coveredLines: number };
+type ProcessResult = { processed: number } & LineTotals;
+
+export type TransformOptions = {
+  minCoverage?: number;
+  maxAnnotations?: number;
+};
+
 export async function transformCoverageReport(
   jsonFilePath: string,
   outputReportPath: string,
   formats: string[],
   ignoreDirs: string[],
-): Promise<{ finalPaths: string[]; warnings: string[] }> {
+  options?: TransformOptions,
+): Promise<{ finalPaths: string[]; warnings: string[]; lineRate: number }> {
   const warnings: string[] = [];
   const finalPaths: string[] = [];
   const formatAmount: number = formats.length;
-  let filesProcessed = 0;
 
   const jsonData = await tryReadJson(jsonFilePath, warnings);
-  if (!jsonData) return { finalPaths: [outputReportPath], warnings };
+  if (!jsonData) return { finalPaths: [outputReportPath], warnings, lineRate: 0 };
 
   const parsedData = JSON.parse(jsonData) as CoverageInput;
   const { repoRoot, packageDirectories } = await getPackageDirectories(ignoreDirs);
@@ -48,27 +56,39 @@ export async function transformCoverageReport(
     filePathCache,
   };
 
+  let processResult: ProcessResult;
+
   if (commandType === 'DeployCoverageData') {
-    filesProcessed = await processDeployCoverage(parsedData as DeployCoverageData, context);
+    processResult = await processDeployCoverage(parsedData as DeployCoverageData, context);
   } else if (commandType === 'TestCoverageData') {
-    filesProcessed = await processTestCoverage(parsedData as TestCoverageData[], context);
+    processResult = await processTestCoverage(parsedData as TestCoverageData[], context);
   } else {
     throw new Error(
       'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
     );
   }
 
-  if (filesProcessed === 0) {
+  if (processResult.processed === 0) {
     warnings.push('None of the files listed in the coverage JSON were processed. The coverage report will be empty.');
   }
 
+  const lineRate = processResult.totalLines > 0 ? processResult.coveredLines / processResult.totalLines : 0;
+
+  const renderOptions = options?.maxAnnotations !== undefined ? { maxAnnotations: options.maxAnnotations } : undefined;
+
   for (const [format, handler] of handlers.entries()) {
     const coverageObj = handler.finalize();
-    const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format, formatAmount);
+    const finalPath = await generateAndWriteReport(outputReportPath, coverageObj, format, formatAmount, renderOptions);
     finalPaths.push(finalPath);
   }
 
-  return { finalPaths, warnings };
+  if (options?.minCoverage !== undefined && lineRate * 100 < options.minCoverage) {
+    throw new Error(
+      `Coverage of ${(lineRate * 100).toFixed(2)}% is below the required minimum of ${options.minCoverage}%.`,
+    );
+  }
+
+  return { finalPaths, warnings, lineRate };
 }
 
 function hasSourceContent(
@@ -102,8 +122,20 @@ function createHandlers(formats: string[]): Map<string, ReturnType<typeof getCov
   return handlers;
 }
 
-async function processDeployCoverage(data: DeployCoverageData, context: CoverageProcessingContext): Promise<number> {
+function countLines(lines: Record<string, number>): LineTotals {
+  const totalLines = Object.keys(lines).length;
+  const coveredLines = Object.values(lines).filter((v) => v === 1).length;
+  return { totalLines, coveredLines };
+}
+
+async function processDeployCoverage(
+  data: DeployCoverageData,
+  context: CoverageProcessingContext,
+): Promise<ProcessResult> {
   let processed = 0;
+  let totalLines = 0;
+  let coveredLines = 0;
+
   await mapLimit(Object.keys(data), context.concurrencyLimit, async (fileName: string) => {
     const fileInfo = data[fileName];
     const formattedName = fileName.replace(/no-map[\\/]+/, '');
@@ -118,16 +150,28 @@ async function processDeployCoverage(data: DeployCoverageData, context: Coverage
     const updatedLines = hasSourceContent(setCoveredResult) ? setCoveredResult.updatedLines : setCoveredResult;
     const sourceContent = hasSourceContent(setCoveredResult) ? setCoveredResult.sourceContent : undefined;
     fileInfo.s = updatedLines;
+
+    const counts = countLines(updatedLines);
+    totalLines += counts.totalLines;
+    coveredLines += counts.coveredLines;
+
     for (const handler of context.handlers.values()) {
       handler.processFile(path, formattedName, updatedLines, sourceContent);
     }
     processed++;
   });
-  return processed;
+
+  return { processed, totalLines, coveredLines };
 }
 
-async function processTestCoverage(data: TestCoverageData[], context: CoverageProcessingContext): Promise<number> {
+async function processTestCoverage(
+  data: TestCoverageData[],
+  context: CoverageProcessingContext,
+): Promise<ProcessResult> {
   let processed = 0;
+  let totalLines = 0;
+  let coveredLines = 0;
+
   await mapLimit(data, context.concurrencyLimit, async (entry: TestCoverageData) => {
     const formattedName = entry.name.replace(/no-map[\\/]+/, '');
     const path = findFilePath(formattedName, context.filePathCache);
@@ -137,11 +181,16 @@ async function processTestCoverage(data: TestCoverageData[], context: CoveragePr
       return;
     }
 
+    const counts = countLines(entry.lines);
+    totalLines += counts.totalLines;
+    coveredLines += counts.coveredLines;
+
     const sourceContent = context.handlers.has('html') ? await readSourceFile(join(context.repoRoot, path)) : undefined;
     for (const handler of context.handlers.values()) {
       handler.processFile(path, formattedName, entry.lines, sourceContent);
     }
     processed++;
   });
-  return processed;
+
+  return { processed, totalLines, coveredLines };
 }

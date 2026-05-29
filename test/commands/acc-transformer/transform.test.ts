@@ -53,7 +53,7 @@ describe('acc-transformer transform unit tests', () => {
     } catch (error) {
       if (error instanceof Error) {
         expect(error.message).toContain(
-          'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+          'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
         );
       } else {
         throw new Error('An unknown error type was thrown.');
@@ -69,7 +69,7 @@ describe('acc-transformer transform unit tests', () => {
       deployCoverage,
       'coverage.xml',
       ['sonar'],
-      ['packaged', 'force-app', samplesPackagePath]
+      ['packaged', 'force-app', samplesPackagePath],
     );
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
@@ -78,7 +78,7 @@ describe('acc-transformer transform unit tests', () => {
       testCoverage,
       'coverage.xml',
       ['sonar'],
-      ['packaged', samplesPackagePath]
+      ['packaged', samplesPackagePath],
     );
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
@@ -87,6 +87,31 @@ describe('acc-transformer transform unit tests', () => {
   });
   it('create a jacoco report using only 1 package directory', async () => {
     await transformCoverageReport(deployCoverage, 'coverage.xml', ['jacoco'], ['packaged', 'force-app']);
+  });
+  it('returns the overall line rate in the result', async () => {
+    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath]);
+    expect(result.lineRate).toBeGreaterThanOrEqual(0);
+    expect(result.lineRate).toBeLessThanOrEqual(1);
+  });
+  it('does not throw when coverage meets the minCoverage threshold', async () => {
+    await expect(
+      transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 0 }),
+    ).resolves.toBeDefined();
+  });
+  it('throws when overall coverage is below the minCoverage threshold', async () => {
+    await expect(
+      transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 100 }),
+    ).rejects.toThrow(/below the required minimum of 100%/);
+  });
+  it('passes maxAnnotations through to the github-actions generator', async () => {
+    const result = await transformCoverageReport(
+      deployCoverage,
+      'coverage.xml',
+      ['github-actions'],
+      [samplesPackagePath],
+      { maxAnnotations: 1 },
+    );
+    expect(result.finalPaths.length).toBeGreaterThan(0);
   });
   it('handles source file read failure gracefully when generating HTML from test coverage', async () => {
     shouldSimulateReadFailureForAccountTrigger = true;

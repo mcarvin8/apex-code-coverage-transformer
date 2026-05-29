@@ -31,3 +31,11 @@ Output format for the coverage report.
 # flags.ignore-package-directory.summary
 
 Ignore a package directory when looking for matching files in the coverage report.
+
+# flags.min-coverage.summary
+
+Minimum required line coverage percentage (0–100). The command exits with an error if overall coverage is below this threshold. Reports are still written before the check.
+
+# flags.max-annotations.summary
+
+Maximum number of GitHub Actions ::warning annotations to emit when using --format github-actions. Defaults to 50. Annotations beyond this limit are summarised in a ::notice line.
