@@ -161,4 +161,22 @@ describe('buildFilePathCache', () => {
     // Both cache keys point to the first-found file
     expect(cache.get('SharedClass.cls')).toBe(cache.get('SharedClass'));
   });
+
+  it('should not overwrite no-extension key when a cls and trigger share the same base name', async () => {
+    await writeFile(join(packageDir1, 'Account.cls'), 'public class Account {}');
+    await writeFile(join(packageDir2, 'Account.trigger'), 'trigger Account on Account (before insert) {}');
+
+    const { cache, warnings } = await buildFilePathCache(
+      [join(testDir, 'force-app'), join(testDir, 'packaged')],
+      repoRoot,
+    );
+
+    expect(cache.has('Account.cls')).toBe(true);
+    expect(cache.has('Account.trigger')).toBe(true);
+    expect(cache.has('Account')).toBe(true);
+    // No-extension key set by whichever file was cached first; no collision warning
+    expect(warnings).toHaveLength(0);
+    const noExtPath = cache.get('Account')!;
+    expect([cache.get('Account.cls'), cache.get('Account.trigger')]).toContain(noExtPath);
+  });
 });
