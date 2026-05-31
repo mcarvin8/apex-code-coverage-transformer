@@ -21,6 +21,7 @@ lib
 *unitcoverage
 .nyc_output
 coverage
+coverage.txt
 test_session*
 
 # generated docs
@@ -50,3 +51,7 @@ oclif.lock
 *.log
 stderr*.txt
 stdout*.txt
+
+# stryker mutation testing
+.stryker-tmp
+reports
