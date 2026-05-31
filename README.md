@@ -243,11 +243,7 @@ The `github-actions` format emits one [`::warning`](https://docs.github.com/en/a
   run: cat coverage.txt
 ```
 
-Pairs with [`sf-cat`](https://www.npmjs.com/package/sf-cat) for code quality annotations on the same diff. Produce both at once:
-
-```bash
-sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -f "markdown" -f "github-actions" -f "sonar"
-```
+Pairs with [`sf-cat`](https://www.github.com/mcarvin8/sf-cat) for code quality annotations on the same diff if you use Salesforce Code Analyzer.
 
 ### GitLab CI
 
