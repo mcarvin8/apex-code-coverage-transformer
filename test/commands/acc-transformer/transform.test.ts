@@ -68,6 +68,10 @@ describe('acc-transformer transform unit tests', () => {
       ['packaged', 'force-app', samplesPackagePath],
     );
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
+    // All files are ignored so processed=0 → emits the empty-report warning
+    expect(result.warnings).toContain(
+      'None of the files listed in the coverage JSON were processed. The coverage report will be empty.',
+    );
   });
   it('ignore a package directory and produce a warning on the test command report.', async () => {
     const result = await transformCoverageReport(
@@ -117,5 +121,34 @@ describe('acc-transformer transform unit tests', () => {
     } finally {
       shouldSimulateReadFailureForAccountTrigger = false;
     }
+  });
+  it('does NOT throw when lineRate=0 and minCoverage=0 (strict < not <=)', async () => {
+    // When all dirs ignored, no files processed → lineRate=0.
+    // With minCoverage=0: "0 < 0" is false → no throw. If mutated to "<=", "0 <= 0" is true → throws.
+    await expect(
+      transformCoverageReport(
+        deployCoverage,
+        'coverage.xml',
+        ['sonar'],
+        ['packaged', 'force-app', samplesPackagePath],
+        {
+          minCoverage: 0,
+        },
+      ),
+    ).resolves.toBeDefined();
+  });
+  it('produces one finalPath entry per format', async () => {
+    const result = await transformCoverageReport(
+      deployCoverage,
+      'coverage.xml',
+      ['sonar', 'cobertura'],
+      [samplesPackagePath],
+    );
+    expect(result.finalPaths).toHaveLength(2);
+  });
+  it('returns lineRate=0 and includes path in finalPaths when JSON cannot be read', async () => {
+    const result = await transformCoverageReport('nonexistent-file.json', 'coverage.xml', ['sonar'], []);
+    expect(result.lineRate).toBe(0);
+    expect(result.finalPaths).toContain('coverage.xml');
   });
 });
