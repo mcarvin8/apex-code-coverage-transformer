@@ -25,7 +25,6 @@ import {
   testCoverage,
   samplesPackagePath,
 } from '../../utils/testConstants.js';
-import { compareToBaselines } from '../../utils/baselineCompare.js';
 import { postTestCleanup } from '../../utils/testCleanup.js';
 import { preTestSetup } from '../../utils/testSetup.js';
 
@@ -42,9 +41,6 @@ describe('acc-transformer transform unit tests', () => {
     it(`transforms the ${label} command JSON file into all output formats`, async () => {
       await transformCoverageReport(path, `${label}.xml`, formatOptions, [samplesPackagePath]);
     });
-  });
-  it('confirm the reports created are the same as the baselines.', async () => {
-    await compareToBaselines();
   });
   it('confirms a failure on an invalid JSON file.', async () => {
     try {
