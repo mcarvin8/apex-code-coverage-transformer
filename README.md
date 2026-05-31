@@ -6,9 +6,7 @@
 [![Maintainability](https://qlty.sh/badges/11057a07-84da-41af-91fb-b3476e404242/maintainability.svg)](https://qlty.sh/gh/mcarvin8/projects/apex-code-coverage-transformer)
 [![codecov](https://codecov.io/gh/mcarvin8/apex-code-coverage-transformer/graph/badge.svg?token=4IQ4NWTPQZ)](https://codecov.io/gh/mcarvin8/apex-code-coverage-transformer)
 
-A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or test runs) into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools. Use it to keep coverage in sync with your CI/CD and code quality pipelines.
-
-It also produces presentation-ready output for pull-request reviews: a Markdown summary for PR/MR comments and CI job summaries, and GitHub Actions workflow command annotations that surface uncovered lines inline on the PR diff. The GitHub Actions output pairs with the Apex code quality annotations from [sf-cat](https://www.npmjs.com/package/sf-cat), so a single PR can show coverage gaps and quality findings side-by-side.
+A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or test runs) into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools, keeping coverage visible across pull requests, CI/CD pipelines, and code quality platforms.
 
 > Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) or submit a [pull request](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
 
