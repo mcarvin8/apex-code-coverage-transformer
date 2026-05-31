@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "testRunner": "vitest",
+  "vitest": {
+    "configFile": "vitest.config.ts"
+  },
+  "coverageAnalysis": "perTest",
+  "mutate": [
+    "src/**/*.ts",
+    "!src/**/*.d.ts",
+    "!src/index.ts",
+    "!src/commands/**/*.ts",
+    "!src/hooks/*.ts",
+    "!src/utils/types.ts",
+    "!src/utils/constants.ts"
+  ],
+  "reporters": ["html", "json", "clear-text", "progress", "dashboard"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/index.html"
+  },
+  "jsonReporter": {
+    "fileName": "reports/mutation/mutation-testing-report.json"
+  },
+  "dashboard": {
+    "project": "github.com/mcarvin8/apex-code-coverage-transformer",
+    "version": "main",
+    "reportType": "full"
+  },
+  "timeoutMS": 600000,
+  "timeoutFactor": 2,
+  "concurrency": 4,
+  "tempDirName": ".stryker-tmp",
+  "cleanTempDir": true,
+  "incremental": false,
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": null
+  },
+  "logLevel": "info",
+  "fileLogLevel": "trace",
+  "checkers": [],
+  "ignorePatterns": ["lib", "coverage", "test/**/*.nut.ts", ".stryker-tmp", "reports"]
+}

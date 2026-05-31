@@ -15,6 +15,8 @@
     "@salesforce/cli-plugins-testkit": "5.3.39",
     "@salesforce/dev-config": "4.3.3",
     "@salesforce/prettier-config": "0.0.4",
+    "@stryker-mutator/core": "^9.6.1",
+    "@stryker-mutator/vitest-runner": "^9.6.1",
     "@types/node": "20.19.39",
     "@vitest/coverage-v8": "4.1.5",
     "eslint-config-salesforce-typescript": "4.0.1",
@@ -98,6 +100,8 @@
     "prepack": "wireit",
     "prepare": "husky install",
     "test": "wireit",
+    "test:mutation": "stryker run",
+    "test:mutation:incremental": "node scripts/incremental-mutation.mjs",
     "test:nuts": "oclif manifest && vitest run --config ./vitest.nut.config.ts",
     "test:only": "wireit",
     "version": "oclif readme"
