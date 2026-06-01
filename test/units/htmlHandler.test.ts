@@ -121,4 +121,138 @@ describe('HTML coverage handler unit tests', () => {
       await rm(tmpDir, { recursive: true });
     }
   });
+
+  it('sets covered=false for lines with hitCount of 0', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 1, '2': 0, '3': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    const line2 = result.files[0].lines.find((l) => l.lineNumber === 2);
+    expect(line2).toBeDefined();
+    expect(line2!.covered).toBe(false);
+    expect(line2!.hitCount).toBe(0);
+  });
+
+  it('sets covered=true for lines with hitCount greater than 1', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 5 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.files[0].lines[0].covered).toBe(true);
+    expect(result.files[0].lines[0].hitCount).toBe(5);
+    expect(result.files[0].lines[0].lineNumber).toBe(1);
+  });
+
+  it('sorts lines by lineNumber ascending within a file', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '5': 1, '2': 0, '8': 1, '1': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    const lineNumbers = result.files[0].lines.map((l) => l.lineNumber);
+    expect(lineNumbers).toEqual([1, 2, 5, 8]);
+  });
+
+  it('calculates exact uncoveredLines and lineRate in summary', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 1, '2': 0, '3': 0, '4': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.summary.totalLines).toBe(4);
+    expect(result.summary.coveredLines).toBe(2);
+    expect(result.summary.uncoveredLines).toBe(2);
+    expect(result.summary.lineRate).toBe(0.5);
+  });
+
+  it('calculates exact packageSummary uncoveredLines and lineRate for single file', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('pkg-a/A.cls', 'A', { '1': 1, '2': 0, '3': 0 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    const pkg = result.packageSummaries[0];
+    expect(pkg.totalLines).toBe(3);
+    expect(pkg.coveredLines).toBe(1);
+    expect(pkg.uncoveredLines).toBe(2);
+    expect(pkg.lineRate).toBeCloseTo(1 / 3, 10);
+  });
+
+  it('accumulates totalLines, coveredLines, and uncoveredLines across multiple files in same package', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 1, '2': 1 }); // 2 total, 2 covered
+    handler.processFile('force-app/B.cls', 'B', { '1': 0, '2': 1 }); // 2 total, 1 covered
+    const result = handler.finalize() as HtmlCoverageObject;
+    const pkg = result.packageSummaries[0];
+    expect(pkg.totalLines).toBe(4);
+    expect(pkg.coveredLines).toBe(3);
+    expect(pkg.uncoveredLines).toBe(1);
+    expect(pkg.fileCount).toBe(2);
+  });
+
+  it('extracts directory from first path segment only', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('my-app/main/default/classes/A.cls', 'A', { '1': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.packageSummaries[0].directory).toBe('my-app');
+  });
+
+  it('sorts packageSummaries alphabetically by directory name', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('z-pkg/A.cls', 'A', { '1': 1 });
+    handler.processFile('a-pkg/B.cls', 'B', { '1': 1 });
+    handler.processFile('m-pkg/C.cls', 'C', { '1': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.packageSummaries.map((p) => p.directory)).toEqual(['a-pkg', 'm-pkg', 'z-pkg']);
+  });
+
+  it('sorts files by package directory first then by file path', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('b-app/z.cls', 'z', { '1': 1 });
+    handler.processFile('a-app/a.cls', 'a', { '1': 1 });
+    handler.processFile('b-app/a.cls', 'a', { '1': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.files.map((f) => f.filePath)).toEqual(['a-app/a.cls', 'b-app/a.cls', 'b-app/z.cls']);
+  });
+
+  it('assigns source line content from sourceContent split by newline', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 1, '2': 0, '3': 1 }, 'line1\nline2\nline3');
+    const result = handler.finalize() as HtmlCoverageObject;
+    const lines = result.files[0].lines;
+    expect(lines.find((l) => l.lineNumber === 1)?.content).toBe('line1');
+    expect(lines.find((l) => l.lineNumber === 2)?.content).toBe('line2');
+    expect(lines.find((l) => l.lineNumber === 3)?.content).toBe('line3');
+  });
+
+  it('splits sourceContent on CRLF line endings correctly', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 1, '2': 1, '3': 1 }, 'first\r\nsecond\r\nthird');
+    const result = handler.finalize() as HtmlCoverageObject;
+    const lines = result.files[0].lines;
+    expect(lines.find((l) => l.lineNumber === 1)?.content).toBe('first');
+    expect(lines.find((l) => l.lineNumber === 2)?.content).toBe('second');
+    expect(lines.find((l) => l.lineNumber === 3)?.content).toBe('third');
+  });
+
+  it('accumulates fileCount per package directory', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 1 });
+    handler.processFile('force-app/B.cls', 'B', { '1': 1 });
+    handler.processFile('force-app/C.cls', 'C', { '1': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.packageSummaries[0].fileCount).toBe(3);
+  });
+
+  it('summary lineRate is 0 when no files processed', () => {
+    const handler = getCoverageHandler('html');
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.summary.totalLines).toBe(0);
+    expect(result.summary.coveredLines).toBe(0);
+    expect(result.summary.uncoveredLines).toBe(0);
+    expect(result.summary.lineRate).toBe(0);
+  });
+
+  it('calculates summary lineRate correctly across multiple files', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('pkg/A.cls', 'A', { '1': 1, '2': 1 }); // 2/2
+    handler.processFile('pkg/B.cls', 'B', { '1': 0, '2': 0 }); // 0/2
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.summary.totalLines).toBe(4);
+    expect(result.summary.coveredLines).toBe(2);
+    expect(result.summary.uncoveredLines).toBe(2);
+    expect(result.summary.lineRate).toBe(0.5);
+  });
 });
