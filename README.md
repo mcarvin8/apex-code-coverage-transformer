@@ -360,7 +360,7 @@ Remapping out-of-range covered line 512 to line 47 in force-app/main/default/cla
 Logs are written to `~/.sf/sf-YYYY-MM-DD.log` by default. To print them to the terminal as well, set `DEBUG=sf:setCoveredLines`.
 
 ```bash
-$ SF_LOG_LEVEL=debug DEBUG=sf:setCoveredLines sf acc-transformer transform -j "deploy_coverage.json"
+$ SF_LOG_LEVEL=debug DEBUG=sf:setCoveredLines sf acc-transformer transform -j "coverage/coverage/coverage.json" -r "coverage.xml" -f "sonar"
 The coverage report has been written to: coverage.xml
 [16:10:20.826] DEBUG (sf:setCoveredLines): Remapping out-of-range covered line 190 to line 1 in force-app/main/default/triggers/AccountTrigger.trigger (file has 105 lines)
 ```
