@@ -1,6 +1,7 @@
 'use strict';
 
 import { join } from 'node:path';
+import { Logger } from '@salesforce/core';
 import { getTotalLines } from './getTotalLines.js';
 
 export type SetCoveredLinesResult =
@@ -11,8 +12,9 @@ export async function setCoveredLines(
   filePath: string,
   repoRoot: string,
   lines: Record<string, number>,
-  returnSourceContent = false
+  returnSourceContent = false,
 ): Promise<SetCoveredLinesResult> {
+  const logger = await Logger.child('setCoveredLines');
   const result = await getTotalLines(join(repoRoot, filePath), returnSourceContent);
   const totalLines = typeof result === 'number' ? result : result.totalLines;
   const updatedLines: Record<string, number> = {};
@@ -26,6 +28,9 @@ export async function setCoveredLines(
     if (status === 1 && lineNumber > totalLines) {
       for (let randomLine = 1; randomLine <= totalLines; randomLine++) {
         if (!usedLines.has(randomLine)) {
+          logger.debug(
+            `Remapping out-of-range covered line ${lineNumber} to line ${randomLine} in ${filePath} (file has ${totalLines} lines)`,
+          );
           updatedLines[randomLine.toString()] = status;
           usedLines.add(randomLine);
           break;
