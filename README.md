@@ -345,6 +345,20 @@ Error (1): ENOENT: no such file or directory: {packageDir}
 
 **Deploy coverage line numbers** — The Salesforce CLI deploy coverage JSON contains known out-of-range line numbers. This plugin corrects them automatically by re-numbering covered lines; uncovered lines are unaffected. Test-command coverage is unaffected. See [forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568).
 
+To see each remapping, set `SF_LOG_LEVEL=debug` before running the command:
+
+```bash
+SF_LOG_LEVEL=debug sf acc-transformer transform -j "coverage/coverage/coverage.json" -r "coverage.xml" -f "sonar"
+```
+
+Each remapped line emits a log entry like:
+
+```
+Remapping out-of-range covered line 512 to line 47 in force-app/main/default/classes/AccountHandler.cls (file has 98 lines)
+```
+
+Logs are written to `~/.sf/sf-YYYY-MM-DD.log` by default. To print them to the terminal as well, set `DEBUG=sf:setCoveredLines`.
+
 ## License
 
 [MIT](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md)
