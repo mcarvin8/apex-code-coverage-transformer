@@ -22,6 +22,7 @@ lib
 .nyc_output
 coverage
 coverage.txt
+coverage-*.xml
 test_session*
 
 # generated docs
