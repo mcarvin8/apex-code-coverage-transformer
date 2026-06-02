@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.21.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.20.0...v2.21.0) (2026-06-02)
+
+
+### Features
+
+* log out-of-range covered line remappings at debug level ([#300](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/300)) ([e812869](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/e812869eff4290af8d3e519ea59fd754475ac325))
+
 ## [2.20.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.19.2...v2.20.0) (2026-05-29)
 
 
