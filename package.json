@@ -7,7 +7,7 @@
     "@salesforce/core": "8.26.3",
     "@salesforce/sf-plugins-core": "12.2.6",
     "fast-xml-builder": "1.2.0",
-    "minimatch": "10.0.1"
+    "minimatch": "10.2.5"
   },
   "devDependencies": {
     "@commitlint/cli": "19.8.1",
