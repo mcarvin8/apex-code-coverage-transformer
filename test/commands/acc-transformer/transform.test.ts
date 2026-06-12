@@ -151,4 +151,22 @@ describe('acc-transformer transform unit tests', () => {
     expect(result.lineRate).toBe(0);
     expect(result.finalPaths).toContain('coverage.xml');
   });
+  it('excludes matching files from deploy coverage using excludePatterns', async () => {
+    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+      excludePatterns: ['*.trigger', '*.cls'],
+    });
+    expect(result.warnings).toContain(
+      'None of the files listed in the coverage JSON were processed. The coverage report will be empty.',
+    );
+    expect(result.lineRate).toBe(0);
+  });
+  it('excludes matching files from test coverage using excludePatterns', async () => {
+    const result = await transformCoverageReport(testCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+      excludePatterns: ['*.trigger', '*.cls'],
+    });
+    expect(result.warnings).toContain(
+      'None of the files listed in the coverage JSON were processed. The coverage report will be empty.',
+    );
+    expect(result.lineRate).toBe(0);
+  });
 });
