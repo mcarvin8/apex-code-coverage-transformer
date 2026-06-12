@@ -111,7 +111,7 @@ Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis):
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> [-r <value>] [-f <value>] [-i <value>]
+  $ sf acc-transformer transform -j <value> [-r <value>] [-f <value>] [-i <value>] [-e <value>]
                                             [--min-coverage <value>] [--max-annotations <value>] [--json]
 
 FLAGS
@@ -120,6 +120,8 @@ FLAGS
   -f, --format=<value>                    Output format (repeat for multiple). Default: sonar.
                                           Multiple formats append to filename, e.g. coverage-sonar.xml.
   -i, --ignore-package-directory=<value>  Package directory to ignore (as in sfdx-project.json). Repeatable.
+  -e, --exclude-pattern=<value>           Glob pattern for file paths to exclude from the report. Matched against
+                                          the relative path from the repo root. Repeatable.
       --min-coverage=<value>              Minimum required line coverage percentage (0–100). Exits with an error
                                           if overall coverage is below this value. Reports are written first.
       --max-annotations=<value>           Maximum ::warning annotations emitted by --format github-actions.
@@ -295,15 +297,16 @@ Create `.apexcodecovtransformer.config.json` in the project root to transform co
 
 Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), [SFDX Hardis](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json).
 
-| Key                        | Required   | Description                                                                                                         |
-| -------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
-| `deployCoverageJsonPath`   | For deploy | Path to deploy coverage JSON.                                                                                       |
-| `testCoverageJsonPath`     | For test   | Path to test coverage JSON.                                                                                         |
-| `outputReportPath`         | No         | Output path (default: `coverage.[xml/info/json]` by format).                                                        |
-| `format`                   | No         | Format(s), comma-separated (default: `sonar`).                                                                      |
-| `ignorePackageDirectories` | No         | Comma-separated package directories to ignore.                                                                      |
-| `minCoverage`              | No         | Minimum required line coverage percentage (0–100). Exits with an error if overall coverage is below this threshold. |
-| `maxAnnotations`           | No         | Maximum `::warning` annotations emitted when `format` includes `github-actions` (default: `50`).                    |
+| Key                        | Required   | Description                                                                                                                                  |
+| -------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `deployCoverageJsonPath`   | For deploy | Path to deploy coverage JSON.                                                                                                                |
+| `testCoverageJsonPath`     | For test   | Path to test coverage JSON.                                                                                                                  |
+| `outputReportPath`         | No         | Output path (default: `coverage.[xml/info/json]` by format).                                                                                 |
+| `format`                   | No         | Format(s), comma-separated (default: `sonar`).                                                                                               |
+| `ignorePackageDirectories` | No         | Comma-separated package directories to ignore.                                                                                               |
+| `minCoverage`              | No         | Minimum required line coverage percentage (0–100). Exits with an error if overall coverage is below this threshold.                          |
+| `maxAnnotations`           | No         | Maximum `::warning` annotations emitted when `format` includes `github-actions` (default: `50`).                                             |
+| `excludePatterns`          | No         | Comma-separated glob patterns for file paths to exclude (e.g. `**/*Test*,**/mock/**`). Matched against the relative path from the repo root. |
 
 ## Troubleshooting
 

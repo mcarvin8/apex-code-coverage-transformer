@@ -1,10 +1,19 @@
 'use strict';
 
+import { readFile, rm } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { formatOptions } from '../../../src/utils/constants.js';
-import { inputJsons, invalidJson, samplesPackagePath } from '../../utils/testConstants.js';
+import {
+  inputJsons,
+  invalidJson,
+  samplesPackagePath,
+  deployCoverage,
+  testCoverage,
+} from '../../utils/testConstants.js';
 import { getExtensionForFormat } from '../../../src/transformers/reportGenerator.js';
 import { compareToBaselines } from '../../utils/baselineCompare.js';
 import { postTestCleanup } from '../../utils/testCleanup.js';
@@ -51,7 +60,32 @@ describe('acc-transformer transform NUTs', () => {
     const error = execCmd(command, { ensureExitCode: 1 }).shellOutput.stderr;
 
     expect(error.replace('\n', '')).toContain(
-      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.'
+      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
     );
+  });
+
+  it('excludes .cls files via **/*.cls glob pattern on deploy coverage', async () => {
+    const outputPath = resolve('exclude-cls-deploy-sonar.xml');
+    const command = `acc-transformer transform --coverage-json "${deployCoverage}" --output-report "${outputPath}" --format sonar -e "**/*.cls"`;
+    execCmd(command, { ensureExitCode: 0 });
+
+    const xml = await readFile(outputPath, 'utf-8');
+    expect(xml).not.toContain('AccountProfile');
+    expect(xml).not.toContain('AccountHandler');
+    expect(xml).toContain('AccountTrigger');
+
+    await rm(outputPath).catch(() => {});
+  });
+
+  it('excludes a single class by basename glob on test coverage', async () => {
+    const outputPath = resolve('exclude-profile-test-sonar.xml');
+    const command = `acc-transformer transform --coverage-json "${testCoverage}" --output-report "${outputPath}" --format sonar -e "AccountProfile*"`;
+    execCmd(command, { ensureExitCode: 0 });
+
+    const xml = await readFile(outputPath, 'utf-8');
+    expect(xml).not.toContain('AccountProfile');
+    expect(xml).toContain('AccountTrigger');
+
+    await rm(outputPath).catch(() => {});
   });
 });
