@@ -133,6 +133,8 @@ function main() {
 
   if (files.length === 0) {
     console.log('[incremental-mutation] No source files changed; skipping mutation testing.');
+    mkdirSync('reports/mutation', { recursive: true });
+    writeFileSync(commentPath, '## 🧬 Mutation Testing Results\n\n_No source files changed — mutation testing skipped._', 'utf-8');
     return;
   }
 
