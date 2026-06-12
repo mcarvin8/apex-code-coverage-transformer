@@ -45,6 +45,8 @@ export const hook: Hook<'finally'> = async function (options) {
   const outputReport: string = configFile.outputReportPath || 'coverage.xml';
   const coverageFormat: string = configFile.format || 'sonar';
   const ignorePackageDirs: string = configFile.ignorePackageDirectories || '';
+  const minCoverage: number | undefined = configFile.minCoverage;
+  const maxAnnotations: number | undefined = configFile.maxAnnotations;
 
   if (commandType === 'deploy') {
     coverageJson = configFile.deployCoverageJsonPath || '.';
@@ -83,6 +85,14 @@ export const hook: Hook<'finally'> = async function (options) {
       commandArgs.push('--ignore-package-directory');
       commandArgs.push(sanitizedDir);
     }
+  }
+  if (minCoverage !== undefined) {
+    commandArgs.push('--min-coverage');
+    commandArgs.push(String(minCoverage));
+  }
+  if (maxAnnotations !== undefined) {
+    commandArgs.push('--max-annotations');
+    commandArgs.push(String(maxAnnotations));
   }
   await TransformerTransform.run(commandArgs);
 };
