@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.22.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.21.0...v2.22.0) (2026-06-12)
+
+
+### Features
+
+* add --exclude-pattern flag to filter files from coverage report ([#304](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/304)) ([559c29e](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/559c29ea007752a49f51b0e2c1933d732991fb46))
+* expose min-coverage and max-annotations in hook config ([#302](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/302)) ([310de46](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/310de46343ca50ced5e39e250fc3014be0ed4c9c))
+
 ## [2.21.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.20.0...v2.21.0) (2026-06-02)
 
 
