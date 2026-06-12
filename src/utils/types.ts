@@ -68,6 +68,8 @@ export type HookFile = {
   outputReportPath: string;
   format: string;
   ignorePackageDirectories: string;
+  minCoverage?: number;
+  maxAnnotations?: number;
 };
 
 export type CoberturaLine = {

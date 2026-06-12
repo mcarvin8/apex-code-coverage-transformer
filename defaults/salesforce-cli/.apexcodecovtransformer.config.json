@@ -2,5 +2,7 @@
   "deployCoverageJsonPath": "coverage/coverage/coverage.json",
   "testCoverageJsonPath": "coverage/test-result-codecoverage.json",
   "outputReportPath": "coverage.xml",
-  "format": "sonar"
+  "format": "sonar",
+  "minCoverage": 75,
+  "maxAnnotations": 50
 }
