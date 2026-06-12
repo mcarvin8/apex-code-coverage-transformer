@@ -39,3 +39,7 @@ Minimum required line coverage percentage (0–100). The command exits with an e
 # flags.max-annotations.summary
 
 Maximum number of GitHub Actions ::warning annotations to emit when using --format github-actions. Defaults to 50. Annotations beyond this limit are summarised in a ::notice line.
+
+# flags.exclude-pattern.summary
+
+Glob pattern for file paths to exclude from the coverage report. Matched against the relative path from the repo root (e.g. force-app/main/default/classes/MyClass.cls). Repeat the flag for multiple patterns.

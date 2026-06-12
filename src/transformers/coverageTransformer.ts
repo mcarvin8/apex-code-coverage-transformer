@@ -2,6 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { minimatch } from 'minimatch';
 import { getCoverageHandler } from '../handlers/getHandler.js';
 import { DeployCoverageData, TestCoverageData, CoverageProcessingContext } from '../utils/types.js';
 import { getPackageDirectories } from '../utils/getPackageDirectories.js';
@@ -21,6 +22,7 @@ type ProcessResult = { processed: number } & LineTotals;
 export type TransformOptions = {
   minCoverage?: number;
   maxAnnotations?: number;
+  excludePatterns?: string[];
 };
 
 export async function transformCoverageReport(
@@ -54,6 +56,7 @@ export async function transformCoverageReport(
     concurrencyLimit,
     warnings,
     filePathCache,
+    excludePatterns: options?.excludePatterns ?? [],
   };
 
   let processResult: ProcessResult;
@@ -146,6 +149,10 @@ async function processDeployCoverage(
       return;
     }
 
+    if (context.excludePatterns.some((pattern) => minimatch(path, pattern, { matchBase: true }))) {
+      return;
+    }
+
     const setCoveredResult = await setCoveredLines(path, context.repoRoot, fileInfo.s, context.handlers.has('html'));
     const updatedLines = hasSourceContent(setCoveredResult) ? setCoveredResult.updatedLines : setCoveredResult;
     const sourceContent = hasSourceContent(setCoveredResult) ? setCoveredResult.sourceContent : undefined;
@@ -178,6 +185,10 @@ async function processTestCoverage(
 
     if (!path) {
       context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
+      return;
+    }
+
+    if (context.excludePatterns.some((pattern) => minimatch(path, pattern, { matchBase: true }))) {
       return;
     }
 

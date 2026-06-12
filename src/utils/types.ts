@@ -43,6 +43,7 @@ export type CoverageProcessingContext = {
   concurrencyLimit: number;
   warnings: string[];
   filePathCache: Map<string, string>;
+  excludePatterns: string[];
 };
 
 type SonarLine = {
@@ -70,6 +71,7 @@ export type HookFile = {
   ignorePackageDirectories: string;
   minCoverage?: number;
   maxAnnotations?: number;
+  excludePatterns?: string;
 };
 
 export type CoberturaLine = {

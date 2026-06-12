@@ -4,5 +4,6 @@
   "outputReportPath": "coverage.xml",
   "format": "sonar",
   "minCoverage": 75,
-  "maxAnnotations": 50
+  "maxAnnotations": 50,
+  "excludePatterns": "**/*Test*,**/mock/**"
 }

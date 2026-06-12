@@ -9,10 +9,44 @@ import TransformerTransform from '../commands/acc-transformer/transform.js';
 import { HookFile } from '../utils/types.js';
 import { getRepoRoot } from '../utils/getRepoRoot.js';
 
+function buildCommandArgs(coverageJsonPath: string, outputReportPath: string, configFile: HookFile): string[] {
+  const args: string[] = ['--coverage-json', coverageJsonPath, '--output-report', outputReportPath];
+
+  const coverageFormat = configFile.format || 'sonar';
+  if (coverageFormat.trim() !== '') {
+    for (const format of coverageFormat.split(',')) {
+      args.push('--format', format.replace(/,/g, ''));
+    }
+  }
+
+  const ignorePackageDirs = configFile.ignorePackageDirectories || '';
+  if (ignorePackageDirs.trim() !== '') {
+    for (const dir of ignorePackageDirs.split(',')) {
+      args.push('--ignore-package-directory', dir.replace(/,/g, ''));
+    }
+  }
+
+  if (configFile.minCoverage !== undefined) {
+    args.push('--min-coverage', String(configFile.minCoverage));
+  }
+
+  if (configFile.maxAnnotations !== undefined) {
+    args.push('--max-annotations', String(configFile.maxAnnotations));
+  }
+
+  const excludePatterns = configFile.excludePatterns ?? '';
+  if (excludePatterns.trim() !== '') {
+    for (const pattern of excludePatterns.split(',')) {
+      args.push('--exclude-pattern', pattern.trim());
+    }
+  }
+
+  return args;
+}
+
 export const hook: Hook<'finally'> = async function (options) {
   const commandId = options?.Command?.id ?? '';
   let commandType: string;
-  let coverageJson: string;
   if (
     [
       'project:deploy:validate',
@@ -28,13 +62,14 @@ export const hook: Hook<'finally'> = async function (options) {
   } else {
     return;
   }
-  let configFile: HookFile;
+
   const { repoRoot } = await getRepoRoot();
   if (!repoRoot) {
     return;
   }
-  const configPath = resolve(repoRoot, '.apexcodecovtransformer.config.json');
 
+  let configFile: HookFile;
+  const configPath = resolve(repoRoot, '.apexcodecovtransformer.config.json');
   try {
     const jsonString: string = await readFile(configPath, 'utf-8');
     configFile = JSON.parse(jsonString) as HookFile;
@@ -42,57 +77,19 @@ export const hook: Hook<'finally'> = async function (options) {
     return;
   }
 
-  const outputReport: string = configFile.outputReportPath || 'coverage.xml';
-  const coverageFormat: string = configFile.format || 'sonar';
-  const ignorePackageDirs: string = configFile.ignorePackageDirectories || '';
-  const minCoverage: number | undefined = configFile.minCoverage;
-  const maxAnnotations: number | undefined = configFile.maxAnnotations;
-
-  if (commandType === 'deploy') {
-    coverageJson = configFile.deployCoverageJsonPath || '.';
-  } else {
-    coverageJson = configFile.testCoverageJsonPath || '.';
-  }
+  const outputReport = configFile.outputReportPath || 'coverage.xml';
+  const coverageJson =
+    commandType === 'deploy' ? configFile.deployCoverageJsonPath || '.' : configFile.testCoverageJsonPath || '.';
 
   if (coverageJson.trim() === '.') {
     return;
   }
 
   const coverageJsonPath = resolve(coverageJson);
-  const outputReportPath = resolve(outputReport);
-
   if (!existsSync(coverageJsonPath)) {
     return;
   }
 
-  const commandArgs: string[] = [];
-  commandArgs.push('--coverage-json');
-  commandArgs.push(coverageJsonPath);
-  commandArgs.push('--output-report');
-  commandArgs.push(outputReportPath);
-  if (coverageFormat.trim() !== '') {
-    const formatArray: string[] = coverageFormat.split(',');
-    for (const format of formatArray) {
-      const sanitizedFormat = format.replace(/,/g, '');
-      commandArgs.push('--format');
-      commandArgs.push(sanitizedFormat);
-    }
-  }
-  if (ignorePackageDirs.trim() !== '') {
-    const ignorePackageDirArray: string[] = ignorePackageDirs.split(',');
-    for (const dirs of ignorePackageDirArray) {
-      const sanitizedDir = dirs.replace(/,/g, '');
-      commandArgs.push('--ignore-package-directory');
-      commandArgs.push(sanitizedDir);
-    }
-  }
-  if (minCoverage !== undefined) {
-    commandArgs.push('--min-coverage');
-    commandArgs.push(String(minCoverage));
-  }
-  if (maxAnnotations !== undefined) {
-    commandArgs.push('--max-annotations');
-    commandArgs.push(String(maxAnnotations));
-  }
+  const commandArgs = buildCommandArgs(coverageJsonPath, resolve(outputReport), configFile);
   await TransformerTransform.run(commandArgs);
 };

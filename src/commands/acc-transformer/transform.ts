@@ -53,6 +53,12 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       min: 1,
       default: DEFAULT_MAX_ANNOTATIONS,
     }),
+    'exclude-pattern': Flags.string({
+      summary: messages.getMessage('flags.exclude-pattern.summary'),
+      char: 'e',
+      required: false,
+      multiple: true,
+    }),
   };
 
   public async run(): Promise<TransformerTransformResult> {
@@ -67,6 +73,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       {
         minCoverage: flags['min-coverage'],
         maxAnnotations: flags['max-annotations'],
+        excludePatterns: flags['exclude-pattern'],
       },
     );
     warnings.push(...result.warnings);
