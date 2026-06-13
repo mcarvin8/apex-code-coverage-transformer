@@ -70,6 +70,12 @@ describe('HandlerRegistry unit tests', () => {
     expect(HandlerRegistry.getDescription('unknown-format')).toBe('');
   });
 
+  it('returns non-empty description for all registered formats', () => {
+    for (const format of HandlerRegistry.getAvailableFormats()) {
+      expect(HandlerRegistry.getDescription(format)).not.toBe('');
+    }
+  });
+
   it('should return compatible platforms for format', () => {
     const platforms = HandlerRegistry.getCompatiblePlatforms('cobertura');
     expect(platforms).toContain('Codecov');
@@ -80,6 +86,116 @@ describe('HandlerRegistry unit tests', () => {
     // Test the fallback when format is not registered
     const platforms = HandlerRegistry.getCompatiblePlatforms('unknown-format');
     expect(platforms).toEqual([]);
+  });
+
+  it('returns correct compatible platforms for html format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('html');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Web Browsers');
+    expect(p).toContain('CI/CD Artifacts');
+    expect(p).toContain('Local Development');
+  });
+
+  it('returns correct compatible platforms for markdown format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('markdown');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('GitHub Actions');
+    expect(p).toContain('GitLab CI');
+    expect(p).toContain('Bitbucket');
+    expect(p).toContain('Azure DevOps');
+  });
+
+  it('returns correct compatible platforms for json format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('json');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Istanbul/NYC');
+    expect(p).toContain('Codecov');
+    expect(p).toContain('Coveralls');
+    expect(p).toContain('Node.js Tools');
+  });
+
+  it('returns correct compatible platforms for json-summary format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('json-summary');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('GitHub Actions');
+    expect(p).toContain('GitLab CI');
+    expect(p).toContain('Custom Dashboards');
+  });
+
+  it('returns correct compatible platforms for lcovonly format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('lcovonly');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Codecov');
+    expect(p).toContain('Coveralls');
+    expect(p).toContain('GitHub Actions');
+  });
+
+  it('returns correct compatible platforms for simplecov format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('simplecov');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Codecov');
+    expect(p).toContain('SimpleCov');
+    expect(p).toContain('Ruby Tools');
+  });
+
+  it('returns correct compatible platforms for sonar format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('sonar');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('SonarQube');
+    expect(p).toContain('SonarCloud');
+  });
+
+  it('returns correct compatible platforms for github-actions format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('github-actions');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('GitHub Actions');
+  });
+
+  it('returns correct compatible platforms for jacoco format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('jacoco');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Codecov');
+    expect(p).toContain('Jenkins');
+    expect(p).toContain('Maven');
+    expect(p).toContain('Gradle');
+  });
+
+  it('returns correct compatible platforms for clover format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('clover');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Bamboo');
+    expect(p).toContain('Bitbucket');
+    expect(p).toContain('Jenkins');
+  });
+
+  it('returns correct compatible platforms for opencover format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('opencover');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Azure DevOps');
+    expect(p).toContain('Visual Studio');
+    expect(p).toContain('Codecov');
+    expect(p).toContain('JetBrains Tools');
+  });
+
+  it('returns correct compatible platforms for cobertura format', () => {
+    const p = HandlerRegistry.getCompatiblePlatforms('cobertura');
+    expect(p.length).toBeGreaterThan(0);
+    expect(p).toContain('Codecov');
+    expect(p).toContain('Azure DevOps');
+    expect(p).toContain('Jenkins');
+  });
+
+  it('getAvailableFormats returns formats in sorted order', () => {
+    const formats = HandlerRegistry.getAvailableFormats();
+    expect(formats).toEqual([...formats].sort());
+  });
+
+  it('error message for unknown format includes "Available formats"', () => {
+    expect(() => HandlerRegistry.get('no-such-format-xyz')).toThrow('Available formats');
+  });
+
+  it('getExtension returns correct extension for cobertura', () => {
+    expect(HandlerRegistry.getExtension('cobertura')).toBe('.xml');
   });
 
   it('should check if format exists', () => {

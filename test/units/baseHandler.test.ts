@@ -198,6 +198,18 @@ describe('BaseHandler unit tests', () => {
     expect(sorted.length).toBe(3);
   });
 
+  it('item without any path property sorts before item with a name (empty string < any name)', () => {
+    const handler = new TestHandler();
+    type ItemType = { [key: string]: unknown; '@path'?: string; '@filename'?: string; '@name'?: string };
+    const items: ItemType[] = [{ '@name': 'alpha' }, { extra: 'no-path-props' }];
+    const sorted = handler.testSortByPath(items);
+    // '' (fallback) < 'alpha' → no-path item sorts first
+    // mutant L86 uses 'Stryker was here!' → 'Stryker...' > 'alpha' → no-path sorts last → fails
+    // mutant L87 uses 'Stryker was here!' for pathB → 'alpha' < 'Stryker...' → alpha sorts first → fails
+    expect(sorted[0]).toEqual({ extra: 'no-path-props' });
+    expect(sorted[1]).toEqual({ '@name': 'alpha' });
+  });
+
   it('should handle empty lines in calculateCoverage', () => {
     const handler = new TestHandler();
     const lines = {};

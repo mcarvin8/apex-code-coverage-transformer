@@ -102,4 +102,19 @@ describe('CloverCoverageHandler unit tests', () => {
     expect(result.coverage.project.file[0].line).toEqual([]);
     expect(result.coverage.project.metrics['@statements']).toBe(0);
   });
+
+  it('project @name is "All files"', () => {
+    const handler = new CloverCoverageHandler();
+    const result = handler.finalize();
+    expect(result.coverage.project['@name']).toBe('All files');
+  });
+
+  it('file-level metrics reflect the file line counts', () => {
+    const handler = new CloverCoverageHandler();
+    handler.processFile('src/Foo.cls', 'Foo', { '1': 1, '2': 0, '3': 1 });
+    const result = handler.finalize();
+    const m = result.coverage.project.file[0].metrics;
+    expect(m['@statements']).toBe(3);
+    expect(m['@coveredstatements']).toBe(2);
+  });
 });

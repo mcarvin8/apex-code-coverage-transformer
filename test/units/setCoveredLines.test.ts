@@ -146,6 +146,16 @@ describe('setCoveredLines unit test', () => {
     expect(result).toEqual({ '1': 1 });
   });
 
+  it('returns plain object when returnSourceContent is omitted and getTotalLines returns an object', async () => {
+    mockGetTotalLines.mockResolvedValue({ totalLines: 3, content: 'a\nb\nc' });
+    const result = await setCoveredLines('some/file.cls', '/repo', { '1': 1 });
+    // default false: returnSourceContent=false && typeof obj !== 'number' = false && true = false
+    // mutant default true: true && true = true → would return { updatedLines, sourceContent }
+    expect('sourceContent' in result).toBe(false);
+    expect('updatedLines' in result).toBe(false);
+    expect(result).toEqual({ '1': 1 });
+  });
+
   // ── ConditionalExpression mutation killer (setCoveredLines.ts:19) ──
   // Mutant makes `typeof result === 'number'` always true → totalLines would always use result
   // even when result is an object. We verify that when getTotalLines returns an object,
@@ -209,6 +219,16 @@ describe('setCoveredLines unit test', () => {
   it('returns plain updatedLines when result is a number and returnSourceContent is false', async () => {
     mockGetTotalLines.mockResolvedValue(5); // result is a number
     const result = await setCoveredLines('some/file.cls', '/repo', { '1': 1, '2': 0 }, false);
+    expect('sourceContent' in result).toBe(false);
+    expect(result).toEqual({ '1': 1, '2': 0 });
+  });
+
+  it('returns plain updatedLines when returnSourceContent is true but getTotalLines returns a number', async () => {
+    mockGetTotalLines.mockResolvedValue(5); // result is a number, not an object
+    const result = await setCoveredLines('some/file.cls', '/repo', { '1': 1, '2': 0 }, true);
+    // returnSourceContent=true but typeof result === 'number' → condition false → plain lines
+    // mutant typeof!=='number'→true: true && true = true → would return { updatedLines, sourceContent: undefined }
+    // mutant 'number'→'': typeof 5 !== '' is always true → true && true = true → same issue
     expect('sourceContent' in result).toBe(false);
     expect(result).toEqual({ '1': 1, '2': 0 });
   });

@@ -30,6 +30,8 @@ describe('reportGenerator unit tests', () => {
       expect(content).toContain('DA:1,1');
       expect(content).toContain('DA:2,0');
       expect(content).toContain('DA:3,1');
+      expect(content).toContain('DA:1,1\nDA:2,0\nDA:3,1');
+      expect(content).toContain('TN:\nSF:src/A.cls');
       expect(content).toContain('LF:3');
       expect(content).toContain('LH:2');
       expect(content).toContain('FNF:0');
@@ -141,6 +143,7 @@ describe('reportGenerator unit tests', () => {
       const content = await readFile(outPath, 'utf-8');
       const endRecords = (content.match(/end_of_record/g) ?? []).length;
       expect(endRecords).toBe(2);
+      expect(content).toContain('end_of_record\nTN:');
     } finally {
       await rm(tmpDir, { recursive: true });
     }

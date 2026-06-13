@@ -49,6 +49,13 @@ describe('SimpleCovCoverageHandler unit tests', () => {
     expect(Number.isInteger(result.timestamp)).toBe(true);
   });
 
+  it('timestamp is in seconds not milliseconds (Math.floor(Date.now() / 1000))', () => {
+    const handler = new SimpleCovCoverageHandler();
+    const result = handler.finalize();
+    // Date.now() / 1000 ≈ 1.7e9; Date.now() * 1000 ≈ 1.7e15
+    expect(result.timestamp).toBeLessThan(2_000_000_000);
+  });
+
   it('stores hit count (not just 0/1) at line index', () => {
     const handler = new SimpleCovCoverageHandler();
     handler.processFile('src/A.cls', 'A', { '2': 1, '3': 0 });
