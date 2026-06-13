@@ -88,4 +88,53 @@ describe('CoberturaCoverageHandler expanded unit tests', () => {
     expect(result.coverage['@branches-valid']).toBe(0);
     expect(result.coverage['@branches-covered']).toBe(0);
   });
+
+  // ── ArithmeticOperator mutation killer (cobertura.ts:89) ──
+  // pkg['@line-rate'] = totalLines / totalClasses
+  // where totalLines = sum(cls['@line-rate'] * cls.lines.line.length)  (weighted rates)
+  // and   totalClasses = sum(cls.lines.line.length)
+  // Mutant: totalLines * totalClasses  → would produce wrong (much larger) value
+  // Mutant: ConditionalExpression always false → always 0 even when totalClasses > 0
+
+  it('package @line-rate is weighted average of class line-rates (division, not multiplication)', () => {
+    const handler = new CoberturaCoverageHandler();
+    // File A: 2 covered out of 4 lines → @line-rate = 0.5
+    handler.processFile('pkg/A.cls', 'A', { '1': 1, '2': 1, '3': 0, '4': 0 });
+    // File B: 3 covered out of 3 lines → @line-rate = 1.0
+    handler.processFile('pkg/B.cls', 'B', { '1': 1, '2': 1, '3': 1 });
+    const result = handler.finalize();
+
+    const pkg = result.coverage.packages.package[0];
+    // totalLines (weighted) = 0.5*4 + 1.0*3 = 2 + 3 = 5
+    // totalClasses (line count) = 4 + 3 = 7
+    // correct pkg @line-rate = 5/7 ≈ 0.7143
+    // mutant (*) would give: 5 * 7 = 35 → parseFloat((35).toFixed(4)) = 35 → clearly wrong
+    expect(pkg['@line-rate']).toBeCloseTo(5 / 7, 3);
+    expect(pkg['@line-rate']).toBeLessThanOrEqual(1); // rules out multiplication mutant
+    expect(pkg['@line-rate']).toBeGreaterThan(0);
+  });
+
+  it('package @line-rate is nonzero when lines exist (ConditionalExpression false mutant killer)', () => {
+    const handler = new CoberturaCoverageHandler();
+    // 2 covered out of 4 → pkg @line-rate should be 0.5, not 0
+    handler.processFile('pkg/A.cls', 'A', { '1': 1, '2': 1, '3': 0, '4': 0 });
+    const result = handler.finalize();
+
+    const pkg = result.coverage.packages.package[0];
+    // Mutant (always false): pkg['@line-rate'] would always be 0 regardless of coverage
+    expect(pkg['@line-rate']).toBeGreaterThan(0);
+    expect(pkg['@line-rate']).toBe(0.5);
+  });
+
+  it('@line-rate sort callback correctly compares strings (ArrowFunction mutant killer)', () => {
+    // The sort on packages uses a.localeCompare(b). Mutant replaces the arrow function body with undefined.
+    // We test that after finalize, packages are in alphabetical order.
+    const handler = new CoberturaCoverageHandler();
+    handler.processFile('z-pkg/A.cls', 'A', { '1': 1 });
+    handler.processFile('a-pkg/B.cls', 'B', { '1': 1 });
+    handler.processFile('m-pkg/C.cls', 'C', { '1': 1 });
+    const result = handler.finalize();
+    const names = result.coverage.packages.package.map((p) => p['@name']);
+    expect(names).toEqual(['a-pkg', 'm-pkg', 'z-pkg']);
+  });
 });

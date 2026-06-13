@@ -177,4 +177,69 @@ describe('GitHubActionsCoverageHandler unit tests', () => {
       await rm(tmpDir, { recursive: true });
     }
   });
+
+  // ── ArithmeticOperator mutation killer (githubActions.ts:79) ──
+  // Sort: a.lineNumber - b.lineNumber (ascending). Mutant: a.lineNumber + b.lineNumber (not a subtraction).
+  // If the comparator always returns a positive sum, lines would not be reordered.
+
+  it('sorts uncovered lines by path then by line number ascending (not addition)', () => {
+    const handler = new GitHubActionsCoverageHandler();
+    // Single file, multiple lines to test line-number sort
+    handler.processFile('a/File.cls', 'File', { '10': 0, '3': 0, '7': 0, '1': 0 });
+    const result = handler.finalize();
+
+    const lineNumbers = result.uncoveredLines.filter((u) => u.filePath === 'a/File.cls').map((u) => u.lineNumber);
+
+    // Correct ascending sort: 1, 3, 7, 10
+    // Mutant (addition): a+b is always positive, so sort is unstable/wrong
+    expect(lineNumbers).toEqual([1, 3, 7, 10]);
+  });
+
+  it('sorts uncovered lines from multiple files: path sort takes precedence over line sort', () => {
+    const handler = new GitHubActionsCoverageHandler();
+    handler.processFile('z/Last.cls', 'Last', { '1': 0, '2': 0 });
+    handler.processFile('a/First.cls', 'First', { '5': 0, '3': 0 });
+    const result = handler.finalize();
+
+    // Path comparison uses localeCompare — 'a/First.cls' < 'z/Last.cls'
+    expect(result.uncoveredLines[0].filePath).toBe('a/First.cls');
+    expect(result.uncoveredLines[1].filePath).toBe('a/First.cls');
+    expect(result.uncoveredLines[2].filePath).toBe('z/Last.cls');
+    expect(result.uncoveredLines[3].filePath).toBe('z/Last.cls');
+    // Line numbers within each file must also be ascending
+    expect(result.uncoveredLines[0].lineNumber).toBe(3);
+    expect(result.uncoveredLines[1].lineNumber).toBe(5);
+  });
+
+  // ── ConditionalExpression mutation killer (githubActions.ts:78) ──
+  // Condition: if (pathCompare !== 0) return pathCompare
+  // Mutant: always true → always returns pathCompare even when files are the same → line sort never runs
+
+  it('applies line-number sort when two uncovered entries share the same file path', () => {
+    const handler = new GitHubActionsCoverageHandler();
+    handler.processFile('same/File.cls', 'File', { '20': 0, '5': 0, '15': 0 });
+    const result = handler.finalize();
+
+    const lineNumbers = result.uncoveredLines.map((u) => u.lineNumber);
+    expect(lineNumbers).toEqual([5, 15, 20]);
+  });
+
+  // ── ObjectLiteral mutation killer (githubActions.ts:38) ──
+  // Mutant replaces the initial coverageObj literal with {}. The finalize() call would fail
+  // or produce undefined summaries.
+
+  it('finalize returns a properly structured object with summary and uncoveredLines', () => {
+    const handler = new GitHubActionsCoverageHandler();
+    handler.processFile('a/File.cls', 'File', { '1': 1, '2': 0 });
+    const result = handler.finalize();
+    // If constructor uses {} instead of full object, these would be undefined
+    expect(result.summary).toBeDefined();
+    expect(result.uncoveredLines).toBeDefined();
+    expect(Array.isArray(result.uncoveredLines)).toBe(true);
+    expect(result.summary.totalLines).toBe(2);
+    expect(result.summary.coveredLines).toBe(1);
+    expect(result.summary.uncoveredLines).toBe(1);
+    expect(result.summary.lineRate).toBeCloseTo(0.5);
+    expect(result.summary.fileCount).toBe(1);
+  });
 });

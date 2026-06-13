@@ -95,4 +95,79 @@ describe('generateGitHubActions unit tests', () => {
     const warnings = result.split('\n').filter((l) => l.startsWith('::warning'));
     expect(warnings).toHaveLength(0);
   });
+
+  // ── ConditionalExpression mutation killer (generateGitHubActions.ts:52) ──
+  // Condition: truncated === 1 ? '' : 's'
+  // Mutant (always true): always uses '' → "line" instead of "lines" even for >1 truncated.
+
+  it('uses "lines" (plural) in truncation notice when more than 1 line is truncated', () => {
+    const lines = Array.from({ length: 55 }, (_, i) => ({ filePath: 'a.cls', lineNumber: i + 1 }));
+    const obj = makeObj({
+      summary: { totalLines: 55, coveredLines: 0, uncoveredLines: 55, lineRate: 0, fileCount: 1 },
+      uncoveredLines: lines,
+    });
+    // maxAnnotations=50 → truncated = 5
+    const result = generateGitHubActions(obj, 50);
+    const notices = result.split('\n').filter((l) => l.startsWith('::notice'));
+    // Second notice is the truncation notice
+    expect(notices[1]).toContain('5 additional uncovered lines');
+    expect(notices[1]).not.toContain('5 additional uncovered line ');
+  });
+
+  it('uses singular "line" in truncation notice when exactly 1 line is truncated', () => {
+    const lines = Array.from({ length: 51 }, (_, i) => ({ filePath: 'a.cls', lineNumber: i + 1 }));
+    const obj = makeObj({
+      summary: { totalLines: 51, coveredLines: 0, uncoveredLines: 51, lineRate: 0, fileCount: 1 },
+      uncoveredLines: lines,
+    });
+    // maxAnnotations=50 → truncated = 1
+    const result = generateGitHubActions(obj, 50);
+    const notices = result.split('\n').filter((l) => l.startsWith('::notice'));
+    expect(notices[1]).toContain('1 additional uncovered line ');
+    expect(notices[1]).not.toContain('1 additional uncovered lines');
+  });
+
+  it('emits no truncation notice when uncovered count equals maxAnnotations exactly', () => {
+    const lines = Array.from({ length: 50 }, (_, i) => ({ filePath: 'a.cls', lineNumber: i + 1 }));
+    const obj = makeObj({
+      summary: { totalLines: 50, coveredLines: 0, uncoveredLines: 50, lineRate: 0, fileCount: 1 },
+      uncoveredLines: lines,
+    });
+    const result = generateGitHubActions(obj, 50);
+    const notices = result.split('\n').filter((l) => l.startsWith('::notice'));
+    // Only summary notice, no truncation notice
+    expect(notices).toHaveLength(1);
+  });
+
+  // ── StringLiteral mutation killers (generateGitHubActions.ts:17,18,24,52) ──
+
+  it('notice line contains "Overall coverage" text', () => {
+    const obj = makeObj({
+      summary: { totalLines: 10, coveredLines: 8, uncoveredLines: 2, lineRate: 0.8, fileCount: 1 },
+    });
+    const result = generateGitHubActions(obj);
+    expect(result).toContain('Overall coverage');
+  });
+
+  it('warning annotation contains "Uncovered Apex line" in title', () => {
+    const obj = makeObj({
+      summary: { totalLines: 1, coveredLines: 0, uncoveredLines: 1, lineRate: 0, fileCount: 1 },
+      uncoveredLines: [{ filePath: 'a/B.cls', lineNumber: 42 }],
+    });
+    const result = generateGitHubActions(obj);
+    expect(result).toContain('Uncovered Apex line');
+    expect(result).toContain('Line 42 is not covered by any Apex test');
+  });
+
+  it('warning annotation contains "not shown" in truncation notice', () => {
+    const lines = Array.from({ length: 52 }, (_, i) => ({ filePath: 'a.cls', lineNumber: i + 1 }));
+    const obj = makeObj({
+      summary: { totalLines: 52, coveredLines: 0, uncoveredLines: 52, lineRate: 0, fileCount: 1 },
+      uncoveredLines: lines,
+    });
+    const result = generateGitHubActions(obj, 50);
+    const notices = result.split('\n').filter((l) => l.startsWith('::notice'));
+    expect(notices[1]).toContain('not shown');
+    expect(notices[1]).toContain('GitHub Actions limits annotations per step');
+  });
 });

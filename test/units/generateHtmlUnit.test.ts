@@ -261,4 +261,98 @@ describe('generateHtml unit tests', () => {
     const result = generateHtml(obj);
     expect(result).toContain('Code Coverage Report');
   });
+
+  // ── ConditionalExpression mutation killer (generateHtml.ts:25) ──
+  // buildPackageSummaryRows: if (packageSummaries.length === 0) return ''
+  // Mutant (always false): even empty array would enter the map loop → no rows but header still shown.
+  // Mutant (always false) means the empty-check is bypassed → empty string would still be returned
+  // from `.map([]).join('')` BUT the caller uses `packageSummaryRows ? ... : ''` which would fail
+  // only if the function returns '' vs truthy non-empty string.
+  // The real test: when packageSummaries is non-empty, the table contains package data.
+
+  it('returns non-empty string from buildPackageSummaryRows when packages exist', () => {
+    const obj = makeObj({
+      packageSummaries: [
+        { directory: 'my-pkg', fileCount: 2, totalLines: 20, coveredLines: 15, uncoveredLines: 5, lineRate: 0.75 },
+      ],
+    });
+    const result = generateHtml(obj);
+    // The package table section must be present and contain the directory name
+    expect(result).toContain('my-pkg');
+    expect(result).toContain('Package directory coverage');
+    expect(result).toContain('75.00');
+  });
+
+  it('buildPackageSummaryRows returns empty string for zero packages (conditional branch)', () => {
+    const obj = makeObj({ packageSummaries: [] });
+    const result = generateHtml(obj);
+    // When packages is empty, the table section must be absent
+    expect(result).not.toContain('Package directory coverage');
+  });
+
+  // ── StringLiteral mutation killers for generateHtml ──
+
+  it('HTML contains DOCTYPE declaration', () => {
+    const obj = makeObj();
+    const result = generateHtml(obj);
+    expect(result).toContain('<!DOCTYPE html>');
+  });
+
+  it('HTML contains lang="en" attribute', () => {
+    const obj = makeObj();
+    const result = generateHtml(obj);
+    expect(result).toContain('lang="en"');
+  });
+
+  it('HTML contains meta charset UTF-8', () => {
+    const obj = makeObj();
+    const result = generateHtml(obj);
+    expect(result).toContain('charset="UTF-8"');
+  });
+
+  it('summary block contains "Summary" heading', () => {
+    const obj = makeObj();
+    const result = generateHtml(obj);
+    expect(result).toContain('<h2>Summary</h2>');
+  });
+
+  it('stat labels contain Total Lines, Covered Lines, Uncovered Lines, Files', () => {
+    const obj = makeObj({
+      summary: { totalLines: 100, coveredLines: 75, uncoveredLines: 25, lineRate: 0.75 },
+      files: [makeFile('a/A.cls')],
+    });
+    const result = generateHtml(obj);
+    expect(result).toContain('Total Lines');
+    expect(result).toContain('Covered Lines');
+    expect(result).toContain('Uncovered Lines');
+    expect(result).toContain('Files');
+  });
+
+  it('File Coverage Details heading is always present', () => {
+    const obj = makeObj();
+    const result = generateHtml(obj);
+    expect(result).toContain('File Coverage Details');
+  });
+
+  it('line row shows "covered" class for covered lines and "uncovered" for uncovered lines', () => {
+    const obj = makeObj({
+      files: [
+        makeFile('src/A.cls', {
+          lines: [
+            { lineNumber: 1, hitCount: 3, covered: true, content: 'covered line' },
+            { lineNumber: 2, hitCount: 0, covered: false, content: 'uncovered line' },
+          ],
+        }),
+      ],
+    });
+    const result = generateHtml(obj);
+    expect(result).toContain('class="covered"');
+    expect(result).toContain('class="uncovered"');
+  });
+
+  it('HTML script toggleFile function is present', () => {
+    const obj = makeObj();
+    const result = generateHtml(obj);
+    expect(result).toContain('function toggleFile');
+  });
 });

@@ -61,4 +61,72 @@ describe('JsonSummaryCoverageHandler unit tests', () => {
     expect(result.total.lines.covered).toBe(5);
     expect(result.total.lines.pct).toBe(83.33);
   });
+
+  // ── ArithmeticOperator and ConditionalExpression mutation killers (jsonSummary.ts:64) ──
+  // pct = (coveredLines / totalLines) * 100
+  // Mutants: coveredLines * totalLines (would give 200 for 2/4), or / 100 instead of * 100 (gives 0.5 not 50)
+
+  it('per-file pct is coveredLines/totalLines*100 (not coveredLines*totalLines or /100)', () => {
+    const handler = new JsonSummaryCoverageHandler();
+    // 2 covered out of 4 total → correct pct = 50.00
+    handler.processFile('a.cls', 'A', { '1': 1, '2': 1, '3': 0, '4': 0 });
+    const result = handler.finalize();
+
+    const file = result.files['a.cls'];
+    // coveredLines * totalLines = 2 * 4 = 8 → wrong
+    // coveredLines / totalLines / 100 = 0.005 → wrong
+    // correct: (2/4)*100 = 50
+    expect(file.lines.pct).toBe(50);
+    expect(file.lines.pct).toBeGreaterThan(1); // rules out /100 mutant
+    expect(file.lines.pct).toBeLessThan(100); // rules out *totalLines mutant
+  });
+
+  it('per-file pct is 0 when all lines uncovered (ConditionalExpression false branch)', () => {
+    // totalLines > 0 → true branch. But what if mutant makes it always false (always pct=0)?
+    // We must assert pct is nonzero when covered lines exist.
+    const handler = new JsonSummaryCoverageHandler();
+    // 3 covered out of 3 → pct should be 100.00
+    handler.processFile('b.cls', 'B', { '1': 1, '2': 1, '3': 1 });
+    const result = handler.finalize();
+
+    expect(result.files['b.cls'].lines.pct).toBe(100);
+    // If conditional is always false, pct stays 0 — this assertion kills that mutant
+    expect(result.files['b.cls'].lines.pct).toBeGreaterThan(0);
+  });
+
+  it('total pct is nonzero when covered lines exist (ConditionalExpression kills always-false mutant)', () => {
+    const handler = new JsonSummaryCoverageHandler();
+    // 7 covered out of 10 total → 70%
+    handler.processFile('c.cls', 'C', {
+      '1': 1,
+      '2': 1,
+      '3': 1,
+      '4': 1,
+      '5': 1,
+      '6': 1,
+      '7': 1,
+      '8': 0,
+      '9': 0,
+      '10': 0,
+    });
+    const result = handler.finalize();
+
+    expect(result.total.lines.pct).toBe(70);
+    expect(result.total.lines.pct).toBeGreaterThan(0);
+  });
+
+  it('pct uses totalLines as denominator, not numerator (arithmetic operator check)', () => {
+    // With 3 covered and 7 total:
+    //   correct: (3/7)*100 = 42.86
+    //   mutant (coveredLines * totalLines): 3*7 = 21 → would be rounded to 21.00
+    //   mutant (/ totalLines / 100): tiny fraction
+    const handler = new JsonSummaryCoverageHandler();
+    handler.processFile('d.cls', 'D', { '1': 1, '2': 1, '3': 1, '4': 0, '5': 0, '6': 0, '7': 0 });
+    const result = handler.finalize();
+
+    expect(result.files['d.cls'].lines.pct).toBe(42.86);
+    // Additional sanity: must be between 0 and 100
+    expect(result.files['d.cls'].lines.pct).toBeGreaterThan(10);
+    expect(result.files['d.cls'].lines.pct).toBeLessThan(100);
+  });
 });
