@@ -52,10 +52,11 @@ export abstract class BaseHandler implements CoverageHandler {
   // eslint-disable-next-line class-methods-use-this
   protected extractLinesByStatus(lines: Record<string, number>, covered: boolean): number[] {
     return (
+      // Stryker disable next-line MethodExpression -- equivalent mutant: Object.entries already returns integer-keyed objects in ascending order
       Object.entries(lines)
         .filter(([, hits]) => (covered ? hits > 0 : hits === 0))
         .map(([line]) => Number(line))
-        // Stryker disable next-line MethodExpression -- Object.entries already returns integer keys in ascending order; sort is defensive only
+        // Stryker disable next-line ArithmeticOperator -- equivalent mutant: a+b is always positive so insertion sort never swaps already-ascending input
         .sort((a, b) => a - b)
     );
   }

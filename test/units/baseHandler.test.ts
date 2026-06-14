@@ -203,15 +203,18 @@ describe('BaseHandler unit tests', () => {
     type ItemType = { [key: string]: unknown; '@path'?: string; '@filename'?: string; '@name'?: string };
     // Three items so the no-path item is compared as both `a` and `b` in the comparator,
     // exercising both the pathA fallback (L86) and pathB fallback (L87).
+    // '@path' values start with 'A'/'B': both uppercase and lowercase 'a'/'b' are < 'S'/'s'
+    // in every locale, so the mutant value "Stryker was here!" always sorts AFTER these paths,
+    // making noPath sort last instead of first — detectable in all environments.
     const noPath: ItemType = { extra: 'no-path-props' };
-    const items: ItemType[] = [{ '@name': 'zebra' }, noPath, { '@name': 'ant' }];
+    const items: ItemType[] = [{ '@path': 'Beta.cls' }, noPath, { '@path': 'Alpha.cls' }];
     const sorted = handler.testSortByPath(items);
-    // '' < 'ant' < 'zebra' → no-path first
-    // L86 mutant: pathA = 'Stryker was here!' when a=noPath → S > a → noPath sorts last → fails
-    // L87 mutant: pathB = 'Stryker was here!' when b=noPath → 'ant' < 'Stryker' → noPath sorts last → fails
+    // With '' fallback: '' < 'Alpha.cls' < 'Beta.cls' → noPath sorts first
+    // L86 mutant: pathA='Stryker was here!' (a=noPath) → S/s > B/b → noPath sorts last → fails
+    // L87 mutant: pathB='Stryker was here!' (b=noPath) → A/a < S/s → noPath shifts right → sorts last → fails
     expect(sorted[0]).toBe(noPath);
-    expect(sorted[1]).toEqual({ '@name': 'ant' });
-    expect(sorted[2]).toEqual({ '@name': 'zebra' });
+    expect(sorted[1]).toEqual({ '@path': 'Alpha.cls' });
+    expect(sorted[2]).toEqual({ '@path': 'Beta.cls' });
   });
 
   it('should handle empty lines in calculateCoverage', () => {
