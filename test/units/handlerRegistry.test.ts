@@ -53,6 +53,8 @@ describe('HandlerRegistry unit tests', () => {
     expect(HandlerRegistry.getExtension('html')).toBe('.html');
     expect(HandlerRegistry.getExtension('markdown')).toBe('.md');
     expect(HandlerRegistry.getExtension('github-actions')).toBe('.txt');
+    expect(HandlerRegistry.getExtension('clover')).toBe('.xml');
+    expect(HandlerRegistry.getExtension('jacoco')).toBe('.xml');
   });
 
   it('should return default extension for unknown format', () => {
@@ -183,6 +185,8 @@ describe('HandlerRegistry unit tests', () => {
     expect(p).toContain('Codecov');
     expect(p).toContain('Azure DevOps');
     expect(p).toContain('Jenkins');
+    expect(p).toContain('GitLab');
+    expect(p).toContain('GitHub Actions');
   });
 
   it('getAvailableFormats returns formats in sorted order', () => {
@@ -192,6 +196,29 @@ describe('HandlerRegistry unit tests', () => {
 
   it('error message for unknown format includes "Available formats"', () => {
     expect(() => HandlerRegistry.get('no-such-format-xyz')).toThrow('Available formats');
+  });
+
+  it('error message for unknown format uses comma-space as separator in available formats list', () => {
+    let message = '';
+    try {
+      HandlerRegistry.get('no-such-format-xyz');
+    } catch (e) {
+      message = (e as Error).message;
+    }
+    expect(message).toMatch(/, /);
+  });
+
+  it('register does not throw for a unique handler name not already in the registry', () => {
+    const uniqueName = '__test-unique-handler-xyz__';
+    expect(() =>
+      HandlerRegistry.register({
+        name: uniqueName,
+        description: 'test handler',
+        fileExtension: '.test',
+        handler: () => new SonarCoverageHandler(),
+      }),
+    ).not.toThrow();
+    expect(HandlerRegistry.has(uniqueName)).toBe(true);
   });
 
   it('getExtension returns correct extension for cobertura', () => {

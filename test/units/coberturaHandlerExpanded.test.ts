@@ -126,6 +126,18 @@ describe('CoberturaCoverageHandler expanded unit tests', () => {
     expect(pkg['@line-rate']).toBe(0.5);
   });
 
+  it('@version is "0.1" in the coverage element', () => {
+    const handler = new CoberturaCoverageHandler();
+    const result = handler.finalize();
+    expect(result.coverage['@version']).toBe('0.1');
+  });
+
+  it('sources.source is ["."] in the coverage element', () => {
+    const handler = new CoberturaCoverageHandler();
+    const result = handler.finalize();
+    expect(result.coverage.sources.source).toEqual(['.']);
+  });
+
   it('@line-rate sort callback correctly compares strings (ArrowFunction mutant killer)', () => {
     // The sort on packages uses a.localeCompare(b). Mutant replaces the arrow function body with undefined.
     // We test that after finalize, packages are in alphabetical order.

@@ -200,6 +200,24 @@ describe('MarkdownCoverageHandler unit tests', () => {
 
   // ── ConditionalExpression mutation killer (markdown.ts:105 — always true) ──
 
+  // ── ConditionalExpression mutant killer (markdown.ts:105 — if true) ──
+  // Mutant: always executes lineRate comparison, skipping path tiebreak entirely.
+  // Files with EQUAL lineRates must be tiebroken by filePath.
+  // Inserted in wrong alphabetical order so the tiebreak changes the result.
+  // Mutant: lineRate equal → 0 → stable sort → insertion order preserved (wrong).
+
+  it('breaks ties by filePath when two files have the same lineRate', () => {
+    const handler = new MarkdownCoverageHandler();
+    // Both files have 1/2 = 50% coverage; insertion order is path-descending (Z before A)
+    handler.processFile('z-pkg/Z.cls', 'Z', { '1': 1, '2': 0 });
+    handler.processFile('a-pkg/A.cls', 'A', { '1': 1, '2': 0 });
+    const result = handler.finalize();
+    // Correct: tiebreak by path → 'a-pkg/A.cls' before 'z-pkg/Z.cls'
+    // Mutant (if true): lineRate equal → return 0 → stable → [Z, A] (wrong)
+    expect(result.files[0].filePath).toBe('a-pkg/A.cls');
+    expect(result.files[1].filePath).toBe('z-pkg/Z.cls');
+  });
+
   it('files with different lineRates are sorted by lineRate ascending (not always same order)', () => {
     const handler = new MarkdownCoverageHandler();
     // 100% covered

@@ -117,4 +117,10 @@ describe('CloverCoverageHandler unit tests', () => {
     expect(m['@statements']).toBe(3);
     expect(m['@coveredstatements']).toBe(2);
   });
+
+  it('@clover version is "3.2.0"', () => {
+    const handler = new CloverCoverageHandler();
+    const result = handler.finalize();
+    expect(result.coverage['@clover']).toBe('3.2.0');
+  });
 });
