@@ -130,6 +130,42 @@ describe('OpenCoverCoverageHandler expanded unit tests', () => {
   // with `["Stryker was here"]` — an array with one bogus string element.
   // The result would include that extra entry in SequencePoints.
 
+  // ── StringLiteral mutant killer (opencover.ts:83 — @hash value) ──
+
+  it('module @hash is "apex-module"', () => {
+    const handler = new OpenCoverCoverageHandler();
+    const result = handler.finalize();
+    expect(result.CoverageSession.Modules.Module[0]['@hash']).toBe('apex-module');
+  });
+
+  // ── StringLiteral mutant killer (opencover.ts:171 — summary[""] = 0 instead of @branchCoverage) ──
+  // Mutant sets an empty-string key on the summary object instead of '@branchCoverage'.
+  // Because @branchCoverage is already 0 from the constructor, the value looks the same.
+  // The distinguishing observable: the mutant adds a spurious "" property.
+
+  it('finalize does not add a spurious empty-string key to the summary object', () => {
+    const handler = new OpenCoverCoverageHandler();
+    handler.processFile('src/A.cls', 'A', { '1': 1 });
+    const result = handler.finalize();
+    expect((result.CoverageSession.Summary as Record<string, unknown>)['']).toBeUndefined();
+  });
+
+  // ── StringLiteral mutant killer (opencover.ts:174 — localeCompare argument) ──
+  // Mutant: a['@fullName'].localeCompare(b[""]) where b[""] is always undefined → "undefined".
+  // Both 'DClass' and 'AClass' start with letters before 'u', so localeCompare('undefined')
+  // is always negative → comparator never swaps → insertion order [DClass, AClass] preserved.
+  // Correct sort must produce [AClass, DClass].
+
+  it('sorts classes by @fullName correctly (localeCompare uses @fullName not empty key)', () => {
+    const handler = new OpenCoverCoverageHandler();
+    handler.processFile('d/D.cls', 'DClass', { '1': 1 });
+    handler.processFile('a/A.cls', 'AClass', { '1': 1 });
+    const result = handler.finalize();
+    const classes = result.CoverageSession.Modules.Module[0].Classes.Class;
+    expect(classes[0]['@fullName']).toBe('AClass');
+    expect(classes[1]['@fullName']).toBe('DClass');
+  });
+
   it('sequence points only contain entries from the lines record (no spurious initial elements)', () => {
     const handler = new OpenCoverCoverageHandler();
     handler.processFile('a/A.cls', 'A', { '3': 1, '7': 0 });

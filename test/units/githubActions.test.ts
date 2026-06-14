@@ -228,6 +228,31 @@ describe('GitHubActionsCoverageHandler unit tests', () => {
   // Mutant replaces the initial coverageObj literal with {}. The finalize() call would fail
   // or produce undefined summaries.
 
+  // ── ConditionalExpression mutant killer (githubActions.ts:78 — if true) ──
+  // Mutant: always returns pathCompare (0 for same file) instead of falling through to lineNumber sort.
+  // Two separate processFile calls force insertion order [line 10, line 3] for the same file.
+  // A correct sort must swap them; the mutant returns 0 → stable sort → leaves them in wrong order.
+
+  it('sorts uncovered lines from same file even when inserted in descending order', () => {
+    const handler = new GitHubActionsCoverageHandler();
+    handler.processFile('a/File.cls', 'File', { '10': 0 });
+    handler.processFile('a/File.cls', 'File', { '3': 0 });
+    const result = handler.finalize();
+    expect(result.uncoveredLines.map((u) => u.lineNumber)).toEqual([3, 10]);
+  });
+
+  // ── ArithmeticOperator mutant killer (githubActions.ts:79 — a + b instead of a - b) ──
+  // Two processFile calls force insertion order [line 3, line 10] (already correct).
+  // Correct sort leaves them unchanged; a+b mutant returns 13 > 0 → swaps to [10, 3].
+
+  it('does not reverse same-file uncovered lines already in ascending order', () => {
+    const handler = new GitHubActionsCoverageHandler();
+    handler.processFile('a/File.cls', 'File', { '3': 0 });
+    handler.processFile('a/File.cls', 'File', { '10': 0 });
+    const result = handler.finalize();
+    expect(result.uncoveredLines.map((u) => u.lineNumber)).toEqual([3, 10]);
+  });
+
   it('finalize returns a properly structured object with summary and uncoveredLines', () => {
     const handler = new GitHubActionsCoverageHandler();
     handler.processFile('a/File.cls', 'File', { '1': 1, '2': 0 });

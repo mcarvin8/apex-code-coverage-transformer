@@ -245,6 +245,31 @@ describe('HTML coverage handler unit tests', () => {
     expect(result.summary.lineRate).toBe(0);
   });
 
+  // ── ArrayDeclaration mutant killer (html.ts:51 — else [] vs else ["Stryker was here"]) ──
+  // Mutant: when sourceContent is falsy, sourceLines = ["Stryker was here"] instead of [].
+  // For line 1, sourceLines[0] ?? '' gives "Stryker was here" instead of ''.
+
+  it('line content is empty string when no sourceContent is provided', () => {
+    const handler = getCoverageHandler('html');
+    handler.processFile('force-app/A.cls', 'A', { '1': 1 });
+    const result = handler.finalize() as HtmlCoverageObject;
+    expect(result.files[0].lines[0].content).toBe('');
+  });
+
+  // ── StringLiteral mutant killer (html.ts:56 — ?? '' vs ?? "Stryker was here!") ──
+  // Mutant: when sourceLines[num-1] is undefined (line number beyond content), fallback is
+  // "Stryker was here!" instead of ''.
+
+  it('line content is empty string when line number exceeds sourceContent line count', () => {
+    const handler = getCoverageHandler('html');
+    // sourceContent has only 2 lines but coverage reports line 3
+    handler.processFile('force-app/A.cls', 'A', { '3': 1 }, 'line1\nline2');
+    const result = handler.finalize() as HtmlCoverageObject;
+    const line3 = result.files[0].lines.find((l) => l.lineNumber === 3);
+    expect(line3).toBeDefined();
+    expect(line3!.content).toBe('');
+  });
+
   it('calculates summary lineRate correctly across multiple files', () => {
     const handler = getCoverageHandler('html');
     handler.processFile('pkg/A.cls', 'A', { '1': 1, '2': 1 }); // 2/2

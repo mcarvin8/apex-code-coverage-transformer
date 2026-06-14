@@ -113,4 +113,34 @@ describe('JaCoCoCoverageHandler unit tests', () => {
     const result = handler.finalize();
     expect(result.report['@name']).toBe('JaCoCo');
   });
+
+  it('package counter @type is "LINE"', () => {
+    const handler = new JaCoCoCoverageHandler();
+    handler.processFile('force-app/classes/A.cls', 'A', { '1': 1 });
+    const result = handler.finalize();
+    expect(result.report.package[0].counter[0]['@type']).toBe('LINE');
+  });
+
+  it('global report counter @type is "LINE"', () => {
+    const handler = new JaCoCoCoverageHandler();
+    handler.processFile('force-app/classes/A.cls', 'A', { '1': 1 });
+    const result = handler.finalize();
+    expect(result.report.counter[0]['@type']).toBe('LINE');
+  });
+
+  // ── StringLiteral mutant killer (jacoco.ts:88 — localeCompare argument) ──
+  // Mutant: a['@name'].localeCompare(b[""]) where b[""] is always undefined → "undefined".
+  // Both 'D.cls' and 'A.cls' start with letters before 'u', so localeCompare('undefined')
+  // returns negative for both → comparator always returns negative → no swaps → insertion
+  // order preserved. Insertion order [D.cls, A.cls] must become [A.cls, D.cls] with correct sort.
+
+  it('sorts source files within a package correctly (localeCompare uses @name not empty key)', () => {
+    const handler = new JaCoCoCoverageHandler();
+    handler.processFile('force-app/classes/D.cls', 'D', { '1': 1 });
+    handler.processFile('force-app/classes/A.cls', 'A', { '1': 1 });
+    const result = handler.finalize();
+    const names = result.report.package[0].sourcefile.map((sf) => sf['@name']);
+    expect(names[0]).toBe('A.cls');
+    expect(names[1]).toBe('D.cls');
+  });
 });
