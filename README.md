@@ -157,15 +157,31 @@ Use `-f` / `--format` to choose the output format. Multiple `-f` values produce 
 All GitHub Actions examples below assume these steps run first:
 
 ```yaml
-- uses: actions/checkout@v4
-- name: Install Salesforce CLI
-  run: npm install -g @salesforce/cli
-- name: Install Coverage Transformer Plugin
-  run: echo y | sf plugins install apex-code-coverage-transformer
-- name: Authenticate to Salesforce
-  run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
-- name: Run Apex Tests
-  run: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli@latest
+
+      - name: Install Apex Code Coverage Transformer plugin
+        run: echo y | sf plugins install apex-code-coverage-transformer
+
+      - name: Authenticate to Salesforce
+        run: sf org login sfdx-url --sfdx-url-file ${{ secrets.SFDX_AUTH_URL }} --alias ci-org
+
+      - name: Deploy with Apex Tests
+        run: sf project deploy start --test-level RunLocalTests --coverage-formatters json --results-dir "coverage"
 ```
 
 ### Codecov
