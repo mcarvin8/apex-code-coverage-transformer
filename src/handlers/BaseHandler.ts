@@ -51,10 +51,13 @@ export abstract class BaseHandler implements CoverageHandler {
    */
   // eslint-disable-next-line class-methods-use-this
   protected extractLinesByStatus(lines: Record<string, number>, covered: boolean): number[] {
-    return Object.entries(lines)
-      .filter(([, hits]) => (covered ? hits > 0 : hits === 0))
-      .map(([line]) => Number(line))
-      .sort((a, b) => a - b);
+    return (
+      Object.entries(lines)
+        .filter(([, hits]) => (covered ? hits > 0 : hits === 0))
+        .map(([line]) => Number(line))
+        // Stryker disable next-line MethodExpression -- Object.entries already returns integer keys in ascending order; sort is defensive only
+        .sort((a, b) => a - b)
+    );
   }
 
   /**

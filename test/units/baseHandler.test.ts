@@ -201,13 +201,17 @@ describe('BaseHandler unit tests', () => {
   it('item without any path property sorts before item with a name (empty string < any name)', () => {
     const handler = new TestHandler();
     type ItemType = { [key: string]: unknown; '@path'?: string; '@filename'?: string; '@name'?: string };
-    const items: ItemType[] = [{ '@name': 'alpha' }, { extra: 'no-path-props' }];
+    // Three items so the no-path item is compared as both `a` and `b` in the comparator,
+    // exercising both the pathA fallback (L86) and pathB fallback (L87).
+    const noPath: ItemType = { extra: 'no-path-props' };
+    const items: ItemType[] = [{ '@name': 'zebra' }, noPath, { '@name': 'ant' }];
     const sorted = handler.testSortByPath(items);
-    // '' (fallback) < 'alpha' → no-path item sorts first
-    // mutant L86 uses 'Stryker was here!' → 'Stryker...' > 'alpha' → no-path sorts last → fails
-    // mutant L87 uses 'Stryker was here!' for pathB → 'alpha' < 'Stryker...' → alpha sorts first → fails
-    expect(sorted[0]).toEqual({ extra: 'no-path-props' });
-    expect(sorted[1]).toEqual({ '@name': 'alpha' });
+    // '' < 'ant' < 'zebra' → no-path first
+    // L86 mutant: pathA = 'Stryker was here!' when a=noPath → S > a → noPath sorts last → fails
+    // L87 mutant: pathB = 'Stryker was here!' when b=noPath → 'ant' < 'Stryker' → noPath sorts last → fails
+    expect(sorted[0]).toBe(noPath);
+    expect(sorted[1]).toEqual({ '@name': 'ant' });
+    expect(sorted[2]).toEqual({ '@name': 'zebra' });
   });
 
   it('should handle empty lines in calculateCoverage', () => {
