@@ -1,5 +1,5 @@
 'use strict';
-
+// test comment
 import {
   CoverageHandler,
   SonarCoverageObject,
