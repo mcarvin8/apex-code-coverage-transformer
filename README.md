@@ -154,7 +154,7 @@ Use `-f` / `--format` to choose the output format. Multiple `-f` values produce 
 
 ### Shared setup (GitHub Actions)
 
-All GitHub Actions examples below assume these steps run first:
+All GitHub Actions examples below assume these steps run first for deployments (update `sf project deploy start` command to `sf apex run test` to invoke tests directly in an org):
 
 ```yaml
 jobs:
