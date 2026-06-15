@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.22.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.22.0...v2.22.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* **deps:** replace minimatch with in-house glob matcher ([#312](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/312)) ([c1ec8c8](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/c1ec8c81673f47bf22f2cbe68294ce75a59d0873))
+
 ## [2.22.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.21.0...v2.22.0) (2026-06-12)
 
 
