@@ -1,5 +1,29 @@
 import { basename } from 'node:path';
 
+type CharClassResult = { cls: string; nextIndex: number };
+
+function parseCharClass(pattern: string, start: number): CharClassResult {
+  let j = start + 1;
+  let cls = '[';
+
+  if (j < pattern.length && pattern[j] === '!') {
+    cls += '^';
+    j++;
+  }
+  if (j < pattern.length && pattern[j] === ']') {
+    cls += '\\]';
+    j++;
+  }
+  while (j < pattern.length && pattern[j] !== ']') {
+    cls += pattern[j++];
+  }
+  if (j < pattern.length) {
+    return { cls: cls + ']', nextIndex: j + 1 };
+  }
+  // unmatched '[', treat as literal
+  return { cls: '\\[', nextIndex: start + 1 };
+}
+
 function globToRegex(pattern: string): RegExp {
   let re = '';
   let i = 0;
@@ -21,28 +45,9 @@ function globToRegex(pattern: string): RegExp {
       re += '[^/]';
       i++;
     } else if (c === '[') {
-      let j = i + 1;
-      let cls = '[';
-      if (j < pattern.length && pattern[j] === '!') {
-        cls += '^';
-        j++;
-      }
-      if (j < pattern.length && pattern[j] === ']') {
-        cls += '\\]';
-        j++;
-      }
-      while (j < pattern.length && pattern[j] !== ']') {
-        cls += pattern[j++];
-      }
-      if (j < pattern.length) {
-        cls += ']';
-        re += cls;
-        i = j + 1;
-      } else {
-        // unmatched '[', treat as literal
-        re += '\\[';
-        i++;
-      }
+      const { cls, nextIndex } = parseCharClass(pattern, i);
+      re += cls;
+      i = nextIndex;
     } else {
       re += c.replace(/[.+^${}()|\\]/g, '\\$&');
       i++;
