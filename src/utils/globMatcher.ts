@@ -6,14 +6,17 @@ function parseCharClass(pattern: string, start: number): TokenResult {
   let j = start + 1;
   let cls = '[';
 
+  // Stryker disable next-line ConditionalExpression,EqualityOperator -- equivalent mutant: undefined !== '!' so bounds check is undetectable via char comparison
   if (j < pattern.length && pattern[j] === '!') {
     cls += '^';
     j++;
   }
+  // Stryker disable next-line ConditionalExpression,EqualityOperator -- equivalent mutant: undefined !== ']' so bounds check is undetectable via char comparison
   if (j < pattern.length && pattern[j] === ']') {
     cls += '\\]';
     j++;
   }
+  // Stryker disable next-line EqualityOperator -- equivalent mutant: extra iteration appends undefined to cls but unmatched-[ path still returns \\[
   while (j < pattern.length && pattern[j] !== ']') {
     cls += pattern[j++];
   }

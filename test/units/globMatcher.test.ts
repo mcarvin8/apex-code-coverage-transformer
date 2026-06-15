@@ -65,6 +65,18 @@ describe('matchesGlob', () => {
     it('does not match when unmatched [ literal does not fit', () => {
       expect(matchesGlob('force-app/main/classes/a.cls', '[.cls', { matchBase: true })).toBe(false);
     });
+
+    it('negated class allows chars not in set including special glob chars', () => {
+      expect(matchesGlob('force-app/main/classes/!oo.cls', '[!F]oo.cls', { matchBase: true })).toBe(true);
+    });
+
+    it('char class not at position 0 with chars after closing bracket', () => {
+      expect(matchesGlob('xFy', 'x[FA]y')).toBe(true);
+    });
+
+    it('char class not at position 0 does not match wrong char', () => {
+      expect(matchesGlob('xBy', 'x[FA]y')).toBe(false);
+    });
   });
 
   describe('patterns with "/" (no matchBase effect)', () => {
@@ -142,6 +154,24 @@ describe('matchesGlob', () => {
 
     it('handles hyphens in path segments', () => {
       expect(matchesGlob('force-app/main/classes/Foo.cls', 'force-app/**/*.cls')).toBe(true);
+    });
+
+    it('pattern anchored at end — does not match when path has suffix beyond pattern', () => {
+      expect(matchesGlob('Foo.clsX', 'Foo.cls', { matchBase: true })).toBe(false);
+    });
+  });
+
+  describe('single * does not degrade to **', () => {
+    it('single * after literal does not match different leading char', () => {
+      expect(matchesGlob('bfoo', 'a*')).toBe(false);
+    });
+
+    it('non-star char preceding single * does not trigger double-star path', () => {
+      expect(matchesGlob('b.cls', 'a*.cls')).toBe(false);
+    });
+
+    it('single * does not match path separator in full-path match', () => {
+      expect(matchesGlob('a/Foo.cls', '*.cls')).toBe(false);
     });
   });
 });
