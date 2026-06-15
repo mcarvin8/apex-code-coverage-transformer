@@ -2,7 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { minimatch } from 'minimatch';
+import { matchesGlob } from '../utils/globMatcher.js';
 import { getCoverageHandler } from '../handlers/getHandler.js';
 import { DeployCoverageData, TestCoverageData, CoverageProcessingContext } from '../utils/types.js';
 import { getPackageDirectories } from '../utils/getPackageDirectories.js';
@@ -149,7 +149,7 @@ async function processDeployCoverage(
       return;
     }
 
-    if (context.excludePatterns.some((pattern) => minimatch(path, pattern, { matchBase: true }))) {
+    if (context.excludePatterns.some((pattern) => matchesGlob(path, pattern, { matchBase: true }))) {
       return;
     }
 
@@ -188,7 +188,7 @@ async function processTestCoverage(
       return;
     }
 
-    if (context.excludePatterns.some((pattern) => minimatch(path, pattern, { matchBase: true }))) {
+    if (context.excludePatterns.some((pattern) => matchesGlob(path, pattern, { matchBase: true }))) {
       return;
     }
 

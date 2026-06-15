@@ -160,6 +160,15 @@ describe('acc-transformer transform unit tests', () => {
     );
     expect(result.lineRate).toBe(0);
   });
+  it('non-matching files are still processed when excludePatterns only excludes some deploy files', async () => {
+    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+      excludePatterns: ['*.trigger'],
+    });
+    expect(result.warnings).not.toContain(
+      'None of the files listed in the coverage JSON were processed. The coverage report will be empty.',
+    );
+    expect(result.lineRate).toBeGreaterThan(0);
+  });
   it('excludes matching files from test coverage using excludePatterns', async () => {
     const result = await transformCoverageReport(testCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
       excludePatterns: ['*.trigger', '*.cls'],
@@ -168,5 +177,14 @@ describe('acc-transformer transform unit tests', () => {
       'None of the files listed in the coverage JSON were processed. The coverage report will be empty.',
     );
     expect(result.lineRate).toBe(0);
+  });
+  it('non-matching files are still processed when excludePatterns only excludes some test files', async () => {
+    const result = await transformCoverageReport(testCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+      excludePatterns: ['*.trigger'],
+    });
+    expect(result.warnings).not.toContain(
+      'None of the files listed in the coverage JSON were processed. The coverage report will be empty.',
+    );
+    expect(result.lineRate).toBeGreaterThan(0);
   });
 });
