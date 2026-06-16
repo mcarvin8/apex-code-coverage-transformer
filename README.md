@@ -388,4 +388,4 @@ The coverage report has been written to: coverage.xml
 
 ## License
 
-[MIT](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md)
+[MIT](LICENSE.md)
