@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.22.1...v2.23.0) (2026-06-17)
+
+
+### Features
+
+* support multiple coverage JSON inputs with union merge ([#317](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/317)) ([43ccda6](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/43ccda6c2542cbb0be36faba37682a23b76758b8))
+
 ## [2.22.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.22.0...v2.22.1) (2026-06-15)
 
 
