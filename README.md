@@ -272,6 +272,86 @@ The `github-actions` format emits one [`::warning`](https://docs.github.com/en/a
 
 Pairs with [`sf-cat`](https://www.github.com/mcarvin8/sf-cat) for code quality annotations on the same diff if you use Salesforce Code Analyzer.
 
+#### Merging coverage from parallel test suites
+
+If you split Apex tests across parallel jobs (e.g. by test class grouping or suite), upload each run's JSON as an artifact and merge them in a final step. Covered lines are unioned — a line covered in any suite counts as covered in the final report.
+
+```yaml
+jobs:
+  test-suite-a:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # ... shared setup steps (Node, SF CLI, auth) ...
+      - name: Run Suite A
+        run: sf apex run test --code-coverage --output-dir coverage-a --target-org ci-org
+      - name: Upload Suite A coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-a
+          path: coverage-a/test-result-codecoverage.json
+
+  test-suite-b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # ... shared setup steps ...
+      - name: Run Suite B
+        run: sf apex run test --code-coverage --output-dir coverage-b --target-org ci-org
+      - name: Upload Suite B coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-b
+          path: coverage-b/test-result-codecoverage.json
+
+  merge-coverage:
+    runs-on: ubuntu-latest
+    needs: [test-suite-a, test-suite-b]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @salesforce/cli@latest
+      - run: echo y | sf plugins install apex-code-coverage-transformer
+      - name: Download Suite A coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-a
+          path: coverage-a
+      - name: Download Suite B coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-b
+          path: coverage-b
+      - name: Merge and transform coverage
+        run: |
+          sf acc-transformer transform \
+            -j "coverage-a/test-result-codecoverage.json" \
+            -j "coverage-b/test-result-codecoverage.json" \
+            -r "coverage.xml" \
+            -f "sonar"
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=your-project-key
+            -Dsonar.organization=your-org
+            -Dsonar.sources=force-app
+            -Dsonar.coverageReportPaths=coverage.xml
+```
+
+Swap the final upload step for any tool from the [Codecov](#codecov) or [GitHub Actions](#github-actions) examples above — the merge command stays the same regardless of destination.
+
 ### GitLab CI
 
 ```yaml
