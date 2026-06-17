@@ -103,6 +103,13 @@ describe('mergeTestCoverageData', () => {
     expect(result[0].coveredPercent).toBeCloseTo((2 / 3) * 100);
   });
 
+  it('sets coveredPercent to 0 when merged entry has no lines', () => {
+    const a = [makeEntry('Foo', {})];
+    const b = [makeEntry('Foo', {})];
+    const result = mergeTestCoverageData([a, b]);
+    expect(result[0].coveredPercent).toBe(0);
+  });
+
   it('does not mutate original inputs', () => {
     const a = [makeEntry('Foo', { '1': 0 })];
     const b = [makeEntry('Foo', { '1': 1 })];
