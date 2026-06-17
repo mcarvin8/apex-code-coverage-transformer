@@ -26,7 +26,7 @@ export type TransformOptions = {
 };
 
 export async function transformCoverageReport(
-  jsonFilePath: string,
+  jsonFilePaths: string[],
   outputReportPath: string,
   formats: string[],
   ignoreDirs: string[],
@@ -36,13 +36,29 @@ export async function transformCoverageReport(
   const finalPaths: string[] = [];
   const formatAmount: number = formats.length;
 
-  const jsonData = await tryReadJson(jsonFilePath, warnings);
-  if (!jsonData) return { finalPaths: [outputReportPath], warnings, lineRate: 0 };
+  const jsonDataItems = await Promise.all(jsonFilePaths.map((p) => tryReadJson(p, warnings)));
+  const validData = jsonDataItems.filter((d): d is string => d !== null);
 
-  const parsedData = JSON.parse(jsonData) as CoverageInput;
+  if (validData.length === 0) return { finalPaths: [outputReportPath], warnings, lineRate: 0 };
+
+  const parsedItems = validData.map((d) => JSON.parse(d) as CoverageInput);
+  const types = parsedItems.map(checkCoverageDataType);
+
+  if (types.some((t) => t === 'Unknown')) {
+    throw new Error(
+      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
+    );
+  }
+
+  const uniqueTypes = [...new Set(types)];
+  if (uniqueTypes.length > 1) {
+    throw new Error('All coverage JSON files must be the same type (deploy or test).');
+  }
+
+  const commandType = uniqueTypes[0];
+
   const { repoRoot, packageDirectories } = await getPackageDirectories(ignoreDirs);
   const handlers = createHandlers(formats);
-  const commandType = checkCoverageDataType(parsedData);
   const concurrencyLimit = getConcurrencyThreshold();
 
   // Build file path cache upfront to avoid O(n*m) directory traversals
@@ -62,13 +78,11 @@ export async function transformCoverageReport(
   let processResult: ProcessResult;
 
   if (commandType === 'DeployCoverageData') {
-    processResult = await processDeployCoverage(parsedData as DeployCoverageData, context);
-  } else if (commandType === 'TestCoverageData') {
-    processResult = await processTestCoverage(parsedData as TestCoverageData[], context);
+    const merged = mergeDeployCoverageData(parsedItems as DeployCoverageData[]);
+    processResult = await processDeployCoverage(merged, context);
   } else {
-    throw new Error(
-      'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
-    );
+    const merged = mergeTestCoverageData(parsedItems as TestCoverageData[][]);
+    processResult = await processTestCoverage(merged, context);
   }
 
   if (processResult.processed === 0) {
@@ -92,6 +106,42 @@ export async function transformCoverageReport(
   }
 
   return { finalPaths, warnings, lineRate };
+}
+
+function mergeDeployCoverageData(inputs: DeployCoverageData[]): DeployCoverageData {
+  const merged: DeployCoverageData = {};
+  for (const input of inputs) {
+    for (const [className, fileInfo] of Object.entries(input)) {
+      if (!merged[className]) {
+        merged[className] = { ...fileInfo, s: { ...fileInfo.s } };
+      } else {
+        for (const [line, hit] of Object.entries(fileInfo.s)) {
+          merged[className].s[line] = Math.max(merged[className].s[line] ?? 0, hit);
+        }
+      }
+    }
+  }
+  return merged;
+}
+
+function mergeTestCoverageData(inputs: TestCoverageData[][]): TestCoverageData[] {
+  const byName = new Map<string, TestCoverageData>();
+  for (const input of inputs) {
+    for (const entry of input) {
+      if (!byName.has(entry.name)) {
+        byName.set(entry.name, { ...entry, lines: { ...entry.lines } });
+      } else {
+        const existing = byName.get(entry.name)!;
+        for (const [line, hit] of Object.entries(entry.lines)) {
+          existing.lines[line] = Math.max(existing.lines[line] ?? 0, hit);
+        }
+        existing.totalLines = Object.keys(existing.lines).length;
+        existing.totalCovered = Object.values(existing.lines).filter((v) => v === 1).length;
+        existing.coveredPercent = existing.totalLines > 0 ? (existing.totalCovered / existing.totalLines) * 100 : 0;
+      }
+    }
+  }
+  return [...byName.values()];
 }
 
 function hasSourceContent(

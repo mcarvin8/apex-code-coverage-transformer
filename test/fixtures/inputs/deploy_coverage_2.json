@@ -1,0 +1,17 @@
+{
+  "no-map/AccountTrigger": {
+    "fnMap": {},
+    "branchMap": {},
+    "path": "no-map/AccountTrigger",
+    "f": {},
+    "b": {},
+    "s": {
+      "52": 1,
+      "53": 1
+    },
+    "statementMap": {
+      "52": { "start": { "line": 52, "column": 0 }, "end": { "line": 52, "column": 0 } },
+      "53": { "start": { "line": 53, "column": 0 }, "end": { "line": 53, "column": 0 } }
+    }
+  }
+}

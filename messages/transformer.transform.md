@@ -15,10 +15,11 @@ Transform Salesforce Apex code coverage JSONs created during deployments and tes
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.md" -f "markdown"`
 - `sf acc-transformer transform -j "coverage.json" -r "coverage.txt" -f "github-actions"`
 - `sf acc-transformer transform -j "coverage.json" -i "force-app"`
+- `sf acc-transformer transform -j "coverage1.json" -j "coverage2.json" -r "coverage.xml" -f "sonar"`
 
 # flags.coverage-json.summary
 
-Path to the code coverage JSON file created by the Salesforce CLI deploy or test command.
+Path to a code coverage JSON file created by the Salesforce CLI deploy or test command. Repeat the flag to merge multiple files. When the same Apex file appears in multiple inputs, covered lines are unioned across all inputs.
 
 # flags.output-report.summary
 

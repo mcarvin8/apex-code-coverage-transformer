@@ -69,6 +69,9 @@ sf plugins install apex-code-coverage-transformer@latest
 
    # Multiple formats at once
    sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -f "sonar" -f "cobertura" -f "jacoco"
+
+   # Merge multiple coverage JSONs of the same type (e.g. two deploy runs)
+   sf acc-transformer transform -j "coverage/coverage/coverage.json" -j "coverage2/coverage/coverage.json" -r "coverage.xml" -f "sonar"
    ```
 
 3. **Upload to your tool** — see [CI/CD Integration](#cicd-integration).
@@ -111,11 +114,14 @@ Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis):
 
 ```
 USAGE
-  $ sf acc-transformer transform -j <value> [-r <value>] [-f <value>] [-i <value>] [-e <value>]
-                                            [--min-coverage <value>] [--max-annotations <value>] [--json]
+  $ sf acc-transformer transform -j <value>... [-r <value>] [-f <value>] [-i <value>] [-e <value>]
+                                               [--min-coverage <value>] [--max-annotations <value>] [--json]
 
 FLAGS
-  -j, --coverage-json=<value>             Path to the code coverage JSON from deploy or test.
+  -j, --coverage-json=<value>...          Path to a code coverage JSON from deploy or test. Repeat to merge
+                                          multiple files. When the same Apex file appears in more than one
+                                          input, covered lines are unioned across all inputs. All files must
+                                          be the same type (deploy or test).
   -r, --output-report=<value>             Output path (e.g. coverage.xml). Default: coverage.[xml|info] by format.
   -f, --format=<value>                    Output format (repeat for multiple). Default: sonar.
                                           Multiple formats append to filename, e.g. coverage-sonar.xml.
@@ -344,6 +350,12 @@ Resolve by renaming one of the files or using `--ignore-package-directory` to ex
 
 ```
 Warning: None of the files listed in the coverage JSON were processed. The coverage report will be empty.
+```
+
+**Mixed coverage types** — All `-j` inputs must be the same type (either all deploy or all test):
+
+```
+Error (1): All coverage JSON files must be the same type (deploy or test).
 ```
 
 **Unknown JSON structure** — Input is not from deploy or test coverage:
