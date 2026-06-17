@@ -389,6 +389,45 @@ apex-tests:
         path: coverage.xml
 ```
 
+### Azure DevOps
+
+```yaml
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+    displayName: Set up Node.js
+
+  - script: npm install -g @salesforce/cli@latest
+    displayName: Install Salesforce CLI
+
+  - script: echo y | sf plugins install apex-code-coverage-transformer
+    displayName: Install Apex Code Coverage Transformer
+
+  - script: echo $(SFDX_AUTH_URL) | sf org login sfdx-url --sfdx-url-stdin --alias ci-org
+    displayName: Authenticate to Salesforce
+
+  - script: sf apex run test --code-coverage --output-dir coverage --target-org ci-org
+    displayName: Run Apex Tests
+
+  - script: sf acc-transformer transform -j "coverage/test-result-codecoverage.json" -r "coverage.xml" -f "cobertura"
+    displayName: Transform Coverage to Cobertura
+
+  - task: PublishCodeCoverageResults@2
+    inputs:
+      summaryFileLocation: coverage.xml
+      pathToSources: $(Build.SourcesDirectory)
+    displayName: Publish Coverage to Azure DevOps
+```
+
+Set `SFDX_AUTH_URL` as a secret pipeline variable. Coverage appears in the pipeline's **Code Coverage** tab.
+
 ## Automatic Transformation (Hook)
 
 Create `.apexcodecovtransformer.config.json` in the project root to transform coverage automatically after:
