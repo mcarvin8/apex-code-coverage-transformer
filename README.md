@@ -120,8 +120,10 @@ USAGE
 FLAGS
   -j, --coverage-json=<value>...          Path to a code coverage JSON from deploy or test. Repeat to merge
                                           multiple files. When the same Apex file appears in more than one
-                                          input, covered lines are unioned across all inputs. All files must
-                                          be the same type (deploy or test).
+                                          input, covered lines are unioned across all inputs — if a line is
+                                          covered in any input it is counted as covered in the final report,
+                                          even if it is uncovered in others. All files must be the same type
+                                          (deploy or test).
   -r, --output-report=<value>             Output path (e.g. coverage.xml). Default: coverage.[xml|info] by format.
   -f, --format=<value>                    Output format (repeat for multiple). Default: sonar.
                                           Multiple formats append to filename, e.g. coverage-sonar.xml.

@@ -19,7 +19,7 @@ Transform Salesforce Apex code coverage JSONs created during deployments and tes
 
 # flags.coverage-json.summary
 
-Path to a code coverage JSON file created by the Salesforce CLI deploy or test command. Repeat the flag to merge multiple files. When the same Apex file appears in multiple inputs, covered lines are unioned across all inputs.
+Path to a code coverage JSON file created by the Salesforce CLI deploy or test command. Repeat the flag to merge multiple files. When the same Apex file appears in multiple inputs, covered lines are unioned across all inputs — if a line is covered in any input it is counted as covered in the final report, even if it is uncovered in others.
 
 # flags.output-report.summary
 
