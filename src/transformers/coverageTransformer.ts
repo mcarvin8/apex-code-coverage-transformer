@@ -1,30 +1,23 @@
 /* eslint-disable no-await-in-loop */
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+'use strict';
 
-import { matchesGlob } from '../utils/globMatcher.js';
-import { getCoverageHandler } from '../handlers/getHandler.js';
-import { DeployCoverageData, TestCoverageData, CoverageProcessingContext } from '../utils/types.js';
+import {
+  CoverageInput,
+  DeployCoverageData,
+  TestCoverageData,
+  CoverageProcessingContext,
+  TransformOptions,
+} from '../utils/types.js';
 import { getPackageDirectories } from '../utils/getPackageDirectories.js';
-import { findFilePath } from '../utils/findFilePath.js';
 import { buildFilePathCache } from '../utils/buildFilePathCache.js';
-import { setCoveredLines, type SetCoveredLinesResult } from '../utils/setCoveredLines.js';
 import { getConcurrencyThreshold } from '../utils/getConcurrencyThreshold.js';
 import { checkCoverageDataType } from '../utils/setCoverageDataType.js';
-import { mapLimit } from '../utils/mapLimit.js';
+import { tryReadJson } from '../utils/readJson.js';
 import { generateAndWriteReport } from './reportGenerator.js';
 import { mergeDeployCoverageData, mergeTestCoverageData } from './coverageDataMerger.js';
+import { createHandlers, processDeployCoverage, processTestCoverage } from './coverageProcessor.js';
 
-type CoverageInput = DeployCoverageData | TestCoverageData[];
-
-type LineTotals = { totalLines: number; coveredLines: number };
-type ProcessResult = { processed: number } & LineTotals;
-
-export type TransformOptions = {
-  minCoverage?: number;
-  maxAnnotations?: number;
-  excludePatterns?: string[];
-};
+export { TransformOptions };
 
 export async function transformCoverageReport(
   jsonFilePaths: string[],
@@ -76,15 +69,10 @@ export async function transformCoverageReport(
     excludePatterns: options?.excludePatterns ?? [],
   };
 
-  let processResult: ProcessResult;
-
-  if (commandType === 'DeployCoverageData') {
-    const merged = mergeDeployCoverageData(parsedItems as DeployCoverageData[]);
-    processResult = await processDeployCoverage(merged, context);
-  } else {
-    const merged = mergeTestCoverageData(parsedItems as TestCoverageData[][]);
-    processResult = await processTestCoverage(merged, context);
-  }
+  const processResult =
+    commandType === 'DeployCoverageData'
+      ? await processDeployCoverage(mergeDeployCoverageData(parsedItems as DeployCoverageData[]), context)
+      : await processTestCoverage(mergeTestCoverageData(parsedItems as TestCoverageData[][]), context);
 
   if (processResult.processed === 0) {
     warnings.push('None of the files listed in the coverage JSON were processed. The coverage report will be empty.');
@@ -107,116 +95,4 @@ export async function transformCoverageReport(
   }
 
   return { finalPaths, warnings, lineRate };
-}
-
-function hasSourceContent(
-  result: SetCoveredLinesResult,
-): result is { updatedLines: Record<string, number>; sourceContent: string } {
-  return typeof result === 'object' && result !== null && 'sourceContent' in result;
-}
-
-async function readSourceFile(absolutePath: string): Promise<string | undefined> {
-  try {
-    return await readFile(absolutePath, 'utf-8');
-  } catch {
-    return undefined;
-  }
-}
-
-async function tryReadJson(path: string, warnings: string[]): Promise<string | null> {
-  try {
-    return await readFile(path, 'utf-8');
-  } catch {
-    warnings.push(`Failed to read ${path}. Confirm file exists.`);
-    return null;
-  }
-}
-
-function createHandlers(formats: string[]): Map<string, ReturnType<typeof getCoverageHandler>> {
-  const handlers = new Map<string, ReturnType<typeof getCoverageHandler>>();
-  for (const format of formats) {
-    handlers.set(format, getCoverageHandler(format));
-  }
-  return handlers;
-}
-
-function countLines(lines: Record<string, number>): LineTotals {
-  const totalLines = Object.keys(lines).length;
-  const coveredLines = Object.values(lines).filter((v) => v === 1).length;
-  return { totalLines, coveredLines };
-}
-
-async function processDeployCoverage(
-  data: DeployCoverageData,
-  context: CoverageProcessingContext,
-): Promise<ProcessResult> {
-  let processed = 0;
-  let totalLines = 0;
-  let coveredLines = 0;
-
-  await mapLimit(Object.keys(data), context.concurrencyLimit, async (fileName: string) => {
-    const fileInfo = data[fileName];
-    const formattedName = fileName.replace(/no-map[\\/]+/, '');
-    const path = findFilePath(formattedName, context.filePathCache);
-
-    if (!path) {
-      context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
-      return;
-    }
-
-    if (context.excludePatterns.some((pattern) => matchesGlob(path, pattern, { matchBase: true }))) {
-      return;
-    }
-
-    const setCoveredResult = await setCoveredLines(path, context.repoRoot, fileInfo.s, context.handlers.has('html'));
-    const updatedLines = hasSourceContent(setCoveredResult) ? setCoveredResult.updatedLines : setCoveredResult;
-    const sourceContent = hasSourceContent(setCoveredResult) ? setCoveredResult.sourceContent : undefined;
-    fileInfo.s = updatedLines;
-
-    const counts = countLines(updatedLines);
-    totalLines += counts.totalLines;
-    coveredLines += counts.coveredLines;
-
-    for (const handler of context.handlers.values()) {
-      handler.processFile(path, formattedName, updatedLines, sourceContent);
-    }
-    processed++;
-  });
-
-  return { processed, totalLines, coveredLines };
-}
-
-async function processTestCoverage(
-  data: TestCoverageData[],
-  context: CoverageProcessingContext,
-): Promise<ProcessResult> {
-  let processed = 0;
-  let totalLines = 0;
-  let coveredLines = 0;
-
-  await mapLimit(data, context.concurrencyLimit, async (entry: TestCoverageData) => {
-    const formattedName = entry.name.replace(/no-map[\\/]+/, '');
-    const path = findFilePath(formattedName, context.filePathCache);
-
-    if (!path) {
-      context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
-      return;
-    }
-
-    if (context.excludePatterns.some((pattern) => matchesGlob(path, pattern, { matchBase: true }))) {
-      return;
-    }
-
-    const counts = countLines(entry.lines);
-    totalLines += counts.totalLines;
-    coveredLines += counts.coveredLines;
-
-    const sourceContent = context.handlers.has('html') ? await readSourceFile(join(context.repoRoot, path)) : undefined;
-    for (const handler of context.handlers.values()) {
-      handler.processFile(path, formattedName, entry.lines, sourceContent);
-    }
-    processed++;
-  });
-
-  return { processed, totalLines, coveredLines };
 }
