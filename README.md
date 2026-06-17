@@ -319,6 +319,8 @@ Create `.apexcodecovtransformer.config.json` in the project root to transform co
 - `sf hardis project deploy smart` (if sfdx-hardis installed and `COVERAGE_FORMATTER_JSON=true`)
 - `sf hardis org test apex` (if sfdx-hardis installed)
 
+> **Note:** The hook fires once per command and always processes a single coverage JSON. It cannot merge multiple inputs. If you need to merge coverage from multiple runs (e.g. split test batches), run the `sf acc-transformer transform` command manually with multiple `-j` flags after all runs complete.
+
 Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), [SFDX Hardis](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json).
 
 | Key                        | Required   | Description                                                                                                                                  |
