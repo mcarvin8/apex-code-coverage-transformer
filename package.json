@@ -123,11 +123,10 @@
       "clean": "if-file-deleted"
     },
     "format": {
-      "command": "prettier --write \"+(src|test|schemas)/**/*.+(ts|js|json)\"",
+      "command": "prettier --write \"+(src|test)/**/*.+(ts|js|json)\"",
       "files": [
         "src/**/*.ts",
         "test/**/*.ts",
-        "schemas/**/*.json",
         ".prettier*"
       ],
       "output": []
