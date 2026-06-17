@@ -46,6 +46,17 @@ export type CoverageProcessingContext = {
   excludePatterns: string[];
 };
 
+export type CoverageInput = DeployCoverageData | TestCoverageData[];
+
+export type LineTotals = { totalLines: number; coveredLines: number };
+export type ProcessResult = { processed: number } & LineTotals;
+
+export type TransformOptions = {
+  minCoverage?: number;
+  maxAnnotations?: number;
+  excludePatterns?: string[];
+};
+
 type SonarLine = {
   '@lineNumber': number;
   '@covered': boolean;

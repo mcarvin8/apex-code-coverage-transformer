@@ -20,6 +20,7 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       summary: messages.getMessage('flags.coverage-json.summary'),
       char: 'j',
       required: true,
+      multiple: true,
     }),
     'output-report': Flags.file({
       summary: messages.getMessage('flags.output-report.summary'),

@@ -22,7 +22,9 @@ import {
   inputJsons,
   invalidJson,
   deployCoverage,
+  deployCoverage2,
   testCoverage,
+  testCoverage2,
   samplesPackagePath,
 } from '../../utils/testConstants.js';
 import { postTestCleanup } from '../../utils/testCleanup.js';
@@ -39,12 +41,12 @@ describe('acc-transformer transform unit tests', () => {
 
   inputJsons.forEach(({ label, path }) => {
     it(`transforms the ${label} command JSON file into all output formats`, async () => {
-      await transformCoverageReport(path, `${label}.xml`, formatOptions, [samplesPackagePath]);
+      await transformCoverageReport([path], `${label}.xml`, formatOptions, [samplesPackagePath]);
     });
   });
   it('confirms a failure on an invalid JSON file.', async () => {
     try {
-      await transformCoverageReport(invalidJson, 'coverage.xml', ['sonar'], []);
+      await transformCoverageReport([invalidJson], 'coverage.xml', ['sonar'], []);
       throw new Error('Command did not fail as expected');
     } catch (error) {
       if (error instanceof Error) {
@@ -57,12 +59,12 @@ describe('acc-transformer transform unit tests', () => {
     }
   });
   it('confirms a warning with a JSON file that does not exist.', async () => {
-    const result = await transformCoverageReport('nonexistent.json', 'coverage.xml', ['sonar'], []);
+    const result = await transformCoverageReport(['nonexistent.json'], 'coverage.xml', ['sonar'], []);
     expect(result.warnings).toContain('Failed to read nonexistent.json. Confirm file exists.');
   });
   it('ignore a package directory and produce a warning on the deploy command report.', async () => {
     const result = await transformCoverageReport(
-      deployCoverage,
+      [deployCoverage],
       'coverage.xml',
       ['sonar'],
       ['packaged', 'force-app', samplesPackagePath],
@@ -75,7 +77,7 @@ describe('acc-transformer transform unit tests', () => {
   });
   it('ignore a package directory and produce a warning on the test command report.', async () => {
     const result = await transformCoverageReport(
-      testCoverage,
+      [testCoverage],
       'coverage.xml',
       ['sonar'],
       ['packaged', samplesPackagePath],
@@ -83,29 +85,29 @@ describe('acc-transformer transform unit tests', () => {
     expect(result.warnings).toContain('The file name AccountTrigger was not found in any package directory.');
   });
   it('create a cobertura report using only 1 package directory', async () => {
-    await transformCoverageReport(deployCoverage, 'coverage.xml', ['cobertura'], ['packaged', 'force-app']);
+    await transformCoverageReport([deployCoverage], 'coverage.xml', ['cobertura'], ['packaged', 'force-app']);
   });
   it('create a jacoco report using only 1 package directory', async () => {
-    await transformCoverageReport(deployCoverage, 'coverage.xml', ['jacoco'], ['packaged', 'force-app']);
+    await transformCoverageReport([deployCoverage], 'coverage.xml', ['jacoco'], ['packaged', 'force-app']);
   });
   it('returns the overall line rate in the result', async () => {
-    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath]);
+    const result = await transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath]);
     expect(result.lineRate).toBeGreaterThanOrEqual(0);
     expect(result.lineRate).toBeLessThanOrEqual(1);
   });
   it('does not throw when coverage meets the minCoverage threshold', async () => {
     await expect(
-      transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 0 }),
+      transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 0 }),
     ).resolves.toBeDefined();
   });
   it('throws when overall coverage is below the minCoverage threshold', async () => {
     await expect(
-      transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 100 }),
+      transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 100 }),
     ).rejects.toThrow(/below the required minimum of 100%/);
   });
   it('passes maxAnnotations through to the github-actions generator', async () => {
     const result = await transformCoverageReport(
-      deployCoverage,
+      [deployCoverage],
       'coverage.xml',
       ['github-actions'],
       [samplesPackagePath],
@@ -116,7 +118,12 @@ describe('acc-transformer transform unit tests', () => {
   it('handles source file read failure gracefully when generating HTML from test coverage', async () => {
     shouldSimulateReadFailureForAccountTrigger = true;
     try {
-      const result = await transformCoverageReport(testCoverage, 'read-fail-test.xml', ['html'], [samplesPackagePath]);
+      const result = await transformCoverageReport(
+        [testCoverage],
+        'read-fail-test.xml',
+        ['html'],
+        [samplesPackagePath],
+      );
       expect(result.finalPaths.length).toBeGreaterThan(0);
     } finally {
       shouldSimulateReadFailureForAccountTrigger = false;
@@ -127,7 +134,7 @@ describe('acc-transformer transform unit tests', () => {
     // With minCoverage=0: "0 < 0" is false → no throw. If mutated to "<=", "0 <= 0" is true → throws.
     await expect(
       transformCoverageReport(
-        deployCoverage,
+        [deployCoverage],
         'coverage.xml',
         ['sonar'],
         ['packaged', 'force-app', samplesPackagePath],
@@ -139,7 +146,7 @@ describe('acc-transformer transform unit tests', () => {
   });
   it('produces one finalPath entry per format', async () => {
     const result = await transformCoverageReport(
-      deployCoverage,
+      [deployCoverage],
       'coverage.xml',
       ['sonar', 'cobertura'],
       [samplesPackagePath],
@@ -147,12 +154,12 @@ describe('acc-transformer transform unit tests', () => {
     expect(result.finalPaths).toHaveLength(2);
   });
   it('returns lineRate=0 and includes path in finalPaths when JSON cannot be read', async () => {
-    const result = await transformCoverageReport('nonexistent-file.json', 'coverage.xml', ['sonar'], []);
+    const result = await transformCoverageReport(['nonexistent-file.json'], 'coverage.xml', ['sonar'], []);
     expect(result.lineRate).toBe(0);
     expect(result.finalPaths).toContain('coverage.xml');
   });
   it('excludes matching files from deploy coverage using excludePatterns', async () => {
-    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+    const result = await transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], {
       excludePatterns: ['*.trigger', '*.cls'],
     });
     expect(result.warnings).toContain(
@@ -161,7 +168,7 @@ describe('acc-transformer transform unit tests', () => {
     expect(result.lineRate).toBe(0);
   });
   it('non-matching files are still processed when excludePatterns only excludes some deploy files', async () => {
-    const result = await transformCoverageReport(deployCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+    const result = await transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], {
       excludePatterns: ['*.trigger'],
     });
     expect(result.warnings).not.toContain(
@@ -170,7 +177,7 @@ describe('acc-transformer transform unit tests', () => {
     expect(result.lineRate).toBeGreaterThan(0);
   });
   it('excludes matching files from test coverage using excludePatterns', async () => {
-    const result = await transformCoverageReport(testCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+    const result = await transformCoverageReport([testCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], {
       excludePatterns: ['*.trigger', '*.cls'],
     });
     expect(result.warnings).toContain(
@@ -179,12 +186,57 @@ describe('acc-transformer transform unit tests', () => {
     expect(result.lineRate).toBe(0);
   });
   it('non-matching files are still processed when excludePatterns only excludes some test files', async () => {
-    const result = await transformCoverageReport(testCoverage, 'coverage.xml', ['sonar'], [samplesPackagePath], {
+    const result = await transformCoverageReport([testCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], {
       excludePatterns: ['*.trigger'],
     });
     expect(result.warnings).not.toContain(
       'None of the files listed in the coverage JSON were processed. The coverage report will be empty.',
     );
     expect(result.lineRate).toBeGreaterThan(0);
+  });
+
+  // Multi-input tests
+  it('merges two deploy coverage JSONs, union-ing covered lines for the same class', async () => {
+    const single = await transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath]);
+    const merged = await transformCoverageReport(
+      [deployCoverage, deployCoverage2],
+      'coverage.xml',
+      ['sonar'],
+      [samplesPackagePath],
+    );
+    // deploy_coverage_2 covers lines 52+53 of AccountTrigger which are 0 in deploy_coverage → merged lineRate higher
+    expect(merged.lineRate).toBeGreaterThan(single.lineRate);
+  });
+  it('merges two test coverage JSONs, union-ing covered lines for the same entry name', async () => {
+    const single = await transformCoverageReport([testCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath]);
+    const merged = await transformCoverageReport(
+      [testCoverage, testCoverage2],
+      'coverage.xml',
+      ['sonar'],
+      [samplesPackagePath],
+    );
+    // test_coverage_2 covers lines 52+53 of AccountProfile which are 0 in test_coverage → merged lineRate higher
+    expect(merged.lineRate).toBeGreaterThan(single.lineRate);
+  });
+  it('throws when mixing deploy and test coverage JSONs', async () => {
+    await expect(
+      transformCoverageReport([deployCoverage, testCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath]),
+    ).rejects.toThrow('All coverage JSON files must be the same type (deploy or test).');
+  });
+  it('processes valid file and warns on missing file when given mixed-existence paths', async () => {
+    const result = await transformCoverageReport(
+      [deployCoverage, 'nonexistent.json'],
+      'coverage.xml',
+      ['sonar'],
+      [samplesPackagePath],
+    );
+    expect(result.warnings).toContain('Failed to read nonexistent.json. Confirm file exists.');
+    expect(result.lineRate).toBeGreaterThan(0);
+  });
+  it('returns lineRate=0 when all provided paths are unreadable', async () => {
+    const result = await transformCoverageReport(['missing-a.json', 'missing-b.json'], 'coverage.xml', ['sonar'], []);
+    expect(result.lineRate).toBe(0);
+    expect(result.warnings).toContain('Failed to read missing-a.json. Confirm file exists.');
+    expect(result.warnings).toContain('Failed to read missing-b.json. Confirm file exists.');
   });
 });

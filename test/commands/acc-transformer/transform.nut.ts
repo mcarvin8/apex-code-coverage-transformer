@@ -12,6 +12,7 @@ import {
   invalidJson,
   samplesPackagePath,
   deployCoverage,
+  deployCoverage2,
   testCoverage,
 } from '../../utils/testConstants.js';
 import { getExtensionForFormat } from '../../../src/transformers/reportGenerator.js';
@@ -75,6 +76,20 @@ describe('acc-transformer transform NUTs', () => {
     expect(xml).toContain('AccountTrigger');
 
     await rm(outputPath).catch(() => {});
+  });
+
+  it('accepts multiple --coverage-json flags and produces a merged report', async () => {
+    const outputPath = resolve('multi-input-deploy.xml');
+    const command = `acc-transformer transform --coverage-json "${deployCoverage}" --coverage-json "${deployCoverage2}" --output-report "${outputPath}" --format sonar -i "${samplesPackagePath}"`;
+    const output = execCmd(command, { ensureExitCode: 0 }).shellOutput.stdout;
+    expect(output).toContain(outputPath);
+    await rm(outputPath).catch(() => {});
+  });
+
+  it('exits with an error when mixing deploy and test coverage JSON types', async () => {
+    const command = `acc-transformer transform --coverage-json "${deployCoverage}" --coverage-json "${testCoverage}" --format sonar`;
+    const error = execCmd(command, { ensureExitCode: 1 }).shellOutput.stderr;
+    expect(error).toContain('All coverage JSON files must be the same type (deploy or test).');
   });
 
   it('excludes a single class by basename glob on test coverage', async () => {
