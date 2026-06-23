@@ -7,7 +7,7 @@ import { SfdxProject } from './types.js';
 import { getRepoRoot } from './getRepoRoot.js';
 
 export async function getPackageDirectories(
-  ignoreDirectories: string[]
+  ignoreDirectories: string[],
 ): Promise<{ repoRoot: string; packageDirectories: string[] }> {
   const { repoRoot, dxConfigFilePath } = (await getRepoRoot()) as {
     repoRoot: string;

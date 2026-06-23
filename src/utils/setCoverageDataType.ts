@@ -66,7 +66,7 @@ function isTestCoverageDataArray(data: unknown): data is TestCoverageData[] {
 }
 
 export function checkCoverageDataType(
-  data: DeployCoverageData | TestCoverageData[]
+  data: DeployCoverageData | TestCoverageData[],
 ): 'DeployCoverageData' | 'TestCoverageData' | 'Unknown' {
   if (isDeployCoverageData(data)) return 'DeployCoverageData';
   if (isTestCoverageDataArray(data)) return 'TestCoverageData';

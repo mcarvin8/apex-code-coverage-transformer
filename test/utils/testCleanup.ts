@@ -18,7 +18,7 @@ export async function postTestCleanup(): Promise<void> {
       inputJsons.map(({ label }) => {
         const reportExtension = getExtensionForFormat(format);
         return resolve(`${label}-${format}${reportExtension}`);
-      })
+      }),
     )
     .concat(defaultPath, resolve('read-fail-test.html'));
 
