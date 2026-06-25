@@ -97,7 +97,7 @@
     "test:compile": "wireit",
     "test:mutation": "stryker run",
     "test:mutation:incremental": "node scripts/incremental-mutation.mjs",
-    "test:nuts": "oclif manifest && vitest run --config ./vitest.nut.config.ts",
+    "test:nuts": "wireit",
     "test:only": "wireit",
     "version": "oclif readme"
   },
@@ -172,6 +172,19 @@
         "test:compile",
         "test:only",
         "lint"
+      ]
+    },
+    "test:nuts": {
+      "command": "vitest run --config ./vitest.nut.config.ts && shx rm -f oclif.manifest.json oclif.lock *.tsbuildinfo",
+      "files": [
+        "test/**/*.nut.ts",
+        "**/tsconfig.json",
+        "vitest.nut.config.ts"
+      ],
+      "output": [],
+      "dependencies": [
+        "build",
+        "prepack"
       ]
     },
     "test:only": {
