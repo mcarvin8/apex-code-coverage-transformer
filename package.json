@@ -94,7 +94,6 @@
     "prepack": "wireit",
     "prepare": "husky install",
     "test": "wireit",
-    "test:compile": "wireit",
     "test:mutation": "stryker run",
     "test:mutation:incremental": "node scripts/incremental-mutation.mjs",
     "test:nuts": "wireit",
