@@ -1,10 +1,1 @@
-STAGED=$(git diff --cached --name-only)
-BIOME_STAGED=$(echo "$STAGED" | grep -E '\.(ts|js|tsx|jsx|json)$' || true)
-if [ -n "$BIOME_STAGED" ]; then
-  npx @biomejs/biome check --write --staged
-fi
-if [ -n "$STAGED" ]; then
-  echo "$STAGED" | while IFS= read -r file; do
-    [ -f "$file" ] && git add "$file"
-  done
-fi
+npx lint-staged
