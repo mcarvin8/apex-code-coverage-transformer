@@ -88,7 +88,7 @@
     "compile": "wireit",
     "format": "wireit",
     "lint": "wireit",
-    "lint:dependencies": "knip",
+    "lint:dependencies": "wireit",
     "postpack": "shx rm -f oclif.manifest.json oclif.lock",
     "prepack": "wireit",
     "prepare": "husky install",
@@ -141,6 +141,19 @@
         "**/tsconfig.json"
       ],
       "output": []
+    },
+    "lint:dependencies": {
+      "command": "knip",
+      "files": [
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "knip.config.ts",
+        "package.json"
+      ],
+      "output": [],
+      "dependencies": [
+        "lint"
+      ]
     },
     "prepack": {
       "command": "oclif manifest && oclif readme",
