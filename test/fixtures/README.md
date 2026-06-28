@@ -5,7 +5,7 @@ Test-only data lives under `test/fixtures/` so it’s clear what’s used by tes
 ## Layout
 
 | Folder         | Purpose                                                                                                                                                              |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **inputs/**    | Coverage JSON files produced by Salesforce CLI (deploy/test) and invalid samples. Used as transformer input in unit and NUT tests.                                   |
 | **baselines/** | Expected output for each coverage format. Tests compare transformer output to these files.                                                                           |
 | **samples/**   | Sample Apex classes and triggers used to satisfy `sfdx-project.json` package directories during tests. `testSetup` copies from here into `force-app` and `packaged`. |

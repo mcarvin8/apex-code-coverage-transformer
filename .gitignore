@@ -55,3 +55,8 @@ stdout*.txt
 # stryker mutation testing
 .stryker-tmp
 reports
+
+# megalinter output
+megalinter-reports/
+.megalinter_github_conf/
+mega-linter.log

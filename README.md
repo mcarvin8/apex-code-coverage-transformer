@@ -144,7 +144,7 @@ GLOBAL FLAGS
 Use `-f` / `--format` to choose the output format. Multiple `-f` values produce multiple files with the format in the name (e.g. `coverage-sonar.xml`, `coverage-cobertura.xml`).
 
 | Format         | Description                | Typical use                             | Example                                                                                 |
-| -------------- | -------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------- |
+|----------------|----------------------------|-----------------------------------------|-----------------------------------------------------------------------------------------|
 | sonar          | SonarQube generic coverage | SonarQube, SonarCloud                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"`          |
 | cobertura      | Cobertura XML              | Codecov, Azure, Jenkins, GitLab, GitHub | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`      |
 | jacoco         | JaCoCo XML                 | Codecov, Jenkins, Maven, Gradle         | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "jacoco"`         |
@@ -443,7 +443,7 @@ Create `.apexcodecovtransformer.config.json` in the project root to transform co
 Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), [SFDX Hardis](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json).
 
 | Key                        | Required   | Description                                                                                                                                  |
-| -------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------|
 | `deployCoverageJsonPath`   | For deploy | Path to deploy coverage JSON.                                                                                                                |
 | `testCoverageJsonPath`     | For test   | Path to test coverage JSON.                                                                                                                  |
 | `outputReportPath`         | No         | Output path (default: `coverage.[xml/info/json]` by format).                                                                                 |
