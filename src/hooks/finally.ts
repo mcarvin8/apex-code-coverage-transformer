@@ -6,8 +6,8 @@ import { resolve } from 'node:path';
 import { Hook } from '@oclif/core';
 
 import TransformerTransform from '../commands/acc-transformer/transform.js';
-import { HookFile } from '../utils/types.js';
 import { getRepoRoot } from '../utils/getRepoRoot.js';
+import { HookFile } from '../utils/types.js';
 
 function buildCommandArgs(coverageJsonPath: string, outputReportPath: string, configFile: HookFile): string[] {
   const args: string[] = ['--coverage-json', coverageJsonPath, '--output-report', outputReportPath];
@@ -73,7 +73,7 @@ export const hook: Hook<'finally'> = async function (options) {
   try {
     const jsonString: string = await readFile(configPath, 'utf-8');
     configFile = JSON.parse(jsonString) as HookFile;
-  } catch (error) {
+  } catch {
     return;
   }
 

@@ -1,20 +1,19 @@
 import { writeFile } from 'node:fs/promises';
-import { extname, basename, dirname, join } from 'node:path';
+import { basename, dirname, extname, join } from 'node:path';
 import XMLBuilder from 'fast-xml-builder';
-
-import {
-  AnyCoverageObject,
-  LcovCoverageObject,
-  HtmlCoverageObject,
-  MarkdownCoverageObject,
-  GitHubActionsCoverageObject,
-} from '../utils/types.js';
 import { HandlerRegistry } from '../handlers/HandlerRegistry.js';
 import { builderOptions, XML_HEADER_CONFIG } from '../utils/constants.js';
-import { XmlReportFormat } from '../utils/types.js';
+import {
+  AnyCoverageObject,
+  GitHubActionsCoverageObject,
+  HtmlCoverageObject,
+  LcovCoverageObject,
+  MarkdownCoverageObject,
+  XmlReportFormat,
+} from '../utils/types.js';
+import { generateGitHubActions } from './generators/generateGitHubActions.js';
 import { generateHtml } from './generators/generateHtml.js';
 import { generateMarkdown } from './generators/generateMarkdown.js';
-import { generateGitHubActions } from './generators/generateGitHubActions.js';
 
 export type ReportRenderOptions = {
   maxAnnotations?: number;

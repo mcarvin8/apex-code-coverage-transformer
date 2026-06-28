@@ -9,21 +9,19 @@
     "fast-xml-builder": "1.2.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.1",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@salesforce/cli-plugins-testkit": "5.3.39",
     "@salesforce/dev-config": "4.3.3",
-    "@salesforce/prettier-config": "0.0.4",
     "@stryker-mutator/core": "9.6.1",
     "@stryker-mutator/vitest-runner": "9.6.1",
     "@types/node": "20.19.39",
     "@vitest/coverage-v8": "4.1.5",
-    "eslint-config-salesforce-typescript": "4.0.1",
-    "eslint-plugin-sf-plugin": "1.20.26",
     "husky": "9.1.7",
+    "knip": "6.23.0",
+    "lint-staged": "17.0.8",
     "oclif": "4.22.81",
-    "prettier": "3.8.4",
-    "pretty-quick": "4.2.2",
     "shx": "0.4.0",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
@@ -90,6 +88,7 @@
     "compile": "wireit",
     "format": "wireit",
     "lint": "wireit",
+    "lint:dependencies": "knip",
     "postpack": "shx rm -f oclif.manifest.json oclif.lock",
     "prepack": "wireit",
     "prepare": "husky install",
@@ -124,21 +123,21 @@
       "clean": "if-file-deleted"
     },
     "format": {
-      "command": "prettier --write \"+(src|test)/**/*.+(ts|js|json)\"",
+      "command": "biome format --write src test",
       "files": [
         "src/**/*.ts",
         "test/**/*.ts",
-        ".prettier*"
+        "biome.json"
       ],
       "output": []
     },
     "lint": {
-      "command": "eslint src test --color --cache --cache-location .eslintcache",
+      "command": "biome check src test",
       "files": [
         "src/**/*.ts",
         "test/**/*.ts",
         "messages/**",
-        "**/.eslint*",
+        "biome.json",
         "**/tsconfig.json"
       ],
       "output": []

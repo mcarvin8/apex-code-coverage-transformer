@@ -1,18 +1,18 @@
 /* eslint-disable no-await-in-loop */
 'use strict';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { BaseHandler } from '../../src/handlers/BaseHandler.js';
 import type {
-  SonarCoverageObject,
-  CoberturaCoverageObject,
   CloverCoverageObject,
-  LcovCoverageObject,
-  JaCoCoCoverageObject,
+  CoberturaCoverageObject,
   IstanbulCoverageObject,
+  JaCoCoCoverageObject,
   JsonSummaryCoverageObject,
-  SimpleCovCoverageObject,
+  LcovCoverageObject,
   OpenCoverCoverageObject,
+  SimpleCovCoverageObject,
+  SonarCoverageObject,
 } from '../../src/utils/types.js';
 
 // Create a concrete implementation for testing
@@ -239,11 +239,11 @@ describe('BaseHandler unit tests', () => {
     handler.processFile('path/to/file.cls', 'FileName', lines);
     const result = handler.finalize();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+    // biome-ignore lint/suspicious/noExplicitAny: test accessor for private shape
     expect((result as any).data).toContain('path/to/file.cls:FileName');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+    // biome-ignore lint/suspicious/noExplicitAny: test accessor for private shape
     expect((result as any).data).toContain('total:3,covered:2');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+    // biome-ignore lint/suspicious/noExplicitAny: test accessor for private shape
     expect((result as any).data).toContain('covered-lines:1,3');
   });
 });

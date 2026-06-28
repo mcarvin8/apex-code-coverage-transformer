@@ -1,6 +1,6 @@
 'use strict';
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { generateHtml } from '../../src/transformers/generators/generateHtml.js';
 import type { HtmlCoverageObject } from '../../src/utils/types.js';

@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 'use strict';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { getCoverageHandler } from '../../src/handlers/getHandler.js';
 
@@ -13,7 +13,7 @@ describe('coverage handler unit test', () => {
       if (error instanceof Error) {
         expect(error.message).toContain('Unsupported format: invalid');
       } else {
-        throw new Error('An unknown error type was thrown.');
+        throw new Error('An unknown error type was thrown.', { cause: error });
       }
     }
   });

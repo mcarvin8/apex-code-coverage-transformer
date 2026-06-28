@@ -1,6 +1,6 @@
 'use strict';
 
-import { JaCoCoCoverageObject, JaCoCoPackage, JaCoCoSourceFile, JaCoCoLine } from '../utils/types.js';
+import { JaCoCoCoverageObject, JaCoCoLine, JaCoCoPackage, JaCoCoSourceFile } from '../utils/types.js';
 import { BaseHandler } from './BaseHandler.js';
 import { HandlerRegistry } from './HandlerRegistry.js';
 

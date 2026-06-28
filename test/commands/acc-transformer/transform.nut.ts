@@ -2,22 +2,20 @@
 
 import { readFile, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
-
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { getExtensionForFormat } from '../../../src/transformers/reportGenerator.js';
 import { formatOptions } from '../../../src/utils/constants.js';
+import { compareToBaselines } from '../../utils/baselineCompare.js';
+import { postTestCleanup } from '../../utils/testCleanup.js';
 import {
+  deployCoverage,
+  deployCoverage2,
   inputJsons,
   invalidJson,
   samplesPackagePath,
-  deployCoverage,
-  deployCoverage2,
   testCoverage,
 } from '../../utils/testConstants.js';
-import { getExtensionForFormat } from '../../../src/transformers/reportGenerator.js';
-import { compareToBaselines } from '../../utils/baselineCompare.js';
-import { postTestCleanup } from '../../utils/testCleanup.js';
 import { preTestSetup } from '../../utils/testSetup.js';
 
 describe('acc-transformer transform NUTs', () => {

@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 'use strict';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { JsonSummaryCoverageHandler } from '../../src/handlers/jsonSummary.js';
 

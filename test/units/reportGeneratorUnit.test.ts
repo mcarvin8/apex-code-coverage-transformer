@@ -3,14 +3,13 @@
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { describe, it, expect } from 'vitest';
-
-import { generateAndWriteReport, getExtensionForFormat } from '../../src/transformers/reportGenerator.js';
+import { describe, expect, it } from 'vitest';
+import { CoberturaCoverageHandler } from '../../src/handlers/cobertura.js';
+import { IstanbulCoverageHandler } from '../../src/handlers/istanbulJson.js';
+import { JaCoCoCoverageHandler } from '../../src/handlers/jacoco.js';
 import { LcovCoverageHandler } from '../../src/handlers/lcov.js';
 import { SonarCoverageHandler } from '../../src/handlers/sonar.js';
-import { IstanbulCoverageHandler } from '../../src/handlers/istanbulJson.js';
-import { CoberturaCoverageHandler } from '../../src/handlers/cobertura.js';
-import { JaCoCoCoverageHandler } from '../../src/handlers/jacoco.js';
+import { generateAndWriteReport, getExtensionForFormat } from '../../src/transformers/reportGenerator.js';
 
 // Ensure all handlers are registered
 import '../../src/handlers/getHandler.js';

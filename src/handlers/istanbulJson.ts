@@ -1,6 +1,6 @@
 'use strict';
 
-import { IstanbulCoverageMap, IstanbulCoverageFile, IstanbulCoverageObject, SourceRange } from '../utils/types.js';
+import { IstanbulCoverageFile, IstanbulCoverageMap, IstanbulCoverageObject, SourceRange } from '../utils/types.js';
 import { BaseHandler } from './BaseHandler.js';
 import { HandlerRegistry } from './HandlerRegistry.js';
 
