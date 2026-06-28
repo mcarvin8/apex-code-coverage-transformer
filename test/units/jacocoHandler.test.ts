@@ -1,6 +1,6 @@
 'use strict';
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { JaCoCoCoverageHandler } from '../../src/handlers/jacoco.js';
 

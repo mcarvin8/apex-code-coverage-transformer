@@ -1,21 +1,21 @@
 /* eslint-disable no-await-in-loop */
 'use strict';
 
-import {
-  CoverageInput,
-  DeployCoverageData,
-  TestCoverageData,
-  CoverageProcessingContext,
-  TransformOptions,
-} from '../utils/types.js';
-import { getPackageDirectories } from '../utils/getPackageDirectories.js';
 import { buildFilePathCache } from '../utils/buildFilePathCache.js';
 import { getConcurrencyThreshold } from '../utils/getConcurrencyThreshold.js';
-import { checkCoverageDataType } from '../utils/setCoverageDataType.js';
+import { getPackageDirectories } from '../utils/getPackageDirectories.js';
 import { tryReadJson } from '../utils/readJson.js';
-import { generateAndWriteReport } from './reportGenerator.js';
+import { checkCoverageDataType } from '../utils/setCoverageDataType.js';
+import {
+  CoverageInput,
+  CoverageProcessingContext,
+  DeployCoverageData,
+  TestCoverageData,
+  TransformOptions,
+} from '../utils/types.js';
 import { mergeDeployCoverageData, mergeTestCoverageData } from './coverageDataMerger.js';
 import { createHandlers, processDeployCoverage, processTestCoverage } from './coverageProcessor.js';
+import { generateAndWriteReport } from './reportGenerator.js';
 
 export { TransformOptions };
 

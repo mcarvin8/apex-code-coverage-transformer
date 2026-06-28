@@ -1,5 +1,5 @@
 'use strict';
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 let shouldSimulateReadFailureForAccountTrigger = false;
 
@@ -18,16 +18,16 @@ vi.mock('node:fs/promises', async () => {
 
 import { transformCoverageReport } from '../../../src/transformers/coverageTransformer.js';
 import { formatOptions } from '../../../src/utils/constants.js';
+import { postTestCleanup } from '../../utils/testCleanup.js';
 import {
-  inputJsons,
-  invalidJson,
   deployCoverage,
   deployCoverage2,
+  inputJsons,
+  invalidJson,
+  samplesPackagePath,
   testCoverage,
   testCoverage2,
-  samplesPackagePath,
 } from '../../utils/testConstants.js';
-import { postTestCleanup } from '../../utils/testCleanup.js';
 import { preTestSetup } from '../../utils/testSetup.js';
 
 describe('acc-transformer transform unit tests', () => {
@@ -54,7 +54,7 @@ describe('acc-transformer transform unit tests', () => {
           'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
         );
       } else {
-        throw new Error('An unknown error type was thrown.');
+        throw new Error('An unknown error type was thrown.', { cause: error });
       }
     }
   });

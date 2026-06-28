@@ -1,8 +1,8 @@
 'use strict';
 
-import { mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { buildFilePathCache } from '../../src/utils/buildFilePathCache.js';
 
 describe('buildFilePathCache', () => {

@@ -1,26 +1,26 @@
 /* eslint-disable no-await-in-loop */
+
+import { strictEqual } from 'node:assert';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { strictEqual } from 'node:assert';
-
-import { formatOptions } from '../../src/utils/constants.js';
 import { getExtensionForFormat } from '../../src/transformers/reportGenerator.js';
+import { formatOptions } from '../../src/utils/constants.js';
+import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 import {
-  jacocoBaselinePath,
-  lcovBaselinePath,
-  sonarBaselinePath,
   cloverBaselinePath,
   coberturaBaselinePath,
+  githubActionsBaselinePath,
+  htmlBaselinePath,
   inputJsons,
+  jacocoBaselinePath,
   jsonBaselinePath,
   jsonSummaryBaselinePath,
-  simplecovBaselinePath,
-  opencoverBaselinePath,
-  htmlBaselinePath,
+  lcovBaselinePath,
   markdownBaselinePath,
-  githubActionsBaselinePath,
+  opencoverBaselinePath,
+  simplecovBaselinePath,
+  sonarBaselinePath,
 } from './testConstants.js';
-import { normalizeCoverageReport } from './normalizeCoverageReport.js';
 
 export async function compareToBaselines(): Promise<void> {
   const baselineMap = {

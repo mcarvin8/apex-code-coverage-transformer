@@ -1,6 +1,6 @@
 'use strict';
 
-import { CoberturaCoverageObject, CoberturaPackage, CoberturaClass } from '../utils/types.js';
+import { CoberturaClass, CoberturaCoverageObject, CoberturaPackage } from '../utils/types.js';
 import { BaseHandler } from './BaseHandler.js';
 import { HandlerRegistry } from './HandlerRegistry.js';
 

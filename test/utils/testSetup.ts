@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
-import { mkdir, copyFile, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 
-import { sfdxConfigFile, baselineClassPath, baselineTriggerPath, configJsonString } from './testConstants.js';
+import { baselineClassPath, baselineTriggerPath, configJsonString, sfdxConfigFile } from './testConstants.js';
 
 export async function preTestSetup(): Promise<void> {
   await mkdir('force-app/main/default/classes', { recursive: true });

@@ -1,6 +1,6 @@
 'use strict';
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { checkCoverageDataType } from '../../src/utils/setCoverageDataType.js';
 import { DeployCoverageData, TestCoverageData } from '../../src/utils/types.js';
 

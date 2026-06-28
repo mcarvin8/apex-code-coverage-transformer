@@ -1,6 +1,6 @@
 'use strict';
 
-import { SonarCoverageObject, SonarClass } from '../utils/types.js';
+import { SonarClass, SonarCoverageObject } from '../utils/types.js';
 import { BaseHandler } from './BaseHandler.js';
 import { HandlerRegistry } from './HandlerRegistry.js';
 

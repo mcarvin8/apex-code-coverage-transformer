@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { setCoveredLines } from '../../src/utils/setCoveredLines.js';
 
 const mockGetTotalLines = vi.fn();

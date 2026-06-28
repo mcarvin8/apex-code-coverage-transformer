@@ -3,19 +3,18 @@
 
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-
-import { matchesGlob } from '../utils/globMatcher.js';
 import { getCoverageHandler } from '../handlers/getHandler.js';
+import { findFilePath } from '../utils/findFilePath.js';
+import { matchesGlob } from '../utils/globMatcher.js';
+import { mapLimit } from '../utils/mapLimit.js';
+import { type SetCoveredLinesResult, setCoveredLines } from '../utils/setCoveredLines.js';
 import {
-  DeployCoverageData,
-  TestCoverageData,
   CoverageProcessingContext,
+  DeployCoverageData,
   LineTotals,
   ProcessResult,
+  TestCoverageData,
 } from '../utils/types.js';
-import { findFilePath } from '../utils/findFilePath.js';
-import { setCoveredLines, type SetCoveredLinesResult } from '../utils/setCoveredLines.js';
-import { mapLimit } from '../utils/mapLimit.js';
 
 export function createHandlers(formats: string[]): Map<string, ReturnType<typeof getCoverageHandler>> {
   const handlers = new Map<string, ReturnType<typeof getCoverageHandler>>();

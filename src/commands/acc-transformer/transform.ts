@@ -1,11 +1,11 @@
 'use strict';
 
-import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import { TransformerTransformResult } from '../../utils/types.js';
+import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { transformCoverageReport } from '../../transformers/coverageTransformer.js';
-import { formatOptions } from '../../utils/constants.js';
 import { DEFAULT_MAX_ANNOTATIONS } from '../../transformers/generators/generateGitHubActions.js';
+import { formatOptions } from '../../utils/constants.js';
+import { TransformerTransformResult } from '../../utils/types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('apex-code-coverage-transformer', 'transformer.transform');

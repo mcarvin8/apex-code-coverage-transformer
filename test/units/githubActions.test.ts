@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { GitHubActionsCoverageHandler } from '../../src/handlers/githubActions.js';
 import { generateAndWriteReport } from '../../src/transformers/reportGenerator.js';

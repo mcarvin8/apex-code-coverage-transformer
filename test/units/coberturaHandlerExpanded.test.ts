@@ -1,6 +1,6 @@
 'use strict';
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { CoberturaCoverageHandler } from '../../src/handlers/cobertura.js';
 

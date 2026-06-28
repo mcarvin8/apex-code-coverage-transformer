@@ -1,19 +1,19 @@
 'use strict';
 
 import {
-  CoverageHandler,
-  SonarCoverageObject,
-  CoberturaCoverageObject,
   CloverCoverageObject,
-  LcovCoverageObject,
-  JaCoCoCoverageObject,
-  IstanbulCoverageObject,
-  JsonSummaryCoverageObject,
-  SimpleCovCoverageObject,
-  OpenCoverCoverageObject,
-  HtmlCoverageObject,
-  MarkdownCoverageObject,
+  CoberturaCoverageObject,
+  CoverageHandler,
   GitHubActionsCoverageObject,
+  HtmlCoverageObject,
+  IstanbulCoverageObject,
+  JaCoCoCoverageObject,
+  JsonSummaryCoverageObject,
+  LcovCoverageObject,
+  MarkdownCoverageObject,
+  OpenCoverCoverageObject,
+  SimpleCovCoverageObject,
+  SonarCoverageObject,
 } from '../utils/types.js';
 
 /**

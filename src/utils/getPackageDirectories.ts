@@ -2,9 +2,8 @@
 
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-
-import { SfdxProject } from './types.js';
 import { getRepoRoot } from './getRepoRoot.js';
+import { SfdxProject } from './types.js';
 
 export async function getPackageDirectories(
   ignoreDirectories: string[],

@@ -1,11 +1,11 @@
 'use strict';
 
 import {
-  OpenCoverCoverageObject,
-  OpenCoverModule,
-  OpenCoverFile,
   OpenCoverClass,
+  OpenCoverCoverageObject,
+  OpenCoverFile,
   OpenCoverMethod,
+  OpenCoverModule,
   OpenCoverSequencePoint,
 } from '../utils/types.js';
 import { BaseHandler } from './BaseHandler.js';
