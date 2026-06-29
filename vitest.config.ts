@@ -12,8 +12,8 @@ export default defineConfig({
       reportsDirectory: 'coverage',
       exclude: ['node_modules/**', 'test/**', 'coverage/**', 'lib/**', '**/*.nut.ts', 'src/utils/types.ts'],
       thresholds: {
-        branches: 90,
-        functions: 90,
+        branches: 95,
+        functions: 95,
         lines: 95,
         statements: 95,
       },
