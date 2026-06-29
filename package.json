@@ -93,7 +93,7 @@
     "lint:dependencies": "wireit",
     "postpack": "shx rm -f oclif.manifest.json oclif.lock",
     "prepack": "wireit",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "wireit",
     "test:mutation": "stryker run",
     "test:mutation:incremental": "node scripts/incremental-mutation.mjs",
