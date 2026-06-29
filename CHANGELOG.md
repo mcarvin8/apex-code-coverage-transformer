@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.23.0...v2.23.1) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update all deps, drop Node 20 support ([#323](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/323)) ([a172ba5](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/a172ba53c3dd7dc4521cbf13f70392c0b6f29bd3))
+
 ## [2.23.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.22.1...v2.23.0) (2026-06-17)
 
 
