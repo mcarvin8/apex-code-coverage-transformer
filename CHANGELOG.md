@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.23.1...v2.23.2) (2026-06-29)
+
+
+### Bug Fixes
+
+* **prereq:** fix readme node requirement ([b226970](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/b22697009d80e41b96d4d7dd5f4caf7aef63c014))
+
 ## [2.23.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.23.0...v2.23.1) (2026-06-29)
 
 
