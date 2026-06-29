@@ -60,7 +60,7 @@ Uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in ESM mo
 ## Pull request process
 
 1. Branch from `main` in your fork (e.g. `fix/issue-description`, `feat/new-format`).
-2. Make changes. Confirm `npm run build`, `npm run lint`, and `npm run test:only` pass.
+2. Make changes. Confirm `npm run lint` and `npm run test:only` pass. (`test:nuts` runs `build` automatically via wireit.)
 3. Add or update tests for any behavior change.
 4. Open a PR from your fork to `main`. Describe what changed and why; reference any issues.
 5. Address review feedback. Maintainers merge on approval.
