@@ -6,7 +6,7 @@ Contributions welcome: bug reports, feature requests, doc improvements, and code
 
 ## Requirements
 
-- Node.js ≥ 20.0.0
+- Node.js ≥ 22.0.0
 - npm
 
 ## Development setup
