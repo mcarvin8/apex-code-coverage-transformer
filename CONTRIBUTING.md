@@ -87,7 +87,3 @@ Uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in ESM mo
    - In `test/utils/baselineCompare.ts`, add the constant to `baselineMap`.
    - If the format includes timestamps (e.g. Cobertura, Clover), update `test/utils/normalizeCoverageReport.ts` to strip them for stable comparison.
    - Re-run `npm run test:only` and confirm all tests pass.
-
-## Questions or issues?
-
-Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) for bugs, feature ideas, or questions.
