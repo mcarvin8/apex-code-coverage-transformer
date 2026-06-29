@@ -21,6 +21,8 @@ A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or te
 - [CI/CD Integration](#cicd-integration)
 - [Automatic Transformation (Hook)](#automatic-transformation-hook)
 - [Troubleshooting](#troubleshooting)
+- [Questions or Issues?](#questions-or-issues)
+- [License](#license)
 
 </details>
 
@@ -519,9 +521,9 @@ The coverage report has been written to: coverage.xml
 [16:10:20.826] DEBUG (sf:setCoveredLines): Remapping out-of-range covered line 190 to line 1 in force-app/main/default/triggers/AccountTrigger.trigger (file has 105 lines)
 ```
 
-## Questions or issues?
+## Questions or Issues?
 
-Questions, issues? Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) for bugs, feature ideas, or questions.
+Questions, issues? Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues).
 
 ## License
 
