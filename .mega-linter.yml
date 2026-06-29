@@ -54,6 +54,7 @@ ADDITIONAL_EXCLUDED_DIRECTORIES:
   - lib
   - megalinter-reports
   - test/fixtures
+  - defaults
 
 BASH_SHELLCHECK_FILTER_REGEX_EXCLUDE: (husky)
 
