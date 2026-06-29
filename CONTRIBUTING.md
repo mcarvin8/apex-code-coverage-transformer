@@ -24,8 +24,7 @@ npm run build
 
 ## Code quality
 
-- **Lint:** `npm run lint` — fix all issues before submitting
-- **Format:** `npm run format` — Prettier; enforced in pre-commit via Husky
+- **Lint + Format:** `npm run lint` / `npm run format` — [Biome](https://biomejs.dev/); enforced in pre-commit via Husky
 - **Commit messages:** [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `test:`, `chore:`); enforced by commitlint on commit
 
 ## Testing
