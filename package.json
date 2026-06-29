@@ -98,8 +98,7 @@
     "test:mutation": "stryker run",
     "test:mutation:incremental": "node scripts/incremental-mutation.mjs",
     "test:nuts": "wireit",
-    "test:only": "wireit",
-    "version": "oclif readme"
+    "test:only": "wireit"
   },
   "publishConfig": {
     "access": "public"
