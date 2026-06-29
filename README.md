@@ -9,8 +9,6 @@
 
 A Salesforce CLI plugin that converts Apex code coverage JSON (from deploy or test runs) into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools, keeping coverage visible across pull requests, CI/CD pipelines, and code quality platforms.
 
-> Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) or submit a [pull request](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/main/CONTRIBUTING.md).
-
 <details>
   <summary>Table of Contents</summary>
 
@@ -520,6 +518,10 @@ $ SF_LOG_LEVEL=debug DEBUG=sf:setCoveredLines sf acc-transformer transform -j "c
 The coverage report has been written to: coverage.xml
 [16:10:20.826] DEBUG (sf:setCoveredLines): Remapping out-of-range covered line 190 to line 1 in force-app/main/default/triggers/AccountTrigger.trigger (file has 105 lines)
 ```
+
+## Questions or issues?
+
+Questions, issues? Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues) for bugs, feature ideas, or questions.
 
 ## License
 
