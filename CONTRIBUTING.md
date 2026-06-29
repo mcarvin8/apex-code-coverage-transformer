@@ -27,6 +27,14 @@ npm run build
 - **Lint + Format:** `npm run lint` / `npm run format` — [Biome](https://biomejs.dev/); enforced in pre-commit via Husky
 - **Commit messages:** [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `test:`, `chore:`); enforced by commitlint on commit
 
+## Git hooks (Husky)
+
+| Hook | Runs | What it does |
+|---|---|---|
+| `pre-commit` | on `git commit` | Runs `lint-staged` — applies Biome check + auto-fix to staged `.ts`/`.js` files |
+| `commit-msg` | on `git commit` | Validates the commit message against Conventional Commits via commitlint |
+| `pre-push` | on `git push` | Runs `npm run build` — ensures the project compiles before code leaves your machine |
+
 ## Testing
 
 Uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in ESM mode.
