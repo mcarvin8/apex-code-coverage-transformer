@@ -20,3 +20,6 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
+      commtlint:
+        patterns:
+          - "@commitlint/*"
