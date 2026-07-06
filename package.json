@@ -17,7 +17,7 @@
     "@stryker-mutator/core": "9.6.1",
     "@stryker-mutator/vitest-runner": "9.6.1",
     "@types/node": "25.9.4",
-    "@vitest/coverage-v8": "4.1.9",
+    "@vitest/coverage-v8": "4.1.10",
     "husky": "9.1.7",
     "knip": "6.23.0",
     "lint-staged": "17.0.8",
@@ -25,7 +25,7 @@
     "shx": "0.4.0",
     "ts-node": "10.9.2",
     "typescript": "6.0.3",
-    "vitest": "4.1.9",
+    "vitest": "4.1.10",
     "wireit": "0.14.13"
   },
   "engines": {
