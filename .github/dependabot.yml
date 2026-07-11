@@ -27,3 +27,4 @@ updates:
         patterns:
           - "@salesforce/*"
           - "@oclif/*"
+          - "oclif"
