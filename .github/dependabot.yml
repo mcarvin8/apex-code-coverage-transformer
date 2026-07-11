@@ -23,3 +23,7 @@ updates:
       commitlint:
         patterns:
           - "@commitlint/*"
+      salesforce:
+        patterns:
+          - "@salesforce/*"
+          - "@oclif/*"
