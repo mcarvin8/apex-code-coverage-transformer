@@ -23,7 +23,7 @@
     "lint-staged": "17.0.8",
     "oclif": "4.23.27",
     "shx": "0.4.0",
-    "ts-node": "10.9.2",
+    "tsx": "4.23.1",
     "typescript": "7.0.2",
     "vitest": "4.1.10",
     "wireit": "0.14.13"
