@@ -9,6 +9,8 @@
 
 A Salesforce CLI plugin that transforms (and optionally merges) Apex code coverage JSON from deployments or test runs into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools, keeping coverage visible across pull requests, CI/CD pipelines, and code quality platforms.
 
+> Deploying to Salesforce at API version 67.0 or earlier? Use apex-code-coverage-transformer v2. Deploying to Salesforce at API version 68.0 or newer? Use apex-code-coverage-transformer v3.
+
 <details>
   <summary>Table of Contents</summary>
 
