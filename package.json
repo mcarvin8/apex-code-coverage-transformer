@@ -20,7 +20,7 @@
     "@vitest/coverage-v8": "4.1.10",
     "husky": "9.1.7",
     "knip": "6.26.0",
-    "lint-staged": "17.0.8",
+    "lint-staged": "17.2.0",
     "oclif": "4.23.27",
     "shx": "0.4.0",
     "tsx": "4.23.1",
