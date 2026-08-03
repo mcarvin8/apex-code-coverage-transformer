@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.23.2...v2.23.3) (2026-08-03)
+
+
+### Bug Fixes
+
+* **deps:** bump brace-expansion ([#355](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/355)) ([9cc0b68](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/9cc0b68a5f67a32f9b972069e530ee753c7f6987))
+* **deps:** bump the salesforce group with 2 updates ([#351](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/351)) ([6282192](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/6282192fea23774fdd05a62bcb8ec3cd2711d130))
+
 ## [2.23.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.23.1...v2.23.2) (2026-06-29)
 
 
