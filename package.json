@@ -19,7 +19,7 @@
     "@types/node": "26.1.2",
     "@vitest/coverage-v8": "4.1.10",
     "husky": "9.1.7",
-    "knip": "6.26.0",
+    "knip": "6.31.0",
     "lint-staged": "17.2.0",
     "oclif": "4.23.29",
     "shx": "0.4.0",
