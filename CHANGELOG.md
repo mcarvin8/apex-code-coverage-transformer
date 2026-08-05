@@ -5,6 +5,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.23.4...v3.0.0) (2026-08-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **engines:** minimum supported node version raised from 22.0.0 to 22.19.0.
+
+### Bug Fixes
+
+* **engines:** raise node engine floor to 22.19.0 to match dep tree ([4aa17a8](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/4aa17a8d7f2ec5016766d3c38181b7185a4978e2))
+
 ## [2.23.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v2.23.3...v2.23.4) (2026-08-04)
 
 
