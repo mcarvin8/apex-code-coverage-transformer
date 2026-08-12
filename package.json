@@ -1,7 +1,7 @@
 {
   "name": "apex-code-coverage-transformer",
   "description": "Transform Salesforce Apex code coverage JSON for SonarQube, SonarCloud, GitHub, GitLab, Azure, and Bitbucket",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "dependencies": {
     "@oclif/core": "4.13.3",
     "@salesforce/core": "9.1.1",
@@ -19,7 +19,7 @@
     "@types/node": "26.1.2",
     "@vitest/coverage-v8": "4.1.10",
     "husky": "9.1.7",
-    "knip": "6.32.0",
+    "knip": "6.31.0",
     "lint-staged": "17.3.0",
     "ls-engines": "0.10.1",
     "oclif": "4.23.30",
