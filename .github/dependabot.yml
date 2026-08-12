@@ -15,18 +15,7 @@ updates:
       prefix: "fix(deps)"
       prefix-development: "chore(dev-deps)"
     groups:
-      stryker:
-        patterns:
-          - "@stryker-mutator/*"
-      vitest:
-        patterns:
-          - "vitest"
-          - "@vitest/*"
-      commitlint:
-        patterns:
-          - "@commitlint/*"
-      salesforce:
-        patterns:
-          - "@salesforce/*"
-          - "@oclif/*"
-          - "oclif"
+      dependencies:
+        dependency-type: "production"
+      dev-dependencies:
+        dependency-type: "development"
