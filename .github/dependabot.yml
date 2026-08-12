@@ -9,10 +9,11 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "monday"
     commit-message:
-      prefix: fix(deps)
-      prefix-development: chore(dev-deps)
+      prefix: "fix(deps)"
+      prefix-development: "chore(dev-deps)"
     groups:
       stryker:
         patterns:
