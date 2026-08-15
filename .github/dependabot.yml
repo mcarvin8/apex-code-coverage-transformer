@@ -6,6 +6,10 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "build"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
