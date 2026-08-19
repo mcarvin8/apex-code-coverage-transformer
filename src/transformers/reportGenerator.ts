@@ -1,6 +1,5 @@
 import { writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, join } from 'node:path';
-import XMLBuilder from 'fast-xml-builder';
 import { HandlerRegistry } from '../handlers/HandlerRegistry.js';
 import { builderOptions, XML_HEADER_CONFIG } from '../utils/constants.js';
 import {
@@ -11,6 +10,7 @@ import {
   MarkdownCoverageObject,
   XmlReportFormat,
 } from '../utils/types.js';
+import { XmlBuilder } from '../utils/xmlBuilder.js';
 import { generateGitHubActions } from './generators/generateGitHubActions.js';
 import { generateHtml } from './generators/generateHtml.js';
 import { generateMarkdown } from './generators/generateMarkdown.js';
@@ -69,7 +69,7 @@ function generateReportContent(coverageObj: AnyCoverageObject, format: string, o
 
 function generateXmlContent(coverageObj: AnyCoverageObject, format: string): string {
   const isHeadless = isXmlReportFormat(format);
-  const builder = new XMLBuilder(builderOptions);
+  const builder = new XmlBuilder(builderOptions);
   let xml = builder.build(coverageObj);
 
   if (isHeadless) {

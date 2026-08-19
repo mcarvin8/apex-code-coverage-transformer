@@ -10,19 +10,9 @@ import { XmlHeaderConfig, XmlReportFormat } from './types.js';
  */
 export const formatOptions: string[] = HandlerRegistry.getAvailableFormats();
 export const builderOptions = {
-  commentPropName: '#comment',
-  ignoreAttributes: false,
-  ignoreNameSpace: false,
-  parseTagValue: false,
-  parseNodeValue: false,
-  parseAttributeValue: false,
-  trimValues: true,
-  processEntities: false,
+  attributeNamePrefix: '@',
   format: true,
   indentBy: '  ',
-  suppressBooleanAttributes: false,
-  suppressEmptyNode: true,
-  attributeNamePrefix: '@',
 };
 
 export const XML_HEADER_CONFIG: Record<XmlReportFormat, XmlHeaderConfig> = {
