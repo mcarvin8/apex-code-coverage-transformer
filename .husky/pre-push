@@ -1,5 +1,6 @@
 npm run build
 npm run prepack
+npm run postpack
 
 if ! git diff --quiet -- README.md; then
   echo ""
