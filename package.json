@@ -95,6 +95,7 @@
     "postpack": "shx rm -f oclif.manifest.json oclif.lock",
     "prepack": "wireit",
     "prepare": "husky",
+    "readme": "wireit",
     "test": "wireit",
     "test:mutation": "wireit",
     "test:mutation:incremental": "wireit",
@@ -197,6 +198,21 @@
     },
     "prepack": {
       "command": "oclif manifest && oclif readme",
+      "files": [
+        "src/commands/acc-transformer/transform.ts",
+        "messages/transformer.transform.md",
+        "README.md"
+      ],
+      "dependencies": [
+        "build"
+      ],
+      "output": [
+        "README.md"
+      ],
+      "clean": false
+    },
+    "readme": {
+      "command": "oclif readme",
       "files": [
         "src/commands/acc-transformer/transform.ts",
         "messages/transformer.transform.md",
