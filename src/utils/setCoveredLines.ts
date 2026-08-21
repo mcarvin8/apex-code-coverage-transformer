@@ -7,6 +7,13 @@ export type SetCoveredLinesResult =
   | Record<string, number>
   | { updatedLines: Record<string, number>; sourceContent: string };
 
+function debugLog(message: string): void {
+  if (process.env.SF_LOG_LEVEL === 'debug') {
+    // eslint-disable-next-line no-console
+    console.debug(`[DEBUG] setCoveredLines: ${message}`);
+  }
+}
+
 export async function setCoveredLines(
   filePath: string,
   repoRoot: string,
@@ -26,6 +33,9 @@ export async function setCoveredLines(
     if (status === 1 && lineNumber > totalLines) {
       for (let randomLine = 1; randomLine <= totalLines; randomLine++) {
         if (!usedLines.has(randomLine)) {
+          debugLog(
+            `Remapping out-of-range covered line ${lineNumber} to line ${randomLine} in ${filePath} (file has ${totalLines} lines)`,
+          );
           updatedLines[randomLine.toString()] = status;
           usedLines.add(randomLine);
           break;
