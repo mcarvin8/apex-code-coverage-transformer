@@ -280,6 +280,38 @@ sonar-scanner \
 
 ### GitHub Actions
 
+#### Native Action (skip the sf CLI install)
+
+For GitHub Actions specifically, the transform step can run as a native Action instead of `sf acc-transformer transform` - no need to install `@salesforce/cli` or this plugin just to convert a coverage file:
+
+```yaml
+- name: Transform Coverage
+  uses: mcarvin8/apex-code-coverage-transformer@v3
+  with:
+    coverage-json: coverage/test-result-codecoverage.json
+    output-report: coverage.xml
+    format: sonar
+```
+
+Repeatable inputs (`coverage-json`, `format`, `ignore-package-directory`, `exclude-pattern`) accept one value per line. The action exposes `report-paths`, `coverage-percentage`, and `warnings` as step outputs:
+
+```yaml
+- name: Transform Coverage
+  id: transform
+  uses: mcarvin8/apex-code-coverage-transformer@v3
+  with:
+    coverage-json: coverage/test-result-codecoverage.json
+    format: |
+      sonar
+      markdown
+    min-coverage: 80
+
+- name: Use the coverage percentage
+  run: echo "Coverage was ${{ steps.transform.outputs.coverage-percentage }}%"
+```
+
+`sf acc-transformer transform` remains available for every other CI provider (GitLab, Azure DevOps, Bitbucket) and for local/hook use - see [Automatic Transformation (Hook)](#automatic-transformation-hook) below.
+
 #### Markdown PR comments (built-in)
 
 Skip third-party summary actions by using the built-in `markdown` format:

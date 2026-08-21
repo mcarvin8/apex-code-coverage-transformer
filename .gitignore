@@ -15,6 +15,9 @@ yarn.lock
 # compile source
 lib
 
+# dist/action IS intentionally committed (GitHub Action bundle, consumed
+# straight from the git ref) - do not add it here
+
 # test artifacts
 *xunit.xml
 *checkstyle.xml

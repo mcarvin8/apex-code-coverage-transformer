@@ -84,6 +84,18 @@ jobs:
           NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
           echo "published=true" >> "$GITHUB_OUTPUT"
 
+      # Moves a floating major-version tag (e.g. v3) to the release commit so
+      # GitHub Action consumers can pin `uses: mcarvin8/apex-code-coverage-transformer@v3`
+      # instead of an exact patch version.
+      - name: Move floating major version tag
+        if: steps.publish.outputs.published == 'true'
+        run: |
+          MAJOR="v$(node -p "require('./package.json').version.split('.')[0]")"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -f "$MAJOR"
+          git push origin "$MAJOR" --force
+
       # `npm publish` runs the `prepack` script (oclif manifest && oclif readme),
       # which regenerates README.md's Command Reference against the version
       # release-please just bumped. Push that back to main so the repo's README
