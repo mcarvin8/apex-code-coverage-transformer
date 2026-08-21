@@ -84,19 +84,26 @@ jobs:
           NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
           echo "published=true" >> "$GITHUB_OUTPUT"
 
+      # Rebuilds the Action bundle in case a src/ change since the last release
+      # wasn't manually rebuilt-and-committed in its PR (CI's lint job catches
+      # this on the PR itself, but this keeps main self-healing regardless).
+      - name: Rebuild Action bundle
+        run: npm run build:action
+
       # `npm publish` runs the `prepack` script (oclif manifest && oclif readme),
       # which regenerates README.md's Command Reference against the version
-      # release-please just bumped. Push that back to main so the repo's README
-      # never drifts from what was just published. This must run BEFORE the tag
-      # move below: it leaves README.md modified but uncommitted in the working
-      # tree, and the repo's husky pre-push hook checks README.md is committed
-      # on every push (including a tag push) - pushing the tag first fails it.
-      - name: Commit regenerated README
+      # release-please just bumped. Push both that and the Action bundle rebuild
+      # above back to main so it never drifts from what was just published. This
+      # must run BEFORE the tag move below: it leaves README.md/dist/action
+      # modified but uncommitted in the working tree, and the repo's husky
+      # pre-push hook checks README.md is committed on every push (including a
+      # tag push) - pushing the tag first fails it.
+      - name: Commit regenerated README and Action bundle
         if: steps.publish.outputs.published == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "docs: regenerate command reference [skip ci]"
-          file_pattern: README.md
+          commit_message: "docs: regenerate command reference and Action bundle [skip ci]"
+          file_pattern: 'README.md dist/action/**'
 
       # Moves a floating major-version tag (e.g. v3) to the release commit so
       # GitHub Action consumers can pin `uses: mcarvin8/apex-code-coverage-transformer@v3`
