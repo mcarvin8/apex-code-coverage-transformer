@@ -33,7 +33,7 @@ npm run build
 |--------------|-----------------|-------------------------------------------------------------------------------------|
 | `pre-commit` | on `git commit` | Runs `lint-staged` — applies Biome check + auto-fix to staged `.ts`/`.js` files     |
 | `commit-msg` | on `git commit` | Validates the commit message against Conventional Commits via commitlint            |
-| `pre-push`   | on `git push`   | Runs `npm run build` — ensures the project compiles before code leaves your machine |
+| `pre-push`   | on `git push`   | Runs `npm run readme` and fails if it produced an uncommitted change to README.md's Command Reference |
 
 ## Testing
 
@@ -56,6 +56,19 @@ Uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in ESM mo
   Runs serially against `**/*.nut.ts` using `vitest.nut.config.ts`.
 
 - **Full pipeline:** `npm test` — compile + unit tests + lint.
+
+## GitHub Action bundle
+
+The repo also ships a native GitHub Action (`action.yml` + `dist/action/index.cjs`) alongside the CLI plugin. Unlike `lib/` (gitignored, npm-only build output), `dist/action/index.cjs` **is committed** - GitHub Actions consumers reference it straight from the git ref (`uses: mcarvin8/apex-code-coverage-transformer@v3`), so there's no install/build step on their end to regenerate it.
+
+If your change touches `src/action/**`, `src/transformers/**`, `src/utils/**`, or `src/handlers/**`:
+
+1. Run `npm run build` (or `npm run build:action` directly) to regenerate `dist/action/index.cjs`.
+2. Commit the regenerated file in the same PR as your source change.
+
+CI's `lint` job rebuilds the bundle fresh and diffs it against what's committed - if you forget step 2, it fails with a diff. Fix by running `npm run build:action` and committing `dist/action/`.
+
+Note the bundle only reaches `@v3` consumers on the next release: merging to `main` updates what's on `main` immediately, but the floating `v3` tag only moves inside `release.yml`'s `release` job, which runs on an actual release-please version bump, not on every merge.
 
 ## Pull request process
 
