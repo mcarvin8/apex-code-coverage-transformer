@@ -232,4 +232,40 @@ describe('setCoveredLines unit test', () => {
     expect('sourceContent' in result).toBe(false);
     expect(result).toEqual({ '1': 1, '2': 0 });
   });
+
+  // ── debugLog gating (setCoveredLines.ts) ──
+  // debugLog only prints when SF_LOG_LEVEL=debug is set - confirms both the
+  // silent default and the opt-in debug path documented in README.
+
+  it('does not log a remap when SF_LOG_LEVEL is unset', async () => {
+    const debugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    const originalLevel = process.env.SF_LOG_LEVEL;
+    delete process.env.SF_LOG_LEVEL;
+    try {
+      mockGetTotalLines.mockResolvedValue(3);
+      await setCoveredLines('some/file.cls', '/repo', { '5': 1 });
+      expect(debugSpy).not.toHaveBeenCalled();
+    } finally {
+      if (originalLevel === undefined) delete process.env.SF_LOG_LEVEL;
+      else process.env.SF_LOG_LEVEL = originalLevel;
+      debugSpy.mockRestore();
+    }
+  });
+
+  it('logs a remap when SF_LOG_LEVEL=debug is set', async () => {
+    const debugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    const originalLevel = process.env.SF_LOG_LEVEL;
+    process.env.SF_LOG_LEVEL = 'debug';
+    try {
+      mockGetTotalLines.mockResolvedValue(3);
+      await setCoveredLines('some/file.cls', '/repo', { '5': 1 });
+      expect(debugSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Remapping out-of-range covered line 5 to line 1 in some/file.cls (file has 3 lines)'),
+      );
+    } finally {
+      if (originalLevel === undefined) delete process.env.SF_LOG_LEVEL;
+      else process.env.SF_LOG_LEVEL = originalLevel;
+      debugSpy.mockRestore();
+    }
+  });
 });
