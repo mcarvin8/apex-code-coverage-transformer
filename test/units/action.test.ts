@@ -86,4 +86,27 @@ describe('GitHub Action entrypoint', () => {
 
     expect(core.setFailed).toHaveBeenCalledWith('The provided JSON does not match a known coverage data format.');
   });
+
+  it('defaults output-report to coverage.xml when the input is empty', async () => {
+    stubInputs({ 'output-report': '' }, { 'coverage-json': ['coverage.json'] });
+    transformMock.mockResolvedValue({ finalPaths: ['coverage.xml'], warnings: [], lineRate: 1, success: true });
+
+    await run();
+
+    expect(transformMock).toHaveBeenCalledWith(['coverage.json'], 'coverage.xml', ['sonar'], [], {
+      minCoverage: undefined,
+      maxAnnotations: undefined,
+      excludePatterns: [],
+    });
+  });
+
+  it('fails the action with String(error) when the thrown value is not an Error instance', async () => {
+    stubInputs({ 'output-report': 'coverage.xml' }, { 'coverage-json': ['coverage.json'] });
+    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+    transformMock.mockRejectedValue('a plain string rejection');
+
+    await run();
+
+    expect(core.setFailed).toHaveBeenCalledWith('a plain string rejection');
+  });
 });
