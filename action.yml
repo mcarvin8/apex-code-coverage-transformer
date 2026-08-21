@@ -1,0 +1,56 @@
+name: 'Apex Code Coverage Transformer'
+description: >-
+  Transform Salesforce Apex code coverage JSON (from sf project deploy / sf apex run test) into
+  SonarQube, Cobertura, JaCoCo, LCOV, Clover, HTML, Markdown, GitHub Actions annotations, and more.
+author: 'Matt Carvin'
+branding:
+  icon: 'percent'
+  color: 'blue'
+
+inputs:
+  coverage-json:
+    description: >-
+      Path to a code coverage JSON file created by the Salesforce CLI deploy or test command.
+      One path per line to merge multiple files (covered lines are unioned across inputs).
+    required: true
+  output-report:
+    description: 'Path to the code coverage file that will be created by this action.'
+    required: false
+    default: 'coverage.xml'
+  format:
+    description: >-
+      Output format(s) for the coverage report, one per line. One or more of: clover, cobertura,
+      github-actions, html, jacoco, json, json-summary, lcovonly, markdown, opencover, simplecov,
+      sonar. Defaults to sonar.
+    required: false
+  ignore-package-directory:
+    description: 'Package directory name(s) to ignore when looking for matching files, one per line.'
+    required: false
+  min-coverage:
+    description: >-
+      Minimum required line coverage percentage (0-100). The action fails if overall coverage is
+      below this threshold. Reports are still written and outputs still set before the check.
+    required: false
+  max-annotations:
+    description: >-
+      Maximum number of ::warning annotations to emit when using the github-actions format.
+      Annotations beyond this limit are summarized in a ::notice line.
+    required: false
+    default: '50'
+  exclude-pattern:
+    description: >-
+      Glob pattern(s) for file paths to exclude from the coverage report, one per line. Matched
+      against the relative path from the repo root (e.g. force-app/main/default/classes/MyClass.cls).
+    required: false
+
+outputs:
+  report-paths:
+    description: 'Newline-separated list of paths to the generated report file(s).'
+  coverage-percentage:
+    description: 'Overall line coverage percentage (0-100, 2 decimal places).'
+  warnings:
+    description: 'Newline-separated list of warnings emitted during the transform, if any.'
+
+runs:
+  using: 'node24'
+  main: 'dist/action/index.cjs'

@@ -95,15 +95,18 @@ describe('acc-transformer transform unit tests', () => {
     expect(result.lineRate).toBeGreaterThanOrEqual(0);
     expect(result.lineRate).toBeLessThanOrEqual(1);
   });
-  it('does not throw when coverage meets the minCoverage threshold', async () => {
-    await expect(
-      transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 0 }),
-    ).resolves.toBeDefined();
+  it('reports success when coverage meets the minCoverage threshold', async () => {
+    const result = await transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], {
+      minCoverage: 0,
+    });
+    expect(result.success).toBe(true);
   });
-  it('throws when overall coverage is below the minCoverage threshold', async () => {
-    await expect(
-      transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], { minCoverage: 100 }),
-    ).rejects.toThrow(/below the required minimum of 100%/);
+  it('reports failure without throwing when overall coverage is below the minCoverage threshold', async () => {
+    const result = await transformCoverageReport([deployCoverage], 'coverage.xml', ['sonar'], [samplesPackagePath], {
+      minCoverage: 100,
+    });
+    expect(result.success).toBe(false);
+    expect(result.finalPaths.length).toBeGreaterThan(0);
   });
   it('passes maxAnnotations through to the github-actions generator', async () => {
     const result = await transformCoverageReport(
@@ -129,20 +132,19 @@ describe('acc-transformer transform unit tests', () => {
       shouldSimulateReadFailureForAccountTrigger = false;
     }
   });
-  it('does NOT throw when lineRate=0 and minCoverage=0 (strict < not <=)', async () => {
+  it('reports success when lineRate=0 and minCoverage=0 (strict < not <=)', async () => {
     // When all dirs ignored, no files processed → lineRate=0.
-    // With minCoverage=0: "0 < 0" is false → no throw. If mutated to "<=", "0 <= 0" is true → throws.
-    await expect(
-      transformCoverageReport(
-        [deployCoverage],
-        'coverage.xml',
-        ['sonar'],
-        ['packaged', 'force-app', samplesPackagePath],
-        {
-          minCoverage: 0,
-        },
-      ),
-    ).resolves.toBeDefined();
+    // With minCoverage=0: "0 >= 0" is true → success. If mutated to "<=", would flip to failure.
+    const result = await transformCoverageReport(
+      [deployCoverage],
+      'coverage.xml',
+      ['sonar'],
+      ['packaged', 'force-app', samplesPackagePath],
+      {
+        minCoverage: 0,
+      },
+    );
+    expect(result.success).toBe(true);
   });
   it('produces one finalPath entry per format', async () => {
     const result = await transformCoverageReport(

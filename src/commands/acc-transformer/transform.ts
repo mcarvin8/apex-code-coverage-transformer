@@ -87,6 +87,12 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
       });
     }
 
+    if (!result.success) {
+      this.error(
+        `Coverage of ${(result.lineRate * 100).toFixed(2)}% is below the required minimum of ${flags['min-coverage']}%.`,
+      );
+    }
+
     return { path: result.finalPaths };
   }
 }

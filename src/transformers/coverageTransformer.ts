@@ -25,7 +25,7 @@ export async function transformCoverageReport(
   formats: string[],
   ignoreDirs: string[],
   options?: TransformOptions,
-): Promise<{ finalPaths: string[]; warnings: string[]; lineRate: number }> {
+): Promise<{ finalPaths: string[]; warnings: string[]; lineRate: number; success: boolean }> {
   const warnings: string[] = [];
   const finalPaths: string[] = [];
   const formatAmount: number = formats.length;
@@ -33,7 +33,7 @@ export async function transformCoverageReport(
   const jsonDataItems = await Promise.all(jsonFilePaths.map((p) => tryReadJson(p, warnings)));
   const validData = jsonDataItems.filter((d): d is string => d !== null);
 
-  if (validData.length === 0) return { finalPaths: [outputReportPath], warnings, lineRate: 0 };
+  if (validData.length === 0) return { finalPaths: [outputReportPath], warnings, lineRate: 0, success: true };
 
   const parsedItems = validData.map((d) => JSON.parse(d) as CoverageInput);
   const types = parsedItems.map(checkCoverageDataType);
@@ -88,11 +88,7 @@ export async function transformCoverageReport(
     finalPaths.push(finalPath);
   }
 
-  if (options?.minCoverage !== undefined && lineRate * 100 < options.minCoverage) {
-    throw new Error(
-      `Coverage of ${(lineRate * 100).toFixed(2)}% is below the required minimum of ${options.minCoverage}%.`,
-    );
-  }
+  const success = options?.minCoverage === undefined || lineRate * 100 >= options.minCoverage;
 
-  return { finalPaths, warnings, lineRate };
+  return { finalPaths, warnings, lineRate, success };
 }

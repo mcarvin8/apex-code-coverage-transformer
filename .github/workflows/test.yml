@@ -26,6 +26,11 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Verify Action bundle is up to date
+        run: |
+          npm run build:action
+          git diff --exit-code dist/action
+
       - name: Check unused dependencies
         run: npm run lint:dependencies
 
