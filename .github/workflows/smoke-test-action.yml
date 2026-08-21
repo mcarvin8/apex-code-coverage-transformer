@@ -1,0 +1,78 @@
+# Manual smoke test: published GitHub Action (@v3) against the repo's own
+# fixtures. Not a real Salesforce project - a synthesized sfdx-project.json
+# is enough to exercise the Action end to end on real GitHub Actions infra.
+name: Smoke test (published Action)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  success-path:
+    name: Success path
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Fake an SFDX project around the fixture
+        run: |
+          mkdir -p force-app
+          echo '{"packageDirectories":[{"path":"force-app","default":true}]}' > sfdx-project.json
+
+      - name: Transform Coverage
+        id: transform
+        uses: mcarvin8/apex-code-coverage-transformer@v3
+        with:
+          coverage-json: test/fixtures/inputs/deploy_coverage.json
+          output-report: coverage.xml
+          format: sonar
+
+      - name: Show outputs and report
+        run: |
+          echo "report-paths: ${{ steps.transform.outputs.report-paths }}"
+          echo "coverage-percentage: ${{ steps.transform.outputs.coverage-percentage }}"
+          echo "warnings: ${{ steps.transform.outputs.warnings }}"
+          echo "---"
+          cat coverage.xml
+
+  min-coverage-failure-path:
+    name: min-coverage failure path
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Fake an SFDX project around the fixture
+        run: |
+          mkdir -p force-app
+          echo '{"packageDirectories":[{"path":"force-app","default":true}]}' > sfdx-project.json
+
+      - name: Transform Coverage (expected to fail the threshold)
+        id: transform
+        continue-on-error: true
+        uses: mcarvin8/apex-code-coverage-transformer@v3
+        with:
+          coverage-json: test/fixtures/inputs/deploy_coverage.json
+          output-report: coverage.xml
+          format: sonar
+          min-coverage: '90'
+
+      - name: Confirm the step actually failed
+        run: |
+          if [ "${{ steps.transform.outcome }}" != "failure" ]; then
+            echo "Expected the min-coverage step to fail (outcome was '${{ steps.transform.outcome }}')."
+            exit 1
+          fi
+          echo "Confirmed: min-coverage threshold correctly failed the step."
+
+      - name: Confirm outputs are still set despite the failure
+        run: |
+          if [ -z "${{ steps.transform.outputs.report-paths }}" ]; then
+            echo "Expected report-paths to still be set on a min-coverage failure."
+            exit 1
+          fi
+          echo "report-paths: ${{ steps.transform.outputs.report-paths }}"
+          echo "coverage-percentage: ${{ steps.transform.outputs.coverage-percentage }}"
