@@ -33,7 +33,7 @@ npm run build
 |--------------|-----------------|-------------------------------------------------------------------------------------|
 | `pre-commit` | on `git commit` | Runs `lint-staged` — applies Biome check + auto-fix to staged `.ts`/`.js` files     |
 | `commit-msg` | on `git commit` | Validates the commit message against Conventional Commits via commitlint            |
-| `pre-push`   | on `git push`   | Runs `npm run build` — ensures the project compiles before code leaves your machine |
+| `pre-push`   | on `git push`   | Runs `npm run readme` and fails if it produced an uncommitted change to README.md's Command Reference |
 
 ## Testing
 
