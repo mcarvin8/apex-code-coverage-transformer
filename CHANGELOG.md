@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.2...v3.1.3) (2026-08-21)
+
+
+### Bug Fixes
+
+* **action:** remove @salesforce/core Logger call breaking the bundled Action ([#386](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/386)) ([ae14d34](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/ae14d349058fe9a3ef3e3cff59ec2cfad06a8338))
+
 ## [3.1.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.1...v3.1.2) (2026-08-21)
 
 
