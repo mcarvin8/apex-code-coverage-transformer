@@ -2,18 +2,20 @@
 
 [![NPM](https://img.shields.io/npm/v/apex-code-coverage-transformer.svg?label=apex-code-coverage-transformer)](https://www.npmjs.com/package/apex-code-coverage-transformer)
 [![Downloads/week](https://img.shields.io/npm/dw/apex-code-coverage-transformer.svg)](https://npmjs.org/package/apex-code-coverage-transformer)
+[![GitHub Marketplace](https://img.shields.io/badge/marketplace-apex--code--coverage--transformer-blue?logo=github)](https://github.com/marketplace/actions/apex-code-coverage-transformer)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/LICENSE.md)
 [![Maintainability](https://qlty.sh/badges/11057a07-84da-41af-91fb-b3476e404242/maintainability.svg)](https://qlty.sh/gh/mcarvin8/projects/apex-code-coverage-transformer)
 [![codecov](https://codecov.io/gh/mcarvin8/apex-code-coverage-transformer/graph/badge.svg?token=4IQ4NWTPQZ)](https://codecov.io/gh/mcarvin8/apex-code-coverage-transformer)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fmcarvin8%2Fapex-code-coverage-transformer%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/mcarvin8/apex-code-coverage-transformer/main)
 
-A Salesforce CLI plugin that transforms (and optionally merges) Apex code coverage JSON from deployments or test runs into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools, keeping coverage visible across pull requests, CI/CD pipelines, and code quality platforms.
+Transforms (and optionally merges) Apex code coverage JSON from Salesforce deployments or test runs into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools, keeping coverage visible across pull requests, CI/CD pipelines, and code quality platforms. Available as a **Salesforce CLI plugin** for any provider, and as a **native GitHub Action** for GitHub Actions users who want to skip installing the CLI.
 
 <details>
   <summary>Table of Contents</summary>
 
 - [Prerequisites](#prerequisites)
 - [Install](#install)
+- [GitHub Action](#github-action)
 - [Quick Start](#quick-start)
 - [Usage](#usage)
 - [Command Reference](#command-reference)
@@ -38,6 +40,21 @@ A Salesforce CLI plugin that transforms (and optionally merges) Apex code covera
 ```bash
 sf plugins install apex-code-coverage-transformer@latest
 ```
+
+## GitHub Action
+
+For GitHub Actions, this is also available as a [native Action](https://github.com/marketplace/actions/apex-code-coverage-transformer) - no `sf` CLI or plugin install required:
+
+```yaml
+- name: Transform Coverage
+  uses: mcarvin8/apex-code-coverage-transformer@v3
+  with:
+    coverage-json: coverage/test-result-codecoverage.json
+    output-report: coverage.xml
+    format: sonar
+```
+
+It still needs the checkout to contain `sfdx-project.json` (same as the CLI's [Prerequisites](#prerequisites) above) - use `actions/checkout` first. See [GitHub Actions](#github-actions) under CI/CD Integration for the full input/output reference and more examples.
 
 ## Quick Start
 
