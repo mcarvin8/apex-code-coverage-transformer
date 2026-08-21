@@ -1,6 +1,8 @@
 # Manual smoke test: published GitHub Action (@v3) against the repo's own
-# fixtures. Not a real Salesforce project - a synthesized sfdx-project.json
-# is enough to exercise the Action end to end on real GitHub Actions infra.
+# fixtures. Not a real Salesforce project - copies test/fixtures/samples
+# into a synthesized force-app/ so the fixture's classes/triggers actually
+# get matched (no "not found" warnings, a real coverage percentage), and
+# exercises the Action end to end on real GitHub Actions infra.
 name: Smoke test (published Action)
 
 on:
@@ -20,9 +22,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Fake an SFDX project around the fixture
+      - name: Assemble an SFDX project from the fixtures
         run: |
           mkdir -p force-app
+          cp -r test/fixtures/samples/. force-app/
           echo '{"packageDirectories":[{"path":"force-app","default":true}]}' > sfdx-project.json
 
       - name: Transform Coverage
@@ -48,9 +51,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Fake an SFDX project around the fixture
+      - name: Assemble an SFDX project from the fixtures
         run: |
           mkdir -p force-app
+          cp -r test/fixtures/samples/. force-app/
           echo '{"packageDirectories":[{"path":"force-app","default":true}]}' > sfdx-project.json
 
       - name: Transform Coverage (expected to fail the threshold)
@@ -61,7 +65,7 @@ jobs:
           coverage-json: test/fixtures/inputs/deploy_coverage.json
           output-report: coverage.xml
           format: sonar
-          min-coverage: '90'
+          min-coverage: '100'
 
       - name: Confirm the step actually failed
         run: |
