@@ -1,8 +1,14 @@
-# Manual smoke test: published GitHub Action (@v3) against the repo's own
-# fixtures. Not a real Salesforce project - copies test/fixtures/samples
-# into a synthesized force-app/ so the fixture's classes/triggers actually
-# get matched (no "not found" warnings, a real coverage percentage), and
-# exercises the Action end to end on real GitHub Actions infra.
+# Manual smoke test: exercises the Action end to end on real GitHub Actions
+# infra using real fixture Apex files (test/fixtures/samples) copied into a
+# synthesized force-app/. Not a real Salesforce project, but enough to catch
+# runtime breakage that only surfaces once files actually get matched.
+#
+# Two sources, deliberately not the same:
+# - pull_request: uses `./` (this checkout's actual action.yml/dist/action) -
+#   validates what's about to be merged, so a regression like the one this
+#   test originally caught gets flagged before it ever reaches @v3.
+# - workflow_dispatch: uses `@v3` (the live published tag) - an on-demand
+#   check that what's actually public still works, run manually post-release.
 name: Smoke test (published Action)
 
 on:
@@ -10,13 +16,91 @@ on:
   pull_request:
     paths:
       - '.github/workflows/smoke-test-action.yml'
+      - 'action.yml'
+      - 'dist/action/**'
+      - 'src/action/**'
+      - 'src/transformers/**'
+      - 'src/utils/**'
+      - 'src/handlers/**'
 
 permissions:
   contents: read
 
 jobs:
-  success-path:
-    name: Success path
+  success-path-local:
+    name: Success path (local checkout)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Assemble an SFDX project from the fixtures
+        run: |
+          mkdir -p force-app
+          cp -r test/fixtures/samples/. force-app/
+          echo '{"packageDirectories":[{"path":"force-app","default":true}]}' > sfdx-project.json
+
+      - name: Transform Coverage
+        id: transform
+        uses: ./
+        with:
+          coverage-json: test/fixtures/inputs/deploy_coverage.json
+          output-report: coverage.xml
+          format: sonar
+
+      - name: Show outputs and report
+        run: |
+          echo "report-paths: ${{ steps.transform.outputs.report-paths }}"
+          echo "coverage-percentage: ${{ steps.transform.outputs.coverage-percentage }}"
+          echo "warnings: ${{ steps.transform.outputs.warnings }}"
+          echo "---"
+          cat coverage.xml
+
+  min-coverage-failure-path-local:
+    name: min-coverage failure path (local checkout)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Assemble an SFDX project from the fixtures
+        run: |
+          mkdir -p force-app
+          cp -r test/fixtures/samples/. force-app/
+          echo '{"packageDirectories":[{"path":"force-app","default":true}]}' > sfdx-project.json
+
+      - name: Transform Coverage (expected to fail the threshold)
+        id: transform
+        continue-on-error: true
+        uses: ./
+        with:
+          coverage-json: test/fixtures/inputs/deploy_coverage.json
+          output-report: coverage.xml
+          format: sonar
+          min-coverage: '100'
+
+      - name: Confirm the step actually failed
+        run: |
+          if [ "${{ steps.transform.outcome }}" != "failure" ]; then
+            echo "Expected the min-coverage step to fail (outcome was '${{ steps.transform.outcome }}')."
+            exit 1
+          fi
+          echo "Confirmed: min-coverage threshold correctly failed the step."
+
+      - name: Confirm outputs are still set despite the failure
+        run: |
+          if [ -z "${{ steps.transform.outputs.report-paths }}" ]; then
+            echo "Expected report-paths to still be set on a min-coverage failure."
+            exit 1
+          fi
+          echo "report-paths: ${{ steps.transform.outputs.report-paths }}"
+          echo "coverage-percentage: ${{ steps.transform.outputs.coverage-percentage }}"
+
+  success-path-published:
+    name: Success path (published @v3)
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,8 +128,9 @@ jobs:
           echo "---"
           cat coverage.xml
 
-  min-coverage-failure-path:
-    name: min-coverage failure path
+  min-coverage-failure-path-published:
+    name: min-coverage failure path (published @v3)
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
