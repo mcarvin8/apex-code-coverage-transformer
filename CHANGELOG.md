@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.0.3...v3.1.0) (2026-08-21)
+
+
+### Features
+
+* **action:** add native GitHub Action wrapper ([#376](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/376)) ([83810f9](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/83810f92f29b5592c83ea3feaa63bf7c07f218dc))
+
 ## [3.0.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.0.2...v3.0.3) (2026-08-19)
 
 
