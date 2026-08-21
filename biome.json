@@ -126,6 +126,30 @@
       }
     },
     {
+      "includes": [
+        "src/action/**/*.ts",
+        "src/transformers/**/*.ts",
+        "src/utils/**/*.ts",
+        "src/handlers/**/*.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@salesforce/core": "This tree feeds the bundled GitHub Action (dist/action) and must stay dependency-free. Only node: builtins, relative imports, and @actions/core are allowed here.",
+                  "@salesforce/sf-plugins-core": "Same reason - CLI-only, bundling-unsafe.",
+                  "@oclif/core": "Same reason - CLI-only, bundling-unsafe."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "includes": ["test/**/*.ts"],
       "javascript": {
         "globals": ["describe", "beforeAll", "beforeEach", "afterAll", "expect", "it", "afterEach", "vi", "test"]
