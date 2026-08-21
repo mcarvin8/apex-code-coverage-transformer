@@ -23,6 +23,41 @@ jobs:
         with:
           release-type: node
 
+  # Keeps dist/action/index.cjs current on every push to main, independent of
+  # whether this push is an actual release. A contributor's PR should already
+  # include a fresh bundle (enforced by test.yml's lint job), but this is the
+  # safety net: it ensures main is never stale by the time a maintainer merges
+  # the pending release-please PR, so release-please's own version tag (not
+  # just the floating major tag moved below) always includes a correct bundle.
+  # Race-free with release-please as long as maintainers let this job finish
+  # (and its commit, if any, land) before merging that PR - the release-please
+  # PR itself only touches version/changelog files, never src/, so it can't
+  # race with a bundle rebuild triggered by its own merge.
+  rebuild-dist:
+    name: Keep dist/action fresh
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 'lts/*'
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Rebuild Action bundle
+        run: npm run build:action
+
+      - name: Commit if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: rebuild Action bundle [skip ci]"
+          file_pattern: 'dist/action/**'
+
   unit-tests:
     name: Unit Tests (ubuntu-latest, node LTS)
     runs-on: ubuntu-latest
