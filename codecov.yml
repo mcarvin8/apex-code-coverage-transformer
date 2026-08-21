@@ -14,6 +14,8 @@ ignore:
   - "test/**/*"
   - "lib"
   - "lib/**/*"
+  - "dist"
+  - "dist/**/*"
   - "coverage"
   - "coverage/**/*"
   - "**/*.nut.ts"
