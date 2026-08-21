@@ -1,7 +1,5 @@
 name: 'Apex Code Coverage Transformer'
-description: >-
-  Transform Salesforce Apex code coverage JSON (from sf project deploy / sf apex run test) into
-  SonarQube, Cobertura, JaCoCo, LCOV, Clover, HTML, Markdown, GitHub Actions annotations, and more.
+description: 'Transform Salesforce Apex code coverage JSON into SonarQube, Cobertura, JaCoCo, LCOV, Clover, HTML, Markdown, and more.'
 author: 'Matt Carvin'
 branding:
   icon: 'percent'
