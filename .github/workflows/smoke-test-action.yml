@@ -5,6 +5,9 @@ name: Smoke test (published Action)
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/smoke-test-action.yml'
 
 permissions:
   contents: read
