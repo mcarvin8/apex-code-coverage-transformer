@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.2](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.1...v3.1.2) (2026-08-21)
+
+
+### Bug Fixes
+
+* **action:** shorten description for Marketplace's 125-char limit ([#380](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/380)) ([ff75703](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/ff75703c18133714d430c1959dead12615c0958c))
+
 ## [3.1.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.0...v3.1.1) (2026-08-21)
 
 
