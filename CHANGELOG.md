@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.4](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.3...v3.1.4) (2026-08-24)
+
+
+### Bug Fixes
+
+* **deps:** bump the dependencies group across 1 directory with 3 updates ([#390](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/390)) ([7b3c806](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/7b3c806bc9c000964d3ae0aab9cbc7a2968c24d4))
+
 ## [3.1.3](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.2...v3.1.3) (2026-08-21)
 
 
