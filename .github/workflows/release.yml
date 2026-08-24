@@ -53,7 +53,7 @@ jobs:
         run: npm run build:action
 
       - name: Commit if changed
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: rebuild Action bundle [skip ci]"
           file_pattern: 'dist/action/**'
@@ -128,7 +128,7 @@ jobs:
       # on every push (including a tag push) - pushing the tag first fails it.
       - name: Commit regenerated README
         if: steps.publish.outputs.published == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "docs: regenerate command reference [skip ci]"
           file_pattern: README.md
