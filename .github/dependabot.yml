@@ -13,8 +13,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
     commit-message:
       prefix: "fix(deps)"
       prefix-development: "chore(dev-deps)"
