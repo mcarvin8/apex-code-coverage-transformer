@@ -193,7 +193,7 @@ EXAMPLES
   `sf acc-transformer transform -j "coverage1.json" -j "coverage2.json" -r "coverage.xml" -f "sonar"`
 ```
 
-_See code: [src/commands/acc-transformer/transform.ts](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/v3.1.4/src/commands/acc-transformer/transform.ts)_
+_See code: [src/commands/acc-transformer/transform.ts](https://github.com/mcarvin8/apex-code-coverage-transformer/blob/v3.1.5/src/commands/acc-transformer/transform.ts)_
 <!-- commandsstop -->
 
 ## Coverage Report Formats
