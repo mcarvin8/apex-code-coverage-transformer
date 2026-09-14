@@ -126,12 +126,7 @@
       }
     },
     {
-      "includes": [
-        "src/action/**/*.ts",
-        "src/transformers/**/*.ts",
-        "src/utils/**/*.ts",
-        "src/handlers/**/*.ts"
-      ],
+      "includes": ["src/action/**/*.ts", "src/transformers/**/*.ts", "src/utils/**/*.ts", "src/handlers/**/*.ts"],
       "linter": {
         "rules": {
           "style": {
