@@ -588,16 +588,6 @@ Error (1): sfdx-project.json not found in any parent directory.
 Error (1): ENOENT: no such file or directory: {packageDir}
 ```
 
-**Deploy coverage line numbers** — The Salesforce CLI deploy coverage JSON contains known out-of-range line numbers. This plugin corrects them automatically by re-numbering covered lines; uncovered lines are unaffected. Test-command coverage is unaffected. See [forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568).
-
-To see each remapping, set `SF_LOG_LEVEL=debug` before running the command - each remapped line prints directly to the terminal:
-
-```bash
-$ SF_LOG_LEVEL=debug sf acc-transformer transform -j "coverage/coverage/coverage.json" -r "coverage.xml" -f "sonar"
-[DEBUG] setCoveredLines: Remapping out-of-range covered line 512 to line 47 in force-app/main/default/classes/AccountHandler.cls (file has 98 lines)
-The coverage report has been written to: coverage.xml
-```
-
 ## Questions or Issues?
 
 Questions, issues? Missing an output format via `--format`? Open an [issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues).
