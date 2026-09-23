@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.7](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.6...v3.1.7) (2026-09-23)
+
+
+### Bug Fixes
+
+* **deps:** bump csv-parse and @jsforce/jsforce-node ([#401](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/401)) ([c7c2cd6](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/c7c2cd6e10c8419a5902abe1bd36f80d3b779460))
+
 ## [3.1.6](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.5...v3.1.6) (2026-09-03)
 
 
