@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.9](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.8...v3.1.9) (2026-09-30)
+
+
+### Bug Fixes
+
+* **deps:** bump brace-expansion ([#406](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/406)) ([70104e2](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/70104e2f34d3c80c95a75dbda7bc2d4f32960319))
+* **deps:** bump fast-uri from 3.1.7 to 3.1.8 ([#407](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/407)) ([c67f2d1](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/c67f2d130eb78ce0ac6c333045870f0a2c114f30))
+
 ## [3.1.8](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.7...v3.1.8) (2026-09-30)
 
 
