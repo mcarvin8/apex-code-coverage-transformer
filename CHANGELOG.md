@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.8](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.7...v3.1.8) (2026-09-30)
+
+
+### Bug Fixes
+
+* **deps:** bump undici ([#403](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/403)) ([05962e5](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/05962e5a1827332d1510fbdb3963c0491b6daa7f))
+
 ## [3.1.7](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.6...v3.1.7) (2026-09-23)
 
 
