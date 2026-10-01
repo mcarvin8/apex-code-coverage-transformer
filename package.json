@@ -3,9 +3,9 @@
   "description": "Transform Salesforce Apex code coverage JSON for SonarQube, SonarCloud, GitHub, GitLab, Azure, and Bitbucket",
   "version": "3.1.9",
   "dependencies": {
-    "@oclif/core": "4.14.0",
-    "@salesforce/core": "9.1.8",
-    "@salesforce/sf-plugins-core": "13.0.3"
+    "@oclif/core": "5.1.2",
+    "@salesforce/core": "9.2.0",
+    "@salesforce/sf-plugins-core": "13.0.4"
   },
   "devDependencies": {
     "@actions/core": "3.0.1",
