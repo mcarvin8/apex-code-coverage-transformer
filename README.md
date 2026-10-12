@@ -9,6 +9,8 @@
 
 Transforms (and optionally merges) Apex code coverage JSON from Salesforce deployments or test runs into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools, keeping coverage visible across pull requests, CI/CD pipelines, and code quality platforms. Available as a **Salesforce CLI plugin** for any provider, and as a **native GitHub Action** for GitHub Actions users who want to skip installing the CLI.
 
+> **Note:** Salesforce deploy coverage JSON contains a known bug where covered lines can be reported beyond the end of a file. This plugin automatically re-numbers those lines to keep deploy coverage accurate. Salesforce API v68.0 is expected to resolve the bug; the fix is kept in place for API v67.0 and earlier. Test-command coverage is unaffected. See [Troubleshooting](#troubleshooting) for details.
+
 <details>
   <summary>Table of Contents</summary>
 
