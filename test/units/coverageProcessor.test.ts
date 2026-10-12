@@ -62,6 +62,27 @@ describe('coverageProcessor', () => {
     expect(result).toEqual({ processed: 1, totalLines: 2, coveredLines: 1 });
   });
 
+  it('logs each deploy remapping when SF_LOG_LEVEL=debug is set', async () => {
+    vi.stubEnv('SF_LOG_LEVEL', 'debug');
+    const debugSpy = vi.spyOn(console, 'debug');
+    const { context } = createContext();
+
+    try {
+      await processDeployCoverage(deployData(), context);
+
+      expect(debugSpy).toHaveBeenCalledWith(
+        expect.stringMatching(
+          new RegExp(
+            `^\\[DEBUG\\] setCoveredLines: Remapping out-of-range covered line 500 to line 1 in ${relativePath} \\(file has \\d+ lines\\)$`,
+          ),
+        ),
+      );
+    } finally {
+      debugSpy.mockRestore();
+      vi.unstubAllEnvs();
+    }
+  });
+
   it('does not remap lines for test coverage', async () => {
     const { context, processFile } = createContext();
     const data: TestCoverageData[] = [
