@@ -9,7 +9,7 @@
 
 Transforms (and optionally merges) Apex code coverage JSON from Salesforce deployments or test runs into formats used by SonarQube, Codecov, GitHub, GitLab, Azure DevOps, Bitbucket, and other tools, keeping coverage visible across pull requests, CI/CD pipelines, and code quality platforms. Available as a **Salesforce CLI plugin** for any provider, and as a **native GitHub Action** for GitHub Actions users who want to skip installing the CLI.
 
-> **Note:** Salesforce deploy coverage JSON contains a known bug where covered lines can be reported beyond the end of a file. This plugin automatically re-numbers those lines to keep deploy coverage accurate. Salesforce API v68.0 is expected to resolve the bug; the fix is kept in place for API v67.0 and earlier. Test-command coverage is unaffected. See [Troubleshooting](#troubleshooting) for details.
+> **Note:** Salesforce deploy command coverage reports contain a known bug where covered lines can be reported beyond the end of a file. This plugin automatically re-numbers those lines to keep deploy coverage accurate. Salesforce API v68.0 is expected to resolve the bug; the fix is kept in place for API v67.0 and earlier. Test-command coverage is unaffected. See [Troubleshooting](#troubleshooting) for details.
 
 <details>
   <summary>Table of Contents</summary>
@@ -589,7 +589,7 @@ Error (1): sfdx-project.json not found in any parent directory.
 Error (1): ENOENT: no such file or directory: {packageDir}
 ```
 
-**Deploy coverage line numbers** — The Salesforce CLI deploy coverage JSON contains known out-of-range line numbers. This plugin corrects them automatically by re-numbering covered lines; uncovered lines are unaffected. Test-command coverage is unaffected. See [forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568).
+**Deploy coverage line numbers** — Salesforce deploy command coverage reports contain known out-of-range line numbers, regardless of the coverage format requested from the Salesforce CLI. This plugin corrects them automatically by re-numbering covered lines; uncovered lines are unaffected. Test-command coverage is unaffected. See [forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568).
 
 Salesforce API v68.0 is expected to resolve the out-of-range line numbers in deploy coverage. The re-numbering logic is kept intact for compatibility with API v67.0 and earlier. It only acts on covered lines beyond the end of a file, so when deploy coverage contains no out-of-range lines, it makes no changes.
 
