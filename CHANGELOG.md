@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.11](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.10...v3.1.11) (2026-10-12)
+
+
+### Bug Fixes
+
+* **deps:** bump fast-copy from 3.0.2 to 3.1.0 ([#413](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/413)) ([58e12e9](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/58e12e90b69cdbb7e63e53bacf92c06e3d842aaa))
+
 ## [3.1.10](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.9...v3.1.10) (2026-10-12)
 
 
