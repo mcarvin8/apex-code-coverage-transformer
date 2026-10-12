@@ -589,6 +589,8 @@ Error (1): ENOENT: no such file or directory: {packageDir}
 
 **Deploy coverage line numbers** — The Salesforce CLI deploy coverage JSON contains known out-of-range line numbers. This plugin corrects them automatically by re-numbering covered lines; uncovered lines are unaffected. Test-command coverage is unaffected. See [forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511) and [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568).
 
+Salesforce API v68.0 is expected to resolve the out-of-range line numbers in deploy coverage. The re-numbering logic is kept intact for compatibility with API v67.0 and earlier. It only acts on covered lines beyond the end of a file, so when deploy coverage contains no out-of-range lines, it makes no changes.
+
 To see each remapping, set `SF_LOG_LEVEL=debug` before running the command - each remapped line prints directly to the terminal:
 
 ```bash
