@@ -44,17 +44,20 @@ export function countLines(lines: Record<string, number>): LineTotals {
   return { totalLines, coveredLines };
 }
 
-export async function processDeployCoverage(
-  data: DeployCoverageData,
+type ResolvedLines = { lines: Record<string, number>; sourceContent?: string };
+
+async function processEntries<T>(
+  items: T[],
   context: CoverageProcessingContext,
+  getName: (item: T) => string,
+  resolveLines: (item: T, path: string) => Promise<ResolvedLines>,
 ): Promise<ProcessResult> {
   let processed = 0;
   let totalLines = 0;
   let coveredLines = 0;
 
-  await mapLimit(Object.keys(data), context.concurrencyLimit, async (fileName: string) => {
-    const fileInfo = data[fileName];
-    const formattedName = fileName.replace(/no-map[\\/]+/, '');
+  await mapLimit(items, context.concurrencyLimit, async (item: T) => {
+    const formattedName = getName(item).replace(/no-map[\\/]+/, '');
     const path = findFilePath(formattedName, context.filePathCache);
 
     if (!path) {
@@ -66,17 +69,14 @@ export async function processDeployCoverage(
       return;
     }
 
-    const setCoveredResult = await setCoveredLines(path, context.repoRoot, fileInfo.s, context.handlers.has('html'));
-    const updatedLines = hasSourceContent(setCoveredResult) ? setCoveredResult.updatedLines : setCoveredResult;
-    const sourceContent = hasSourceContent(setCoveredResult) ? setCoveredResult.sourceContent : undefined;
-    fileInfo.s = updatedLines;
+    const { lines, sourceContent } = await resolveLines(item, path);
 
-    const counts = countLines(updatedLines);
+    const counts = countLines(lines);
     totalLines += counts.totalLines;
     coveredLines += counts.coveredLines;
 
     for (const handler of context.handlers.values()) {
-      handler.processFile(path, formattedName, updatedLines, sourceContent);
+      handler.processFile(path, formattedName, lines, sourceContent);
     }
     processed++;
   });
@@ -84,37 +84,35 @@ export async function processDeployCoverage(
   return { processed, totalLines, coveredLines };
 }
 
-export async function processTestCoverage(
+export function processDeployCoverage(
+  data: DeployCoverageData,
+  context: CoverageProcessingContext,
+): Promise<ProcessResult> {
+  return processEntries(
+    Object.keys(data),
+    context,
+    (fileName) => fileName,
+    async (fileName, path) => {
+      const fileInfo = data[fileName];
+      const result = await setCoveredLines(path, context.repoRoot, fileInfo.s, context.handlers.has('html'));
+      const updatedLines = hasSourceContent(result) ? result.updatedLines : result;
+      fileInfo.s = updatedLines;
+      return { lines: updatedLines, sourceContent: hasSourceContent(result) ? result.sourceContent : undefined };
+    },
+  );
+}
+
+export function processTestCoverage(
   data: TestCoverageData[],
   context: CoverageProcessingContext,
 ): Promise<ProcessResult> {
-  let processed = 0;
-  let totalLines = 0;
-  let coveredLines = 0;
-
-  await mapLimit(data, context.concurrencyLimit, async (entry: TestCoverageData) => {
-    const formattedName = entry.name.replace(/no-map[\\/]+/, '');
-    const path = findFilePath(formattedName, context.filePathCache);
-
-    if (!path) {
-      context.warnings.push(`The file name ${formattedName} was not found in any package directory.`);
-      return;
-    }
-
-    if (context.excludePatterns.some((pattern) => matchesGlob(path, pattern, { matchBase: true }))) {
-      return;
-    }
-
-    const counts = countLines(entry.lines);
-    totalLines += counts.totalLines;
-    coveredLines += counts.coveredLines;
-
-    const sourceContent = context.handlers.has('html') ? await readSourceFile(join(context.repoRoot, path)) : undefined;
-    for (const handler of context.handlers.values()) {
-      handler.processFile(path, formattedName, entry.lines, sourceContent);
-    }
-    processed++;
-  });
-
-  return { processed, totalLines, coveredLines };
+  return processEntries(
+    data,
+    context,
+    (entry) => entry.name,
+    async (entry, path) => ({
+      lines: entry.lines,
+      sourceContent: context.handlers.has('html') ? await readSourceFile(join(context.repoRoot, path)) : undefined,
+    }),
+  );
 }
