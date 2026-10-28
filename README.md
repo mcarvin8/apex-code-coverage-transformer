@@ -66,18 +66,17 @@ It still needs the checkout to contain `sfdx-project.json` (same as the CLI's [P
 
    ```bash
    sf apex run test --code-coverage --output-dir "coverage"
+   # Creates code coverage file here: coverage/test-result-codecoverage.json
    ```
 
    From deploy/validate:
 
    ```bash
    sf project deploy start --coverage-formatters json --results-dir "coverage"
-   # or: sf project deploy validate --coverage-formatters json --results-dir "coverage"
+   # Creates code coverage file here: coverage/coverage/coverage.json
    ```
 
 2. **Transform to your target format**
-
-   Test output → `coverage/test-result-codecoverage.json`. Deploy output → `coverage/coverage/coverage.json`.
 
    ```bash
    # SonarQube
