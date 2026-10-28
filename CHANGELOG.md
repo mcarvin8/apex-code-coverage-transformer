@@ -5,6 +5,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.12](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.11...v3.1.12) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** bump fast-uri from 3.1.8 to 3.1.9 ([#423](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/423)) ([dd33d19](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/dd33d19875f5965a261f1275d5b29525e2b0ad60))
+* **deps:** bump qs from 6.15.3 to 6.17.0 ([#420](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/420)) ([9d5eaee](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/9d5eaee4b2de35048074d73198bd71a0f736609d))
+* **deps:** bump undici ([#421](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/421)) ([1d78985](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/1d789851876821f9f595e24dd2ed3c143f7f4889))
+* **deps:** bump zod from 4.4.3 to 4.6.7 ([#424](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/424)) ([649c403](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/649c4039795b4551e7445a42c06e8d34f9dccae7))
+
 ## [3.1.11](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.10...v3.1.11) (2026-10-12)
 
 
