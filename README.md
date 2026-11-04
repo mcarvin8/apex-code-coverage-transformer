@@ -128,6 +128,7 @@ Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis):
 
 ## Command Reference
 
+<!-- biome-ignore format: oclif readme writes this list with `*` bullets -->
 <!-- commands -->
 * [`sf acc-transformer transform`](#sf-acc-transformer-transform)
 
@@ -202,7 +203,7 @@ _See code: [src/commands/acc-transformer/transform.ts](https://github.com/mcarvi
 Use `-f` / `--format` to choose the output format. Multiple `-f` values produce multiple files with the format in the name (e.g. `coverage-sonar.xml`, `coverage-cobertura.xml`).
 
 | Format         | Description                | Typical use                             | Example                                                                                 |
-|----------------|----------------------------|-----------------------------------------|-----------------------------------------------------------------------------------------|
+| -------------- | -------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------- |
 | sonar          | SonarQube generic coverage | SonarQube, SonarCloud                   | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "sonar"`          |
 | cobertura      | Cobertura XML              | Codecov, Azure, Jenkins, GitLab, GitHub | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "cobertura"`      |
 | jacoco         | JaCoCo XML                 | Codecov, Jenkins, Maven, Gradle         | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "jacoco"`         |
@@ -235,7 +236,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli@latest
@@ -407,7 +408,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
       - run: npm install -g @salesforce/cli@latest
       - run: echo y | sf plugins install apex-code-coverage-transformer
       - name: Download Suite A coverage
@@ -491,7 +492,7 @@ pool:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '20.x'
+      versionSpec: "20.x"
     displayName: Set up Node.js
 
   - script: npm install -g @salesforce/cli@latest
@@ -533,7 +534,7 @@ Create `.apexcodecovtransformer.config.json` in the project root to transform co
 Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/salesforce-cli/.apexcodecovtransformer.config.json), [SFDX Hardis](https://raw.githubusercontent.com/mcarvin8/apex-code-coverage-transformer/main/defaults/sfdx-hardis/.apexcodecovtransformer.config.json).
 
 | Key                        | Required   | Description                                                                                                                                  |
-|----------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `deployCoverageJsonPath`   | For deploy | Path to deploy coverage JSON.                                                                                                                |
 | `testCoverageJsonPath`     | For test   | Path to test coverage JSON.                                                                                                                  |
 | `outputReportPath`         | No         | Output path (default: `coverage.[xml/info/json]` by format).                                                                                 |

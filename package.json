@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@actions/core": "3.0.1",
-    "@biomejs/biome": "2.6.4",
+    "@biomejs/biome": "2.6.5",
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-conventional": "21.2.4",
     "@salesforce/cli-plugins-testkit": "5.3.83",
@@ -176,22 +176,24 @@
       "clean": "if-file-deleted"
     },
     "format": {
-      "command": "biome format --write src test",
+      "command": "biome format --write src test README.md CONTRIBUTING.md",
       "files": [
         "src/**/*.ts",
         "test/**/*.ts",
-        "biome.json"
+        "biome.json",
+        "*.md"
       ],
       "output": []
     },
     "lint": {
-      "command": "biome check src test",
+      "command": "biome check src test README.md CONTRIBUTING.md",
       "files": [
         "src/**/*.ts",
         "test/**/*.ts",
         "messages/**",
         "biome.json",
-        "**/tsconfig.json"
+        "**/tsconfig.json",
+        "*.md"
       ],
       "output": []
     },
@@ -333,6 +335,6 @@
     "url": "https://github.com/mcarvin8/apex-code-coverage-transformer/issues"
   },
   "allowScripts": {
-    "esbuild@0.28.1": true
+    "esbuild@0.28.2": true
   }
 }
