@@ -1,8 +1,11 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-  "files": { "ignoreUnknown": true, "includes": ["**", "!test/fixtures/**"] },
+  "files": { "ignoreUnknown": true, "includes": ["**", "!test/fixtures/**", "!CHANGELOG.md", "!LICENSE.md", "!messages/**/*.md"] },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },
+  "markdown": {
+    "formatter": { "enabled": true }
+  },
   "linter": {
     "enabled": true,
     "rules": {
