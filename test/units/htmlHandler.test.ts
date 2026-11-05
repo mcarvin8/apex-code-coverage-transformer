@@ -336,6 +336,12 @@ describe('HTML coverage handler unit tests', () => {
       ]);
     });
 
+    it('ignores non-numeric coverage keys when sizing the view instead of blanking the file', () => {
+      const result = linesFor({ abc: 1, '2': 1 }, 'a\nb\nc');
+      expect(result.map((l) => l.lineNumber)).toEqual([1, 2, 3]);
+      expect(result[1]).toMatchObject({ executable: true, covered: true });
+    });
+
     it('falls back to coverage-data lines only, sorted, when source content is unavailable', () => {
       const result = linesFor({ '10': 1, '2': 0 });
       expect(result).toEqual([
