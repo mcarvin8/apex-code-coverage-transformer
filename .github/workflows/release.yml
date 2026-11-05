@@ -133,8 +133,8 @@ jobs:
           commit_message: "docs: regenerate command reference [skip ci]"
           file_pattern: README.md
 
-      # Moves a floating major-version tag (e.g. v3) to the release commit so
-      # GitHub Action consumers can pin `uses: mcarvin8/apex-code-coverage-transformer@v3`
+      # Moves a floating major-version tag (e.g. v4) to the release commit so
+      # GitHub Action consumers can pin `uses: mcarvin8/apex-code-coverage-transformer@v4`
       # instead of an exact patch version.
       - name: Move floating major version tag
         if: steps.publish.outputs.published == 'true'
