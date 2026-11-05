@@ -5,6 +5,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.12...v4.0.0) (2026-11-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove deploy coverage line renumbering ([#429](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/429))
+
+### Features
+
+* remove deploy coverage line renumbering ([#429](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/429)) ([0c15717](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/0c157176edb7a9e0513f8558960f47bd97558a4a))
+
 ## [3.1.12](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v3.1.11...v3.1.12) (2026-10-28)
 
 
