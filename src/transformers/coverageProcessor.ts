@@ -31,8 +31,17 @@ async function readSourceFile(absolutePath: string): Promise<string | undefined>
   }
 }
 
-function loadSourceContent(path: string, context: CoverageProcessingContext): Promise<string | undefined> {
-  return context.handlers.has('html') ? readSourceFile(join(context.repoRoot, path)) : Promise.resolve(undefined);
+async function loadSourceContent(path: string, context: CoverageProcessingContext): Promise<string | undefined> {
+  if (!context.handlers.has('html')) {
+    return undefined;
+  }
+  const content = await readSourceFile(join(context.repoRoot, path));
+  if (content === undefined) {
+    context.warnings.push(
+      `Could not read source file ${path}; the HTML report will show coverage for this file without line contents.`,
+    );
+  }
+  return content;
 }
 
 export function countLines(lines: Record<string, number>): LineTotals {

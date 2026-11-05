@@ -87,4 +87,53 @@ describe('coverageProcessor', () => {
 
     expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', outOfRangeLines, sourceContent);
   });
+
+  describe('source read warnings', () => {
+    const missingPath = 'test/fixtures/samples/classes/DoesNotExist.cls';
+
+    function missingFileContext(formats: string[]): ReturnType<typeof createContext> {
+      const created = createContext(formats);
+      created.context.filePathCache = new Map([['AccountProfile.cls', missingPath]]);
+      return created;
+    }
+
+    it('warns and passes undefined source when the html source file cannot be read', async () => {
+      const { context, processFile } = missingFileContext(['html']);
+
+      await processDeployCoverage(deployData(), context);
+
+      expect(context.warnings).toEqual([
+        `Could not read source file ${missingPath}; the HTML report will show coverage for this file without line contents.`,
+      ]);
+      expect(processFile).toHaveBeenCalledWith(missingPath, 'AccountProfile', outOfRangeLines, undefined);
+    });
+
+    it('warns for test coverage too', async () => {
+      const { context } = missingFileContext(['html']);
+      const data: TestCoverageData[] = [
+        { id: '01p', name: 'AccountProfile', totalLines: 1, lines: { '1': 1 }, totalCovered: 1, coveredPercent: 100 },
+      ];
+
+      await processTestCoverage(data, context);
+
+      expect(context.warnings).toHaveLength(1);
+      expect(context.warnings[0]).toContain(missingPath);
+    });
+
+    it('does not read or warn when html is not requested', async () => {
+      const { context } = missingFileContext(['sonar']);
+
+      await processDeployCoverage(deployData(), context);
+
+      expect(context.warnings).toEqual([]);
+    });
+
+    it('does not warn when the source file is read successfully', async () => {
+      const { context } = createContext(['html']);
+
+      await processDeployCoverage(deployData(), context);
+
+      expect(context.warnings).toEqual([]);
+    });
+  });
 });
