@@ -58,6 +58,8 @@ ADDITIONAL_EXCLUDED_DIRECTORIES:
   - test/fixtures
   - defaults
 
+FILTER_REGEX_EXCLUDE: (docs/github-dependents-info\.md)
+
 BASH_SHELLCHECK_FILTER_REGEX_EXCLUDE: (husky)
 
 TYPESCRIPT_DEFAULT_STYLE: prettier
