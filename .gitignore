@@ -28,9 +28,6 @@ coverage.txt
 coverage-*.xml
 test_session*
 
-# generated docs
-docs
-
 # ignore sfdx-trust files
 *.tgz
 *.sig

@@ -67,9 +67,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN  }}
           branch: github-dependents-info-auto-update
-          commit-message: "[GitHub Dependents Info] Updated markdown file(s)"
+          commit-message: "chore(github-dependents): updated markdown files"
           delete-branch: true
-          title: "[GitHub Dependents Info] Updated markdown file"
+          title: "chore(github-dependents): updated markdown files"
           body: "_Generated with [github-dependents-info](https://github.com/nvuillam/github-dependents-info), by [Nicolas Vuillamy](https://github.com/nvuillam)_"
           labels: documentation
       - name: Create PR output
