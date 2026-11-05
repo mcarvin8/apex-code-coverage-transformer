@@ -1,4 +1,4 @@
-import { HtmlCoverageObject } from '../../utils/types.js';
+import { HtmlCoverageObject, HtmlLineCoverage } from '../../utils/types.js';
 
 function getCoverageColor(lineRate: number): string {
   if (lineRate >= 0.8) return '#4caf50';
@@ -51,10 +51,17 @@ function groupFilesByDir(files: HtmlCoverageObject['files']): Map<string, HtmlCo
   return filesByDir;
 }
 
-function buildLineRow(line: { lineNumber: number; hitCount: number; covered: boolean; content?: string }): string {
+function buildLineRow(line: HtmlLineCoverage): string {
+  const codeContent = line.content !== undefined ? escapeHtml(line.content) : '';
+  if (line.executable === false) {
+    return `<tr class="neutral">
+            <td class="line-number">${line.lineNumber}</td>
+            <td class="hit-count"></td>
+            <td class="line-content">${codeContent}</td>
+          </tr>`;
+  }
   const lineClass = line.covered ? 'covered' : 'uncovered';
   const lineColor = line.covered ? '#c8e6c9' : '#ffcdd2';
-  const codeContent = line.content !== undefined ? escapeHtml(line.content) : '';
   return `<tr class="${lineClass}" style="background-color: ${lineColor}">
             <td class="line-number">${line.lineNumber}</td>
             <td class="hit-count">${line.hitCount}</td>
@@ -276,6 +283,9 @@ export function generateHtml(coverageObj: HtmlCoverageObject): string {
     }
     .uncovered {
       background-color: #ffcdd2 !important;
+    }
+    .neutral .line-content {
+      color: #666;
     }
     .package-summary {
       margin-bottom: 30px;
