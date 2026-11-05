@@ -9,7 +9,7 @@ type Handler = ReturnType<typeof getCoverageHandler>;
 
 const repoRoot = resolve('.');
 const relativePath = 'test/fixtures/samples/classes/AccountProfile.cls';
-// AccountProfile.cls is ~94 lines, so line 500 is out of range
+// AccountProfile.cls is ~94 lines; line 500 is past end of file and must pass through untouched
 const outOfRangeLines = { '2': 0, '500': 1 };
 
 function createContext(formats: string[] = ['sonar']): {
@@ -50,40 +50,18 @@ function deployData(): DeployCoverageData {
 }
 
 describe('coverageProcessor', () => {
-  it('remaps out-of-range covered lines for deploy coverage before handlers receive them', async () => {
+  it('passes deploy coverage lines to handlers unchanged', async () => {
     const { context, processFile } = createContext();
     const data = deployData();
 
     const result = await processDeployCoverage(data, context);
 
-    const expectedLines = { '1': 1, '2': 0 };
-    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', expectedLines, undefined);
-    expect(data['no-map/AccountProfile'].s).toEqual(expectedLines);
+    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', outOfRangeLines, undefined);
+    expect(data['no-map/AccountProfile'].s).toEqual(outOfRangeLines);
     expect(result).toEqual({ processed: 1, totalLines: 2, coveredLines: 1 });
   });
 
-  it('logs each deploy remapping when SF_LOG_LEVEL=debug is set', async () => {
-    vi.stubEnv('SF_LOG_LEVEL', 'debug');
-    const debugSpy = vi.spyOn(console, 'debug');
-    const { context } = createContext();
-
-    try {
-      await processDeployCoverage(deployData(), context);
-
-      expect(debugSpy).toHaveBeenCalledWith(
-        expect.stringMatching(
-          new RegExp(
-            `^\\[DEBUG\\] setCoveredLines: Remapping out-of-range covered line 500 to line 1 in ${relativePath} \\(file has \\d+ lines\\)$`,
-          ),
-        ),
-      );
-    } finally {
-      debugSpy.mockRestore();
-      vi.unstubAllEnvs();
-    }
-  });
-
-  it('does not remap lines for test coverage', async () => {
+  it('passes test coverage lines to handlers unchanged', async () => {
     const { context, processFile } = createContext();
     const data: TestCoverageData[] = [
       {
@@ -107,6 +85,6 @@ describe('coverageProcessor', () => {
 
     await processDeployCoverage(deployData(), context);
 
-    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', { '1': 1, '2': 0 }, sourceContent);
+    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', outOfRangeLines, sourceContent);
   });
 });
