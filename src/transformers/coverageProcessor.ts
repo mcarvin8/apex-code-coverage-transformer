@@ -7,7 +7,6 @@ import { getCoverageHandler } from '../handlers/getHandler.js';
 import { findFilePath } from '../utils/findFilePath.js';
 import { matchesGlob } from '../utils/globMatcher.js';
 import { mapLimit } from '../utils/mapLimit.js';
-import { type SetCoveredLinesResult, setCoveredLines } from '../utils/setCoveredLines.js';
 import {
   CoverageProcessingContext,
   DeployCoverageData,
@@ -24,18 +23,16 @@ export function createHandlers(formats: string[]): Map<string, ReturnType<typeof
   return handlers;
 }
 
-function hasSourceContent(
-  result: SetCoveredLinesResult,
-): result is { updatedLines: Record<string, number>; sourceContent: string } {
-  return typeof result === 'object' && result !== null && 'sourceContent' in result;
-}
-
 async function readSourceFile(absolutePath: string): Promise<string | undefined> {
   try {
     return await readFile(absolutePath, 'utf-8');
   } catch {
     return undefined;
   }
+}
+
+function loadSourceContent(path: string, context: CoverageProcessingContext): Promise<string | undefined> {
+  return context.handlers.has('html') ? readSourceFile(join(context.repoRoot, path)) : Promise.resolve(undefined);
 }
 
 export function countLines(lines: Record<string, number>): LineTotals {
@@ -92,13 +89,10 @@ export function processDeployCoverage(
     Object.keys(data),
     context,
     (fileName) => fileName,
-    async (fileName, path) => {
-      const fileInfo = data[fileName];
-      const result = await setCoveredLines(path, context.repoRoot, fileInfo.s, context.handlers.has('html'));
-      const updatedLines = hasSourceContent(result) ? result.updatedLines : result;
-      fileInfo.s = updatedLines;
-      return { lines: updatedLines, sourceContent: hasSourceContent(result) ? result.sourceContent : undefined };
-    },
+    async (fileName, path) => ({
+      lines: data[fileName].s,
+      sourceContent: await loadSourceContent(path, context),
+    }),
   );
 }
 
@@ -112,7 +106,7 @@ export function processTestCoverage(
     (entry) => entry.name,
     async (entry, path) => ({
       lines: entry.lines,
-      sourceContent: context.handlers.has('html') ? await readSourceFile(join(context.repoRoot, path)) : undefined,
+      sourceContent: await loadSourceContent(path, context),
     }),
   );
 }
