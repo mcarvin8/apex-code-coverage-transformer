@@ -215,7 +215,7 @@ Use `-f` / `--format` to choose the output format. Multiple `-f` values produce 
 | json-summary   | JSON summary               | Badges, PR comments                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "json-summary"`  |
 | simplecov      | SimpleCov JSON             | Codecov, Ruby tools                     | `sf acc-transformer transform -j "coverage.json" -r "coverage.json" -f "simplecov"`     |
 | opencover      | OpenCover XML              | Azure DevOps, VS, Codecov               | `sf acc-transformer transform -j "coverage.json" -r "coverage.xml" -f "opencover"`      |
-| html           | HTML report                | Browsers, CI artifacts                  | `sf acc-transformer transform -j "coverage.json" -r "coverage.html" -f "html"`          |
+| html           | Full-source HTML report    | Browsers, CI artifacts                  | `sf acc-transformer transform -j "coverage.json" -r "coverage.html" -f "html"`          |
 | markdown       | Markdown summary           | PR/MR comments, CI job summaries        | `sf acc-transformer transform -j "coverage.json" -r "coverage.md" -f "markdown"`        |
 | github-actions | GitHub Actions annotations | GitHub Actions PR diff annotations      | `sf acc-transformer transform -j "coverage.json" -r "coverage.txt" -f "github-actions"` |
 

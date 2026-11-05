@@ -355,4 +355,47 @@ describe('generateHtml unit tests', () => {
     const result = generateHtml(obj);
     expect(result).toContain('function toggleFile');
   });
+
+  describe('line rows', () => {
+    function renderLines(lines: FileEntry['lines']): string {
+      return generateHtml(makeObj({ files: [makeFile('force-app/main/default/classes/A.cls', { lines })] }));
+    }
+
+    it('renders non-executable lines as neutral rows with no hit count and no background', () => {
+      const result = renderLines([
+        { lineNumber: 7, hitCount: 0, covered: false, content: '// note', executable: false },
+      ]);
+      expect(result).toMatch(
+        /<tr class="neutral">\s*<td class="line-number">7<\/td>\s*<td class="hit-count"><\/td>\s*<td class="line-content">\/\/ note<\/td>/,
+      );
+      expect(result).not.toContain('<tr class="uncovered"');
+    });
+
+    it('escapes content in neutral rows', () => {
+      const result = renderLines([
+        { lineNumber: 1, hitCount: 0, covered: false, content: 'List<A> x;', executable: false },
+      ]);
+      expect(result).toContain('<td class="line-content">List&lt;A&gt; x;</td>');
+    });
+
+    it('renders neutral rows with empty content when content is missing', () => {
+      const result = renderLines([{ lineNumber: 1, hitCount: 0, covered: false, executable: false }]);
+      expect(result).toMatch(/<tr class="neutral">[\s\S]*?<td class="line-content"><\/td>/);
+    });
+
+    it('renders lines without the executable flag as executable (covered/uncovered)', () => {
+      const result = renderLines([
+        { lineNumber: 1, hitCount: 2, covered: true, content: 'a' },
+        { lineNumber: 2, hitCount: 0, covered: false, content: 'b', executable: true },
+      ]);
+      expect(result).toContain('<tr class="covered" style="background-color: #c8e6c9">');
+      expect(result).toContain('<tr class="uncovered" style="background-color: #ffcdd2">');
+      expect(result).toContain('<td class="hit-count">2</td>');
+      expect(result).not.toContain('<tr class="neutral">');
+    });
+
+    it('includes neutral row styling', () => {
+      expect(renderLines([])).toContain('.neutral .line-content');
+    });
+  });
 });

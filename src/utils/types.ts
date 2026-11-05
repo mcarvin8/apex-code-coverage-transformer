@@ -376,12 +376,21 @@ export type HtmlFileCoverage = {
   coveredLines: number;
   uncoveredLines: number;
   lineRate: number;
-  lines: Array<{
-    lineNumber: number;
-    hitCount: number;
-    covered: boolean;
-    content?: string;
-  }>;
+  lines: HtmlLineCoverage[];
+};
+
+/**
+ * One row in the HTML line view. When source content is available, every
+ * line of the file is listed; lines absent from the coverage data are marked
+ * `executable: false` (comments, signatures, braces, blank lines).
+ */
+export type HtmlLineCoverage = {
+  lineNumber: number;
+  hitCount: number;
+  covered: boolean;
+  content?: string;
+  /** False for non-executable lines. Omitted or true for lines in the coverage data. */
+  executable?: boolean;
 };
 
 /** Summary for a package directory (e.g. force-app) in the HTML report */

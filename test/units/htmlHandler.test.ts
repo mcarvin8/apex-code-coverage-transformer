@@ -280,4 +280,76 @@ describe('HTML coverage handler unit tests', () => {
     expect(result.summary.uncoveredLines).toBe(2);
     expect(result.summary.lineRate).toBe(0.5);
   });
+
+  describe('full source view', () => {
+    function linesFor(
+      lines: Record<string, number>,
+      sourceContent?: string,
+    ): HtmlCoverageObject['files'][number]['lines'] {
+      const handler = getCoverageHandler('html');
+      handler.processFile('force-app/main/default/classes/A.cls', 'A', lines, sourceContent);
+      return (handler.finalize() as HtmlCoverageObject).files[0].lines;
+    }
+
+    it('lists every source line and marks lines missing from coverage data as non-executable', () => {
+      const source = 'public class A {\n  // comment\n  public void run() {\n    doWork();\n  }\n}';
+      const result = linesFor({ '3': 0, '4': 1 }, source);
+
+      expect(result).toEqual([
+        { lineNumber: 1, hitCount: 0, covered: false, content: 'public class A {', executable: false },
+        { lineNumber: 2, hitCount: 0, covered: false, content: '  // comment', executable: false },
+        { lineNumber: 3, hitCount: 0, covered: false, content: '  public void run() {', executable: true },
+        { lineNumber: 4, hitCount: 1, covered: true, content: '    doWork();', executable: true },
+        { lineNumber: 5, hitCount: 0, covered: false, content: '  }', executable: false },
+        { lineNumber: 6, hitCount: 0, covered: false, content: '}', executable: false },
+      ]);
+    });
+
+    it('does not add a row for the empty string after a trailing newline', () => {
+      const result = linesFor({ '1': 1 }, 'a\nb\n');
+      expect(result.map((l) => l.lineNumber)).toEqual([1, 2]);
+    });
+
+    it('keeps a trailing blank line that has coverage data', () => {
+      const result = linesFor({ '3': 1 }, 'a\nb\n');
+      expect(result.map((l) => l.lineNumber)).toEqual([1, 2, 3]);
+      expect(result[2]).toMatchObject({ content: '', executable: true, covered: true });
+    });
+
+    it('splits CRLF and CR line endings', () => {
+      const result = linesFor({ '2': 1 }, 'a\r\nb\rc');
+      expect(result.map((l) => l.content)).toEqual(['a', 'b', 'c']);
+    });
+
+    it('appends coverage lines numbered past the end of the file with empty content', () => {
+      const result = linesFor({ '1': 1, '5': 0 }, 'a\nb');
+      expect(result.map((l) => l.lineNumber)).toEqual([1, 2, 3, 4, 5]);
+      expect(result[3]).toMatchObject({ content: '', executable: false });
+      expect(result[4]).toMatchObject({ content: '', executable: true, covered: false });
+    });
+
+    it('treats an empty source file as available source', () => {
+      const result = linesFor({ '2': 1 }, '');
+      expect(result).toEqual([
+        { lineNumber: 1, hitCount: 0, covered: false, content: '', executable: false },
+        { lineNumber: 2, hitCount: 1, covered: true, content: '', executable: true },
+      ]);
+    });
+
+    it('falls back to coverage-data lines only, sorted, when source content is unavailable', () => {
+      const result = linesFor({ '10': 1, '2': 0 });
+      expect(result).toEqual([
+        { lineNumber: 2, hitCount: 0, covered: false, content: '', executable: true },
+        { lineNumber: 10, hitCount: 1, covered: true, content: '', executable: true },
+      ]);
+    });
+
+    it('does not count non-executable lines in file totals', () => {
+      const handler = getCoverageHandler('html');
+      handler.processFile('force-app/main/default/classes/A.cls', 'A', { '2': 1, '3': 0 }, 'a\nb\nc\nd');
+      const file = (handler.finalize() as HtmlCoverageObject).files[0];
+      expect(file.lines).toHaveLength(4);
+      expect(file).toMatchObject({ totalLines: 2, coveredLines: 1, uncoveredLines: 1, lineRate: 0.5 });
+    });
+  });
 });

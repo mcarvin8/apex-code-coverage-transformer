@@ -1,11 +1,49 @@
 'use strict';
 
-import { HtmlCoverageObject, HtmlFileCoverage, HtmlPackageSummary } from '../utils/types.js';
+import { HtmlCoverageObject, HtmlFileCoverage, HtmlLineCoverage, HtmlPackageSummary } from '../utils/types.js';
 import { BaseHandler } from './BaseHandler.js';
 import { HandlerRegistry } from './HandlerRegistry.js';
 
 /** Accumulated stats for a package directory (e.g. force-app) */
 type PackageAccumulator = { totalLines: number; coveredLines: number; fileCount: number };
+
+function toExecutableLine(lineNumber: number, hitCount: number, content: string): HtmlLineCoverage {
+  return { lineNumber, hitCount, covered: hitCount > 0, content, executable: true };
+}
+
+/** Rows for coverage-data lines only. Used when the source file could not be read. */
+function buildCoverageOnlyLines(lines: Record<string, number>): HtmlLineCoverage[] {
+  return Object.entries(lines)
+    .map(([lineNumber, hitCount]) => toExecutableLine(Number(lineNumber), hitCount, ''))
+    .sort((a, b) => a.lineNumber - b.lineNumber);
+}
+
+/**
+ * Rows for every line of the source file, with coverage overlaid on executable lines.
+ * Coverage lines numbered past the end of the file are still listed (with empty content)
+ * so no reported coverage is dropped from the view.
+ */
+function buildFullSourceLines(lines: Record<string, number>, sourceContent: string): HtmlLineCoverage[] {
+  const sourceLines = sourceContent.split(/\r\n|\r|\n/);
+  if (sourceLines.at(-1) === '') {
+    sourceLines.pop();
+  }
+
+  const lastCoverageLine = Object.keys(lines).reduce((max, key) => Math.max(max, Number(key) || 0), 0);
+  const lineCount = Math.max(sourceLines.length, lastCoverageLine);
+
+  const rows: HtmlLineCoverage[] = [];
+  for (let lineNumber = 1; lineNumber <= lineCount; lineNumber++) {
+    const content = sourceLines[lineNumber - 1] ?? '';
+    const hitCount = lines[String(lineNumber)];
+    rows.push(
+      hitCount === undefined
+        ? { lineNumber, hitCount: 0, covered: false, content, executable: false }
+        : toExecutableLine(lineNumber, hitCount, content),
+    );
+  }
+  return rows;
+}
 
 /**
  * Handler for generating HTML coverage reports.
@@ -48,20 +86,8 @@ export class HtmlCoverageHandler extends BaseHandler {
   public processFile(filePath: string, fileName: string, lines: Record<string, number>, sourceContent?: string): void {
     const { totalLines, coveredLines, uncoveredLines, lineRate } = this.calculateCoverage(lines);
 
-    const sourceLines = sourceContent ? sourceContent.split(/\r?\n/) : [];
-
-    const fileLines: HtmlFileCoverage['lines'] = Object.entries(lines)
-      .map(([lineNumber, hitCount]) => {
-        const num = Number(lineNumber);
-        const content = sourceLines[num - 1] ?? '';
-        return {
-          lineNumber: num,
-          hitCount,
-          covered: hitCount > 0,
-          content,
-        };
-      })
-      .sort((a, b) => a.lineNumber - b.lineNumber);
+    const fileLines =
+      sourceContent === undefined ? buildCoverageOnlyLines(lines) : buildFullSourceLines(lines, sourceContent);
 
     const fileCoverage: HtmlFileCoverage = {
       filePath,
