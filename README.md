@@ -592,7 +592,7 @@ Error (1): sfdx-project.json not found in any parent directory.
 Error (1): ENOENT: no such file or directory: {packageDir}
 ```
 
-**Deploy coverage line numbers** — Older Salesforce deploy command coverage reports could contain covered lines numbered past the end of a file ([forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511), [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568)). Salesforce fixed this server-side in Winter '27 (API v68.0), and the fix applies regardless of the `--api-version` requested on the deploy. Versions 3.x and earlier of this plugin re-numbered those lines; starting with v4, deploy coverage lines are passed through as reported by Salesforce. If you still see out-of-range lines in deploy coverage, please [open an issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/2).
+**Deploy coverage line numbers** — Older Salesforce deploy command coverage reports could contain covered lines numbered past the end of a file ([forcedotcom/salesforcedx-vscode#5511](https://github.com/forcedotcom/salesforcedx-vscode/issues/5511), [forcedotcom/cli#1568](https://github.com/forcedotcom/cli/issues/1568)). Salesforce fixed this server-side in Winter '27 (API v68.0), and the fix applies regardless of the `--api-version` requested on the deploy. Versions 3.x and earlier of this plugin re-numbered those lines; starting with v4, deploy coverage lines are passed through as reported by Salesforce. If you still see out-of-range lines in deploy coverage, please [open an issue](https://github.com/mcarvin8/apex-code-coverage-transformer/issues).
 
 ## Questions or Issues?
 
