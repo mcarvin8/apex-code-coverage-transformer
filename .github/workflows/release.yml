@@ -17,11 +17,11 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
     steps:
+      # Manifest mode (release-please-config.json + .release-please-manifest.json) so the
+      # release PR also bumps packages/core/package.json. Tags stay "vX.Y.Z" (no component).
       - name: Release Please
         id: release
         uses: googleapis/release-please-action@v5
-        with:
-          release-type: node
 
   # Keeps dist/action/index.cjs current on every push to main, independent of
   # whether this push is an actual release. A contributor's PR should already
@@ -119,6 +119,21 @@ jobs:
           NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
           echo "published=true" >> "$GITHUB_OUTPUT"
 
+      # apex-code-coverage-transformer-core: the dependency-free programmatic API, built from
+      # the same src/ and released with the same version (release-please bumps
+      # packages/core/package.json via extra-files). Its prepack runs `build:core`, which also
+      # fails if the build picks up a runtime dependency or plugin-only code.
+      - name: Publish core package to NPM
+        if: steps.publish.outputs.published == 'true'
+        run: |
+          ROOT_VERSION=$(node -p "require('./package.json').version")
+          CORE_VERSION=$(node -p "require('./packages/core/package.json').version")
+          if [ "$ROOT_VERSION" != "$CORE_VERSION" ]; then
+            echo "packages/core version $CORE_VERSION does not match $ROOT_VERSION"
+            exit 1
+          fi
+          NODE_AUTH_TOKEN="" npm publish ./packages/core --access public --tag latest --provenance
+
       # `npm publish` runs the `prepack` script (oclif manifest && oclif readme),
       # which regenerates README.md's Command Reference against the version
       # release-please just bumped. Push that back to main so the repo's README
@@ -166,16 +181,18 @@ jobs:
       - name: Poll npm for published version
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          for i in $(seq 1 40); do
-            if npm view apex-code-coverage-transformer@"$VERSION" version >/dev/null 2>&1; then
-              echo "apex-code-coverage-transformer@$VERSION is available on npm"
-              exit 0
-            fi
-            echo "apex-code-coverage-transformer@$VERSION not yet available, retrying in 15s ($i/40)"
-            sleep 15
+          for PACKAGE in apex-code-coverage-transformer apex-code-coverage-transformer-core; do
+            for i in $(seq 1 40); do
+              if npm view "$PACKAGE@$VERSION" version >/dev/null 2>&1; then
+                echo "$PACKAGE@$VERSION is available on npm"
+                continue 2
+              fi
+              echo "$PACKAGE@$VERSION not yet available, retrying in 15s ($i/40)"
+              sleep 15
+            done
+            echo "Timed out waiting for $PACKAGE@$VERSION on npm"
+            exit 1
           done
-          echo "Timed out waiting for apex-code-coverage-transformer@$VERSION on npm"
-          exit 1
 
   smoke-test:
     needs: [release, wait-for-npm]

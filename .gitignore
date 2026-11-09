@@ -60,3 +60,7 @@ reports
 megalinter-reports/
 .megalinter_github_conf/
 mega-linter.log
+
+# apex-code-coverage-transformer-core build output (built from src/ by `npm run build:core`)
+packages/core/lib
+packages/core/LICENSE.md
