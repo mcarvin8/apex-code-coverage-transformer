@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "packages/core/lib",
+    "rootDir": "src",
+    "sourceMap": false,
+    "types": ["node"]
+  },
+  "include": [],
+  "files": ["src/index.ts"]
+}

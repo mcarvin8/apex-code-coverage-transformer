@@ -1,0 +1,51 @@
+{
+  "name": "apex-code-coverage-transformer-core",
+  "description": "Dependency-free library that transforms Salesforce Apex code coverage JSON into SonarQube, Cobertura, JaCoCo, LCOV, Clover, HTML, Markdown and more",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "prepack": "npm run --prefix ../.. build:core"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Matt Carvin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcarvin8/apex-code-coverage-transformer.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/mcarvin8/apex-code-coverage-transformer/issues"
+  },
+  "homepage": "https://github.com/mcarvin8/apex-code-coverage-transformer#programmatic-usage",
+  "keywords": [
+    "salesforce",
+    "salesforcedx",
+    "apex",
+    "coverage",
+    "code-coverage",
+    "test-coverage",
+    "transformer",
+    "cobertura",
+    "clover",
+    "jacoco",
+    "lcov",
+    "sonarqube"
+  ]
+}

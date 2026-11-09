@@ -547,11 +547,16 @@ Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex
 
 ## Programmatic Usage
 
-Other Node.js tools (CLI plugins, scripts, CI wrappers) can call the transformer directly instead of shelling out to `sf acc-transformer transform`. The package is ESM-only.
+Other Node.js tools (CLI plugins, scripts, CI wrappers) can call the transformer directly instead of shelling out to `sf acc-transformer transform`. The API is ESM-only and ships in two npm packages, built from the same source and released with the same version:
+
+- **`apex-code-coverage-transformer-core`** (recommended for libraries): the API only, with **no runtime dependencies**.
+- **`apex-code-coverage-transformer`**: the Salesforce CLI plugin package, which also exports the API but installs the plugin's dependencies (`@salesforce/core`, `@oclif/core` and others).
 
 ```bash
-npm install apex-code-coverage-transformer
+npm install apex-code-coverage-transformer-core
 ```
+
+The examples below import from `apex-code-coverage-transformer`; with the core package, import from `apex-code-coverage-transformer-core` instead. Everything else is identical.
 
 ```ts
 import { transformCoverage, CoverageError } from 'apex-code-coverage-transformer';

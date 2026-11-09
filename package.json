@@ -88,6 +88,7 @@
   "scripts": {
     "build": "wireit",
     "build:action": "wireit",
+    "build:core": "wireit",
     "clean": "wireit",
     "clean:build": "wireit",
     "clean:package-manager": "wireit",
@@ -145,7 +146,8 @@
       "dependencies": [
         "compile",
         "lint",
-        "build:action"
+        "build:action",
+        "build:core"
       ]
     },
     "build:action": {
@@ -161,6 +163,25 @@
         "dist/action/**"
       ],
       "clean": false
+    },
+    "build:core": {
+      "command": "tsc -p tsconfig.core.json && shx cp LICENSE.md packages/core/LICENSE.md && node scripts/verify-core-package.mjs",
+      "files": [
+        "src/**/*.ts",
+        "!src/commands/**",
+        "!src/hooks/**",
+        "!src/action/**",
+        "tsconfig.json",
+        "tsconfig.core.json",
+        "packages/core/package.json",
+        "LICENSE.md",
+        "scripts/verify-core-package.mjs"
+      ],
+      "output": [
+        "packages/core/lib/**",
+        "packages/core/LICENSE.md"
+      ],
+      "clean": true
     },
     "compile": {
       "command": "tsc -p . --pretty --incremental",

@@ -1,7 +1,8 @@
 # Smoke test for the programmatic API (`import { transformCoverage } from
 # 'apex-code-coverage-transformer'`), run as an external consumer in a scratch
 # project: published types must compile and the runtime checks must pass.
-# See scripts/api-consumer/.
+# Runs for both npm packages built from this repo: the CLI plugin package and the
+# dependency-free apex-code-coverage-transformer-core. See scripts/api-consumer/.
 #
 # Two sources, deliberately not the same:
 # - pull_request: installs an `npm pack` tarball of this checkout - catches a
@@ -16,6 +17,9 @@ on:
       - '.github/workflows/smoke-test-api.yml'
       - 'scripts/api-consumer/**'
       - 'package.json'
+      - 'packages/core/**'
+      - 'tsconfig.core.json'
+      - 'scripts/verify-core-package.mjs'
       - 'src/index.ts'
       - 'src/transformers/**'
       - 'src/utils/**'
@@ -33,12 +37,13 @@ permissions:
 
 jobs:
   api-consumer:
-    name: API consumer (${{ matrix.os }}, Node ${{ matrix.node-version }})
+    name: API consumer (${{ matrix.package }}, ${{ matrix.os }}, Node ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
+        package: [apex-code-coverage-transformer, apex-code-coverage-transformer-core]
         os: [ubuntu-latest, windows-latest]
         # Lowest supported (package.json engines) and current LTS
         node-version: ['22.19.0', 'lts/*']
@@ -57,20 +62,30 @@ jobs:
 
       - name: Pack this checkout
         if: github.event_name == 'pull_request'
+        env:
+          PACKAGE: ${{ matrix.package }}
         run: |
           npm ci
           npm run build
-          # --ignore-scripts skips prepack (oclif manifest/readme), which the API doesn't need
-          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
-          echo "PACKAGE_SPEC=$(ls "$RUNNER_TEMP"/apex-code-coverage-transformer-*.tgz)" >> "$GITHUB_ENV"
+          # --ignore-scripts skips prepack (oclif manifest/readme for the plugin, a rebuild for
+          # core); `npm run build` above already built both packages.
+          PACK_DIR="$RUNNER_TEMP/pack"
+          mkdir -p "$PACK_DIR"
+          if [ "$PACKAGE" = "apex-code-coverage-transformer-core" ]; then
+            npm pack ./packages/core --ignore-scripts --pack-destination "$PACK_DIR"
+          else
+            npm pack --ignore-scripts --pack-destination "$PACK_DIR"
+          fi
+          echo "PACKAGE_SPEC=$(ls "$PACK_DIR"/*.tgz)" >> "$GITHUB_ENV"
 
       - name: Use published version
         if: github.event_name != 'pull_request'
         env:
           INPUT_VERSION: ${{ inputs.version }}
+          PACKAGE: ${{ matrix.package }}
         run: |
           VERSION="${INPUT_VERSION:-$(node -p "require('./package.json').version")}"
-          echo "PACKAGE_SPEC=apex-code-coverage-transformer@$VERSION" >> "$GITHUB_ENV"
+          echo "PACKAGE_SPEC=$PACKAGE@$VERSION" >> "$GITHUB_ENV"
 
       - name: Run consumer checks
         run: scripts/api-consumer/run.sh "$PACKAGE_SPEC"
