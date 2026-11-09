@@ -61,6 +61,8 @@ describe('acc-transformer transform NUTs', () => {
     expect(error.replace('\n', '')).toContain(
       'The provided JSON does not match a known coverage data format from the Salesforce deploy or test command.',
     );
+    // CoverageError's code must not leak into the CLI prefix ("Error (UNKNOWN_INPUT_FORMAT)").
+    expect(error).toMatch(/Error \(1\)/);
   });
 
   it('excludes .cls files via **/*.cls glob pattern on deploy coverage', async () => {
@@ -88,6 +90,7 @@ describe('acc-transformer transform NUTs', () => {
     const command = `acc-transformer transform --coverage-json "${deployCoverage}" --coverage-json "${testCoverage}" --format sonar`;
     const error = execCmd(command, { ensureExitCode: 1 }).shellOutput.stderr;
     expect(error).toContain('All coverage JSON files must be the same type (deploy or test).');
+    expect(error).toMatch(/Error \(1\)/);
   });
 
   it('excludes a single class by basename glob on test coverage', async () => {
