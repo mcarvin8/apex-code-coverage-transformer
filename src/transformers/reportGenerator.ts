@@ -50,19 +50,24 @@ export async function generateAndWriteReport(
   options?: ReportRenderOptions,
 ): Promise<string> {
   const content = generateReportContent(coverageObj, format, options);
-  const extension = HandlerRegistry.getExtension(format);
-
-  const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
-  const dir = dirname(outputPath);
-
-  const suffix = formatAmount > 1 ? `-${format}` : '';
-  const filePath = join(dir, `${base}${suffix}${extension}`);
-
+  const filePath = getReportPath(outputPath, format, formatAmount);
   await writeFile(filePath, content, 'utf-8');
   return filePath;
 }
 
-function generateReportContent(coverageObj: AnyCoverageObject, format: string, options?: ReportRenderOptions): string {
+export function getReportPath(outputPath: string, format: string, formatAmount: number): string {
+  const extension = HandlerRegistry.getExtension(format);
+  const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
+  const dir = dirname(outputPath);
+  const suffix = formatAmount > 1 ? `-${format}` : '';
+  return join(dir, `${base}${suffix}${extension}`);
+}
+
+export function generateReportContent(
+  coverageObj: AnyCoverageObject,
+  format: string,
+  options?: ReportRenderOptions,
+): string {
   const renderer = STRING_FORMAT_RENDERERS[format];
   return renderer ? renderer(coverageObj, options) : generateXmlContent(coverageObj, format);
 }

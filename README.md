@@ -24,6 +24,7 @@ Transforms (and optionally merges) Apex code coverage JSON from Salesforce deplo
 - [Coverage Report Formats](#coverage-report-formats)
 - [CI/CD Integration](#cicd-integration)
 - [Automatic Transformation (Hook)](#automatic-transformation-hook)
+- [Programmatic Usage](#programmatic-usage)
 - [Troubleshooting](#troubleshooting)
 - [Questions or Issues?](#questions-or-issues)
 - [License](#license)
@@ -543,6 +544,47 @@ Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex
 | `minCoverage`              | No         | Minimum required line coverage percentage (0–100). Exits with an error if overall coverage is below this threshold.                          |
 | `maxAnnotations`           | No         | Maximum `::warning` annotations emitted when `format` includes `github-actions` (default: `50`).                                             |
 | `excludePatterns`          | No         | Comma-separated glob patterns for file paths to exclude (e.g. `**/*Test*,**/mock/**`). Matched against the relative path from the repo root. |
+
+## Programmatic Usage
+
+Other Node.js tools (CLI plugins, scripts, CI wrappers) can call the transformer directly instead of shelling out to `sf acc-transformer transform`. The package is ESM-only.
+
+```bash
+npm install apex-code-coverage-transformer
+```
+
+```ts
+import { transformCoverage, CoverageError } from 'apex-code-coverage-transformer';
+
+const { summary, reports, warnings, passed } = await transformCoverage({
+  inputs: ['coverage/coverage/coverage.json'], // file paths and/or already-parsed coverage JSON
+  formats: ['cobertura', 'markdown'],
+  write: false, // return report contents without writing files
+  cwd: '/path/to/sfdx/project', // where to look for sfdx-project.json (default: process.cwd())
+});
+
+console.log(`${(summary.lineRate * 100).toFixed(2)}% across ${summary.fileCount} files`);
+for (const file of summary.files) {
+  console.log(file.path, file.coveredLines, '/', file.totalLines, 'uncovered:', file.uncoveredLines);
+}
+const markdown = reports.find((r) => r.format === 'markdown')?.content;
+```
+
+| Option                     | Default         | Description                                                                                 |
+| -------------------------- | --------------- | ------------------------------------------------------------------------------------------- |
+| `inputs`                   | (required)      | Coverage JSON file paths and/or parsed objects. All must be the same type (deploy or test). |
+| `formats`                  | `['sonar']`     | Output formats. `COVERAGE_FORMATS` lists every supported value.                             |
+| `outputReport`             | `coverage.xml`  | Base path for written reports. Multiple formats add a suffix (e.g. `coverage-sonar.xml`).   |
+| `write`                    | `true`          | When `false`, nothing is written and each report's `path` is `undefined`.                   |
+| `cwd`                      | `process.cwd()` | Directory to search upward from for `sfdx-project.json`.                                    |
+| `ignorePackageDirectories` | `[]`            | Package directories to skip.                                                                |
+| `excludePatterns`          | `[]`            | Glob patterns for repo-relative file paths to exclude.                                      |
+| `minCoverage`              | none            | Sets `passed: false` when overall coverage is below this percentage. Nothing is thrown.     |
+| `maxAnnotations`           | `50`            | Annotation limit for the `github-actions` format.                                           |
+
+Known failures throw a `CoverageError` with a `code`: `UNKNOWN_INPUT_FORMAT`, `MIXED_INPUT_TYPES`, `UNSUPPORTED_FORMAT`, or `NO_SFDX_PROJECT`. Unreadable input files are skipped with a warning.
+
+Everything exported from the package root follows semver. Deep imports are not supported.
 
 ## Troubleshooting
 

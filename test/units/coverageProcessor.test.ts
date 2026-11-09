@@ -58,7 +58,21 @@ describe('coverageProcessor', () => {
 
     expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', outOfRangeLines, undefined);
     expect(data['no-map/AccountProfile'].s).toEqual(outOfRangeLines);
-    expect(result).toEqual({ processed: 1, totalLines: 2, coveredLines: 1 });
+    expect(result).toEqual({
+      processed: 1,
+      totalLines: 2,
+      coveredLines: 1,
+      files: [
+        {
+          path: relativePath,
+          name: 'AccountProfile',
+          totalLines: 2,
+          coveredLines: 1,
+          lineRate: 0.5,
+          uncoveredLines: [2],
+        },
+      ],
+    });
   });
 
   it('passes test coverage lines to handlers unchanged', async () => {

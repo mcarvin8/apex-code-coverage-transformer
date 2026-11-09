@@ -10,6 +10,7 @@ import { mapLimit } from '../utils/mapLimit.js';
 import {
   CoverageProcessingContext,
   DeployCoverageData,
+  FileCoverageSummary,
   LineTotals,
   ProcessResult,
   TestCoverageData,
@@ -61,6 +62,7 @@ async function processEntries<T>(
   let processed = 0;
   let totalLines = 0;
   let coveredLines = 0;
+  const files: FileCoverageSummary[] = [];
 
   await mapLimit(items, context.concurrencyLimit, async (item: T) => {
     const formattedName = getName(item).replace(/no-map[\\/]+/, '');
@@ -80,6 +82,7 @@ async function processEntries<T>(
     const counts = countLines(lines);
     totalLines += counts.totalLines;
     coveredLines += counts.coveredLines;
+    files.push(summarizeFile(path, formattedName, lines, counts));
 
     for (const handler of context.handlers.values()) {
       handler.processFile(path, formattedName, lines, sourceContent);
@@ -87,7 +90,28 @@ async function processEntries<T>(
     processed++;
   });
 
-  return { processed, totalLines, coveredLines };
+  files.sort((a, b) => a.path.localeCompare(b.path));
+  return { processed, totalLines, coveredLines, files };
+}
+
+function summarizeFile(
+  path: string,
+  name: string,
+  lines: Record<string, number>,
+  counts: LineTotals,
+): FileCoverageSummary {
+  const uncoveredLines = Object.entries(lines)
+    .filter(([, hit]) => hit !== 1)
+    .map(([line]) => Number(line))
+    .sort((a, b) => a - b);
+  return {
+    path,
+    name,
+    totalLines: counts.totalLines,
+    coveredLines: counts.coveredLines,
+    lineRate: counts.totalLines > 0 ? counts.coveredLines / counts.totalLines : 0,
+    uncoveredLines,
+  };
 }
 
 export function processDeployCoverage(
