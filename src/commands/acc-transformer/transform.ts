@@ -5,6 +5,7 @@ import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { transformCoverageReport } from '../../transformers/coverageTransformer.js';
 import { DEFAULT_MAX_ANNOTATIONS } from '../../transformers/generators/generateGitHubActions.js';
 import { formatOptions } from '../../utils/constants.js';
+import { CoverageError } from '../../utils/errors.js';
 import { TransformerTransformResult } from '../../utils/types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -66,17 +67,25 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     const { flags } = await this.parse(TransformerTransform);
     const warnings: string[] = [];
 
-    const result = await transformCoverageReport(
-      flags['coverage-json'],
-      flags['output-report'],
-      flags['format'] ?? ['sonar'],
-      flags['ignore-package-directory'] ?? [],
-      {
-        minCoverage: flags['min-coverage'],
-        maxAnnotations: flags['max-annotations'],
-        excludePatterns: flags['exclude-pattern'],
-      },
-    );
+    let result: Awaited<ReturnType<typeof transformCoverageReport>>;
+    try {
+      result = await transformCoverageReport(
+        flags['coverage-json'],
+        flags['output-report'],
+        flags['format'] ?? ['sonar'],
+        flags['ignore-package-directory'] ?? [],
+        {
+          minCoverage: flags['min-coverage'],
+          maxAnnotations: flags['max-annotations'],
+          excludePatterns: flags['exclude-pattern'],
+        },
+      );
+    } catch (error) {
+      // SfCommand prints an error's `code` in place of the exit code ("Error (UNKNOWN_INPUT_FORMAT)").
+      // Rethrow as a plain Error so CLI output stays "Error (1): ..." as documented.
+      if (error instanceof CoverageError) throw new Error(error.message, { cause: error });
+      throw error;
+    }
     warnings.push(...result.warnings);
 
     this.log(`The coverage report has been written to: ${result.finalPaths.join(', ')}`);
