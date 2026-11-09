@@ -24,14 +24,14 @@ echo "Consumer project: $WORK"
 echo "Installing: $SPEC"
 
 cd "$WORK"
-echo '{ "name": "api-consumer", "private": true, "type": "module" }' > package.json
+echo '{ "name": "api-consumer", "private": true, "type": "module" }' >package.json
 npm install --no-audit --no-fund --loglevel=error "$SPEC" typescript @types/node
 cp "$HERE/check.mjs" "$HERE/types.ts" "$HERE/tsconfig.json" .
 
 # Minimal SFDX project from the shared fixtures, so file paths actually resolve.
 mkdir -p project/force-app
 cp -r "$FIXTURES/samples/." project/force-app/
-echo '{ "packageDirectories": [{ "path": "force-app", "default": true }] }' > project/sfdx-project.json
+echo '{ "packageDirectories": [{ "path": "force-app", "default": true }] }' >project/sfdx-project.json
 
 echo "Installed version: $(node -p "require('apex-code-coverage-transformer/package.json').version")"
 
