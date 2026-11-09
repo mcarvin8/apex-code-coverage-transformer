@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v4.2.0...v4.3.0) (2026-11-09)
+
+
+### Features
+
+* publish dependency-free apex-code-coverage-transformer-core package ([#441](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/441)) ([76d7f65](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/76d7f650234bac780b22ffeb22728530e3b78375))
+
 ## [4.2.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v4.1.0...v4.2.0) (2026-11-09)
 
 
