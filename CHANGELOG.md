@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v4.1.0...v4.2.0) (2026-11-09)
+
+
+### Features
+
+* add programmatic API for library consumers ([#438](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/438)) ([13679cd](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/13679cd98ea71f3f077ccf17d594cd512b9a0878))
+
 ## [4.1.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v4.0.0...v4.1.0) (2026-11-05)
 
 
