@@ -23,7 +23,7 @@ ALIAS="apex-code-coverage-transformer"
 if [[ -f "$SPEC" ]]; then
   # Resolve a local tarball to an absolute path before leaving the repo. On Windows (Git Bash),
   # `pwd -W` gives a native path; Git Bash doesn't translate a POSIX path inside "name@file:...".
-  TARBALL_DIR="$(cd "$(dirname "$SPEC")" && (pwd -W 2>/dev/null || pwd))"
+  TARBALL_DIR="$(cd "$(dirname "$SPEC")" && (pwd -W 2>/dev/null || pwd) )"
   SPEC="$ALIAS@file:$TARBALL_DIR/$(basename "$SPEC")"
 elif [[ "${SPEC%@*}" != "$ALIAS" ]]; then
   SPEC="$ALIAS@npm:$SPEC"
