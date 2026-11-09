@@ -206,7 +206,7 @@ describe('acc-transformer transform unit tests', () => {
       ['sonar'],
       [samplesPackagePath],
     );
-    // deploy_coverage_2 covers lines 52+53 of AccountTrigger which are 0 in deploy_coverage → merged lineRate higher
+    // deploy_coverage_2 covers AccountTrigger lines 19+20, which are uncovered in deploy_coverage → merged lineRate higher
     expect(merged.lineRate).toBeGreaterThan(single.lineRate);
   });
   it('merges two test coverage JSONs, union-ing covered lines for the same entry name', async () => {
@@ -217,7 +217,7 @@ describe('acc-transformer transform unit tests', () => {
       ['sonar'],
       [samplesPackagePath],
     );
-    // test_coverage_2 covers lines 52+53 of AccountProfile which are 0 in test_coverage → merged lineRate higher
+    // test_coverage_2 covers AccountProfile lines 18+28, which are uncovered in test_coverage → merged lineRate higher
     expect(merged.lineRate).toBeGreaterThan(single.lineRate);
   });
   it('throws when mixing deploy and test coverage JSONs', async () => {

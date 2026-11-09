@@ -9,8 +9,8 @@ type Handler = ReturnType<typeof getCoverageHandler>;
 
 const repoRoot = resolve('.');
 const relativePath = 'test/fixtures/samples/classes/AccountProfile.cls';
-// AccountProfile.cls is ~94 lines; line 500 is past end of file and must pass through untouched
-const outOfRangeLines = { '2': 0, '500': 1 };
+// Real AccountProfile.cls lines: 17 (if condition) covered, 18 (early return) uncovered.
+const coverageLines = { '17': 1, '18': 0 };
 
 function createContext(formats: string[] = ['sonar']): {
   context: CoverageProcessingContext;
@@ -43,7 +43,7 @@ function deployData(): DeployCoverageData {
       path: 'no-map/AccountProfile',
       f: {},
       b: {},
-      s: { ...outOfRangeLines },
+      s: { ...coverageLines },
       statementMap: {},
     },
   };
@@ -56,8 +56,8 @@ describe('coverageProcessor', () => {
 
     const result = await processDeployCoverage(data, context);
 
-    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', outOfRangeLines, undefined);
-    expect(data['no-map/AccountProfile'].s).toEqual(outOfRangeLines);
+    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', coverageLines, undefined);
+    expect(data['no-map/AccountProfile'].s).toEqual(coverageLines);
     expect(result).toEqual({
       processed: 1,
       totalLines: 2,
@@ -69,7 +69,7 @@ describe('coverageProcessor', () => {
           totalLines: 2,
           coveredLines: 1,
           lineRate: 0.5,
-          uncoveredLines: [2],
+          uncoveredLines: [18],
         },
       ],
     });
@@ -121,7 +121,7 @@ describe('coverageProcessor', () => {
         id: '01p000000000000',
         name: 'AccountProfile',
         totalLines: 2,
-        lines: { ...outOfRangeLines },
+        lines: { ...coverageLines },
         totalCovered: 1,
         coveredPercent: 50,
       },
@@ -129,7 +129,7 @@ describe('coverageProcessor', () => {
 
     await processTestCoverage(data, context);
 
-    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', outOfRangeLines, undefined);
+    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', coverageLines, undefined);
   });
 
   it('passes source content to handlers for deploy coverage when html format is requested', async () => {
@@ -138,7 +138,7 @@ describe('coverageProcessor', () => {
 
     await processDeployCoverage(deployData(), context);
 
-    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', outOfRangeLines, sourceContent);
+    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', coverageLines, sourceContent);
   });
 
   describe('source read warnings', () => {
@@ -158,7 +158,7 @@ describe('coverageProcessor', () => {
       expect(context.warnings).toEqual([
         `Could not read source file ${missingPath}; the HTML report will show coverage for this file without line contents.`,
       ]);
-      expect(processFile).toHaveBeenCalledWith(missingPath, 'AccountProfile', outOfRangeLines, undefined);
+      expect(processFile).toHaveBeenCalledWith(missingPath, 'AccountProfile', coverageLines, undefined);
     });
 
     it('warns for test coverage too', async () => {

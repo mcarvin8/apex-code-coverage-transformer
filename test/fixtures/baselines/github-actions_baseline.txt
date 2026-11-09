@@ -1,9 +1,10 @@
-::notice title=Apex Code Coverage::Overall coverage 87.10%25 (54/62 lines, 8 uncovered across 2 files)
-::warning file=force-app/main/default/classes/AccountProfile.cls,line=52,title=Uncovered Apex line::Line 52 is not covered by any Apex test
-::warning file=force-app/main/default/classes/AccountProfile.cls,line=53,title=Uncovered Apex line::Line 53 is not covered by any Apex test
+::notice title=Apex Code Coverage::Overall coverage 76.32%25 (29/38 lines, 9 uncovered across 2 files)
+::warning file=force-app/main/default/classes/AccountProfile.cls,line=18,title=Uncovered Apex line::Line 18 is not covered by any Apex test
+::warning file=force-app/main/default/classes/AccountProfile.cls,line=28,title=Uncovered Apex line::Line 28 is not covered by any Apex test
+::warning file=force-app/main/default/classes/AccountProfile.cls,line=38,title=Uncovered Apex line::Line 38 is not covered by any Apex test
 ::warning file=force-app/main/default/classes/AccountProfile.cls,line=59,title=Uncovered Apex line::Line 59 is not covered by any Apex test
-::warning file=force-app/main/default/classes/AccountProfile.cls,line=60,title=Uncovered Apex line::Line 60 is not covered by any Apex test
-::warning file=packaged/triggers/AccountTrigger.trigger,line=52,title=Uncovered Apex line::Line 52 is not covered by any Apex test
-::warning file=packaged/triggers/AccountTrigger.trigger,line=53,title=Uncovered Apex line::Line 53 is not covered by any Apex test
-::warning file=packaged/triggers/AccountTrigger.trigger,line=59,title=Uncovered Apex line::Line 59 is not covered by any Apex test
-::warning file=packaged/triggers/AccountTrigger.trigger,line=60,title=Uncovered Apex line::Line 60 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=19,title=Uncovered Apex line::Line 19 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=20,title=Uncovered Apex line::Line 20 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=21,title=Uncovered Apex line::Line 21 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=22,title=Uncovered Apex line::Line 22 is not covered by any Apex test
+::warning file=packaged/triggers/AccountTrigger.trigger,line=35,title=Uncovered Apex line::Line 35 is not covered by any Apex test

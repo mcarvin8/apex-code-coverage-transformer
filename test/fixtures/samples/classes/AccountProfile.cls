@@ -79,15 +79,4 @@ public with sharing class AccountProfile {
     public static String getMetadata() {
         return 'AccountProfile v1.0';
     }
-
-    // Placeholder lines for coverage test alignment (lines 85-93)
-    // 85
-    // 86
-    // 87
-    // 88
-    // 89
-    // 90
-    // 91
-    // 92
-    // 93
 }
