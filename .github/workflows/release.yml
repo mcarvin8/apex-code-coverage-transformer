@@ -182,3 +182,8 @@ jobs:
     if: needs.release.outputs.published == 'true'
     uses: ./.github/workflows/smoke-test.yml
     secrets: inherit
+
+  smoke-test-api:
+    needs: [release, wait-for-npm]
+    if: needs.release.outputs.published == 'true'
+    uses: ./.github/workflows/smoke-test-api.yml

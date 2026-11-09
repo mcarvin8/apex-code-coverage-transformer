@@ -1,0 +1,76 @@
+# Smoke test for the programmatic API (`import { transformCoverage } from
+# 'apex-code-coverage-transformer'`), run as an external consumer in a scratch
+# project: published types must compile and the runtime checks must pass.
+# See scripts/api-consumer/.
+#
+# Two sources, deliberately not the same:
+# - pull_request: installs an `npm pack` tarball of this checkout - catches a
+#   broken exports map, missing .d.ts or API regression before merge.
+# - workflow_call (from release.yml) / workflow_dispatch: installs the exact
+#   version from the npm registry - checks what users actually get.
+name: Smoke test (programmatic API)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/smoke-test-api.yml'
+      - 'scripts/api-consumer/**'
+      - 'package.json'
+      - 'src/index.ts'
+      - 'src/transformers/**'
+      - 'src/utils/**'
+      - 'src/handlers/**'
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Published version to test (defaults to the version in package.json)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  api-consumer:
+    name: API consumer (${{ matrix.os }}, Node ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        # Lowest supported (package.json engines) and current LTS
+        node-version: ['22.19.0', 'lts/*']
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Pack this checkout
+        if: github.event_name == 'pull_request'
+        run: |
+          npm ci
+          npm run build
+          # --ignore-scripts skips prepack (oclif manifest/readme), which the API doesn't need
+          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
+          echo "PACKAGE_SPEC=$(ls "$RUNNER_TEMP"/apex-code-coverage-transformer-*.tgz)" >> "$GITHUB_ENV"
+
+      - name: Use published version
+        if: github.event_name != 'pull_request'
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          VERSION="${INPUT_VERSION:-$(node -p "require('./package.json').version")}"
+          echo "PACKAGE_SPEC=apex-code-coverage-transformer@$VERSION" >> "$GITHUB_ENV"
+
+      - name: Run consumer checks
+        run: scripts/api-consumer/run.sh "$PACKAGE_SPEC"
