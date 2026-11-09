@@ -6,12 +6,12 @@
     "f": {},
     "b": {},
     "s": {
-      "52": 1,
-      "53": 1
+      "19": 1,
+      "20": 1
     },
     "statementMap": {
-      "52": { "start": { "line": 52, "column": 0 }, "end": { "line": 52, "column": 0 } },
-      "53": { "start": { "line": 53, "column": 0 }, "end": { "line": 53, "column": 0 } }
+      "19": { "start": { "line": 19, "column": 0 }, "end": { "line": 19, "column": 0 } },
+      "20": { "start": { "line": 20, "column": 0 }, "end": { "line": 20, "column": 0 } }
     }
   }
 }

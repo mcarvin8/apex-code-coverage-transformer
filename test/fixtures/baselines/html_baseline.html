@@ -224,19 +224,19 @@
     
     <div class="summary">
       <h2>Summary</h2>
-      <div class="coverage-percent" style="color: #4caf50">87.10%</div>
+      <div class="coverage-percent" style="color: #ff9800">76.32%</div>
       <div class="summary-stats">
         <div class="stat-item">
           <div class="stat-label">Total Lines</div>
-          <div class="stat-value">62</div>
+          <div class="stat-value">38</div>
         </div>
         <div class="stat-item">
           <div class="stat-label">Covered Lines</div>
-          <div class="stat-value">54</div>
+          <div class="stat-value">29</div>
         </div>
         <div class="stat-item">
           <div class="stat-label">Uncovered Lines</div>
-          <div class="stat-value">8</div>
+          <div class="stat-value">9</div>
         </div>
         <div class="stat-item">
           <div class="stat-label">Files</div>
@@ -264,20 +264,20 @@
           <tr>
               <td class="package-dir">force-app</td>
               <td class="package-stat">1</td>
-              <td class="package-stat">31</td>
-              <td class="package-stat">27</td>
+              <td class="package-stat">19</td>
+              <td class="package-stat">15</td>
               <td class="package-stat">4</td>
-              <td class="package-pct" style="color: #4caf50">87.10%</td>
-              <td><span class="coverage-bar" style="background-color: #4caf50; width: 87.10%"></span></td>
+              <td class="package-pct" style="color: #ff9800">78.95%</td>
+              <td><span class="coverage-bar" style="background-color: #ff9800; width: 78.95%"></span></td>
             </tr>
 <tr>
               <td class="package-dir">packaged</td>
               <td class="package-stat">1</td>
-              <td class="package-stat">31</td>
-              <td class="package-stat">27</td>
-              <td class="package-stat">4</td>
-              <td class="package-pct" style="color: #4caf50">87.10%</td>
-              <td><span class="coverage-bar" style="background-color: #4caf50; width: 87.10%"></span></td>
+              <td class="package-stat">19</td>
+              <td class="package-stat">14</td>
+              <td class="package-stat">5</td>
+              <td class="package-pct" style="color: #ff9800">73.68%</td>
+              <td><span class="coverage-bar" style="background-color: #ff9800; width: 73.68%"></span></td>
             </tr>
         </tbody>
       </table>
@@ -294,8 +294,8 @@
           <h3 class="file-header" onclick="toggleFile('force-app/main/default/classes/AccountProfile.cls')">
             <span class="file-name">force-app/main/default/classes/AccountProfile.cls</span>
             <span class="file-stats">
-              27/31 lines (87.10%)
-              <span class="coverage-bar" style="background-color: #4caf50; width: 87.10%"></span>
+              15/19 lines (78.95%)
+              <span class="coverage-bar" style="background-color: #ff9800; width: 78.95%"></span>
             </span>
           </h3>
           <div id="file-force-app-main-default-classes-AccountProfile-cls" class="file-details" style="display: none;">
@@ -388,14 +388,14 @@
             <td class="hit-count"></td>
             <td class="line-content">    public String getProfileName(String accountType) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">17</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        if (String.isBlank(accountType)) {</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">18</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">            return DEFAULT_PROFILE;</td>
           </tr>
 <tr class="neutral">
@@ -403,9 +403,9 @@
             <td class="hit-count"></td>
             <td class="line-content">        }</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">20</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        return accountType + &#039; Profile&#039;;</td>
           </tr>
 <tr class="neutral">
@@ -438,14 +438,14 @@
             <td class="hit-count"></td>
             <td class="line-content">    public Boolean validateProfile(Map&lt;String, Object&gt; settings) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">27</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        if (settings == null || settings.isEmpty()) {</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">28</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">            return false;</td>
           </tr>
 <tr class="neutral">
@@ -453,9 +453,9 @@
             <td class="hit-count"></td>
             <td class="line-content">        }</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">30</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        return settings.containsKey(&#039;name&#039;) &amp;&amp; settings.containsKey(&#039;active&#039;);</td>
           </tr>
 <tr class="neutral">
@@ -488,14 +488,14 @@
             <td class="hit-count"></td>
             <td class="line-content">    public void applyProfile(Account acc, String profileName) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">37</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        if (acc == null) {</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">38</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">            return;</td>
           </tr>
 <tr class="neutral">
@@ -503,14 +503,14 @@
             <td class="hit-count"></td>
             <td class="line-content">        }</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">40</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        acc.Description = &#039;Profile: &#039; + profileName;</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">41</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        acc.NumberOfEmployees = 0;</td>
           </tr>
 <tr class="neutral">
@@ -548,54 +548,54 @@
             <td class="hit-count"></td>
             <td class="line-content">        // Reset logic would go here</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">49</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        Integer count = 0;</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">50</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        for (Integer i = 0; i &lt; MAX_RETRIES; i++) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">51</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">            count++;</td>
           </tr>
-<tr class="uncovered" style="background-color: #ffcdd2">
+<tr class="neutral">
             <td class="line-number">52</td>
-            <td class="hit-count">0</td>
+            <td class="hit-count"></td>
             <td class="line-content">        }</td>
           </tr>
-<tr class="uncovered" style="background-color: #ffcdd2">
+<tr class="neutral">
             <td class="line-number">53</td>
-            <td class="hit-count">0</td>
+            <td class="hit-count"></td>
             <td class="line-content">    }</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">54</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content"></td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">55</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    /**</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">56</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">     * Checks if profile is active.</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">57</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">     */</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">58</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    public Boolean isActive(String profileId) {</td>
           </tr>
 <tr class="uncovered" style="background-color: #ffcdd2">
@@ -603,49 +603,49 @@
             <td class="hit-count">0</td>
             <td class="line-content">        return String.isNotBlank(profileId);</td>
           </tr>
-<tr class="uncovered" style="background-color: #ffcdd2">
+<tr class="neutral">
             <td class="line-number">60</td>
-            <td class="hit-count">0</td>
+            <td class="hit-count"></td>
             <td class="line-content">    }</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">61</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content"></td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">62</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    /**</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">63</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">     * Merges two profile configurations.</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">64</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">     */</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">65</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    public Map&lt;String, Object&gt; mergeProfiles(</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">66</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">        Map&lt;String, Object&gt; primary,</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">67</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">        Map&lt;String, Object&gt; secondary</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">68</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    ) {</td>
           </tr>
 <tr class="covered" style="background-color: #c8e6c9">
@@ -663,9 +663,9 @@
             <td class="hit-count">1</td>
             <td class="line-content">            result.putAll(secondary);</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">72</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">        }</td>
           </tr>
 <tr class="covered" style="background-color: #c8e6c9">
@@ -673,34 +673,34 @@
             <td class="hit-count">1</td>
             <td class="line-content">        return result;</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">74</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    }</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">75</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content"></td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">76</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    /**</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">77</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">     * Gets profile metadata.</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">78</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">     */</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">79</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    public static String getMetadata() {</td>
           </tr>
 <tr class="covered" style="background-color: #c8e6c9">
@@ -708,68 +708,13 @@
             <td class="hit-count">1</td>
             <td class="line-content">        return &#039;AccountProfile v1.0&#039;;</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">81</td>
-            <td class="hit-count">1</td>
+            <td class="hit-count"></td>
             <td class="line-content">    }</td>
           </tr>
-<tr class="covered" style="background-color: #c8e6c9">
+<tr class="neutral">
             <td class="line-number">82</td>
-            <td class="hit-count">1</td>
-            <td class="line-content"></td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">83</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // Placeholder lines for coverage test alignment (lines 85-93)</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">84</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 85</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">85</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 86</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">86</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 87</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">87</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 88</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">88</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 89</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">89</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 90</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">90</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 91</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">91</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 92</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">92</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 93</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">93</td>
             <td class="hit-count"></td>
             <td class="line-content">}</td>
           </tr>
@@ -788,8 +733,8 @@
           <h3 class="file-header" onclick="toggleFile('packaged/triggers/AccountTrigger.trigger')">
             <span class="file-name">packaged/triggers/AccountTrigger.trigger</span>
             <span class="file-stats">
-              27/31 lines (87.10%)
-              <span class="coverage-bar" style="background-color: #4caf50; width: 87.10%"></span>
+              14/19 lines (73.68%)
+              <span class="coverage-bar" style="background-color: #ff9800; width: 73.68%"></span>
             </span>
           </h3>
           <div id="file-packaged-triggers-AccountTrigger-trigger" class="file-details" style="display: none;">
@@ -852,29 +797,29 @@
             <td class="hit-count"></td>
             <td class="line-content">) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">11</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">    if (Trigger.isBefore) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">12</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        if (Trigger.isInsert) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">13</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">            for (Account acc : Trigger.new) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">14</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">                if (String.isBlank(acc.Description)) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">15</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">                    acc.Description = &#039;Created by trigger&#039;;</td>
           </tr>
 <tr class="neutral">
@@ -887,29 +832,29 @@
             <td class="hit-count"></td>
             <td class="line-content">            }</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">18</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        } else if (Trigger.isUpdate) {</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">19</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">            for (Account acc : Trigger.new) {</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">20</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">                Account oldAcc = Trigger.oldMap.get(acc.Id);</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">21</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">                if (oldAcc != null &amp;&amp; acc.Name != oldAcc.Name) {</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">22</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">                    acc.Description = &#039;Name updated&#039;;</td>
           </tr>
 <tr class="neutral">
@@ -927,29 +872,29 @@
             <td class="hit-count"></td>
             <td class="line-content">        }</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">26</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">    } else if (Trigger.isAfter) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">27</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        if (Trigger.isInsert) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">28</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">            List&lt;Id&gt; newIds = new List&lt;Id&gt;();</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">29</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">            for (Account acc : Trigger.new) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">30</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">                newIds.add(acc.Id);</td>
           </tr>
 <tr class="neutral">
@@ -957,24 +902,24 @@
             <td class="hit-count"></td>
             <td class="line-content">            }</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">32</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">        } else if (Trigger.isUpdate) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">33</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">            for (Account acc : Trigger.new) {</td>
           </tr>
-<tr class="neutral">
+<tr class="covered" style="background-color: #c8e6c9">
             <td class="line-number">34</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">1</td>
             <td class="line-content">                if (acc.Industry != null) {</td>
           </tr>
-<tr class="neutral">
+<tr class="uncovered" style="background-color: #ffcdd2">
             <td class="line-number">35</td>
-            <td class="hit-count"></td>
+            <td class="hit-count">0</td>
             <td class="line-content">                    acc.Rating = &#039;Warm&#039;;</td>
           </tr>
 <tr class="neutral">
@@ -999,326 +944,6 @@
           </tr>
 <tr class="neutral">
             <td class="line-number">40</td>
-            <td class="hit-count"></td>
-            <td class="line-content"></td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">41</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // Placeholder lines for coverage test alignment (lines 43-104)</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">42</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 43</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">43</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 44</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">44</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 45</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">45</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 46</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">46</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 47</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">47</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 48</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">48</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 49</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">49</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 50</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">50</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 51</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">51</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 52</td>
-          </tr>
-<tr class="uncovered" style="background-color: #ffcdd2">
-            <td class="line-number">52</td>
-            <td class="hit-count">0</td>
-            <td class="line-content">    // 53</td>
-          </tr>
-<tr class="uncovered" style="background-color: #ffcdd2">
-            <td class="line-number">53</td>
-            <td class="hit-count">0</td>
-            <td class="line-content">    // 54</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">54</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 55</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">55</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 56</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">56</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 57</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">57</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 58</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">58</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 59</td>
-          </tr>
-<tr class="uncovered" style="background-color: #ffcdd2">
-            <td class="line-number">59</td>
-            <td class="hit-count">0</td>
-            <td class="line-content">    // 60</td>
-          </tr>
-<tr class="uncovered" style="background-color: #ffcdd2">
-            <td class="line-number">60</td>
-            <td class="hit-count">0</td>
-            <td class="line-content">    // 61</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">61</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 62</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">62</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 63</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">63</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 64</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">64</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 65</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">65</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 66</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">66</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 67</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">67</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 68</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">68</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 69</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">69</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 70</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">70</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 71</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">71</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 72</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">72</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 73</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">73</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 74</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">74</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 75</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">75</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 76</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">76</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 77</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">77</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 78</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">78</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 79</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">79</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 80</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">80</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 81</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">81</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 82</td>
-          </tr>
-<tr class="covered" style="background-color: #c8e6c9">
-            <td class="line-number">82</td>
-            <td class="hit-count">1</td>
-            <td class="line-content">    // 83</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">83</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 84</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">84</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 85</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">85</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 86</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">86</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 87</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">87</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 88</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">88</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 89</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">89</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 90</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">90</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 91</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">91</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 92</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">92</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 93</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">93</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 94</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">94</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 95</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">95</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 96</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">96</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 97</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">97</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 98</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">98</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 99</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">99</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 100</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">100</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 101</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">101</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 102</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">102</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 103</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">103</td>
-            <td class="hit-count"></td>
-            <td class="line-content">    // 104</td>
-          </tr>
-<tr class="neutral">
-            <td class="line-number">104</td>
             <td class="hit-count"></td>
             <td class="line-content">}</td>
           </tr>
