@@ -9,12 +9,38 @@ import { IstanbulCoverageHandler } from '../../src/handlers/istanbulJson.js';
 import { JaCoCoCoverageHandler } from '../../src/handlers/jacoco.js';
 import { LcovCoverageHandler } from '../../src/handlers/lcov.js';
 import { SonarCoverageHandler } from '../../src/handlers/sonar.js';
-import { generateAndWriteReport, getExtensionForFormat } from '../../src/transformers/reportGenerator.js';
+import {
+  generateAndWriteReport,
+  generateReportContent,
+  getExtensionForFormat,
+} from '../../src/transformers/reportGenerator.js';
 
 // Ensure all handlers are registered
 import '../../src/handlers/getHandler.js';
 
 describe('reportGenerator unit tests', () => {
+  it('puts the XML declaration, doctype and root element on separate lines', () => {
+    const handler = new JaCoCoCoverageHandler();
+    handler.processFile('src/A.cls', 'A', { '1': 1 });
+
+    const content = generateReportContent(handler.finalize(), 'jacoco');
+
+    expect(content.split('\n').slice(0, 3)).toEqual([
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
+      '<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN" "report.dtd">',
+      expect.stringMatching(/^<report[ >]/),
+    ]);
+  });
+
+  it('uses a plain XML declaration for formats without a header config', () => {
+    const handler = new SonarCoverageHandler();
+    handler.processFile('src/A.cls', 'A', { '1': 1 });
+
+    const content = generateReportContent(handler.finalize(), 'sonar');
+
+    expect(content.split('\n').slice(0, 2)).toEqual(['<?xml version="1.0"?>', expect.stringMatching(/^<coverage[ >]/)]);
+  });
+
   it('produces correct LCOV format (TN:, SF:, DA:, LF:, LH:, BRF:, BRH:, end_of_record)', async () => {
     const handler = new LcovCoverageHandler();
     handler.processFile('src/A.cls', 'A', { '1': 1, '2': 0, '3': 1 });

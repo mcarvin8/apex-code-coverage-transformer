@@ -24,25 +24,18 @@ export function createHandlers(formats: string[]): Map<string, ReturnType<typeof
   return handlers;
 }
 
-async function readSourceFile(absolutePath: string): Promise<string | undefined> {
-  try {
-    return await readFile(absolutePath, 'utf-8');
-  } catch {
-    return undefined;
-  }
-}
-
 async function loadSourceContent(path: string, context: CoverageProcessingContext): Promise<string | undefined> {
   if (!context.handlers.has('html')) {
     return undefined;
   }
-  const content = await readSourceFile(join(context.repoRoot, path));
-  if (content === undefined) {
+  try {
+    return await readFile(join(context.repoRoot, path), 'utf-8');
+  } catch {
     context.warnings.push(
       `Could not read source file ${path}; the HTML report will show coverage for this file without line contents.`,
     );
+    return undefined;
   }
-  return content;
 }
 
 export function countLines(lines: Record<string, number>): LineTotals {
@@ -100,10 +93,11 @@ function summarizeFile(
   lines: Record<string, number>,
   counts: LineTotals,
 ): FileCoverageSummary {
+  // Line numbers are integer-like keys, which JavaScript always enumerates in ascending
+  // numeric order, so no explicit sort is needed.
   const uncoveredLines = Object.entries(lines)
     .filter(([, hit]) => hit !== 1)
-    .map(([line]) => Number(line))
-    .sort((a, b) => a - b);
+    .map(([line]) => Number(line));
   return {
     path,
     name,

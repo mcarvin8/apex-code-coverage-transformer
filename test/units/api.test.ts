@@ -192,11 +192,69 @@ describe('programmatic API', () => {
       transformCoverage({ inputs: [testCoverage], formats: ['bogus'], write: false, cwd: projectDir }),
     );
     expect(error.code).toBe('UNSUPPORTED_FORMAT');
-    expect(error.message).toContain('Unsupported format: bogus');
+    expect(error.message).toBe(`Unsupported format: bogus. Available formats: ${COVERAGE_FORMATS.join(', ')}`);
+  });
+
+  it('defaults to sonar when formats is empty', async () => {
+    const { reports } = await transformCoverage({ inputs: [testCoverage], formats: [], write: false, cwd: projectDir });
+    expect(reports.map((r) => r.format)).toEqual(['sonar']);
+  });
+
+  it('applies maxAnnotations to the github-actions format', async () => {
+    const countWarnings = (content: string): number =>
+      content.split('\n').filter((l) => l.startsWith('::warning')).length;
+    const run = (maxAnnotations?: number): ReturnType<typeof transformCoverage> =>
+      transformCoverage({
+        inputs: [deployCoverage],
+        formats: ['github-actions'],
+        write: false,
+        cwd: projectDir,
+        maxAnnotations,
+      });
+
+    const unlimited = countWarnings((await run()).reports[0].content);
+    const limited = countWarnings((await run(1)).reports[0].content);
+
+    expect(unlimited).toBeGreaterThan(1);
+    expect(limited).toBe(1);
+  });
+
+  it('names CoverageError and keeps the cause only when given', () => {
+    const cause = new Error('root cause');
+    const withCause = new CoverageError('boom', { code: 'NO_SFDX_PROJECT', cause });
+    const withoutCause = new CoverageError('boom', { code: 'MIXED_INPUT_TYPES' });
+
+    expect(withCause).toBeInstanceOf(Error);
+    expect(withCause.name).toBe('CoverageError');
+    expect(withCause.message).toBe('boom');
+    expect(withCause.code).toBe('NO_SFDX_PROJECT');
+    expect(withCause.cause).toBe(cause);
+    expect(withoutCause.cause).toBeUndefined();
   });
 
   it('throws UNKNOWN_INPUT_FORMAT for unrecognized JSON', async () => {
     const error = await captureError(transformCoverage({ inputs: [invalidJson], write: false, cwd: projectDir }));
+    expect(error.code).toBe('UNKNOWN_INPUT_FORMAT');
+  });
+
+  it('includes file lookup warnings such as duplicate Apex files', async () => {
+    const dupDir = await createProject();
+    try {
+      await mkdir(join(dupDir, 'packaged/classes'), { recursive: true });
+      await copyFile(baselineClassPath, join(dupDir, 'packaged/classes/AccountProfile.cls'));
+
+      const { warnings } = await transformCoverage({ inputs: [testCoverage], write: false, cwd: dupDir });
+
+      expect(warnings.some((w) => w.startsWith('Duplicate Apex file "AccountProfile.cls"'))).toBe(true);
+    } finally {
+      await rm(dupDir, { recursive: true, force: true });
+    }
+  });
+
+  it('throws UNKNOWN_INPUT_FORMAT when any one input is unrecognized', async () => {
+    const error = await captureError(
+      transformCoverage({ inputs: [testCoverage, invalidJson], write: false, cwd: projectDir }),
+    );
     expect(error.code).toBe('UNKNOWN_INPUT_FORMAT');
   });
 

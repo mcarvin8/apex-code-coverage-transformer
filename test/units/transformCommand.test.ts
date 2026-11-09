@@ -1,6 +1,6 @@
 'use strict';
 
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 const transformMock = vi.hoisted(() => vi.fn());
 vi.mock('../../src/transformers/coverageTransformer.js', () => ({ transformCoverageReport: transformMock }));
@@ -8,57 +8,152 @@ vi.mock('../../src/transformers/coverageTransformer.js', () => ({ transformCover
 import TransformerTransform from '../../src/commands/acc-transformer/transform.js';
 import { CoverageError } from '../../src/utils/errors.js';
 
-type CliError = { code?: string; exitCode?: number; message: string };
+type CliError = { code?: string; exitCode?: number; message: string; cause?: unknown };
 
-async function runAndCatch(): Promise<CliError> {
-  return (await TransformerTransform.run(['-j', 'coverage.json']).catch((e: unknown) => e)) as CliError;
+async function runAndCatch(argv: string[] = ['-j', 'coverage.json']): Promise<CliError> {
+  return (await TransformerTransform.run(argv).catch((e: unknown) => e)) as CliError;
+}
+
+/** Walks the `cause` chain, since SfCommand may wrap the thrown error. */
+function causeChain(error: unknown): unknown[] {
+  const chain: unknown[] = [];
+  let current = (error as { cause?: unknown } | undefined)?.cause;
+  while (current !== undefined && chain.length < 10) {
+    chain.push(current);
+    current = (current as { cause?: unknown }).cause;
+  }
+  return chain;
+}
+
+function succeed(overrides: Partial<{ finalPaths: string[]; warnings: string[] }> = {}): void {
+  transformMock.mockResolvedValue({
+    finalPaths: ['coverage.xml'],
+    warnings: [],
+    lineRate: 0.9,
+    success: true,
+    ...overrides,
+  });
 }
 
 describe('transform command', () => {
+  let logSpy: MockInstance;
+  let warnSpy: MockInstance;
+
+  beforeEach(() => {
+    logSpy = vi.spyOn(TransformerTransform.prototype, 'log').mockImplementation(() => {});
+    warnSpy = vi.spyOn(TransformerTransform.prototype, 'warn').mockImplementation((input) => input);
+  });
+
   afterEach(() => {
     transformMock.mockReset();
+    vi.restoreAllMocks();
+    // SfCommand.catch sets process.exitCode, and SfCommandError reads it back on the next failure.
+    process.exitCode = undefined;
+  });
+
+  it('applies defaults when only --coverage-json is given', async () => {
+    succeed();
+
+    await TransformerTransform.run(['--coverage-json', 'coverage.json']);
+
+    expect(transformMock).toHaveBeenCalledWith(['coverage.json'], 'coverage.xml', ['sonar'], [], {
+      minCoverage: undefined,
+      maxAnnotations: 50,
+      excludePatterns: undefined,
+    });
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it('passes short flags and repeated values through', async () => {
+    succeed();
+
+    await TransformerTransform.run([
+      '-j',
+      'a.json',
+      '-j',
+      'b.json',
+      '-r',
+      'out.xml',
+      '-f',
+      'sonar',
+      '-f',
+      'cobertura',
+      '-i',
+      'force-app',
+      '-i',
+      'packaged',
+      '-e',
+      '**/*Test*',
+      '-e',
+      '**/mock/**',
+      '--min-coverage',
+      '80',
+      '--max-annotations',
+      '5',
+    ]);
+
+    expect(transformMock).toHaveBeenCalledWith(
+      ['a.json', 'b.json'],
+      'out.xml',
+      ['sonar', 'cobertura'],
+      ['force-app', 'packaged'],
+      { minCoverage: 80, maxAnnotations: 5, excludePatterns: ['**/*Test*', '**/mock/**'] },
+    );
+  });
+
+  it('logs every report path and returns them', async () => {
+    succeed({ finalPaths: ['coverage-sonar.xml', 'coverage-cobertura.xml'] });
+
+    const result = await TransformerTransform.run(['-j', 'coverage.json', '-f', 'sonar', '-f', 'cobertura']);
+
+    expect(result).toEqual({ path: ['coverage-sonar.xml', 'coverage-cobertura.xml'] });
+    expect(logSpy).toHaveBeenCalledWith(
+      'The coverage report has been written to: coverage-sonar.xml, coverage-cobertura.xml',
+    );
+  });
+
+  it('emits each transform warning', async () => {
+    succeed({ warnings: ['first warning', 'second warning'] });
+
+    await TransformerTransform.run(['-j', 'coverage.json']);
+
+    expect(warnSpy.mock.calls).toEqual([['first warning'], ['second warning']]);
+  });
+
+  it('requires --coverage-json', async () => {
+    const error = await runAndCatch([]);
+
+    expect(error.message).toContain('Missing required flag');
+    expect(transformMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects --min-coverage above 100', async () => {
+    const error = await runAndCatch(['-j', 'coverage.json', '--min-coverage', '101']);
+
+    expect(error.message).toContain('Expected an integer less than or equal to 100');
+    expect(transformMock).not.toHaveBeenCalled();
+  });
+
+  it('fails with the coverage message when below --min-coverage', async () => {
+    transformMock.mockResolvedValue({ finalPaths: ['coverage.xml'], warnings: [], lineRate: 0.5, success: false });
+
+    const error = await runAndCatch(['-j', 'coverage.json', '--min-coverage', '75']);
+
+    expect(error.message).toBe('Coverage of 50.00% is below the required minimum of 75%.');
   });
 
   it('does not surface CoverageError codes, keeping CLI output as "Error (1): ..."', async () => {
-    transformMock.mockRejectedValue(
-      new CoverageError('The provided JSON does not match a known coverage data format.', {
-        code: 'UNKNOWN_INPUT_FORMAT',
-      }),
-    );
+    const original = new CoverageError('The provided JSON does not match a known coverage data format.', {
+      code: 'UNKNOWN_INPUT_FORMAT',
+    });
+    transformMock.mockRejectedValue(original);
 
     const error = await runAndCatch();
 
     expect(error.message).toContain('The provided JSON does not match a known coverage data format');
     expect(error.code).not.toBe('UNKNOWN_INPUT_FORMAT');
     expect(error.exitCode).toBe(1);
-  });
-
-  it('returns report paths and passes flags through on success', async () => {
-    transformMock.mockResolvedValue({
-      finalPaths: ['coverage-sonar.xml'],
-      warnings: ['The file name Foo was not found in any package directory.'],
-      lineRate: 0.9,
-      success: true,
-    });
-
-    const result = await TransformerTransform.run(['-j', 'coverage.json', '-f', 'sonar', '--min-coverage', '80']);
-
-    expect(result).toEqual({ path: ['coverage-sonar.xml'] });
-    expect(transformMock).toHaveBeenCalledWith(['coverage.json'], 'coverage.xml', ['sonar'], [], {
-      minCoverage: 80,
-      maxAnnotations: 50,
-      excludePatterns: undefined,
-    });
-  });
-
-  it('fails with the coverage message when below --min-coverage', async () => {
-    transformMock.mockResolvedValue({ finalPaths: ['coverage.xml'], warnings: [], lineRate: 0.5, success: false });
-
-    const error = (await TransformerTransform.run(['-j', 'coverage.json', '--min-coverage', '75']).catch(
-      (e: unknown) => e,
-    )) as CliError;
-
-    expect(error.message).toBe('Coverage of 50.00% is below the required minimum of 75%.');
+    expect(causeChain(error)).toContain(original);
   });
 
   it('rethrows other errors unchanged', async () => {

@@ -51,7 +51,6 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
     }),
     'max-annotations': Flags.integer({
       summary: messages.getMessage('flags.max-annotations.summary'),
-      required: false,
       min: 1,
       default: DEFAULT_MAX_ANNOTATIONS,
     }),
@@ -90,11 +89,9 @@ export default class TransformerTransform extends SfCommand<TransformerTransform
 
     this.log(`The coverage report has been written to: ${result.finalPaths.join(', ')}`);
 
-    if (warnings.length > 0) {
-      warnings.forEach((warning) => {
-        this.warn(warning);
-      });
-    }
+    warnings.forEach((warning) => {
+      this.warn(warning);
+    });
 
     if (!result.success) {
       this.error(

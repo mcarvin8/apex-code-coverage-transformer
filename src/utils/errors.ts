@@ -10,7 +10,7 @@ export class CoverageError extends Error {
   public readonly code: CoverageErrorCode;
 
   public constructor(message: string, options: { code: CoverageErrorCode; cause?: unknown }) {
-    super(message, options.cause === undefined ? undefined : { cause: options.cause });
+    super(message, { cause: options.cause });
     this.name = 'CoverageError';
     this.code = options.code;
   }

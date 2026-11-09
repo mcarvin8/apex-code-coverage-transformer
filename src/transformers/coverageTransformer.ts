@@ -138,7 +138,7 @@ export async function transformCoverage(options: TransformCoverageOptions): Prom
     const report: GeneratedReport = { format: format as CoverageFormat, content };
     if (write) {
       report.path = getReportPath(outputReport, format, formats.length);
-      await writeFile(report.path, content, 'utf-8');
+      await writeFile(report.path, content);
     }
     reports.push(report);
   }
@@ -178,7 +178,8 @@ export async function transformCoverageReport(
     excludePatterns: options?.excludePatterns,
   });
 
-  const finalPaths = result.reports.map((r) => r.path).filter((p): p is string => p !== undefined);
+  // The wrapper always writes (write defaults to true), so every report has a path.
+  const finalPaths = result.reports.map((r) => r.path as string);
 
   return {
     // Preserve historical behavior: report the requested path even when no inputs could be read.

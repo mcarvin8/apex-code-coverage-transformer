@@ -75,6 +75,45 @@ describe('coverageProcessor', () => {
     });
   });
 
+  it('strips repeated separators after the no-map prefix', async () => {
+    const { context, processFile } = createContext();
+    const data: TestCoverageData[] = [
+      {
+        id: '01p',
+        name: 'no-map//AccountProfile',
+        totalLines: 1,
+        lines: { '1': 1 },
+        totalCovered: 1,
+        coveredPercent: 100,
+      },
+    ];
+
+    await processTestCoverage(data, context);
+
+    expect(context.warnings).toEqual([]);
+    expect(processFile).toHaveBeenCalledWith(relativePath, 'AccountProfile', { '1': 1 }, undefined);
+  });
+
+  it('sorts the per-file summary by path regardless of input order', async () => {
+    const { context } = createContext();
+    context.filePathCache = new Map([
+      ['Zeta.cls', 'force-app/classes/Zeta.cls'],
+      ['Alpha.cls', 'force-app/classes/Alpha.cls'],
+    ]);
+    const entry = (name: string): TestCoverageData => ({
+      id: name,
+      name,
+      totalLines: 1,
+      lines: { '1': 1 },
+      totalCovered: 1,
+      coveredPercent: 100,
+    });
+
+    const result = await processTestCoverage([entry('Zeta'), entry('Alpha')], context);
+
+    expect(result.files.map((f) => f.path)).toEqual(['force-app/classes/Alpha.cls', 'force-app/classes/Zeta.cls']);
+  });
+
   it('passes test coverage lines to handlers unchanged', async () => {
     const { context, processFile } = createContext();
     const data: TestCoverageData[] = [
