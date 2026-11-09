@@ -1,6 +1,8 @@
 'use strict';
 
-import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
+import { resolve } from 'node:path';
+import { Config } from '@oclif/core';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 const transformMock = vi.hoisted(() => vi.fn());
 vi.mock('../../src/transformers/coverageTransformer.js', () => ({ transformCoverageReport: transformMock }));
@@ -8,10 +10,18 @@ vi.mock('../../src/transformers/coverageTransformer.js', () => ({ transformCover
 import TransformerTransform from '../../src/commands/acc-transformer/transform.js';
 import { CoverageError } from '../../src/utils/errors.js';
 
+// Loading the oclif config is slow (seconds on Windows CI), so load it once and reuse it
+// rather than letting each run() load it again.
+let config: Config;
+
+function runCommand(argv: string[]): ReturnType<typeof TransformerTransform.run> {
+  return TransformerTransform.run(argv, config);
+}
+
 type CliError = { code?: string; exitCode?: number; message: string; cause?: unknown };
 
 async function runAndCatch(argv: string[] = ['-j', 'coverage.json']): Promise<CliError> {
-  return (await TransformerTransform.run(argv).catch((e: unknown) => e)) as CliError;
+  return (await runCommand(argv).catch((e: unknown) => e)) as CliError;
 }
 
 /** Walks the `cause` chain, since SfCommand may wrap the thrown error. */
@@ -36,6 +46,10 @@ function succeed(overrides: Partial<{ finalPaths: string[]; warnings: string[] }
 }
 
 describe('transform command', () => {
+  beforeAll(async () => {
+    config = await Config.load(resolve('.'));
+  }, 60_000);
+
   let logSpy: MockInstance;
   let warnSpy: MockInstance;
 
@@ -54,7 +68,7 @@ describe('transform command', () => {
   it('applies defaults when only --coverage-json is given', async () => {
     succeed();
 
-    await TransformerTransform.run(['--coverage-json', 'coverage.json']);
+    await runCommand(['--coverage-json', 'coverage.json']);
 
     expect(transformMock).toHaveBeenCalledWith(['coverage.json'], 'coverage.xml', ['sonar'], [], {
       minCoverage: undefined,
@@ -67,7 +81,7 @@ describe('transform command', () => {
   it('passes short flags and repeated values through', async () => {
     succeed();
 
-    await TransformerTransform.run([
+    await runCommand([
       '-j',
       'a.json',
       '-j',
@@ -104,7 +118,7 @@ describe('transform command', () => {
   it('logs every report path and returns them', async () => {
     succeed({ finalPaths: ['coverage-sonar.xml', 'coverage-cobertura.xml'] });
 
-    const result = await TransformerTransform.run(['-j', 'coverage.json', '-f', 'sonar', '-f', 'cobertura']);
+    const result = await runCommand(['-j', 'coverage.json', '-f', 'sonar', '-f', 'cobertura']);
 
     expect(result).toEqual({ path: ['coverage-sonar.xml', 'coverage-cobertura.xml'] });
     expect(logSpy).toHaveBeenCalledWith(
@@ -115,7 +129,7 @@ describe('transform command', () => {
   it('emits each transform warning', async () => {
     succeed({ warnings: ['first warning', 'second warning'] });
 
-    await TransformerTransform.run(['-j', 'coverage.json']);
+    await runCommand(['-j', 'coverage.json']);
 
     expect(warnSpy.mock.calls).toEqual([['first warning'], ['second warning']]);
   });
