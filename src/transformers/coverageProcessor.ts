@@ -10,6 +10,7 @@ import { mapLimit } from '../utils/mapLimit.js';
 import {
   CoverageProcessingContext,
   DeployCoverageData,
+  FileCoverageSummary,
   LineTotals,
   ProcessResult,
   TestCoverageData,
@@ -23,25 +24,18 @@ export function createHandlers(formats: string[]): Map<string, ReturnType<typeof
   return handlers;
 }
 
-async function readSourceFile(absolutePath: string): Promise<string | undefined> {
-  try {
-    return await readFile(absolutePath, 'utf-8');
-  } catch {
-    return undefined;
-  }
-}
-
 async function loadSourceContent(path: string, context: CoverageProcessingContext): Promise<string | undefined> {
   if (!context.handlers.has('html')) {
     return undefined;
   }
-  const content = await readSourceFile(join(context.repoRoot, path));
-  if (content === undefined) {
+  try {
+    return await readFile(join(context.repoRoot, path), 'utf-8');
+  } catch {
     context.warnings.push(
       `Could not read source file ${path}; the HTML report will show coverage for this file without line contents.`,
     );
+    return undefined;
   }
-  return content;
 }
 
 export function countLines(lines: Record<string, number>): LineTotals {
@@ -61,6 +55,7 @@ async function processEntries<T>(
   let processed = 0;
   let totalLines = 0;
   let coveredLines = 0;
+  const files: FileCoverageSummary[] = [];
 
   await mapLimit(items, context.concurrencyLimit, async (item: T) => {
     const formattedName = getName(item).replace(/no-map[\\/]+/, '');
@@ -80,6 +75,7 @@ async function processEntries<T>(
     const counts = countLines(lines);
     totalLines += counts.totalLines;
     coveredLines += counts.coveredLines;
+    files.push(summarizeFile(path, formattedName, lines, counts));
 
     for (const handler of context.handlers.values()) {
       handler.processFile(path, formattedName, lines, sourceContent);
@@ -87,7 +83,29 @@ async function processEntries<T>(
     processed++;
   });
 
-  return { processed, totalLines, coveredLines };
+  files.sort((a, b) => a.path.localeCompare(b.path));
+  return { processed, totalLines, coveredLines, files };
+}
+
+function summarizeFile(
+  path: string,
+  name: string,
+  lines: Record<string, number>,
+  counts: LineTotals,
+): FileCoverageSummary {
+  // Line numbers are integer-like keys, which JavaScript always enumerates in ascending
+  // numeric order, so no explicit sort is needed.
+  const uncoveredLines = Object.entries(lines)
+    .filter(([, hit]) => hit !== 1)
+    .map(([line]) => Number(line));
+  return {
+    path,
+    name,
+    totalLines: counts.totalLines,
+    coveredLines: counts.coveredLines,
+    lineRate: counts.totalLines > 0 ? counts.coveredLines / counts.totalLines : 0,
+    uncoveredLines,
+  };
 }
 
 export function processDeployCoverage(

@@ -49,12 +49,95 @@ export type CoverageProcessingContext = {
 export type CoverageInput = DeployCoverageData | TestCoverageData[];
 
 export type LineTotals = { totalLines: number; coveredLines: number };
-export type ProcessResult = { processed: number } & LineTotals;
+/** Per-file coverage totals returned by the programmatic API. */
+export type FileCoverageSummary = {
+  /** Path relative to the repo root, using forward slashes. */
+  path: string;
+  /** Apex class or trigger name as reported by Salesforce. */
+  name: string;
+  totalLines: number;
+  coveredLines: number;
+  /** Covered lines divided by total lines (0-1). 0 when the file has no coverable lines. */
+  lineRate: number;
+  /** Line numbers with no coverage, ascending. */
+  uncoveredLines: number[];
+};
+
+export type ProcessResult = { processed: number; files: FileCoverageSummary[] } & LineTotals;
 
 export type TransformOptions = {
   minCoverage?: number;
   maxAnnotations?: number;
   excludePatterns?: string[];
+};
+
+/** Output formats supported by the transformer. */
+export type CoverageFormat =
+  | 'clover'
+  | 'cobertura'
+  | 'github-actions'
+  | 'html'
+  | 'jacoco'
+  | 'json'
+  | 'json-summary'
+  | 'lcovonly'
+  | 'markdown'
+  | 'opencover'
+  | 'simplecov'
+  | 'sonar';
+
+/** Options for {@link transformCoverage}. */
+export type TransformCoverageOptions = {
+  /**
+   * Coverage inputs: paths to Salesforce CLI coverage JSON files and/or already-parsed JSON.
+   * All inputs must be the same type (deploy or test). Covered lines are unioned across inputs.
+   */
+  inputs: Array<string | CoverageInput>;
+  /** Output formats. Defaults to `['sonar']`. */
+  formats?: CoverageFormat[];
+  /**
+   * Base path for written reports. Defaults to `coverage.xml`. With multiple formats, the format
+   * name is appended (e.g. `coverage-sonar.xml`). Ignored when `write` is false.
+   */
+  outputReport?: string;
+  /** Write reports to disk. Defaults to true. When false, report contents are only returned. */
+  write?: boolean;
+  /** Directory to search upward from for `sfdx-project.json`. Defaults to `process.cwd()`. */
+  cwd?: string;
+  /** Package directory paths (as written in `sfdx-project.json`) to skip. */
+  ignorePackageDirectories?: string[];
+  /** Glob patterns matched against repo-relative file paths to exclude. */
+  excludePatterns?: string[];
+  /** Minimum overall line coverage percentage (0-100). Sets `passed` to false when not met. */
+  minCoverage?: number;
+  /** Maximum annotations for the `github-actions` format. */
+  maxAnnotations?: number;
+};
+
+export type GeneratedReport = {
+  format: CoverageFormat;
+  /** Path the report was written to. Undefined when `write` is false. */
+  path?: string;
+  content: string;
+};
+
+export type CoverageSummary = {
+  /** Overall covered lines divided by total lines (0-1). */
+  lineRate: number;
+  coveredLines: number;
+  totalLines: number;
+  fileCount: number;
+  /** Per-file totals, sorted by path. */
+  files: FileCoverageSummary[];
+};
+
+/** Result of {@link transformCoverage}. */
+export type TransformCoverageResult = {
+  reports: GeneratedReport[];
+  summary: CoverageSummary;
+  warnings: string[];
+  /** False only when `minCoverage` is set and overall coverage is below it. */
+  passed: boolean;
 };
 
 type SonarLine = {

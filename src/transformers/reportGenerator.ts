@@ -50,32 +50,31 @@ export async function generateAndWriteReport(
   options?: ReportRenderOptions,
 ): Promise<string> {
   const content = generateReportContent(coverageObj, format, options);
-  const extension = HandlerRegistry.getExtension(format);
-
-  const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
-  const dir = dirname(outputPath);
-
-  const suffix = formatAmount > 1 ? `-${format}` : '';
-  const filePath = join(dir, `${base}${suffix}${extension}`);
-
-  await writeFile(filePath, content, 'utf-8');
+  const filePath = getReportPath(outputPath, format, formatAmount);
+  await writeFile(filePath, content);
   return filePath;
 }
 
-function generateReportContent(coverageObj: AnyCoverageObject, format: string, options?: ReportRenderOptions): string {
+export function getReportPath(outputPath: string, format: string, formatAmount: number): string {
+  const extension = HandlerRegistry.getExtension(format);
+  const base = basename(outputPath, extname(outputPath)); // e.g., 'coverage'
+  const dir = dirname(outputPath);
+  const suffix = formatAmount > 1 ? `-${format}` : '';
+  return join(dir, `${base}${suffix}${extension}`);
+}
+
+export function generateReportContent(
+  coverageObj: AnyCoverageObject,
+  format: string,
+  options?: ReportRenderOptions,
+): string {
   const renderer = STRING_FORMAT_RENDERERS[format];
   return renderer ? renderer(coverageObj, options) : generateXmlContent(coverageObj, format);
 }
 
 function generateXmlContent(coverageObj: AnyCoverageObject, format: string): string {
-  const isHeadless = isXmlReportFormat(format);
-  const builder = new XmlBuilder(builderOptions);
-  let xml = builder.build(coverageObj);
-
-  if (isHeadless) {
-    xml = xml.replace(/^<\?xml[^>]*>\s*/i, '');
-  }
-
+  // XmlBuilder never emits an XML declaration, so the format's header is simply prepended.
+  const xml = new XmlBuilder(builderOptions).build(coverageObj);
   return prependXmlHeader(xml, format).trimEnd();
 }
 
@@ -100,11 +99,8 @@ function generateLcov(coverageObj: LcovCoverageObject): string {
 }
 
 function prependXmlHeader(xml: string, format: string): string {
-  // Remove any existing XML declaration to avoid duplicates
-  const stripped = xml.replace(/^<\?xml[^>]*>\s*/i, '');
   const config = isXmlReportFormat(format) ? XML_HEADER_CONFIG[format] : undefined;
-
-  return [config?.xmlDecl ?? '<?xml version="1.0"?>', config?.doctype, stripped].filter(Boolean).join('\n');
+  return [config?.xmlDecl ?? '<?xml version="1.0"?>', config?.doctype, xml].filter(Boolean).join('\n');
 }
 
 export function getExtensionForFormat(format: string): string {

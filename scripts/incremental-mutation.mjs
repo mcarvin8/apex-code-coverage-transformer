@@ -3,7 +3,8 @@
 // with the base branch.
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { matchesGlob } from 'node:path';
 
 const baseBranch = process.env.MUTATION_BASE_BRANCH ?? 'origin/main';
 const reportJsonPath = 'reports/mutation/mutation-testing-report.json';
@@ -26,7 +27,19 @@ function listChangedSourceFiles() {
   return output
     .split('\n')
     .map((line) => line.trim())
-    .filter((line) => line.endsWith('.ts'));
+    .filter((line) => line.endsWith('.ts'))
+    .filter((line) => !isExcludedFromMutation(line));
+}
+
+// Passing files via --mutate overrides the config's `mutate` list, including its `!` excludes
+// (e.g. src/commands/**, which is covered by NUTs rather than unit tests). Re-apply them here
+// so an incremental run never mutates files the full run deliberately skips.
+const mutateExcludes = JSON.parse(readFileSync('stryker.config.json', 'utf-8'))
+  .mutate.filter((pattern) => pattern.startsWith('!'))
+  .map((pattern) => pattern.slice(1));
+
+function isExcludedFromMutation(file) {
+  return mutateExcludes.some((pattern) => matchesGlob(file, pattern));
 }
 
 function extractOriginal(filePath, location) {
