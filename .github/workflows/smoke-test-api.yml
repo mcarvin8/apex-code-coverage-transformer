@@ -45,8 +45,14 @@ jobs:
       matrix:
         package: [apex-code-coverage-transformer, apex-code-coverage-transformer-core]
         os: [ubuntu-latest, windows-latest]
-        # Lowest supported (package.json engines) and current LTS
-        node-version: ['22.19.0', 'lts/*']
+        # Current LTS, plus the lowest Node each package supports (its package.json engines):
+        # the plugin needs more than core because of sfdx-hardis.
+        node-version: ['lts/*']
+        include:
+          - { package: apex-code-coverage-transformer, os: ubuntu-latest, node-version: '22.22.2' }
+          - { package: apex-code-coverage-transformer, os: windows-latest, node-version: '22.22.2' }
+          - { package: apex-code-coverage-transformer-core, os: ubuntu-latest, node-version: '22.19.0' }
+          - { package: apex-code-coverage-transformer-core, os: windows-latest, node-version: '22.19.0' }
     defaults:
       run:
         shell: bash

@@ -34,7 +34,7 @@ Transforms (and optionally merges) Apex code coverage JSON from Salesforce deplo
 ## Prerequisites
 
 - [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli) (`sf`) installed
-- Node.js 22.19 or later
+- Node.js 22.22.2 or later (`apex-code-coverage-transformer-core` alone needs 22.19 or later)
 - A Salesforce DX project with `sfdx-project.json` and package directories
 - Use only the **json** coverage formatter from the Salesforce CLI; other formatters are not supported
 
@@ -122,9 +122,9 @@ sf apex get test --test-run-id <id> --code-coverage --output-dir "coverage"
 
 **SFDX Hardis** — coverage path: `hardis-report/apex-coverage-results.json`
 
-Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis):
+Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) 8.24.1 or later: the plugin picks up the coverage automatically through [sfdx-hardis events](#sfdx-hardis-events) and posts a coverage summary on the Pull Request.
 
-- `sf hardis project deploy smart` (requires `COVERAGE_FORMATTER_JSON=true`)
+- `sf hardis project deploy smart|start|validate|quick`
 - `sf hardis org test apex`
 
 ## Command Reference
@@ -527,8 +527,7 @@ Create `.apexcodecovtransformer.config.json` in the project root to transform co
 - `sf project deploy [start|validate|report|resume]`
 - `sf apex run test`
 - `sf apex get test`
-- `sf hardis project deploy smart` (if sfdx-hardis installed and `COVERAGE_FORMATTER_JSON=true`)
-- `sf hardis org test apex` (if sfdx-hardis installed)
+- `sf hardis project deploy [smart|start|validate|quick]` and `sf hardis org test apex` (see [sfdx-hardis events](#sfdx-hardis-events))
 
 > **Note:** The hook fires once per command and always processes a single coverage JSON. It cannot merge multiple inputs. If you need to merge coverage from multiple runs (e.g. split test batches), run the `sf acc-transformer transform` command manually with multiple `-j` flags after all runs complete.
 
@@ -544,6 +543,31 @@ Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex
 | `minCoverage`              | No         | Minimum required line coverage percentage (0–100). Exits with an error if overall coverage is below this threshold.                          |
 | `maxAnnotations`           | No         | Maximum `::warning` annotations emitted when `format` includes `github-actions` (default: `50`).                                             |
 | `excludePatterns`          | No         | Comma-separated glob patterns for file paths to exclude (e.g. `**/*Test*,**/mock/**`). Matched against the relative path from the repo root. |
+| `pullRequestComment`       | No         | sfdx-hardis events only: post the coverage summary as a Pull Request comment (default: `true`).                                              |
+
+### sfdx-hardis events
+
+sfdx-hardis 8.24.1 and later send an event as soon as Salesforce returns the result of a validation, a deployment or an Apex test run. The plugin listens to these events, so with sfdx-hardis you don't need `deployCoverageJsonPath` or `testCoverageJsonPath`: the event gives the path of `hardis-report/apex-coverage-results.json`.
+
+The coverage of sfdx-hardis commands only goes through these events. The `sf project deploy` and `sf apex run test` commands that sfdx-hardis starts under the hood are skipped by the hook, so the coverage is transformed once per run.
+
+| Event                         | Sent by                                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `sfdx-hardis:validation-done` | `sf hardis project deploy smart` in check mode, `sf hardis project deploy validate`, `deploy start --dry-run` |
+| `sfdx-hardis:deployment-done` | `sf hardis project deploy smart`, `sf hardis project deploy start`, `sf hardis project deploy quick`          |
+| `sfdx-hardis:apex-tests-done` | `sf hardis org test apex`                                                                                     |
+
+On each event, when `.apexcodecovtransformer.config.json` exists, the plugin:
+
+1. Writes the reports set by `format` and `outputReportPath`.
+2. Posts a markdown coverage summary (files sorted with the lowest coverage first) as a Pull Request comment, through the git provider sfdx-hardis is set up with (GitHub, GitLab, Azure DevOps, Bitbucket). There is one comment for validations, one for deployments and one for Apex test runs, and each later run updates its comment. The sfdx-hardis comments are left as they are. Set `pullRequestComment` to `false` to only write the reports.
+
+Notes:
+
+- The summary only counts Apex in the project's package directories, so it can differ from the org-wide coverage sfdx-hardis checks.
+- `minCoverage` marks the comment as failing but does not fail the sfdx-hardis command. Use the sfdx-hardis coverage threshold (`apexTestsMinCoverageOrgWide`) to fail the job.
+- A `deploy smart` run with several packages sends one event per package; each one overwrites the reports and the comment, so the last package wins.
+- Turning the sfdx-hardis events off (`disablePluginEvents: true` in `.sfdx-hardis.yml` or `SFDX_HARDIS_DISABLE_PLUGIN_EVENTS=true`) also turns off this plugin in sfdx-hardis commands.
 
 ## Programmatic Usage
 
