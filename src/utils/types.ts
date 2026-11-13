@@ -157,19 +157,6 @@ export type SonarCoverageObject = {
   };
 };
 
-export type HookFile = {
-  deployCoverageJsonPath?: string;
-  testCoverageJsonPath?: string;
-  outputReportPath?: string;
-  format?: string;
-  ignorePackageDirectories?: string;
-  minCoverage?: number;
-  maxAnnotations?: number;
-  excludePatterns?: string;
-  /** sfdx-hardis events only: post the coverage summary as a Pull Request comment. Defaults to true. */
-  pullRequestComment?: boolean;
-};
-
 export type CoberturaLine = {
   '@number': number;
   '@hits': number;

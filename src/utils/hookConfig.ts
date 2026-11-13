@@ -4,9 +4,23 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 import { getRepoRoot } from './getRepoRoot.js';
-import { CoverageFormat, HookFile } from './types.js';
+import { CoverageFormat } from './types.js';
 
 export const HOOK_CONFIG_FILE_NAME = '.apexcodecovtransformer.config.json';
+
+/** Contents of `.apexcodecovtransformer.config.json`. */
+export type HookFile = {
+  deployCoverageJsonPath?: string;
+  testCoverageJsonPath?: string;
+  outputReportPath?: string;
+  format?: string;
+  ignorePackageDirectories?: string;
+  minCoverage?: number;
+  maxAnnotations?: number;
+  excludePatterns?: string;
+  /** sfdx-hardis events only: post the coverage summary as a Pull Request comment. Defaults to true. */
+  pullRequestComment?: boolean;
+};
 
 /**
  * Set by the prerun hook while an sfdx-hardis command runs. sfdx-hardis passes its environment to the

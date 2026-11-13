@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import type { SfdxHardisRunEvent } from 'sfdx-hardis/plugin-api';
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
-import { HOOK_CONFIG_FILE_NAME } from '../../src/utils/hookConfig.js';
+import { HOOK_CONFIG_FILE_NAME, type HookFile } from '../../src/utils/hookConfig.js';
 import {
   buildCommentMarkdown,
   getCommentKey,
@@ -16,7 +16,7 @@ import {
   type SfdxHardisRunEventDeps,
   truncateMarkdown,
 } from '../../src/utils/sfdxHardisRunEvent.js';
-import type { HookFile, TransformCoverageResult } from '../../src/utils/types.js';
+import type { TransformCoverageResult } from '../../src/utils/types.js';
 import { baselineClassPath, baselineTriggerPath, deployCoverage, testCoverage } from '../utils/testConstants.js';
 
 type RunEvent = Pick<SfdxHardisRunEvent, 'event' | 'data'>;
