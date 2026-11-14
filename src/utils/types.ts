@@ -157,17 +157,6 @@ export type SonarCoverageObject = {
   };
 };
 
-export type HookFile = {
-  deployCoverageJsonPath: string;
-  testCoverageJsonPath: string;
-  outputReportPath: string;
-  format: string;
-  ignorePackageDirectories: string;
-  minCoverage?: number;
-  maxAnnotations?: number;
-  excludePatterns?: string;
-};
-
 export type CoberturaLine = {
   '@number': number;
   '@hits': number;

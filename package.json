@@ -5,7 +5,8 @@
   "dependencies": {
     "@oclif/core": "5.1.11",
     "@salesforce/core": "9.4.4",
-    "@salesforce/sf-plugins-core": "13.0.8"
+    "@salesforce/sf-plugins-core": "13.0.8",
+    "sfdx-hardis": "8.24.1-beta202611122321.0"
   },
   "devDependencies": {
     "@actions/core": "3.0.1",
@@ -31,7 +32,7 @@
     "wireit": "0.15.0"
   },
   "engines": {
-    "node": ">=22.19.0"
+    "node": ">=22.22.2"
   },
   "files": [
     "/lib",
@@ -78,7 +79,11 @@
       }
     },
     "hooks": {
-      "finally": "./lib/hooks/finally"
+      "prerun": "./lib/hooks/prerun",
+      "finally": "./lib/hooks/finally",
+      "sfdx-hardis:validation-done": "./lib/hooks/sfdxHardisRunDone",
+      "sfdx-hardis:deployment-done": "./lib/hooks/sfdxHardisRunDone",
+      "sfdx-hardis:apex-tests-done": "./lib/hooks/sfdxHardisRunDone"
     },
     "devPlugins": [
       "@oclif/plugin-help"
