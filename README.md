@@ -53,7 +53,7 @@ For GitHub Actions, this is also available as a [native Action](https://github.c
 
 ```yaml
 - name: Transform Coverage
-  uses: mcarvin8/apex-code-coverage-transformer@v4
+  uses: mcarvin8/apex-code-coverage-transformer@v5
   with:
     coverage-json: coverage/test-result-codecoverage.json
     output-report: coverage.xml
@@ -309,7 +309,7 @@ For GitHub Actions specifically, the transform step can run as a native Action i
 
 ```yaml
 - name: Transform Coverage
-  uses: mcarvin8/apex-code-coverage-transformer@v4
+  uses: mcarvin8/apex-code-coverage-transformer@v5
   with:
     coverage-json: coverage/test-result-codecoverage.json
     output-report: coverage.xml
@@ -321,7 +321,7 @@ Repeatable inputs (`coverage-json`, `format`, `ignore-package-directory`, `exclu
 ```yaml
 - name: Transform Coverage
   id: transform
-  uses: mcarvin8/apex-code-coverage-transformer@v4
+  uses: mcarvin8/apex-code-coverage-transformer@v5
   with:
     coverage-json: coverage/test-result-codecoverage.json
     format: |

@@ -6,8 +6,8 @@
 # Two sources, deliberately not the same:
 # - pull_request: uses `./` (this checkout's actual action.yml/dist/action) -
 #   validates what's about to be merged, so a regression like the one this
-#   test originally caught gets flagged before it ever reaches @v4.
-# - workflow_dispatch: uses `@v4` (the live published tag) - an on-demand
+#   test originally caught gets flagged before it ever reaches @v5.
+# - workflow_dispatch: uses `@v5` (the live published tag) - an on-demand
 #   check that what's actually public still works, run manually post-release.
 name: Smoke test (published Action)
 
@@ -99,7 +99,7 @@ jobs:
           echo "coverage-percentage: ${{ steps.transform.outputs.coverage-percentage }}"
 
   success-path-published:
-    name: Success path (published @v4)
+    name: Success path (published @v5)
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -114,7 +114,7 @@ jobs:
 
       - name: Transform Coverage
         id: transform
-        uses: mcarvin8/apex-code-coverage-transformer@v4
+        uses: mcarvin8/apex-code-coverage-transformer@v5
         with:
           coverage-json: test/fixtures/inputs/deploy_coverage.json
           output-report: coverage.xml
@@ -129,7 +129,7 @@ jobs:
           cat coverage.xml
 
   min-coverage-failure-path-published:
-    name: min-coverage failure path (published @v4)
+    name: min-coverage failure path (published @v5)
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -145,7 +145,7 @@ jobs:
       - name: Transform Coverage (expected to fail the threshold)
         id: transform
         continue-on-error: true
-        uses: mcarvin8/apex-code-coverage-transformer@v4
+        uses: mcarvin8/apex-code-coverage-transformer@v5
         with:
           coverage-json: test/fixtures/inputs/deploy_coverage.json
           output-report: coverage.xml
