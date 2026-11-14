@@ -1,7 +1,7 @@
 {
   "name": "apex-code-coverage-transformer-core",
   "description": "Dependency-free library that transforms Salesforce Apex code coverage JSON into SonarQube, Cobertura, JaCoCo, LCOV, Clover, HTML, Markdown and more",
-  "version": "4.3.0",
+  "version": "5.0.0",
   "type": "module",
   "exports": {
     ".": {
