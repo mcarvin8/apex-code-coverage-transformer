@@ -24,8 +24,6 @@ import { mergeDeployCoverageData, mergeTestCoverageData } from './coverageDataMe
 import { createHandlers, processDeployCoverage, processTestCoverage } from './coverageProcessor.js';
 import { generateReportContent, getReportPath } from './reportGenerator.js';
 
-export { TransformOptions };
-
 const DEFAULT_OUTPUT_REPORT = 'coverage.xml';
 
 async function loadInputs(inputs: Array<string | CoverageInput>, warnings: string[]): Promise<CoverageInput[]> {
