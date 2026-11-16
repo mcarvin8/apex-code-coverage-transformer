@@ -66,6 +66,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      # Node 22 ships npm 10, which writes optional peer dependencies of the sfdx-hardis tree into
+      # package-lock.json differently from npm 11+ (used locally, on Node 24+ and by Dependabot).
+      - name: Use npm 11
+        if: startsWith(matrix.node-version, '22')
+        run: npm install --global npm@11
+
       - name: Pack this checkout
         if: github.event_name == 'pull_request'
         env:
