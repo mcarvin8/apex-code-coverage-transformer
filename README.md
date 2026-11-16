@@ -13,8 +13,10 @@ Transforms (and optionally merges) Apex code coverage JSON from Salesforce deplo
 > **v4 breaking change:** v3 and earlier automatically re-numbered deploy command coverage lines that Salesforce reported beyond the end of a file. Salesforce fixed this bug server-side in Winter '27 (API v68.0), regardless of the `--api-version` used on the deploy, so v4 removes the re-numbering and passes deploy coverage lines through exactly as reported. Test-command coverage is unaffected. See [Troubleshooting](#troubleshooting) for details.
 
 > [!WARNING]
-> **v5 breaking change:** Only affects users using this plugin's automated hooks with sfdx-hardis. The `finally` hook no longer runs after `sf hardis project deploy smart` or `sf hardis org test apex`, or after the `sf` commands sfdx-hardis runs under the hood, so coverage is no longer transformed twice. sfdx-hardis coverage now goes through [sfdx-hardis events](#sfdx-hardis-events), which require sfdx-hardis 8.24.1 or later with plugin events enabled. With an older sfdx-hardis, upgrade it or run `sf acc-transformer transform` after the sfdx-hardis command. The `deployCoverageJsonPath` and `testCoverageJsonPath` config keys are no longer needed for sfdx-hardis.
-> v5 bumps the node minimum to Node.js 22.22.2 for the Salesforce CLI plugin due to sfdx-hardis dependencies. The node minimum `apex-code-coverage-transformer-core`remains at Node.js 22.19.
+> **v5 breaking changes:**
+>
+> - The Salesforce CLI plugin requires Node.js 22.22.2 or later. `apex-code-coverage-transformer-core` still supports Node.js 22.19.
+> - With sfdx-hardis, the [hook](#automatic-transformation-hook) now runs through [sfdx-hardis events](#sfdx-hardis-events), which need sfdx-hardis 8.24.1 or later. With an older sfdx-hardis, upgrade it or run `sf acc-transformer transform` after the sfdx-hardis command.
 
 <details>
   <summary>Table of Contents</summary>
