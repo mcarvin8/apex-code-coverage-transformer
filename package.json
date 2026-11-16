@@ -34,6 +34,7 @@
   "engines": {
     "node": ">=22.22.2"
   },
+  "packageManager": "pnpm@12.21.0",
   "files": [
     "/lib",
     "!/lib/action",
@@ -98,7 +99,7 @@
     "clean:build": "wireit",
     "clean:package-manager": "wireit",
     "compile": "wireit",
-    "dependencies:upgrade": "npx npm-check-updates -u && npm install && npm audit fix",
+    "dependencies:upgrade": "pnpm dlx npm-check-updates -u && pnpm install",
     "format": "wireit",
     "lint": "wireit",
     "lint:dependencies": "wireit",
@@ -237,10 +238,10 @@
       ]
     },
     "lint:engine": {
-      "command": "ls-engines --no-current --no-dev --mode=virtual",
+      "command": "ls-engines --no-current --no-dev --mode=actual",
       "files": [
         "package.json",
-        "package-lock.json"
+        "pnpm-lock.yaml"
       ],
       "output": []
     },
