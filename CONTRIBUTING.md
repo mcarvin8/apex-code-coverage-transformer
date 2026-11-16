@@ -7,7 +7,7 @@ Contributions welcome: bug reports, feature requests, doc improvements, and code
 ## Requirements
 
 - Node.js ≥ 22.22.2
-- [pnpm](https://pnpm.io/installation), at the version pinned in `packageManager` in `package.json` (e.g. `npm install --global pnpm@<version>`)
+- pnpm ≥ 12.21.0 - `npm i -g pnpm@12.21.0 --allow-scripts=pnpm`
 
 ## Development setup
 
