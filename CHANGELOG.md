@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.1](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v5.0.0...v5.0.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* **hardis:** bump sfdx-hardis dep to 8.25.0 ([#448](https://github.com/mcarvin8/apex-code-coverage-transformer/issues/448)) ([fcf4ae7](https://github.com/mcarvin8/apex-code-coverage-transformer/commit/fcf4ae72d0904b2fe12d1046763b18ffed43d134))
+
 ## [5.0.0](https://github.com/mcarvin8/apex-code-coverage-transformer/compare/v4.3.0...v5.0.0) (2026-11-14)
 
 
