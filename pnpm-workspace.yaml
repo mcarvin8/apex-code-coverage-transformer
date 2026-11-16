@@ -8,4 +8,7 @@ allowBuilds:
 # package.json) otherwise makes pnpm 12 add a leading document for pnpm itself, which GitHub's
 # dependency graph can't read, so Dependabot alerts and security updates would stop working.
 # CI still installs the pinned version with pnpm/action-setup.
+minimumReleaseAgeExclude:
+  - sfdx-hardis@8.25.0
+
 pmOnFail: ignore

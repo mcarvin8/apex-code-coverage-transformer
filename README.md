@@ -16,7 +16,7 @@ Transforms (and optionally merges) Apex code coverage JSON from Salesforce deplo
 > **v5 breaking changes:**
 >
 > - The Salesforce CLI plugin requires Node.js 22.22.2 or later. `apex-code-coverage-transformer-core` still supports Node.js 22.19.
-> - With sfdx-hardis, the [hook](#automatic-transformation-hook) now runs through [sfdx-hardis events](#sfdx-hardis-events), which need sfdx-hardis 8.24.1 or later. With an older sfdx-hardis, upgrade it or run `sf acc-transformer transform` after the sfdx-hardis command.
+> - With sfdx-hardis, the [hook](#automatic-transformation-hook) now runs through [sfdx-hardis events](#sfdx-hardis-events), which need sfdx-hardis 8.25.0 or later. With an older sfdx-hardis, upgrade it or run `sf acc-transformer transform` after the sfdx-hardis command.
 
 <details>
   <summary>Table of Contents</summary>
@@ -128,7 +128,7 @@ sf apex get test --test-run-id <id> --code-coverage --output-dir "coverage"
 
 **SFDX Hardis** — coverage path: `hardis-report/apex-coverage-results.json`
 
-Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) 8.24.1 or later: the plugin picks up the coverage automatically through [sfdx-hardis events](#sfdx-hardis-events) and posts a coverage summary on the Pull Request.
+Works with [sfdx-hardis](https://github.com/hardisgroupcom/sfdx-hardis) 8.25.0 or later: the plugin picks up the coverage automatically through [sfdx-hardis events](#sfdx-hardis-events) and posts a coverage summary on the Pull Request.
 
 - `sf hardis project deploy smart|start|validate|quick`
 - `sf hardis org test apex`
@@ -553,7 +553,7 @@ Sample configs: [Salesforce CLI](https://raw.githubusercontent.com/mcarvin8/apex
 
 ### sfdx-hardis events
 
-sfdx-hardis 8.24.1 and later send an event as soon as Salesforce returns the result of a validation, a deployment or an Apex test run. The plugin listens to these events, so with sfdx-hardis you don't need `deployCoverageJsonPath` or `testCoverageJsonPath`: the event gives the path of `hardis-report/apex-coverage-results.json`.
+sfdx-hardis 8.25.0 and later send an event as soon as Salesforce returns the result of a validation, a deployment or an Apex test run. The plugin listens to these events, so with sfdx-hardis you don't need `deployCoverageJsonPath` or `testCoverageJsonPath`: the event gives the path of `hardis-report/apex-coverage-results.json`.
 
 The coverage of sfdx-hardis commands only goes through these events. The `sf project deploy` and `sf apex run test` commands that sfdx-hardis starts under the hood are skipped by the hook, so the coverage is transformed once per run.
 
