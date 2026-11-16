@@ -64,7 +64,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -110,7 +109,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli@nightly

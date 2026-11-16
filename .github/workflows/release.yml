@@ -76,7 +76,6 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: pnpm
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -121,6 +120,10 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          # registry-url writes `_authToken=${NODE_AUTH_TOKEN}` to .npmrc for publishing; pnpm
+          # warns when the variable is unset. Publishing uses OIDC trusted publishing below.
+          NODE_AUTH_TOKEN: ''
 
       - name: Publish to NPM
         id: publish
