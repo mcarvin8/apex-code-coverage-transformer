@@ -64,7 +64,12 @@ jobs:
       # package-lock.json differently from npm 11+ (used locally, on Node 24+ and by Dependabot).
       - name: Use npm 11
         if: startsWith(matrix.node-version, '22')
-        run: npm install --global npm@11
+        # npm 10 can not replace itself globally (MODULE_NOT_FOUND 'promise-retry'), so install npm 11
+        # in its own folder and put it first on the PATH.
+        shell: bash
+        run: |
+          npm install --prefix "$RUNNER_TEMP/npm11" --no-audit --no-fund npm@11
+          echo "$RUNNER_TEMP/npm11/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Install Dependencies
         run: npm ci
@@ -113,7 +118,12 @@ jobs:
       # package-lock.json differently from npm 11+ (used locally, on Node 24+ and by Dependabot).
       - name: Use npm 11
         if: startsWith(matrix.node-version, '22')
-        run: npm install --global npm@11
+        # npm 10 can not replace itself globally (MODULE_NOT_FOUND 'promise-retry'), so install npm 11
+        # in its own folder and put it first on the PATH.
+        shell: bash
+        run: |
+          npm install --prefix "$RUNNER_TEMP/npm11" --no-audit --no-fund npm@11
+          echo "$RUNNER_TEMP/npm11/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli@nightly
