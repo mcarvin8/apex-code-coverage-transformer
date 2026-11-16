@@ -73,6 +73,7 @@
   "oclif": {
     "commands": "./lib/commands",
     "bin": "sf",
+    "repositoryPrefix": "<%- repo %>/blob/main/<%- commandPath %>",
     "topicSeparator": " ",
     "topics": {
       "acc-transformer": {
