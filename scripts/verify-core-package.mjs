@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Guards the apex-code-coverage-transformer-core package after `npm run build:core`:
+// Guards the apex-code-coverage-transformer-core package after `pnpm run build:core`:
 // - it declares no runtime dependencies,
 // - its build contains no CLI plugin, hook or GitHub Action code,
 // - nothing in the build imports a package other than Node.js built-ins.
@@ -30,7 +30,7 @@ let files;
 try {
   files = walk(libDir);
 } catch {
-  problems.push(`${libDir} is missing - run "npm run build:core" first`);
+  problems.push(`${libDir} is missing - run "pnpm run build:core" first`);
   files = [];
 }
 

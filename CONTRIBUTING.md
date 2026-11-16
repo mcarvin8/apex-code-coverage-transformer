@@ -6,8 +6,8 @@ Contributions welcome: bug reports, feature requests, doc improvements, and code
 
 ## Requirements
 
-- Node.js ≥ 22.19
-- npm
+- Node.js ≥ 22.22.2
+- [pnpm](https://pnpm.io/installation), at the version pinned in `packageManager` in `package.json` (e.g. `npm install --global pnpm@<version>`)
 
 ## Development setup
 
@@ -16,24 +16,24 @@ Contributions welcome: bug reports, feature requests, doc improvements, and code
 git clone https://github.com/<your-username>/apex-code-coverage-transformer.git
 
 # 2. Install dependencies
-npm install
+pnpm install
 
 # 3. Build (re-run after source changes)
-npm run build
+pnpm run build
 ```
 
 ## Code quality
 
-- **Lint + Format:** `npm run lint` / `npm run format` — [Biome](https://biomejs.dev/); enforced in pre-commit via Husky
+- **Lint + Format:** `pnpm run lint` / `pnpm run format` — [Biome](https://biomejs.dev/); enforced in pre-commit via Husky
 - **Commit messages:** [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `test:`, `chore:`); enforced by commitlint on commit
 
 ## Git hooks (Husky)
 
-| Hook         | Runs            | What it does                                                                                          |
-| ------------ | --------------- | ----------------------------------------------------------------------------------------------------- |
-| `pre-commit` | on `git commit` | Runs `lint-staged` — applies Biome check + auto-fix to staged `.ts`/`.js` files                       |
-| `commit-msg` | on `git commit` | Validates the commit message against Conventional Commits via commitlint                              |
-| `pre-push`   | on `git push`   | Runs `npm run readme` and fails if it produced an uncommitted change to README.md's Command Reference |
+| Hook         | Runs            | What it does                                                                                           |
+| ------------ | --------------- | ------------------------------------------------------------------------------------------------------ |
+| `pre-commit` | on `git commit` | Runs `lint-staged` — applies Biome check + auto-fix to staged `.ts`/`.js` files                        |
+| `commit-msg` | on `git commit` | Validates the commit message against Conventional Commits via commitlint                               |
+| `pre-push`   | on `git push`   | Runs `pnpm run readme` and fails if it produced an uncommitted change to README.md's Command Reference |
 
 ## Testing
 
@@ -42,7 +42,7 @@ Uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in ESM mo
 - **Unit tests (with coverage):**
 
   ```bash
-  npm run test:only
+  pnpm run test:only
   ```
 
   New code must satisfy the existing coverage thresholds in `vitest.config.ts`.
@@ -50,12 +50,12 @@ Uses [Vitest](https://vitest.dev/). Test files live in `test/` and run in ESM mo
 - **NUTs:**
 
   ```bash
-  npm run test:nuts
+  pnpm run test:nuts
   ```
 
   Runs serially against `**/*.nut.ts` using `vitest.nut.config.ts`.
 
-- **Full pipeline:** `npm test` — compile + unit tests + lint.
+- **Full pipeline:** `pnpm test` — compile + unit tests + lint.
 
 ## GitHub Action bundle
 
@@ -63,17 +63,17 @@ The repo also ships a native GitHub Action (`action.yml` + `dist/action/index.cj
 
 If your change touches `src/action/**`, `src/transformers/**`, `src/utils/**`, or `src/handlers/**`:
 
-1. Run `npm run build` (or `npm run build:action` directly) to regenerate `dist/action/index.cjs`.
+1. Run `pnpm run build` (or `pnpm run build:action` directly) to regenerate `dist/action/index.cjs`.
 2. Commit the regenerated file in the same PR as your source change.
 
-CI's `lint` job rebuilds the bundle fresh and diffs it against what's committed - if you forget step 2, it fails with a diff. Fix by running `npm run build:action` and committing `dist/action/`.
+CI's `lint` job rebuilds the bundle fresh and diffs it against what's committed - if you forget step 2, it fails with a diff. Fix by running `pnpm run build:action` and committing `dist/action/`.
 
 Note the bundle only reaches `@v4` consumers on the next release: merging to `main` updates what's on `main` immediately, but the floating `v4` tag only moves inside `release.yml`'s `release` job, which runs on an actual release-please version bump, not on every merge.
 
 ## Pull request process
 
 1. Branch from `main` in your fork (e.g. `fix/issue-description`, `feat/new-format`).
-2. Make changes. Confirm `npm run lint`, `npm run test:only`, and `npm run test:nuts` pass.
+2. Make changes. Confirm `pnpm run lint`, `pnpm run test:only`, and `pnpm run test:nuts` pass.
 3. Add or update tests for any behavior change.
 4. Open a PR from your fork to `main`. Describe what changed and why; reference any issues.
 5. Address review feedback. Maintainers merge on approval.
@@ -101,9 +101,9 @@ Note the bundle only reaches `@v4` consumers on the next release: merging to `ma
 4. **Report generation** — standard XML formats flow through `src/transformers/reportGenerator.ts` with no changes needed. For plain-text/JSON/custom formats, add a branch to `generateReportContent` (see `generateLcov` for a minimal example). For large self-contained renderers, add a module to `src/transformers/generators/` and dispatch from `reportGenerator.ts` (see `generators/generateHtml.ts`).
 
 5. **Baselines and tests**
-   - Run `npm run test:only` — it generates a report for the new format.
+   - Run `pnpm run test:only` — it generates a report for the new format.
    - Add the generated file to `test/fixtures/baselines/` as `{format}_baseline.{ext}`.
    - In `test/utils/testConstants.ts`, add a constant for the baseline path.
    - In `test/utils/baselineCompare.ts`, add the constant to `baselineMap`.
    - If the format includes timestamps (e.g. Cobertura, Clover), update `test/utils/normalizeCoverageReport.ts` to strip them for stable comparison.
-   - Re-run `npm run test:only` and confirm all tests pass.
+   - Re-run `pnpm run test:only` and confirm all tests pass.

@@ -60,32 +60,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
-
-      # Node 22 ships npm 10, which writes optional peer dependencies of the sfdx-hardis tree into
-      # package-lock.json differently from npm 11+ (used locally, on Node 24+ and by Dependabot).
-      - name: Use npm 11
-        if: startsWith(matrix.node-version, '22')
-        # npm 10 can not replace itself globally (MODULE_NOT_FOUND 'promise-retry'), so install npm 11
-        # in its own folder and put it first on the PATH.
-        shell: bash
-        run: |
-          npm install --prefix "$RUNNER_TEMP/npm11" --no-audit --no-fund npm@11
-          echo "$RUNNER_TEMP/npm11/node_modules/.bin" >> "$GITHUB_PATH"
+          cache: pnpm
 
       - name: Pack this checkout
         if: github.event_name == 'pull_request'
         env:
           PACKAGE: ${{ matrix.package }}
         run: |
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
           # --ignore-scripts skips prepack (oclif manifest/readme for the plugin, a rebuild for
-          # core); `npm run build` above already built both packages.
+          # core); `pnpm run build` above already built both packages.
           PACK_DIR="$RUNNER_TEMP/pack"
           mkdir -p "$PACK_DIR"
           if [ "$PACKAGE" = "apex-code-coverage-transformer-core" ]; then
